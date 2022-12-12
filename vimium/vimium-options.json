@@ -1,0 +1,46 @@
+{
+  "settingsVersion": "1.67.2",
+  "exclusionRules": [
+    {
+      "pattern": "https?://mail.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://docs.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https://inbox.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.youtube.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https://www.speedtypingonline.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https://zty.pe",
+      "passKeys": ""
+    }
+  ],
+  "filterLinkHints": false,
+  "waitForEnterForFilteredHints": true,
+  "hideHud": false,
+  "keyMappings": "# Insert your preferred key mappings here.\n\nmap ח scrollDown\nmap ל scrollUp\nmap ג scrollFullPageDown\nmap ו scrollFullPageUp\nmap עע scrollToTop\nmap ר reload\nmap טט copyCurrentUrl\nmap טכ LinkHints.activateModeToCopyLinkUrl\nmap פ openCopiedUrlInCurrentTab\nmap ן enterInsertMode\nmap ה enterVisualMode\nmap כ LinkHints.activateMode\nmap עכ nextFrame\nmap עF mainFrame\nmap ם Vomnibar.activate\nmap נ Vomnibar.activateBookmarks\nmap . enterFindMode\nmap מ performFind\nmap עא nextTab\nmap עT previousTab\nmap ע0 firstTab\nmap ע$ lastTab\nmap א createTab\nmap טא duplicateTab\nmap ס removeTab\nmap <a-פ> togglePinTab\nmap ען focusInput\nmap צ Marks.activateCreateMode\nmap \\ Marks.activateGotoMode\nmap <a-צ> toggleMuteTab\nmap עק Vomnibar.activateEditUrl\nmap עE Vomnibar.activateEditUrlInNewTab",
+  "linkHintCharacters": "sadfjklewcmpgh",
+  "linkHintNumbers": "0123456789",
+  "newTabUrl": "about:newtab",
+  "nextPatterns": "next,more,newer,>,›,→,»,≫,>>",
+  "previousPatterns": "prev,previous,back,older,<,‹,←,«,≪,<<",
+  "regexFindMode": false,
+  "ignoreKeyboardLayout": false,
+  "scrollStepSize": 60,
+  "smoothScroll": true,
+  "grabBackFocus": false,
+  "searchEngines": "w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia\n\n# More examples.\n#\n# (Vimium supports search completion Wikipedia, as\n# above, and for these.)\n#\ng: https://www.google.com/search?q=%s Google\ny: https://www.youtube.com/results?search_query=%s Youtube\ngm: https://www.google.com/maps?q=%s Google maps\naz: https://www.amazon.com/s/?field-keywords=%s Amazon",
+  "searchUrl": "https://www.google.com/search?q=",
+  "userDefinedLinkHintCss": "div > .vimiumHintMarker {\n/* linkhint boxes */\nbackground: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF785),\n  color-stop(100%,#FFC542));\nborder: 1px solid #E3BE23;\n}\n\ndiv > .vimiumHintMarker span {\n/* linkhint text */\ncolor: black;\nfont-weight: bold;\nfont-size: 20px;\n}\n\ndiv > .vimiumHintMarker > .matchingCharacter {\n}"
+}
