@@ -13,6 +13,7 @@ set relativenumber
 set number
 set smartindent
 set smartcase
+set ignorecase
 let &showbreak = '↳ '
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
@@ -32,4 +33,3 @@ au TextYankPost * silent! lua vim.highlight.on_yank()
 colorscheme moonfly
 let g:chadtree_settings = {'theme.text_colour_set': 'trapdoor'}
 highlight SpellBad guisp='DarkRed' gui=undercurl cterm=undercurl
-" highlight SpellBad cterm=underline guisp='DarkRed'
