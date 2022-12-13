@@ -28,4 +28,8 @@ return {
   colors = {
     compose_cursor = 'orange',
   },
+  inactive_pane_hsb = {
+    saturation = 0.6,
+    brightness = 0.4,
+  },
 }
