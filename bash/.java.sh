@@ -8,4 +8,4 @@ alias bucksuck='bucky unsuck'
 alias buckcp='buckclean; buckproj'
 
 alias java11="export JAVA_HOME=`/usr/libexec/java_home -v 11.0.11`"
-alias java17="export JAVA_HOME=`/usr/libexec/java_home -v 17.0.5`"
+alias java19="export JAVA_HOME=/usr/local/Cellar/openjdk/19.0.1/libexec/openjdk.jdk/Contents/Home"
