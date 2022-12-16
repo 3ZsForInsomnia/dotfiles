@@ -191,3 +191,7 @@ gistr() {
   eval 'gist -r $gist_id | setclip'
 }
 
+setupGit() {
+  git config --global alias.ctags '!.git/hooks/ctags';
+  git config --global init.templatedir '~/.git_template'
+}
