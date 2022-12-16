@@ -40,3 +40,8 @@ compdef _cli_yargs_completions cli
 ###-end-cli-completions-###
 
 source ~/.bashrc
+
+function git_main_branch() {
+  def=`git remote show origin | sed -n '/HEAD branch/s/.*: //p'`
+  echo $def
+}

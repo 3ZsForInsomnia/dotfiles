@@ -1,10 +1,30 @@
+### Convention
+# g -> git
+# st -> status
+# a -> add (or apply if used with stash)
+# c -> commit
+# co -> checkout
+# cb -> checkout new branch
+# cm -> checkout git_main_branch
+# p -> push
+# pu -> pull
+# m -> merge
+# r -> rebase
+# f -> fetch
+# fa -> fetch all
+# t -> tags
+# d -> delete
+# sta -> stash
+# d -> diff
+
+### Status
 alias cst='c && gst' # Clear and get status
+alias gstuno='gst -uno' # much faster for large commit histories but doesn't show untracked
 
 ### Committing
-alias gcom='g commit -m'
-alias gagc='ga . && gc'		
+alias gcmsg='g commit -m'
 alias gibid='g commit -a --amend -C head'		
-alias gempty='g commit --allow-empty'
+alias gce='g commit --allow-empty'
 gac() {
   $(ga $1)
   $(gcom $2)
@@ -13,16 +33,12 @@ gacp() {
   $(gac $1 $2)
   $(ggp)
 }
-gcomb() { # Checkout new branch and commit
+gcbc() { # Checkout new branch and commit
   $(gcob $1)
   $(gcom $2)
 }
-gcombp() { # Checkout new branch, commit and push
+gcbcp() { # Checkout new branch, commit and push
   $(gcomb $1 $2)
-  $(ggp)
-}
-gcomp() { # Commit and push
-  $(gcom $1)
   $(ggp)
 }
 gab() { # Add and checkout new branch
@@ -33,15 +49,15 @@ gabc() { # Add, checkout new branch, commit
   $(gab $1 $2)
   $(gcom $3)
 }
-gabcp() { # Add, checkout new branch, commit, push
+gacbcp() { # Add, checkout new branch, commit, push
   $(gabc $1 $2 $3)
   $(ggp)
 }
 
 ### Pulling/Updating
-alias gmm='gm master'
-alias grbmup='gcm && gup'
-alias gupfa='gfa && gup'
+alias gmm='gm $(git_main_branch)'
+alias gcmpu='gcm && gup'
+alias gfapu='gfa && gup'
 pullBranchThenMergeWithIt() {
   currentBranch=$(git symbolic-ref --short HEAD)
   $(gco $1)
@@ -59,10 +75,49 @@ pullBranchThenRebaseWithIt() {
   $(gstaa)
 }
 pullMasThenMerge() {
-  eval 'pullBranchThenMergeWithIt master'
+  eval 'pullBranchThenMergeWithIt $(git_main_branch)'
 }
 pullMasThenRebase() {
-  eval 'pullBranchThenRebaseWithIt master'
+  eval 'pullBranchThenRebaseWithIt $(git_main_branch)'
+}
+alias gpmm='pullMasThenMerge'
+alias gprm='pullMasThenRebase'
+
+### Tags
+alias gt='git tag'
+alias gpt='git push --tags'
+
+### Stashing
+function gstas() { # Stash with name if available, otherwise just stash
+  if [ -z "$1" ]
+  then
+      $(g stash -u)
+  else
+      $(g stash push -u -m "$1")
+  fi
+}
+alias gsta='gstas'
+alias gstapu='gsta && gup'
+alias gstapua='gstapu && gstaa'
+# git stash apply with name if present, or apply stash by number if input is number (for gstala)
+function gstaa() { 
+  if [ -z "$1" ]
+  then
+    $(git stash apply)
+  elif [ "$1" = <-> ]
+  then
+    git stash pop stash@{$1}
+  else
+    git stash apply $(git stash list | grep "$1" | cut -d: -f1 | head -n 1)
+  fi
+}
+function gstala() {
+  a=$(gstl P)
+  if [ -n "$a" ]
+  then
+    b=$(echo $a C -d: -f1 TR -dc '0-9')
+    $(gstaa $b)
+  fi
 }
 stashThenRunAndApply() {
   $(gsta)
@@ -75,44 +130,16 @@ stashMergeMas() {
 stashRebaseMas() {
   $(stashThenRunAndApply(pullMasThenRebase))
 }
-
-### Tags
-alias gt='git tag'
-alias gptags='git push --tags'
-
-### Stashing
-# alias gsta='git stash --include-untracked'
-alias gstal='gsta && gup'
-alias gstala='gstal && gstaa'
-alias gstuno='gst -uno' # much faster for large commit histories but doesn't show untracked
-alias gstlaan='gstl P | gstaan'
-gstaan() {
-    if [ -z "$1" ]
-    then
-        $(git stash apply)
-    else
-        git stash apply $(git stash list | grep "$1" | cut -d: -f1 | head -n 1)
-    fi
-}
-
-gstas() {
-  if [ -z "$1" ]
-  then
-      $(g stash -u)
-  else
-      $(g stash push -u -m "$1")
-  fi
-}
-alias gsta='gstas'
+alias gstamm='stashMergeMas'
+alias gstarm='stashRebaseMas'
 
 ### Diff
-alias gdiff='git diff --ignore-all-space | git-split-diffs --color L -RFX'
-alias gd='gdiff'
+alias gd='git diff --ignore-all-space | git-split-diffs --color L -RFX'
 
 ### Cleaning
-alias grhhm='grhh origin/master'
-alias gbdeleteMerged='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d'
-alias gbdm='gbdeleteMerged'
+alias grhhm='grhh origin/$(git_main_branch)'
+alias deleteMerged='git branch --merged | egrep -v "(^\*|master|main|dev)" | xargs git branch -d'
+alias gdm='deleteMerged'
 
 ### Branches
 gcob() {

@@ -23,8 +23,8 @@ alias didTwerk='twerk -d'
 
 alias trackedTime='node ~/src/logging-cli/harvest/client.js';
 alias food='node ~/src/logging-cli/cal-score.js'
-alias shareTodaysTwerk='dicks=$(node ~/src/logging-cli/share-todays-twerkout.js -t); echo $dicks PC; echo $dicks'
-alias shareTomorrowsTwerk='dicks=$(node ~/src/logging-cli/share-todays-twerkout.js); echo $dicks PC; echo $dicks'
+alias shareTodaysTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js -t); echo $value PC; echo $value'
+alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js); echo $value PC; echo $value'
 
 alias keepAwake='cd /Applications; ./delay-screensaver.command'
 

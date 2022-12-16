@@ -9,12 +9,12 @@ s=start
 b=build
 w=watch
 nmod=node_modules
-packlock=package-lock.json
-yarnlock=yarn.lock
+plock=package-lock.json
+ylock=yarn.lock
 
 alias y='yarn'
 alias yin='y install'
-alias gupfay='gupfa; yin'
+alias gfapuy='gupfa; yin'
 alias yb='y $b'
 alias yd='y dev'
 alias yr='y run'
@@ -33,7 +33,7 @@ alias yan='y analyze'
 
 alias n='npm'
 alias ni='n i'
-alias gupfan='gupfa; ni'
+alias gfapun='gupfa; ni'
 alias nis='ni --save'
 alias nisd='ni --save-dev'
 alias nr='n run'
