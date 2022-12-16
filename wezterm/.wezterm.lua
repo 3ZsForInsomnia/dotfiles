@@ -2,9 +2,6 @@ local wezterm = require 'wezterm'
 local keybinds = require 'keybinds'
 require 'on'
 
-local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
-local SOLID_RIGHT_ARROW = utf8.char(0xe0b0)
-
 return {
   term = 'wezterm',
   font = wezterm.font 'Fira Code',
