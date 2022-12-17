@@ -24,3 +24,5 @@ alias oreg='o https://regex101.com'
 alias gogh='bash -c "$(curl -sLo- https://git.io/vQgMr)"'
 alias ogogh='o http://mayccoll.github.io/Gogh/'
 
+alias lpa='lpass'
+alias lpas='lpas show --password'
