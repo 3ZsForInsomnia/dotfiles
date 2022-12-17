@@ -15,9 +15,9 @@ function fupc() {
     echo $result;
 }
 
-alias pomo="pomojs --log ~/.pomo.log --tmux"
-alias longPom='pomo -w 30 -b 5'
-alias shortPom='pomo -d 15'
+alias po="pomojs --log ~/.pomo.log --tmux"
+alias pol='pomo -w 30 -b 5'
+alias pos='pomo -d 15'
 
 alias 8ball='~/8ball.sh'
 alias oreg='o https://regex101.com'

@@ -24,7 +24,7 @@ killProcess() {
 }
 alias kp='killProcess'
 
-alias lineCount='wc -l'
+alias lc='wc -l'
 # $1=file extension
 lineCountForFolder() {
   if [ -z $1 ]
