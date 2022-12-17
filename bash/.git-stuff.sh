@@ -42,9 +42,9 @@ gcbcp() { # Checkout new branch, commit and push
 }
 gab() { # Add and checkout new branch
   $(ga $1)
-  $(gcob $2)
+  $(gco $2)
 }
-gabc() { # Add, checkout new branch, commit
+gacbc() { # Add, checkout new branch, commit
   $(gab $1 $2)
   $(gc $3)
 }

@@ -2,31 +2,6 @@ local telescope = require("telescope")
 local actions = require("telescope.actions")
 local trouble = require("trouble.providers.telescope")
 
-local dashConfig = {
-  search_engine = 'google', -- fallback when no results in dash
-  debounce = 500,
-  file_type_keywords = {
-    dashboard = false,
-    NvimTree = false,
-    TelescopePrompt = false,
-    terminal = false,
-    packer = false,
-    fzf = false,
-    javascript = { 'javascript', 'nodejs', 'ramda', 'lodash', 'ember', 'awsjs', 'redux' },
-    typescript = { 'typescript', 'javascript', 'nodejs', 'ramda', 'angular', 'react', 'rxjs' },
-    typescriptreact = { 'typescript', 'javascript', 'react', 'ramda', 'rxjs', 'emmet', 'tailwindcss' },
-    javascriptreact = { 'javascript', 'react', 'ramda', 'emmet', 'tailwindcss' },
-    hbs = { 'html', 'handlebars', 'tailwindcss', 'emmet' },
-    html = { 'html', 'tailwindcss', 'emmet' },
-    lua = { 'lua', 'neovim', 'vim' },
-    sh = { 'bash', 'zsh' },
-    css = { 'css', 'scss', 'tailwindcss', 'media', 'color' },
-    scss = { 'css', 'scss', 'tailwindcss', 'media', 'color' },
-  },
-}
-
-require('dash').setup(dashConfig)
-
 telescope.setup {
   defaults = {
     wrap_results = true,

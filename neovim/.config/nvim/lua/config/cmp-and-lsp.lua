@@ -55,6 +55,7 @@ cmp.setup({
         end,
       },
     },
+    { name = 'nvim_lua' },
   },
   mapping = {
     ["<Tab>"] = cmp.mapping({

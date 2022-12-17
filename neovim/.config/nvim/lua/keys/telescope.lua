@@ -8,7 +8,7 @@ end
 wk.register({
   f = {
     name = 'Telescope Find',
-    f = { f("find_files"), "Files" },
+    f = { f("find_files hidden=true"), "Files" },
     r = { f("frecency"), "Frecency" },
     gl = { f("live_grep"), "Live Search" },
     gs = { f("grep_string"), "String" },

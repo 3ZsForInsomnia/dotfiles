@@ -86,6 +86,8 @@ return packer.startup(function(use)
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'rcarriga/cmp-dap',
       'dcampos/cmp-emmet-vim',
+      'delphinus/cmp-ctags',
+      'hrsh7th/cmp-nvim-lua',
     },
     config = function()
       require("cmp_nvim_ultisnips").setup {}
@@ -233,10 +235,6 @@ return packer.startup(function(use)
       require('package-info').setup()
     end,
     ft = { 'json' },
-  }
-  use {
-    'mzlogin/vim-markdown-toc',
-    ft = { 'markdown', 'md' }
   }
   use { "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",

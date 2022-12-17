@@ -39,4 +39,5 @@ let g:db_ui_save_location = '~/.config/db_ui'
 source ~/.config/nvim/trello.vim
 
 autocmd User TelescopePreviewerLoaded setlocal wrap
+autocmd BufWinEnter,WinEnter term://* set filetype=zsh
 cmap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
