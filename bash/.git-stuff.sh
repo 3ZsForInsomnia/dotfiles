@@ -22,23 +22,22 @@ alias cst='c && gst' # Clear and get status
 alias gstuno='gst -uno' # much faster for large commit histories but doesn't show untracked
 
 ### Committing
-alias gcmsg='g commit -m'
 alias gibid='g commit -a --amend -C head'		
 alias gce='g commit --allow-empty'
+alias gc='g commit -v -m'
 gac() {
   $(ga $1)
-  $(gcom $2)
+  $(gc $2)
 }
 gacp() {
   $(gac $1 $2)
   $(ggp)
 }
 gcbc() { # Checkout new branch and commit
-  $(gcob $1)
-  $(gcom $2)
+  $(gco $1)
 }
 gcbcp() { # Checkout new branch, commit and push
-  $(gcomb $1 $2)
+  $(gcbc $1 $2)
   $(ggp)
 }
 gab() { # Add and checkout new branch
@@ -47,7 +46,7 @@ gab() { # Add and checkout new branch
 }
 gabc() { # Add, checkout new branch, commit
   $(gab $1 $2)
-  $(gcom $3)
+  $(gc $3)
 }
 gacbcp() { # Add, checkout new branch, commit, push
   $(gabc $1 $2 $3)

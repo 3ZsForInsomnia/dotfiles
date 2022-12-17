@@ -12,8 +12,13 @@ local ensure_packer = function()
 end
 
 local packer_bootstrap = ensure_packer()
+local packer = require('packer')
 
-return require('packer').startup(function(use)
+packer.init {
+  max_jobs = 50
+}
+
+return packer.startup(function(use)
   use 'lewis6991/impatient.nvim'
   use 'tpope/vim-sensible'
 
@@ -61,6 +66,10 @@ return require('packer').startup(function(use)
       },
     },
     disable = false,
+  }
+  use {
+    'dhruvmanila/telescope-bookmarks.nvim',
+    tag = '*',
   }
 
   use 'onsails/lspkind-nvim'
@@ -146,17 +155,10 @@ return require('packer').startup(function(use)
       require('telescope').load_extension("tailiscope")
     end
   }
-  use {
-    "LinArcX/telescope-changes.nvim",
-    config = function()
-      require('telescope').load_extension('changes')
-    end
-  }
+  use "LinArcX/telescope-changes.nvim"
+  use("HUAHUAI23/telescope-session.nvim")
   use {
     'nvim-telescope/telescope-fzf-native.nvim',
-    config = function()
-      require('telescope').load_extension('fzf')
-    end,
     run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
   use {
@@ -228,7 +230,7 @@ return require('packer').startup(function(use)
   use {
     'vuki656/package-info.nvim',
     config = function()
-require('package-info').setup()
+      require('package-info').setup()
     end,
     ft = { 'json' },
   }

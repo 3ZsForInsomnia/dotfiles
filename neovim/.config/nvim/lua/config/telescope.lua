@@ -1,7 +1,31 @@
-local dashConfig = require('libdash_nvim').default_config
 local telescope = require("telescope")
 local actions = require("telescope.actions")
 local trouble = require("trouble.providers.telescope")
+
+local dashConfig = {
+  search_engine = 'google', -- fallback when no results in dash
+  debounce = 500,
+  file_type_keywords = {
+    dashboard = false,
+    NvimTree = false,
+    TelescopePrompt = false,
+    terminal = false,
+    packer = false,
+    fzf = false,
+    javascript = { 'javascript', 'nodejs', 'ramda', 'lodash', 'ember', 'awsjs', 'redux' },
+    typescript = { 'typescript', 'javascript', 'nodejs', 'ramda', 'angular', 'react', 'rxjs' },
+    typescriptreact = { 'typescript', 'javascript', 'react', 'ramda', 'rxjs', 'emmet', 'tailwindcss' },
+    javascriptreact = { 'javascript', 'react', 'ramda', 'emmet', 'tailwindcss' },
+    hbs = { 'html', 'handlebars', 'tailwindcss', 'emmet' },
+    html = { 'html', 'tailwindcss', 'emmet' },
+    lua = { 'lua', 'neovim', 'vim' },
+    sh = { 'bash', 'zsh' },
+    css = { 'css', 'scss', 'tailwindcss', 'media', 'color' },
+    scss = { 'css', 'scss', 'tailwindcss', 'media', 'color' },
+  },
+}
+
+require('dash').setup(dashConfig)
 
 telescope.setup {
   defaults = {
@@ -13,9 +37,35 @@ telescope.setup {
     },
   },
   extensions = {
-    dash = dashConfig
-  }
+    fzf = {
+      fuzzy = true, -- false will only do exact matching
+      override_generic_sorter = true, -- override the generic sorter
+      override_file_sorter = true, -- override the file sorter
+      case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+      -- the default case_mode is "smart_case"
+    },
+    bookmarks = {
+      selected_browser = 'chrome',
+      -- Either provide a shell command to open the URL
+      url_open_command = 'open',
+      -- Show the full path to the bookmark instead of just the bookmark name
+      full_path = true,
+      -- Add a column which contains the tags for each bookmark for buku
+      buku_include_tags = false,
+      -- Provide debug messages
+      debug = false,
+    },
+  },
+  xray23 = {
+    sessionDir = "~/vim-sessions",
+  },
 }
+
+telescope.load_extension('fzf')
+telescope.load_extension('bookmarks')
+telescope.load_extension('changes')
+telescope.load_extension("xray23")
+telescope.load_extension("dash")
 
 require('telescope-alternate').setup({
   mappings = {
@@ -33,4 +83,3 @@ require('telescope-alternate').setup({
   --   change_to_uppercase = function(w) return my_uppercase_method(w) end
   -- }
 })
-
