@@ -23,16 +23,16 @@ require'marks'.setup({
   -- sign/virttext. Bookmarks can be used to group together positions and quickly move
   -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
   -- default virt_text is "".
-  -- Bookmark as flagged/normal path of investigation
+  -- Bookmark as good
   bookmark_0 = {
-    sign = "⚑",
+    sign = "",
     -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
     -- defaults to false.
     annotate = true,
   },
-  -- Bookmark as good
+  -- Bookmark as flagged/normal path of investigation
   bookmark_9 = {
-    sign = "",
+    sign = "⚑",
     -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
     -- defaults to false.
     annotate = true,

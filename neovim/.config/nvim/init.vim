@@ -36,8 +36,12 @@ let g:instant_username = 'Zach'
 let g:UltiSnipsEditSplit='tabdo'
 let g:blamer_enabled = 1
 let g:db_ui_save_location = '~/.config/db_ui'
+let g:matchup_matchparen_offscreen = {'method': 'popup'}
+
 source ~/.config/nvim/trello.vim
+
+cmap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 autocmd User TelescopePreviewerLoaded setlocal wrap
 autocmd BufWinEnter,WinEnter term://* set filetype=zsh
-cmap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+au TermOpen * setlocal nospell | :startinsert

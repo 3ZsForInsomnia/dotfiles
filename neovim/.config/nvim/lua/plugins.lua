@@ -41,7 +41,34 @@ return packer.startup(function(use)
   use 'nvim-treesitter/nvim-treesitter-context'
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'RRethy/nvim-treesitter-textsubjects'
+  use {
+    'm-demare/hlargs.nvim',
+    requires = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('hlargs').setup({
+        paint_catch_blocks = {
+          declarations = true,
+          usages = true,
+        },
+      })
+    end
+  }
+  use {
+    "danymat/neogen",
+    config = function()
+      require('neogen').setup {}
+    end,
+    requires = "nvim-treesitter/nvim-treesitter",
+    tag = "*"
+  }
 
+  use 'windwp/nvim-ts-autotag'
+  use {
+    'andymass/vim-matchup',
+    setup = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end
+  }
   use { 'bennypowers/nvim-regexplainer',
     config = function() require 'regexplainer'.setup() end,
     requires = {
@@ -70,6 +97,13 @@ return packer.startup(function(use)
   use {
     'dhruvmanila/telescope-bookmarks.nvim',
     tag = '*',
+  }
+  use {
+    'debugloop/telescope-undo.nvim',
+    requires = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      require("telescope").load_extension("undo")
+    end,
   }
 
   use 'onsails/lspkind-nvim'
@@ -177,9 +211,9 @@ return packer.startup(function(use)
     requires = "kyazdani42/nvim-web-devicons",
     config = function()
       require("trouble").setup {
-        height = 30,
+        height = 20,
         action_keys = {
-          open_tab = { "<c-s>" },
+          open_tab = { "<c-t>" },
         },
       }
     end
@@ -199,10 +233,6 @@ return packer.startup(function(use)
 
   -- Theming and highlighting
   use 'kyazdani42/nvim-web-devicons'
-  use {
-    'valloric/matchtagalways',
-    ft = { 'hbs', 'html', 'jsx', 'tsx' },
-  }
   -- use 'tanvirtin/monokai.nvim'
   -- use 'marko-cerovac/material.nvim'
   -- use 'nxvu699134/vn-night.nvim'
