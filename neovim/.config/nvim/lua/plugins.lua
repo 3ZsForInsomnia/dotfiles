@@ -54,12 +54,8 @@ return packer.startup(function(use)
     end
   }
   use {
-    "danymat/neogen",
-    config = function()
-      require('neogen').setup {}
-    end,
-    requires = "nvim-treesitter/nvim-treesitter",
-    tag = "*"
+    'kkoomen/vim-doge',
+    run = ':call doge#install()'
   }
 
   use 'windwp/nvim-ts-autotag'
@@ -94,6 +90,13 @@ return packer.startup(function(use)
     },
     disable = false,
   }
+  -- use({
+  --   "andythigpen/nvim-coverage",
+  --   requires = "nvim-lua/plenary.nvim",
+  --   config = function()
+  --     require("user.coverage")
+  --   end,
+  -- })
   use {
     'dhruvmanila/telescope-bookmarks.nvim',
     tag = '*',
@@ -115,7 +118,6 @@ return packer.startup(function(use)
       'ray-x/cmp-treesitter',
       'hrsh7th/cmp-cmdline',
       'quangnguyen30192/cmp-nvim-tags',
-      'quangnguyen30192/cmp-nvim-ultisnips',
       'petertriho/cmp-git',
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'rcarriga/cmp-dap',
@@ -123,22 +125,24 @@ return packer.startup(function(use)
       'delphinus/cmp-ctags',
       'hrsh7th/cmp-nvim-lua',
     },
-    config = function()
-      require("cmp_nvim_ultisnips").setup {}
-    end,
   })
-  use { 'SirVer/ultisnips',
-    requires = {
-      { "honza/vim-snippets", rtp = "." },
-      "mlaursen/vim-react-snippets"
-    },
+  use({
+    "L3MON4D3/LuaSnip",
+    tag = "v<CurrentMajor>.*",
+  })
+  use { 'saadparwaiz1/cmp_luasnip' }
+  use "rafamadriz/friendly-snippets"
+  use {
+    "molleweide/LuaSnip-snippets.nvim",
+    as = 'luasnip-snippets',
+  }
+  use {
+    'doxnit/cmp-luasnip-choice',
     config = function()
-      vim.g.UltiSnipsExpandTrigger = '<Plug>(ultisnips_expand)'
-      vim.g.UltiSnipsJumpForwardTrigger = '<Plug>(ultisnips_jump_forward)'
-      vim.g.UltiSnipsJumpBackwardTrigger = '<Plug>(ultisnips_jump_backward)'
-      vim.g.UltiSnipsListSnippets = '<c-x><c-s>'
-      vim.g.UltiSnipsRemoveSelectModeMappings = 0
-    end
+      require('cmp_luasnip_choice').setup({
+        auto_open = true,
+      });
+    end,
   }
 
   use 'jose-elias-alvarez/null-ls.nvim'
@@ -173,11 +177,8 @@ return packer.startup(function(use)
     end
   }
   use {
-    "fhill2/telescope-ultisnips.nvim",
-    requires = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      require('telescope').load_extension("ultisnips")
-    end
+    "benfowler/telescope-luasnip.nvim",
+    module = "telescope._extensions.luasnip", -- if you wish to lazy-load
   }
   use {
     "barrett-ruth/telescope-http.nvim",
@@ -197,13 +198,8 @@ return packer.startup(function(use)
     'nvim-telescope/telescope-fzf-native.nvim',
     run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
-  use {
-    "otavioschwanck/telescope-alternate",
-    config = function()
-      require('telescope').load_extension('telescope-alternate')
-    end
-  }
 
+  use 'rgroli/other.nvim'
   use "folke/which-key.nvim"
 
   use {
@@ -219,6 +215,13 @@ return packer.startup(function(use)
     end
   }
 
+  use {
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons', -- optional, for file icons
+    },
+    tag = 'nightly' -- optional, updated every week. (see issue #1193)
+  }
   use {
     "ms-jpq/chadtree",
     branch = "chad",
@@ -344,7 +347,7 @@ return packer.startup(function(use)
   }
 
   -- " Remote plugin, legacy from vim-compatible plugins
-  use 'roxma/nvim-yarp'
+  -- use 'roxma/nvim-yarp'
 
   use({
     'mrjones2014/dash.nvim',

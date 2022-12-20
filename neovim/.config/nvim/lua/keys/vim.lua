@@ -27,7 +27,6 @@ wk.register({
       ljs = { "\"ayiwoconsole.log('<C-R>a:', <C-R>a);<Esc>", "Log word under cursor (js)" },
     },
     ts = { ":ts", "Go to tag by name" },
-    dm = { ":delmarks ", "Delete marks" },
     ['dm!'] = { "<cmd>delmarks!<cr>", "Delete all marks" },
     [','] = { "<cmd>nohlsearch<cr>", "Stop highlighting search results" },
   },

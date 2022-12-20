@@ -45,7 +45,7 @@ wk.register({
   },
   fd = {
     name = "Telescope Search Documentation",
-    s = { f("ultisnips"), "Ultisnips" },
+    s = { f("luasnip"), "Snippets" },
     ht = { f("http list"), "Http codes" },
     t = { f("tailiscope"), "Tailwind" },
     m = { f("man_pages"), "Man pages" },

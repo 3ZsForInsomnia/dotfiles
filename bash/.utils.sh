@@ -35,7 +35,7 @@ lineCountForFolder() {
   fi
 }
 
-runThenReturn() {
+function runThenReturn() {
   pwd=$(pwd)
   eval $1
   cd $pwd
