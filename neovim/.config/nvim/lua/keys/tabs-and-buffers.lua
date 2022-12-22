@@ -4,10 +4,17 @@ wk.register({
     name = "Tabs",
     t = { "<cmd>CHADopen<cr>", "ChadTree Open" },
     n = { "<cmd>tabnew<cr>", "Open a new tab" },
+    nt = { "<cmd>tabnew<cr><cmd>terminal<cr>", "Open a terminal in a new tab" },
     no = { function() print(":tabe " .. vim.fn.expand("%:p:h")) end, "Open file in dir of current buffer" },
     c = { "<cmd>tabnew<cr><cmd>CHADopen<cr><C-h>Jc", "Open ChadTree at current file" },
     h = { "<cmd>split<cr>", "Horizontal split" },
     v = { "<cmd>vsplit<cr>", "Vertical split" },
+  },
+  b = {
+    name = "Buffers",
+    n = { "<cmd>new<cr>", "New buffer with horizontal split" },
+    nv = { "<cmd>vnew<cr>", "New buffer with vertical split" },
+    tk = { "<cmd>bd!<cr>", "Kill terminal/Exit immediately" },
   },
   c = {
     name = "Quickfix list",

@@ -6,7 +6,7 @@ end
 
 wk.register({
   l = {
-    name = "Surround (custom)",
+    name = "View diagnostics",
     ['l'] = { f(""), "Toggle Diagnostics list" },
     ["w"] = { f("workspace_diagnostics"), "Show Workspace Diagnostics" },
     ['d'] = { f("document_diagnostics"), "Show Document Diagnostics" },

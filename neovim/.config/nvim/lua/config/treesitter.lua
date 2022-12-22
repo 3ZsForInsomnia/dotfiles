@@ -52,19 +52,19 @@ require 'nvim-treesitter.configs'.setup {
       enable = true,
       set_jumps = true,
       goto_next_start = {
-        [']m'] = '@function.outer',
-        [']]'] = '@class.outer'
+        ['[M'] = '@function.outer',
+        [']['] = '@class.outer'
       },
       goto_next_end = {
-        [']M'] = '@function.outer',
-        [']['] = '@class.outer'
+        [']m'] = '@function.outer',
+        [']]'] = '@class.outer'
       },
       goto_previous_start = {
         ['[m'] = '@function.outer',
         ['[['] = '@class.outer'
       },
       goto_previous_end = {
-        ['[M'] = '@function.outer',
+        [']M'] = '@function.outer',
         ['[]'] = '@class.outer'
       }
     },
@@ -90,43 +90,6 @@ require 'nvim-treesitter.configs'.setup {
     -- @parameter.inner
     -- @statement.outer
   },
-  select = {
-    enable = true,
-    keymaps = {
-      ["af"] = "@function.outer",
-      ["if"] = "@function.inner",
-      ["ac"] = "@class.outer",
-      ["ic"] = "@class.inner",
-    },
-  },
-  move = {
-    enable = true,
-    goto_next_start = {
-      ["]m"] = "@function.outer",
-      ["]]"] = "@class.outer",
-    },
-    goto_next_end = {
-      ["]M"] = "@function.outer",
-      ["]["] = "@class.outer",
-    },
-    goto_previous_start = {
-      ["[m"] = "@function.outer",
-      ["[["] = "@class.outer",
-    },
-    goto_previous_end = {
-      ["[M"] = "@function.outer",
-      ["[]"] = "@class.outer",
-    },
-  },
-  swap = {
-    enable = true,
-    swap_next = {
-      ["<leader>a"] = "@parameter.inner",
-    },
-    swap_previous = {
-      ["<leader>A"] = "@parameter.inner",
-    },
-  },
   indent = {
     enable = true,
   },
@@ -146,5 +109,11 @@ require 'nvim-treesitter.configs'.setup {
     max_file_lines = nil, -- Do not enable for files with more than n lines, int
     -- colors = {}, -- table of hex strings
     -- termcolors = {} -- table of colour name strings
-  }
+  },
+  autotag = {
+    enable = true,
+  },
+  matchup = {
+    enable = true,
+  },
 }
