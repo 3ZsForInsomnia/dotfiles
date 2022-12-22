@@ -16,9 +16,9 @@ wk.register({
     a = {
       name = "Any matching",
       j = { f("anyjs"), "js file" },
-      s = { f("anyjs"), "css/scss file" },
-      h = { f("anyjs"), "html file" },
-      e = { f("anyjs"), "hbs file" },
+      s = { f("anycss"), "css/scss file" },
+      h = { f("anyhtml"), "html file" },
+      e = { f("anyhbs"), "hbs file" },
     },
   },
 }, { prefix = "<leader>" })

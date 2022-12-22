@@ -23,7 +23,7 @@ alias cls='c; ls'
 
 alias bashrc='v ~/src/dotfiles/.bashrc'
 alias bashpro='v ~/src/dotfiles/.bash_profile'
-alias vimrc='v ~/src/dotfiles/neovim/.config/nvim/init.vim'
+alias vimrc='v ~/src/dotfiles/neovim/.config/nvim/init.lua'
 alias zshrc='v ~/src/dotfiles/zsh/.zshrc'
 alias wezrc='v ~/src/dotfiles/wezterm/.wezterm.lua'
 
