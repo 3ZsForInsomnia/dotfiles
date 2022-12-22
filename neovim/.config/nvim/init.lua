@@ -36,6 +36,6 @@ set notagrelative
 cmap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 autocmd User TelescopePreviewerLoaded setlocal wrap
-autocmd BufWinEnter,WinEnter term://* o.filetype=zsh
+autocmd BufWinEnter,WinEnter term://* setlocal filetype=zsh
 au TermOpen * setlocal nospell | :startinsert
 ]]
