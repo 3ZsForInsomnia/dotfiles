@@ -24,7 +24,7 @@ killProcess() {
 }
 alias kp='killProcess'
 
-alias lineCount='wc -l'
+alias lc='wc -l'
 # $1=file extension
 lineCountForFolder() {
   if [ -z $1 ]
@@ -35,7 +35,7 @@ lineCountForFolder() {
   fi
 }
 
-runThenReturn() {
+function runThenReturn() {
   pwd=$(pwd)
   eval $1
   cd $pwd

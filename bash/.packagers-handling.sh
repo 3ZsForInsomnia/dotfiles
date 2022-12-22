@@ -10,3 +10,5 @@ alias pip3Install='pip3 install -r pip3-requirements.txt'
 
 alias savePackages='cd ~/src/dotfiles/packagers/; brewPack; voltaPack; pip2Pack; pip3Pack; rubyPack'
 alias installPackages='cd ~/src/dotfiles/packagers/; brewInstall; pip2Install; pip3Install'
+
+alias goToNvimPlugins='cd ~/.local/share/nvim/site/pack/packer/'
