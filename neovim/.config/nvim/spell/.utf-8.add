@@ -1,6 +1,6 @@
 ADPR
 configs
-lua
+#ua
 treesitter
 config
 theming
@@ -27,3 +27,7 @@ iverson
 #/!
 c/!
 use/!
+test/!
+lua/!
+syntax/!
+syntax
