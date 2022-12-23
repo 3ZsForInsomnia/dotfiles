@@ -1,5 +1,6 @@
 -- vim.cmd [[packadd packer.nvim]]
 
+-- let Packer ensure it is installed on load
 local ensure_packer = function()
   local fn = vim.fn
   local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
@@ -14,26 +15,61 @@ end
 local packer_bootstrap = ensure_packer()
 local packer = require('packer')
 
+-- Prevents Packer hanging and failing to update when there are too many plugins
 packer.init {
   max_jobs = 50
 }
 
 return packer.startup(function(use)
+  --
+  --
+  -- General settings
+  -- Packer itself, UI component and function libraries used by other plugins
+  --
+  --
   use 'lewis6991/impatient.nvim'
-  use 'tpope/vim-sensible'
-
   use 'MunifTanjim/nui.nvim'
   use 'nvim-lua/plenary.nvim'
   use 'kamykn/popup-menu.nvim'
-
   use 'wbthomason/packer.nvim'
+
+  --
+  --
+  -- LSP support
+  -- For all things LSP related that is not (explicitly) part of the Treesitter ecosystem
+  --
+  --
   use { "williamboman/mason.nvim" }
   use 'williamboman/mason-lspconfig.nvim'
   use 'neovim/nvim-lspconfig'
   use 'nvim-lua/lsp-status.nvim'
+  use 'onsails/lspkind-nvim'
   use { 'mfussenegger/nvim-jdtls', ft = { "java" } }
-
+  use({
+    'weilbith/nvim-code-action-menu',
+    cmd = 'CodeActionMenu',
+  })
+  use 'ThePrimeagen/refactoring.nvim'
+  use {
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+    config = function()
+      require("trouble").setup {
+        height = 20,
+        action_keys = {
+          open_tab = { "<c-t>" },
+        },
+      }
+    end
+  }
   use "folke/neodev.nvim"
+
+  --
+  --
+  -- Treesitter
+  -- Everything directly associated with Treesitter
+  --
+  --
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate'
@@ -53,18 +89,6 @@ return packer.startup(function(use)
       })
     end
   }
-  use {
-    'kkoomen/vim-doge',
-    run = ':call doge#install()'
-  }
-
-  use 'windwp/nvim-ts-autotag'
-  use {
-    'andymass/vim-matchup',
-    setup = function()
-      vim.g.matchup_matchparen_offscreen = { method = "popup" }
-    end
-  }
   use { 'bennypowers/nvim-regexplainer',
     config = function() require 'regexplainer'.setup() end,
     requires = {
@@ -73,80 +97,12 @@ return packer.startup(function(use)
     }
   }
 
-  use {
-    "mfussenegger/nvim-dap",
-    module = { "dap" },
-    requires = {
-      "theHamsta/nvim-dap-virtual-text",
-      "rcarriga/nvim-dap-ui",
-      "mfussenegger/nvim-dap-python",
-      "nvim-telescope/telescope-dap.nvim",
-      "theHamsta/nvim-dap-virtual-text",
-      { "mxsdev/nvim-dap-vscode-js" },
-      {
-        "microsoft/vscode-js-debug",
-        run = "npm install --legacy-peer-deps && npm run compile",
-      },
-    },
-    disable = false,
-  }
-  -- use({
-  --   "andythigpen/nvim-coverage",
-  --   requires = "nvim-lua/plenary.nvim",
-  --   config = function()
-  --     require("user.coverage")
-  --   end,
-  -- })
-  use {
-    'dhruvmanila/telescope-bookmarks.nvim',
-    tag = '*',
-  }
-  use {
-    'debugloop/telescope-undo.nvim',
-    requires = { 'nvim-telescope/telescope.nvim' },
-    config = function()
-      require("telescope").load_extension("undo")
-    end,
-  }
-
-  use 'onsails/lspkind-nvim'
-  use({ 'hrsh7th/nvim-cmp',
-    requires = {
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
-      'ray-x/cmp-treesitter',
-      'hrsh7th/cmp-cmdline',
-      'quangnguyen30192/cmp-nvim-tags',
-      'petertriho/cmp-git',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
-      'rcarriga/cmp-dap',
-      'dcampos/cmp-emmet-vim',
-      'delphinus/cmp-ctags',
-      'hrsh7th/cmp-nvim-lua',
-    },
-  })
-  use({
-    "L3MON4D3/LuaSnip",
-    tag = "v<CurrentMajor>.*",
-  })
-  use { 'saadparwaiz1/cmp_luasnip' }
-  use "rafamadriz/friendly-snippets"
-  use {
-    "molleweide/LuaSnip-snippets.nvim",
-    as = 'luasnip-snippets',
-  }
-  use {
-    'doxnit/cmp-luasnip-choice',
-    config = function()
-      require('cmp_luasnip_choice').setup({
-        auto_open = true,
-      });
-    end,
-  }
-
-  use 'jose-elias-alvarez/null-ls.nvim'
-
+  --
+  --
+  -- Telescope
+  -- Find everything that has ever existed, ever
+  --
+  --
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.0',
     config = function()
@@ -198,23 +154,86 @@ return packer.startup(function(use)
     'nvim-telescope/telescope-fzf-native.nvim',
     run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
+  use {
+    'dhruvmanila/telescope-bookmarks.nvim',
+    tag = '*',
+  }
+  use {
+    'debugloop/telescope-undo.nvim',
+    requires = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      require("telescope").load_extension("undo")
+    end,
+  }
+  use({
+    'mrjones2014/dash.nvim',
+    run = 'make install',
+  })
 
+  --
+  --
+  -- Cmp, Luasnip and Null-ls
+  -- For all my text completion and code-styling needs
+  --
+  --
+  use({ 'hrsh7th/nvim-cmp',
+    requires = {
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'ray-x/cmp-treesitter',
+      'hrsh7th/cmp-cmdline',
+      'quangnguyen30192/cmp-nvim-tags',
+      'petertriho/cmp-git',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
+      'rcarriga/cmp-dap',
+      'dcampos/cmp-emmet-vim',
+      'delphinus/cmp-ctags',
+      'hrsh7th/cmp-nvim-lua',
+    },
+  })
+  use({
+    "L3MON4D3/LuaSnip",
+    tag = "v<CurrentMajor>.*",
+  })
+  use { 'saadparwaiz1/cmp_luasnip' }
+  use "rafamadriz/friendly-snippets"
+  use {
+    "molleweide/LuaSnip-snippets.nvim",
+    as = 'luasnip-snippets',
+  }
+  -- Unclear if I actually need this - it seems to be build into Luasnip itself?
+  use {
+    'doxnit/cmp-luasnip-choice',
+    config = function()
+      require('cmp_luasnip_choice').setup({
+        auto_open = true,
+      });
+    end,
+  }
+  use 'jose-elias-alvarez/null-ls.nvim'
+
+  --
+  --
+  -- Comments
+  -- Code sometimes needs comments, and these plugins make it easier
+  --
+  --
+  use {
+    'kkoomen/vim-doge',
+    run = ':call doge#install()'
+  }
+  use 'tpope/vim-commentary'
+  use 'folke/todo-comments.nvim'
+
+  --
+  --
+  -- Inter and intra file motion
+  -- Move around inside of files, between files, with marks, motions, and file exploration
+  --
+  --
   use 'rgroli/other.nvim'
   use "folke/which-key.nvim"
-
-  use {
-    "folke/trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
-    config = function()
-      require("trouble").setup {
-        height = 20,
-        action_keys = {
-          open_tab = { "<c-t>" },
-        },
-      }
-    end
-  }
-
   use {
     'nvim-tree/nvim-tree.lua',
     requires = {
@@ -222,19 +241,57 @@ return packer.startup(function(use)
     },
     tag = 'nightly' -- optional, updated every week. (see issue #1193)
   }
+  use 'chentoast/marks.nvim'
   use {
-    "ms-jpq/chadtree",
-    branch = "chad",
-    run = "python3 -m chadtree deps"
+    'liuchengxu/vista.vim',
+    cmd = 'Vista'
   }
 
-  use 'ThePrimeagen/refactoring.nvim'
-  use({
-    'weilbith/nvim-code-action-menu',
-    cmd = 'CodeActionMenu',
-  })
+  --
+  --
+  -- Debugger (DAP)
+  -- For when I need to figure out what dumb thing I did
+  --
+  --
+  use {
+    "mfussenegger/nvim-dap",
+    module = { "dap" },
+    requires = {
+      "theHamsta/nvim-dap-virtual-text",
+      "rcarriga/nvim-dap-ui",
+      "mfussenegger/nvim-dap-python",
+      "nvim-telescope/telescope-dap.nvim",
+      "theHamsta/nvim-dap-virtual-text",
+      { "mxsdev/nvim-dap-vscode-js" },
+      {
+        "microsoft/vscode-js-debug",
+        run = "npm install --legacy-peer-deps && npm run compile",
+      },
+    },
+    disable = false,
+  }
 
+  --
+  --
+  -- Surrounds and tags
+  -- Make it easier to work with markup and surrounding things in ({['"``"']})
+  --
+  --
+  use 'kylechui/nvim-surround'
+  use 'windwp/nvim-ts-autotag'
+  use {
+    'andymass/vim-matchup',
+    setup = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end
+  }
+
+  --
+  --
   -- Theming and highlighting
+  -- Making Neovim into a beautiful butterfly
+  --
+  --
   use 'kyazdani42/nvim-web-devicons'
   -- use 'tanvirtin/monokai.nvim'
   -- use 'marko-cerovac/material.nvim'
@@ -257,11 +314,15 @@ return packer.startup(function(use)
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   }
-  use 'kylechui/nvim-surround'
   use 'p00f/nvim-ts-rainbow'
   use 'glepnir/indent-guides.nvim'
 
+  --
+  --
   -- Misc filetype specific things
+  -- Filetype specific-ish plugins for filetype specific-ish tasks
+  --
+  --
   use {
     'vuki656/package-info.nvim',
     config = function()
@@ -279,11 +340,21 @@ return packer.startup(function(use)
     ft = { 'html', 'hbs', 'jsx', 'tsx' }
   }
 
-  -- Database viewer
+  --
+  --
+  -- Databases
+  -- Because DBeaver sucks
+  --
+  --
   use 'tpope/vim-dadbod'
   use 'kristijanhusak/vim-dadbod-ui'
 
-  -- Git and status line
+  --
+  --
+  -- Git
+  -- Git statuses and diffs and PRs, oh my
+  --
+  --
   use {
     'sindrets/diffview.nvim',
     cmd = 'DiffviewOpen',
@@ -302,37 +373,6 @@ return packer.startup(function(use)
       require('gitsigns').setup()
     end
   }
-
-  -- Other addons
-  use {
-    'MunifTanjim/prettier.nvim',
-    config = function()
-      require('prettier').setup({
-        bin = 'prettierd',
-      })
-    end,
-  }
-  use 'chentoast/marks.nvim'
-  use 'tpope/vim-commentary'
-  use 'folke/todo-comments.nvim'
-  use {
-    'CRAG666/code_runner.nvim',
-    cmd = { 'RunCode', 'RunFile' },
-  }
-  use 'vimwiki/vimwiki'
-  -- use 'tpope/vim-dispatch'
-  -- use 'narutoxy/silicon.lua'
-  use {
-    'yoshio15/vim-trello',
-    branch = 'main',
-    cmd = 'VimTrello'
-  }
-  -- use 'jbyuki/instant.nvim'
-  use {
-    'liuchengxu/vista.vim',
-    cmd = 'Vista'
-  }
-
   use {
     'pwntester/octo.nvim',
     requires = {
@@ -346,13 +386,30 @@ return packer.startup(function(use)
     cmd = 'Octo'
   }
 
-  -- " Remote plugin, legacy from vim-compatible plugins
-  -- use 'roxma/nvim-yarp'
-
-  use({
-    'mrjones2014/dash.nvim',
-    run = 'make install',
-  })
+  --
+  --
+  -- Other addons
+  -- Some things cannot be categorized. They are banished to this dungeon at the bottom of my plugins.lua
+  --
+  --
+  use {
+    'MunifTanjim/prettier.nvim',
+    config = function()
+      require('prettier').setup({
+        bin = 'prettierd',
+      })
+    end,
+  }
+  use {
+    'CRAG666/code_runner.nvim',
+    cmd = { 'RunCode', 'RunFile' },
+  }
+  use 'vimwiki/vimwiki'
+  use {
+    'yoshio15/vim-trello',
+    branch = 'main',
+    cmd = 'VimTrello'
+  }
 
   if packer_bootstrap then
     require('packer').sync()

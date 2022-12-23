@@ -67,5 +67,7 @@ wk.register({
     im = { f("lsp_implementations"), "Implementations" },
     de = { f("lsp_definitions"), "Definitions" },
     t = { f("lsp_type_definitions"), "Type definitions" },
+    c = { "<cmd>lua require(\"telescope.builtin\").lsp_workspace_symbols({query=vim.call('expand','<cword>')})<cr>",
+      "Search workspace symbol under cursor (even in comments)" }
   }
 }, { prefix = "<leader>" })

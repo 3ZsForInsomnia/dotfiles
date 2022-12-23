@@ -34,6 +34,7 @@ vim.cmd [[
 set noswapfile
 set notagrelative
 cmap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+inoremap <c-l> <cmd>lua require("luasnip.extras.select_choice")()<cr>
 
 autocmd User TelescopePreviewerLoaded setlocal wrap
 autocmd BufWinEnter,WinEnter term://* setlocal filetype=zsh

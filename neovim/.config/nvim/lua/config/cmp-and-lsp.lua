@@ -30,10 +30,6 @@ local has_words_before = function()
 end
 
 local luasnip = require("luasnip")
-require("luasnip/loaders/from_vscode").lazy_load()
-
-require("luasnip.loaders.from_lua").lazy_load { paths = "~/.config/nvim/lua/snippets/" }
-
 local cmp = require 'cmp'
 
 local t = function(str)
@@ -72,7 +68,7 @@ cmp.setup({
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
+      elseif luasnip.expand_or_locally_jumpable() then
         luasnip.expand_or_jump()
       elseif has_words_before() then
         cmp.complete()

@@ -16,8 +16,8 @@ function fupc() {
 }
 
 alias po="pomojs --log ~/.pomo.log --tmux"
-alias pol='pomo -w 30 -b 5'
-alias pos='pomo -d 15'
+alias pol='po -w 30 -b 5'
+alias pos='po -d 15'
 
 alias 8ball='~/8ball.sh'
 alias oreg='o https://regex101.com'
