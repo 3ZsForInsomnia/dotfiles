@@ -10,8 +10,8 @@ wk.register({
     name = 'Telescope Find',
     f = { f("find_files hidden=true"), "Files" },
     fr = { f("frecency"), "Frecency" },
-    gl = { f("live_grep"), "Live Search" },
-    gs = { f("grep_string"), "String" },
+    sl = { f("live_grep"), "Live Search" },
+    ss = { f("grep_string"), "String" },
     h = { f("search_history"), "Search History" },
     r = { f("resume"), "Resume previous search" },
   },
@@ -68,6 +68,6 @@ wk.register({
     de = { f("lsp_definitions"), "Definitions" },
     t = { f("lsp_type_definitions"), "Type definitions" },
     c = { "<cmd>lua require(\"telescope.builtin\").lsp_workspace_symbols({query=vim.call('expand','<cword>')})<cr>",
-      "Search workspace symbol under cursor (even in comments)" }
+      "Search workspace symbol under cursor (even in comments)" },
   }
 }, { prefix = "<leader>" })

@@ -12,13 +12,27 @@ ls.config.setup({
   ext_opts = {
     [types.choiceNode] = {
       active = {
-        virt_text = { { "●", "GruvboxOrange" } }
-      }
+        virt_text = { { "●", "MoonflyOrange" } },
+        hl_group = 'MoonflyRed'
+      },
+      visited = {
+        hl_group = "MoonflyBlue"
+      },
+      unvisited = {
+        hl_group = "MoonflyGreen"
+      },
     },
     [types.insertNode] = {
       active = {
-        virt_text = { { "●", "GruvboxBlue" } }
-      }
-    }
+        virt_text = { { "●", "MoonflyBlue" } },
+        hl_group = 'MoonflyRed'
+      },
+      visited = {
+        hl_group = "MoonflyBlue"
+      },
+      unvisited = {
+        hl_group = "MoonflyGreen"
+      },
+    },
   },
 })

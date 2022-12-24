@@ -31,3 +31,4 @@ test/!
 lua/!
 syntax/!
 syntax
+docstring
