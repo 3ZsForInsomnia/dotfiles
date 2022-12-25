@@ -32,5 +32,5 @@ augroup SyntaxSettings
 augroup END
 
 " -- Highlight on yank
-au TextYankPost * silent! lua vim.highlight.on_yank()
+au TextYankPost * silent! lua vim.highlight.on_yank({timeout=333})
 ]]

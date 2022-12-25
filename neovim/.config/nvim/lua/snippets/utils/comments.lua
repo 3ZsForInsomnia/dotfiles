@@ -25,7 +25,7 @@ local strings = require('snippets.utils.strings')
 local M = {}
 
 M.docstringParams = function(str)
-  local params = strings.splitString(str[1][1])
+  local params = vim.split(str[1][1], ', ', {})
   if #params == 0 then
     return sn(nil, { t('') })
   end

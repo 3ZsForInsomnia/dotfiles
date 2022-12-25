@@ -216,6 +216,24 @@ local on_attach = function(_, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
+  local wk = require("which-key")
+
+  wk.register({
+    gD = "Go to declaration",
+    gd = "Go to definition",
+    K = "Hover for context",
+    gi = "Go to implementation",
+    ['<c-k'] = "Show signature",
+    ['<space>wa'] = "Workspace add folder",
+    ['<space>wr'] = "Workspace remove folder",
+    ['<space>wl'] = "Workspace list folders",
+    D = "Go to type definition",
+    rn = "Rename tag under cursor",
+    ca = "Perform code action",
+    gr = "View references",
+    ['<space>fo'] = "LSP format",
+  })
+
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
