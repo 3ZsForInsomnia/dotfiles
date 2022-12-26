@@ -1,5 +1,26 @@
 require 'nvim-treesitter.configs'.setup {
-  ensure_installed = "javascript", -- one of "all", "language", or a list of languages
+  ensure_installed = {
+    "javascript",
+    "lua",
+    "awk",
+    "bash",
+    "gitignore",
+    "graphql",
+    "java",
+    "jq",
+    "jsdoc",
+    "json",
+    "html",
+    "markdown",
+    "python",
+    "scss",
+    "css",
+    "regex",
+    "tsx",
+    "typescript",
+    "vim",
+    "yaml",
+  },
   sync_install = true,
   auto_install = true,
   highlight = {

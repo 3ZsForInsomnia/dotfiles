@@ -1,5 +1,3 @@
--- vim.cmd [[packadd packer.nvim]]
-
 -- let Packer ensure it is installed on load
 local ensure_packer = function()
   local fn = vim.fn
@@ -17,7 +15,10 @@ local packer = require('packer')
 
 -- Prevents Packer hanging and failing to update when there are too many plugins
 packer.init {
-  max_jobs = 50
+  max_jobs = 50,
+  git = {
+    clone_timeout = 300
+  }
 }
 
 return packer.startup(function(use)
@@ -39,16 +40,13 @@ return packer.startup(function(use)
   -- For all things LSP related that is not (explicitly) part of the Treesitter ecosystem
   --
   --
-  use { "williamboman/mason.nvim" }
+  use "williamboman/mason.nvim"
   use 'williamboman/mason-lspconfig.nvim'
   use 'neovim/nvim-lspconfig'
   use 'nvim-lua/lsp-status.nvim'
   use 'onsails/lspkind-nvim'
   use { 'mfussenegger/nvim-jdtls', ft = { "java" } }
-  use({
-    'weilbith/nvim-code-action-menu',
-    cmd = 'CodeActionMenu',
-  })
+  use 'weilbith/nvim-code-action-menu'
   use 'ThePrimeagen/refactoring.nvim'
   use {
     "folke/trouble.nvim",
@@ -132,10 +130,7 @@ return packer.startup(function(use)
       require "telescope-tabs".setup()
     end
   }
-  use {
-    "benfowler/telescope-luasnip.nvim",
-    module = "telescope._extensions.luasnip", -- if you wish to lazy-load
-  }
+  use "benfowler/telescope-luasnip.nvim"
   use {
     "barrett-ruth/telescope-http.nvim",
     config = function()
@@ -196,12 +191,8 @@ return packer.startup(function(use)
     "L3MON4D3/LuaSnip",
     tag = "v<CurrentMajor>.*",
   })
-  use { 'saadparwaiz1/cmp_luasnip' }
+  use 'saadparwaiz1/cmp_luasnip'
   use "rafamadriz/friendly-snippets"
-  use {
-    "molleweide/LuaSnip-snippets.nvim",
-    as = 'luasnip-snippets',
-  }
   -- Unclear if I actually need this - it seems to be build into Luasnip itself?
   use {
     'doxnit/cmp-luasnip-choice',
@@ -242,10 +233,7 @@ return packer.startup(function(use)
     tag = 'nightly' -- optional, updated every week. (see issue #1193)
   }
   use 'chentoast/marks.nvim'
-  use {
-    'liuchengxu/vista.vim',
-    cmd = 'Vista'
-  }
+  use 'liuchengxu/vista.vim'
 
   --
   --
@@ -268,7 +256,6 @@ return packer.startup(function(use)
         run = "npm install --legacy-peer-deps && npm run compile",
       },
     },
-    disable = false,
   }
 
   --
@@ -293,12 +280,6 @@ return packer.startup(function(use)
   --
   --
   use 'kyazdani42/nvim-web-devicons'
-  -- use 'tanvirtin/monokai.nvim'
-  -- use 'marko-cerovac/material.nvim'
-  -- use 'nxvu699134/vn-night.nvim'
-  -- use 'bluz71/vim-nightfly-guicolors'
-  -- use 'rafi/awesome-vim-colorschemes'
-  -- use 'rebelot/kanagawa.nvim'
   use 'bluz71/vim-moonfly-colors'
   use {
     'brenoprata10/nvim-highlight-colors',
@@ -312,7 +293,7 @@ return packer.startup(function(use)
   }
   use {
     'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    requires = { 'kyazdani42/nvim-web-devicons' }
   }
   use 'p00f/nvim-ts-rainbow'
   use 'glepnir/indent-guides.nvim'
@@ -328,17 +309,12 @@ return packer.startup(function(use)
     config = function()
       require('package-info').setup()
     end,
-    ft = { 'json' },
   }
   use { "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",
     setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
-    ft = { "markdown", 'md' },
   }
-  use {
-    'mattn/emmet-vim',
-    ft = { 'html', 'hbs', 'jsx', 'tsx' }
-  }
+  use 'mattn/emmet-vim'
 
   --
   --
@@ -355,17 +331,8 @@ return packer.startup(function(use)
   -- Git statuses and diffs and PRs, oh my
   --
   --
-  use {
-    'sindrets/diffview.nvim',
-    cmd = 'DiffviewOpen',
-    config = function()
-      require('config.diffview')
-    end
-  }
-  use {
-    'ruanyl/vim-gh-line',
-    keys = '<leader>gh'
-  }
+  use 'sindrets/diffview.nvim'
+  use 'ruanyl/vim-gh-line'
   use 'APZelos/blamer.nvim'
   use {
     'lewis6991/gitsigns.nvim',
@@ -383,7 +350,6 @@ return packer.startup(function(use)
     config = function()
       require "octo".setup()
     end,
-    cmd = 'Octo'
   }
 
   --
@@ -404,7 +370,6 @@ return packer.startup(function(use)
     'CRAG666/code_runner.nvim',
     cmd = { 'RunCode', 'RunFile' },
   }
-  use 'vimwiki/vimwiki'
   use {
     'yoshio15/vim-trello',
     branch = 'main',

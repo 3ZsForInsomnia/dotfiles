@@ -16,11 +16,11 @@ matches:
         type: date
         params:
           format: "%m/%d/%Y"
-  - trigger: "e1"
+  - trigger: ":e1"
     replace: "comrade.topanga@gmail.com"
-  - trigger: "e2"
+  - trigger: ":e2"
     replace: "zachary.levine89@gmail.com"
-  - trigger: "e3"
+  - trigger: ":e3"
     replace: "zach.levine@addepar.com"
   - trigger: "bw"
     replace: "between"
