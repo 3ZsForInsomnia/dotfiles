@@ -24,11 +24,70 @@ local strings = require("snippets.utils.strings")
 
 return {
   s({
-    trig = 'lreq',
+    trig = 'lr',
     name = 'local x = require("z.y.x")',
     dsrc = 'Create local var for last item in require path',
-  },
-  {
+  }, {
     t('local '), f(strings.getStringPart, 1), t(' = require("'), i(1, 'module'), t('")'),
+  }),
+  s({
+    trig = "lrp",
+    name = "local x = require('module').x",
+    dscr = "Create a local variable for a property of a module",
+  }, {
+    t('local '),
+    rep(2),
+    t(' = require("'),
+    i(1, 'module'),
+    t('").'),
+    i(2, 'prop'),
+  }),
+  s({
+    trig = "i(%d)",
+    name = "i(#, ''),",
+    dscr = "Create insertNode with Jump",
+    regTrig = true,
+  }, {
+    t('i('),
+    f(function(_, snip) return snip.captures[1] end, {}),
+    t(', "'),
+    i(0, 'placeholder'),
+    t('"),'),
+  }),
+  s({
+    trig = "tit",
+    name = "TextNode InsertNode TextNode",
+    dscr = "Handles common case of an InsertNode surrounded by TextNodes",
+  }, {
+    t('t("'),
+    i(1, "textNode1"),
+    t({ '"),', 'i(' }),
+    i(2, "insert jump node"),
+    t(', "'),
+    i(3, 'placeholder'),
+    t({ '"),', 't("' }),
+    i(4, "textNode2"),
+    t('"),')
+  }),
+  s({
+    trig = 'snip',
+    name = 'New snippet',
+  }, {
+    t({ 's({', '\ttrig = "' }),
+    i(1, 'trigger'),
+    t({ '",', '\tname = "' }),
+    i(2, 'Name'),
+    t({ '",', '\tdscr = "' }),
+    i(3, 'Description'),
+    t({ '",', '}, {', '\t' }),
+    i(0, 'Snippet goes here'),
+    t({ '', '}),' })
+  }),
+  s({
+    trig = "a11",
+    name = "args[1][1]",
+    dscr = "Description",
+  }, {
+    t('args[1][1]')
   }),
 }

@@ -24,6 +24,14 @@ local strings = require('snippets.utils.strings')
 
 local M = {}
 
+M.blockComment = sn(nil, {
+  t({ '/**', ' * ' }),
+  i(3, 'Summary'),
+  t({ '', '' }),
+  d(4, M.docstringParams, { 2 }),
+  t({ ' **/', '' }),
+})
+
 M.docstringParams = function(str)
   local params = vim.split(str[1][1], ', ', {})
   if #params == 0 then

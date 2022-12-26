@@ -35,6 +35,8 @@ vim.api.nvim_set_keymap("i", "<C-j>", "<Plug>luasnip-next-choice", {})
 vim.api.nvim_set_keymap("s", "<C-j>", "<Plug>luasnip-next-choice", {})
 vim.api.nvim_set_keymap("i", "<C-k>", "<Plug>luasnip-prev-choice", {})
 vim.api.nvim_set_keymap("s", "<C-k>", "<Plug>luasnip-prev-choice", {})
+vim.api.nvim_set_keymap("s", "<C-e>", "<Plug>luasnip-expand-snippet", {})
+vim.api.nvim_set_keymap("i", "<C-e>", "<Plug>luasnip-expand-snippet", {})
 
 vim.cmd [[
 set noswapfile
