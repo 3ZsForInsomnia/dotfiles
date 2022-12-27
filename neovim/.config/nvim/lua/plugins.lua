@@ -104,15 +104,7 @@ return packer.startup(function(use)
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.0',
     config = function()
-      require('telescope').setup({
-        defaults = {
-          layout_config = {
-            width = 0.95,
-            height = 0.95,
-            preview_width = 0.5
-          }
-        }
-      })
+      require('telescope').setup()
     end,
     requires = { { 'nvim-lua/plenary.nvim' } }
   }

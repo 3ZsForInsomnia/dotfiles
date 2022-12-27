@@ -10,6 +10,11 @@ telescope.setup {
       i = { ["<c-s>"] = trouble.open_with_trouble },
       n = { ["<c-s>"] = trouble.open_with_trouble },
     },
+    layout_config = {
+      width = 0.95,
+      height = 0.95,
+      preview_width = 0.5
+    }
   },
   extensions = {
     fzf = {
