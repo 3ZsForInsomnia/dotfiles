@@ -25,14 +25,13 @@ wk.register({
     l = { f("loclist"), "Location list" },
   },
   fb = {
-    name = "Telescope buffers/tags/marks/sessions",
+    name = "Telescope buffers/tags/marks",
     w = { f("telescope-tabs list-tabs"), "Tabs" },
     m = { f("marks"), "Marks" },
     b = { f("buffers"), "Buffers" },
-    re = { f("registers"), "Registers" },
+    r = { f("registers"), "Registers" },
     t = { f("tags"), "Tags" },
     tb = { f("current_buffer_tags"), "Tags in buffer" },
-    s = { f("xray23 list"), "Vim Sessions" },
   },
   fg = {
     name = "Telescope Git",
@@ -69,5 +68,14 @@ wk.register({
     t = { f("lsp_type_definitions"), "Type definitions" },
     c = { "<cmd>lua require(\"telescope.builtin\").lsp_workspace_symbols({query=vim.call('expand','<cword>')})<cr>",
       "Search workspace symbol under cursor (even in comments)" },
+  },
+  fm = {
+    name = "Telescope Misc",
+    sn = { f("scriptnames"), "See all scripts sourced in config" },
+    s = { f("xray23 list"), "Vim Sessions" },
+    h = { f("heading"), "Document headings" },
+    p = { f("packer"), "Packer information/actions" },
+    f = { f("file_browser"), "Find files" },
+    fo = { f("folder_browser"), "Find folders" },
   }
 }, { prefix = "<leader>" })

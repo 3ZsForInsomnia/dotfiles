@@ -35,23 +35,31 @@ local createStatusRight = function(window, pane)
   local cells = {}
 
   local cwd, hostname = getProjectPath(pane)
-  table.insert(cells, cwd)
+  table.insert(cells, ' ' .. cwd)
   table.insert(cells, hostname)
   table.insert(cells, pane:get_domain_name())
-
   local mode, n = string.gsub(pane:get_title(), "(.+) mode: .*", "%1", 1)
   if mode == nil or n == 0 then
     mode = 'Normal'
   end
   table.insert(cells, "Mode: " .. (window:active_key_table() or mode))
 
+  local mem = utils.getMemoryUsage()
+  table.insert(cells, mem)
+  local cpu = utils.getCpuUsage()
+  table.insert(cells, cpu)
+
   -- Color palette for the backgrounds of each cell
   local colors = {
-    '#3c1361',
-    '#52307c',
-    '#663a82',
-    '#7c5295',
-    '#b491c8',
+    "#330723",
+    "#3F0936",
+    "#480C4B",
+    "#440F56",
+    "#3c1361",
+    "#514182",
+    "#6F71A3",
+    "#9EA9C2",
+    "#CED9E1",
   }
 
   -- Foreground color for the text across the fade

@@ -125,6 +125,11 @@ _G.packer_plugins = {
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp",
     url = "https://github.com/hrsh7th/cmp-nvim-lsp"
   },
+  ["cmp-nvim-lsp-document-symbol"] = {
+    loaded = true,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp-document-symbol",
+    url = "https://github.com/hrsh7th/cmp-nvim-lsp-document-symbol"
+  },
   ["cmp-nvim-lsp-signature-help"] = {
     loaded = true,
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp-signature-help",
@@ -294,7 +299,7 @@ _G.packer_plugins = {
     url = "https://github.com/mxsdev/nvim-dap-vscode-js"
   },
   ["nvim-highlight-colors"] = {
-    config = { "\27LJ\2\n‚\1\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\3\vrender\15background\20enable_tailwind\2\24enable_named_colors\2\nsetup\26nvim-highlight-colors\frequire\0" },
+    config = { "\27LJ\2\n‚\1\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\3\24enable_named_colors\2\20enable_tailwind\2\vrender\15background\nsetup\26nvim-highlight-colors\frequire\0" },
     loaded = true,
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/nvim-highlight-colors",
     url = "https://github.com/brenoprata10/nvim-highlight-colors"
@@ -431,6 +436,11 @@ _G.packer_plugins = {
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/telescope-dap.nvim",
     url = "https://github.com/nvim-telescope/telescope-dap.nvim"
   },
+  ["telescope-file-browser.nvim"] = {
+    loaded = true,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/telescope-file-browser.nvim",
+    url = "https://github.com/nvim-telescope/telescope-file-browser.nvim"
+  },
   ["telescope-frecency.nvim"] = {
     config = { "\27LJ\2\nM\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\rfrecency\19load_extension\14telescope\frequire\0" },
     loaded = true,
@@ -442,6 +452,11 @@ _G.packer_plugins = {
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/telescope-fzf-native.nvim",
     url = "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
   },
+  ["telescope-heading.nvim"] = {
+    loaded = true,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/telescope-heading.nvim",
+    url = "https://github.com/crispgm/telescope-heading.nvim"
+  },
   ["telescope-http.nvim"] = {
     config = { "\27LJ\2\nI\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\thttp\19load_extension\14telescope\frequire\0" },
     loaded = true,
@@ -452,6 +467,16 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/telescope-luasnip.nvim",
     url = "https://github.com/benfowler/telescope-luasnip.nvim"
+  },
+  ["telescope-packer.nvim"] = {
+    loaded = true,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/telescope-packer.nvim",
+    url = "https://github.com/nvim-telescope/telescope-packer.nvim"
+  },
+  ["telescope-scriptnames.nvim"] = {
+    loaded = true,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/telescope-scriptnames.nvim",
+    url = "https://github.com/LinArcX/telescope-scriptnames.nvim"
   },
   ["telescope-session.nvim"] = {
     loaded = true,
@@ -471,7 +496,7 @@ _G.packer_plugins = {
     url = "https://github.com/debugloop/telescope-undo.nvim"
   },
   ["telescope.nvim"] = {
-    config = { "\27LJ\2\n£\1\0\0\5\0\b\0\v6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\4\0005\4\3\0=\4\5\3=\3\a\2B\0\2\1K\0\1\0\rdefaults\1\0\0\18layout_config\1\0\0\1\0\3\vheight\4æÌ™³\6æÌ¹ÿ\3\18preview_width\4\0€€€ÿ\3\nwidth\4æÌ™³\6æÌ¹ÿ\3\nsetup\14telescope\frequire\0" },
+    config = { "\27LJ\2\n7\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14telescope\frequire\0" },
     loaded = true,
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
@@ -496,6 +521,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/vim-dadbod",
     url = "https://github.com/tpope/vim-dadbod"
+  },
+  ["vim-dadbod-completion"] = {
+    loaded = true,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/vim-dadbod-completion",
+    url = "https://github.com/kristijanhusak/vim-dadbod-completion"
   },
   ["vim-dadbod-ui"] = {
     loaded = true,
@@ -592,6 +622,14 @@ time([[Setup for markdown-preview.nvim]], false)
 time([[packadd for markdown-preview.nvim]], true)
 vim.cmd [[packadd markdown-preview.nvim]]
 time([[packadd for markdown-preview.nvim]], false)
+-- Config for: trouble.nvim
+time([[Config for trouble.nvim]], true)
+try_loadstring("\27LJ\2\nw\0\0\5\0\b\0\v6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\5\0005\4\4\0=\4\6\3=\3\a\2B\0\2\1K\0\1\0\16action_keys\ropen_tab\1\0\0\1\2\0\0\n<c-t>\1\0\1\vheight\3\20\nsetup\ftrouble\frequire\0", "config", "trouble.nvim")
+time([[Config for trouble.nvim]], false)
+-- Config for: prettier.nvim
+time([[Config for prettier.nvim]], true)
+try_loadstring("\27LJ\2\nK\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\bbin\14prettierd\nsetup\rprettier\frequire\0", "config", "prettier.nvim")
+time([[Config for prettier.nvim]], false)
 -- Config for: telescope-http.nvim
 time([[Config for telescope-http.nvim]], true)
 try_loadstring("\27LJ\2\nI\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\thttp\19load_extension\14telescope\frequire\0", "config", "telescope-http.nvim")
@@ -604,54 +642,46 @@ time([[Config for hlargs.nvim]], false)
 time([[Config for tailiscope.nvim]], true)
 try_loadstring("\27LJ\2\nO\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\15tailiscope\19load_extension\14telescope\frequire\0", "config", "tailiscope.nvim")
 time([[Config for tailiscope.nvim]], false)
--- Config for: gitsigns.nvim
-time([[Config for gitsigns.nvim]], true)
-try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
-time([[Config for gitsigns.nvim]], false)
 -- Config for: package-info.nvim
 time([[Config for package-info.nvim]], true)
 try_loadstring("\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17package-info\frequire\0", "config", "package-info.nvim")
 time([[Config for package-info.nvim]], false)
--- Config for: telescope-frecency.nvim
-time([[Config for telescope-frecency.nvim]], true)
-try_loadstring("\27LJ\2\nM\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\rfrecency\19load_extension\14telescope\frequire\0", "config", "telescope-frecency.nvim")
-time([[Config for telescope-frecency.nvim]], false)
--- Config for: telescope-tabs
-time([[Config for telescope-tabs]], true)
-try_loadstring("\27LJ\2\n<\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\19telescope-tabs\frequire\0", "config", "telescope-tabs")
-time([[Config for telescope-tabs]], false)
--- Config for: trouble.nvim
-time([[Config for trouble.nvim]], true)
-try_loadstring("\27LJ\2\nw\0\0\5\0\b\0\v6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\5\0005\4\4\0=\4\6\3=\3\a\2B\0\2\1K\0\1\0\16action_keys\ropen_tab\1\0\0\1\2\0\0\n<c-t>\1\0\1\vheight\3\20\nsetup\ftrouble\frequire\0", "config", "trouble.nvim")
-time([[Config for trouble.nvim]], false)
--- Config for: cmp-luasnip-choice
-time([[Config for cmp-luasnip-choice]], true)
-try_loadstring("\27LJ\2\nR\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\14auto_open\2\nsetup\23cmp_luasnip_choice\frequire\0", "config", "cmp-luasnip-choice")
-time([[Config for cmp-luasnip-choice]], false)
--- Config for: prettier.nvim
-time([[Config for prettier.nvim]], true)
-try_loadstring("\27LJ\2\nK\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\bbin\14prettierd\nsetup\rprettier\frequire\0", "config", "prettier.nvim")
-time([[Config for prettier.nvim]], false)
--- Config for: nvim-highlight-colors
-time([[Config for nvim-highlight-colors]], true)
-try_loadstring("\27LJ\2\n‚\1\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\3\vrender\15background\20enable_tailwind\2\24enable_named_colors\2\nsetup\26nvim-highlight-colors\frequire\0", "config", "nvim-highlight-colors")
-time([[Config for nvim-highlight-colors]], false)
--- Config for: octo.nvim
-time([[Config for octo.nvim]], true)
-try_loadstring("\27LJ\2\n2\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\tocto\frequire\0", "config", "octo.nvim")
-time([[Config for octo.nvim]], false)
--- Config for: telescope.nvim
-time([[Config for telescope.nvim]], true)
-try_loadstring("\27LJ\2\n£\1\0\0\5\0\b\0\v6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\4\0005\4\3\0=\4\5\3=\3\a\2B\0\2\1K\0\1\0\rdefaults\1\0\0\18layout_config\1\0\0\1\0\3\vheight\4æÌ™³\6æÌ¹ÿ\3\18preview_width\4\0€€€ÿ\3\nwidth\4æÌ™³\6æÌ¹ÿ\3\nsetup\14telescope\frequire\0", "config", "telescope.nvim")
-time([[Config for telescope.nvim]], false)
+-- Config for: gitsigns.nvim
+time([[Config for gitsigns.nvim]], true)
+try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+time([[Config for gitsigns.nvim]], false)
 -- Config for: telescope-undo.nvim
 time([[Config for telescope-undo.nvim]], true)
 try_loadstring("\27LJ\2\nI\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\tundo\19load_extension\14telescope\frequire\0", "config", "telescope-undo.nvim")
 time([[Config for telescope-undo.nvim]], false)
+-- Config for: telescope-frecency.nvim
+time([[Config for telescope-frecency.nvim]], true)
+try_loadstring("\27LJ\2\nM\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\rfrecency\19load_extension\14telescope\frequire\0", "config", "telescope-frecency.nvim")
+time([[Config for telescope-frecency.nvim]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+try_loadstring("\27LJ\2\n7\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14telescope\frequire\0", "config", "telescope.nvim")
+time([[Config for telescope.nvim]], false)
 -- Config for: nvim-regexplainer
 time([[Config for nvim-regexplainer]], true)
 try_loadstring("\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17regexplainer\frequire\0", "config", "nvim-regexplainer")
 time([[Config for nvim-regexplainer]], false)
+-- Config for: nvim-highlight-colors
+time([[Config for nvim-highlight-colors]], true)
+try_loadstring("\27LJ\2\n‚\1\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\3\24enable_named_colors\2\20enable_tailwind\2\vrender\15background\nsetup\26nvim-highlight-colors\frequire\0", "config", "nvim-highlight-colors")
+time([[Config for nvim-highlight-colors]], false)
+-- Config for: cmp-luasnip-choice
+time([[Config for cmp-luasnip-choice]], true)
+try_loadstring("\27LJ\2\nR\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\14auto_open\2\nsetup\23cmp_luasnip_choice\frequire\0", "config", "cmp-luasnip-choice")
+time([[Config for cmp-luasnip-choice]], false)
+-- Config for: octo.nvim
+time([[Config for octo.nvim]], true)
+try_loadstring("\27LJ\2\n2\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\tocto\frequire\0", "config", "octo.nvim")
+time([[Config for octo.nvim]], false)
+-- Config for: telescope-tabs
+time([[Config for telescope-tabs]], true)
+try_loadstring("\27LJ\2\n<\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\19telescope-tabs\frequire\0", "config", "telescope-tabs")
+time([[Config for telescope-tabs]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)

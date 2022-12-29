@@ -12,6 +12,7 @@ wk.register({
     b = { "<cmd>BookmarksListAll<cr>", "View all bookmarks", },
     ba = { ":BookmarksList ", "View bookmarks in group", },
     g = { "<cmd>DogeGenerate<cr>", "Generate docstring for whatever is under cursor" },
+    f = { "<cmd>Twilight<cr>", "Dim unused code (twilight)", },
   },
 }, { prefix = "<leader>" })
 

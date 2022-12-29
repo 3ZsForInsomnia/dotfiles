@@ -152,6 +152,10 @@ return packer.startup(function(use)
       require("telescope").load_extension("undo")
     end,
   }
+  use "LinArcX/telescope-scriptnames.nvim"
+  use 'crispgm/telescope-heading.nvim'
+  use "nvim-telescope/telescope-file-browser.nvim"
+  use "nvim-telescope/telescope-packer.nvim"
   use({
     'mrjones2014/dash.nvim',
     run = 'make install',
@@ -165,18 +169,20 @@ return packer.startup(function(use)
   --
   use({ 'hrsh7th/nvim-cmp',
     requires = {
-      'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      'ray-x/cmp-treesitter',
       'hrsh7th/cmp-cmdline',
+      'hrsh7th/cmp-nvim-lua',
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
+      'hrsh7th/cmp-nvim-lsp-document-symbol',
+      'kristijanhusak/vim-dadbod-completion',
+      'ray-x/cmp-treesitter',
       'quangnguyen30192/cmp-nvim-tags',
       'petertriho/cmp-git',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
       'rcarriga/cmp-dap',
       'dcampos/cmp-emmet-vim',
       'delphinus/cmp-ctags',
-      'hrsh7th/cmp-nvim-lua',
     },
   })
   use({
@@ -289,6 +295,12 @@ return packer.startup(function(use)
   }
   use 'p00f/nvim-ts-rainbow'
   use 'glepnir/indent-guides.nvim'
+  use {
+    "folke/twilight.nvim",
+    config = function()
+      require("twilight").setup {}
+    end
+  }
 
   --
   --

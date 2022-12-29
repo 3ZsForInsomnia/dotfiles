@@ -172,9 +172,13 @@ require('cmp_git').setup({})
 
 cmp.setup.cmdline({ '/', '?' }, {
   mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
+  sources = cmp.config.sources({
+    {
+      { name = 'nvim_lsp_document_symbol' }
+    }, {
+      { name = 'buffer' }
+    }
+  })
 })
 
 cmp.setup.cmdline(':', {
@@ -263,3 +267,7 @@ for _, server in ipairs(lspServers) do
     capabilities = capabilities
   }
 end
+
+vim.cmd [[
+autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })
+]]

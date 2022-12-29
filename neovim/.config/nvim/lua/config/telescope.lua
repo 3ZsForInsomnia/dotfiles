@@ -39,6 +39,9 @@ telescope.setup {
   xray23 = {
     sessionDir = "~/vim-sessions",
   },
+  heading = {
+    treesitter = true,
+  },
 }
 
 telescope.load_extension('fzf')
@@ -47,3 +50,6 @@ telescope.load_extension('changes')
 telescope.load_extension("xray23")
 telescope.load_extension("dash")
 telescope.load_extension('luasnip')
+telescope.load_extension('scriptnames')
+telescope.load_extension('heading')
+telescope.load_extension("packer")
