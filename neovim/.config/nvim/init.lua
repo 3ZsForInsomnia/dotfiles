@@ -10,6 +10,7 @@ o.backup = true
 o.backupdir = '/Users/zachary.levine/.local/state/nvim/backup//'
 o.undofile = true
 o.mouse = ''
+o.grepprg='rg --vimgrep --no-heading'
 g.loaded_netrw = 1
 g.loaded_netrwPlugin = 1
 -- Enables reading vimrc in folder where vim is opened

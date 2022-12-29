@@ -2,11 +2,9 @@ local wk = require("which-key")
 wk.register({
   t = {
     name = "Tabs",
-    t = { "<cmd>CHADopen<cr>", "ChadTree Open" },
     n = { "<cmd>tabnew<cr>", "Open a new tab" },
     nt = { "<cmd>tabnew<cr><cmd>terminal<cr>", "Open a terminal in a new tab" },
-    no = { function() print(":tabe " .. vim.fn.expand("%:p:h")) end, "Open file in dir of current buffer" },
-    c = { "<cmd>tabnew<cr><cmd>CHADopen<cr><C-h>Jc", "Open ChadTree at current file" },
+    no = { function() vim.api.nvim_command(":tabe " .. vim.fn.expand("%:p:h")) end, "Open file in dir of current buffer" },
     h = { "<cmd>split<cr>", "Horizontal split" },
     v = { "<cmd>vsplit<cr>", "Vertical split" },
   },
@@ -26,6 +24,7 @@ wk.register({
     l = { "<cmd>cexpr []<cr>", "Clear" },
     d = { "<cmd>colder<cr>", "Go to older list" },
     u = { "<cmd>cnewer<cr>", "Go to newer list" },
+    s = { ":vimgrep //%<left><left>", "Search and add results to qflist" },
   },
   l = {
     name = "LocList",
@@ -36,6 +35,7 @@ wk.register({
     l = { "<cmd>lexpr []<cr>", "Clear" },
     d = { "<cmd>lolder<cr>", "Go to older list" },
     u = { "<cmd>lnewer<cr>", "Go to newer list" },
+    s = { ":lvimgrep //%<left><left>", "Search and add results to loclist" },
   },
 }, { prefix = "<leader>" })
 

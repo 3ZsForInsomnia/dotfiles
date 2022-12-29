@@ -5,12 +5,12 @@ local f = function(command)
 end
 
 wk.register({
-  l = {
+  t = {
     name = "View diagnostics",
-    ['l'] = { f(""), "Toggle Diagnostics list" },
-    ["w"] = { f("workspace_diagnostics"), "Show Workspace Diagnostics" },
-    ['d'] = { f("document_diagnostics"), "Show Document Diagnostics" },
-    ['q'] = { f("quickfix"), "Show diagnostics in Quickfix" },
-    ['o'] = { f("loclist"), "Show diagnostics in loclist" },
+    l = { f(""), "Toggle Diagnostics list" },
+    w = { f("workspace_diagnostics"), "Show Workspace Diagnostics" },
+    d = { f("document_diagnostics"), "Show Document Diagnostics" },
+    q = { f("quickfix"), "Show diagnostics in Quickfix" },
+    o = { f("loclist"), "Show diagnostics in loclist" },
   },
 }, { prefix = "<leader>" })
