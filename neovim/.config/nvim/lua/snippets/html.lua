@@ -122,6 +122,7 @@ return {
     trig = "ol",
     name = "Ordered List",
     dscr = "Ordered list that autocreates new li tags with correct indentation and ordering levels",
+    priority = 500,
   }, {
     t({ '<ol type="1">', '\t<li>' }),
     i(1, "list item"),

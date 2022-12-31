@@ -25,6 +25,7 @@ wk.register({
     d = { "<cmd>colder<cr>", "Go to older list" },
     u = { "<cmd>cnewer<cr>", "Go to newer list" },
     s = { ":vimgrep //%<left><left>", "Search and add results to qflist" },
+    qt = { "<cmd>TodoQuickFix<cr>", "Add all todos in project to qflist" },
   },
   l = {
     name = "LocList",
@@ -36,6 +37,7 @@ wk.register({
     d = { "<cmd>lolder<cr>", "Go to older list" },
     u = { "<cmd>lnewer<cr>", "Go to newer list" },
     s = { ":lvimgrep //%<left><left>", "Search and add results to loclist" },
+    lt = { "<cmd>TodoLocList<cr>", "Add all todos in file to loclist" },
   },
 }, { prefix = "<leader>" })
 
@@ -47,7 +49,7 @@ wk.register({
   gt = { "<cmd>bn<cr>", "Go to next buffer" },
   gT = { "<cmd>bp<cr>", "Go to previous buffer" },
   gk = { "<cmd>bd<cr>", "Kill buffer" },
-  gv= { "<cmd>buffers<cr>", "View open buffers" },
+  gv = { "<cmd>buffers<cr>", "View open buffers" },
   g1 = { f(1), "Jump to Buffer 1" },
   g2 = { f(2), "Jump to Buffer 2" },
   g3 = { f(3), "Jump to Buffer 3" },
