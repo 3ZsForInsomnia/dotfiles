@@ -213,7 +213,12 @@ return packer.startup(function(use)
     run = ':call doge#install()'
   }
   use 'tpope/vim-commentary'
-  use 'folke/todo-comments.nvim'
+  use {
+    'folke/todo-comments.nvim',
+    config = function()
+      require("todo-comments").setup()
+    end
+  }
 
   --
   --
