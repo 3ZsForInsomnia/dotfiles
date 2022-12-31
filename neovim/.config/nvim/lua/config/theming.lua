@@ -16,7 +16,7 @@ o.showbreak = '↳ '
 o.showmode = true
 o.foldmethod = 'expr'
 o.foldexpr = 'nvim_treesitter#foldexpr()'
-o.foldlevelstart = 3
+o.foldlevelstart = 6
 o.completeopt = 'menu,noinsert,menuone,noselect,preview'
 o.shortmess:append('c')
 
