@@ -1,4 +1,8 @@
 require("hlargs").setup {
+  paint_catch_blocks = {
+    declarations = true,
+    usages = true,
+  },
   color = "#ef9062",
   use_colorpalette = false,
   colorpalette = {

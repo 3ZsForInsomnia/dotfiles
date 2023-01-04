@@ -6,12 +6,6 @@ require("trouble").setup {
     open_tab = { "<c-t>" },
   },
 }
-require('hlargs').setup({
-  paint_catch_blocks = {
-    declarations = true,
-    usages = true,
-  },
-})
 require('regexplainer').setup()
 require('cmp_luasnip_choice').setup({
   auto_open = true,
