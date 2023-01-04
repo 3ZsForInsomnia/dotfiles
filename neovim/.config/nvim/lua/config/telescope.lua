@@ -44,6 +44,8 @@ telescope.setup {
   },
 }
 
+require "telescope-tabs".setup()
+
 telescope.load_extension('fzf')
 telescope.load_extension('bookmarks')
 telescope.load_extension('changes')
@@ -53,3 +55,7 @@ telescope.load_extension('luasnip')
 telescope.load_extension('scriptnames')
 telescope.load_extension('heading')
 telescope.load_extension("packer")
+telescope.load_extension("frecency")
+telescope.load_extension("http")
+telescope.load_extension("tailiscope")
+telescope.load_extension("undo")

@@ -2,7 +2,7 @@ ADPR
 configs
 #ua
 treesitter
-config
+#onfig
 theming
 init
 tmux
@@ -36,3 +36,10 @@ Test
 evernote
 TODO
 luasnip
+table/!
+number
+nvim
+vim
+api
+config/!
+print/!

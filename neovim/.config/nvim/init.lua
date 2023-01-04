@@ -1,5 +1,6 @@
 local o = vim.opt
 local g = vim.g
+local a = vim.api
 
 g.mapleader = " "
 o.spell = true
@@ -9,6 +10,7 @@ o.spellfile = '/Users/zachary.levine/.config/nvim/spell/.utf-8.add'
 o.backup = true
 o.backupdir = '/Users/zachary.levine/.local/state/nvim/backup//'
 o.undofile = true
+o.lazyredraw = true
 o.mouse = ''
 o.grepprg='rg --vimgrep --no-heading'
 g.loaded_netrw = 1
@@ -26,18 +28,18 @@ require('keys')
 g.python3_host_prog = "/usr/bin/python3"
 g.python_host_prog = "/usr/bin/python"
 g.instant_username = 'Zach'
-g.UltiSnipsEditSplit = 'tabdo'
 g.blamer_enabled = 1
 g.db_ui_save_location = '~/.config/db_ui'
 g.matchup_matchparen_offscreen = { method = "popup" }
+g.mkdp_filetypes = { "markdown" }
 
 -- Just putting luasnip keybinds here since they won't be shown by whichkey since they aren't normal mode
-vim.api.nvim_set_keymap("i", "<C-j>", "<Plug>luasnip-next-choice", {})
-vim.api.nvim_set_keymap("s", "<C-j>", "<Plug>luasnip-next-choice", {})
-vim.api.nvim_set_keymap("i", "<C-k>", "<Plug>luasnip-prev-choice", {})
-vim.api.nvim_set_keymap("s", "<C-k>", "<Plug>luasnip-prev-choice", {})
-vim.api.nvim_set_keymap("s", "<C-e>", "<Plug>luasnip-expand-snippet", {})
-vim.api.nvim_set_keymap("i", "<C-e>", "<Plug>luasnip-expand-snippet", {})
+a.nvim_set_keymap("i", "<C-j>", "<Plug>luasnip-next-choice", {})
+a.nvim_set_keymap("s", "<C-j>", "<Plug>luasnip-next-choice", {})
+a.nvim_set_keymap("i", "<C-k>", "<Plug>luasnip-prev-choice", {})
+a.nvim_set_keymap("s", "<C-k>", "<Plug>luasnip-prev-choice", {})
+a.nvim_set_keymap("s", "<C-e>", "<Plug>luasnip-expand-snippet", {})
+a.nvim_set_keymap("i", "<C-e>", "<Plug>luasnip-expand-snippet", {})
 
 vim.cmd [[
 set noswapfile

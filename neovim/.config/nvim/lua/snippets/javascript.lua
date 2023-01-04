@@ -23,27 +23,39 @@ local conds_expand = require("luasnip.extras.conditions.expand")
 local comments = require('snippets.utils.comments')
 
 local getObservedProps = function(args)
+  if #args == 0 or #args[1] == 0 then
+    return
+  end
+
   local observedProps = {}
 
   for j in ipairs(args[1]) do
-    local assignedWithGet = string.match(args[1][j], 'this.get%(%b""')
-    local assigned
-    if #assignedWithGet == 1 then
-      assigned = assignedWithGet
-    else
-      assigned = string.match(args[1][j], 'this.%w+')
-    end
-   -- assume never more than one per line - if that happens, more complex than snippet should handle
-    if assigned ~= '' then
-      local str = string.match(assigned, '%b""')
-      local prop = string.sub(str, 2, -2)
-      table.insert(observedProps, prop)
+    local doesHaveThis = string.match(args[1][j], 'this.')
+    if doesHaveThis ~= nil and doesHaveThis ~= '' then
+      local assignedWithGet = string.match(args[1][j], 'this.get%p%p%w')
+      local assigned
+      if assignedWithGet ~= nil and assignedWithGet ~= '' then
+        assigned = assignedWithGet
+        assigned = string.gsub(assigned, 'this.get[();\'"]', '')
+        assigned = string.gsub(assigned, '[);\'"]', '')
+      else
+        assigned = string.match(args[1][j], 'this.%w+')
+        assigned = string.gsub(assigned, 'this.', '')
+        assigned = string.gsub(assigned, ';', '')
+      end
+      -- assume never more than one per line - if 2+ happens, more complex than snippet should handle
+      if assigned ~= nil and assigned ~= '' then
+        table.insert(observedProps, assigned)
+      end
     end
   end
 
-  if #observedProps >= 1 then
-    observedProps = uniq(sort(observedProps))
-    return "'" .. join(observedProps, "', ")
+  if #observedProps > 0 then
+    local result = ''
+    for _, v in ipairs(observedProps) do
+      result = result .. '"' .. v .. '", '
+    end
+    return result
   else
     return ''
   end
@@ -79,6 +91,16 @@ return {
     t({ '', '},' })
   }),
   s({
+    trig = "lp",
+    name = "Let prop = this.prop;",
+  }, {
+    t('let '),
+    i(1, "prop"),
+    t(' = this.'),
+    rep(1),
+    t(';'),
+  }),
+  s({
     trig = "ecp",
     name = "Ember Computed Property",
     dscr = "Create an Ember computed property with automatic addition of Observed properties",
@@ -89,10 +111,9 @@ return {
     i(1, "propName"),
     t(': computed('),
     f(getObservedProps, 2),
-    -- grab this.x's here
-    t({'function() {', '\t'}),
+    t({ 'function() {', '\t' }),
     i(2, "body"),
-    t({ '', '}', '),'}),
+    t({ '', '}),' }),
   }),
   -- s({
   --   trig = 'etest',

@@ -20,9 +20,7 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
--- TODO:
--- Refactor ul and ol helper to extract similar parts, clean up
--- Add evernote bullet points/symbols
+-- TODO:Add evernote bullet points/symbols
 
 local tabs = function(count)
   return string.rep('\t', count)
@@ -32,7 +30,7 @@ local ul_helper
 ul_helper = function(a1, b1, c1, count)
   return sn(nil, {
     c(1, {
-      t({ "" }),
+      t({ "", "" }),
       sn(nil, {
         t(tabs(count) .. "<li>"),
         i(1, 'list item'),

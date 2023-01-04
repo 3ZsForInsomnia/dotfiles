@@ -24,7 +24,11 @@ wk.register({
         d = { "<cmd>lua DeleteSessionByName()<cr>", "Delete named" },
         -- db = { ":lua DeleteSession('')<left><left>", "deleted named" },
       },
-      ljs = { "\"ayiwoconsole.log('<C-R>a:', <C-R>a);<Esc>", "Log word under cursor (js)" },
+      l = {
+        name = "Easy log",
+        js = { "\"ayiwoconsole.log('<C-R>a:', <C-R>a);<Esc>", "Log word under cursor (js)" },
+        l = { "\"ayiwoprint('<C-R>a:', vim.inspect(<C-R>a))<Esc>", "Log word under cursor (lua)" },
+      },
     },
     ts = { ":ts", "Go to tag by name" },
     ['dm!'] = { "<cmd>delmarks!<cr>", "Delete all marks" },
