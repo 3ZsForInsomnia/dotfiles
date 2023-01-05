@@ -17,6 +17,8 @@ source "$HOME/.profile"
 export PATH=$PATH:/opt/apache-maven/bin
 export GOPATH=~/go/
 
+export LUA_PATH="$HOME/lua/;;"
+
 ### Navigator items
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export RCI_ENV=LOCALHOST

@@ -10,6 +10,11 @@ telescope.setup {
       i = { ["<c-s>"] = trouble.open_with_trouble },
       n = { ["<c-s>"] = trouble.open_with_trouble },
     },
+    layout_config = {
+      width = 0.95,
+      height = 0.95,
+      preview_width = 0.5
+    }
   },
   extensions = {
     fzf = {
@@ -34,7 +39,12 @@ telescope.setup {
   xray23 = {
     sessionDir = "~/vim-sessions",
   },
+  heading = {
+    treesitter = true,
+  },
 }
+
+require "telescope-tabs".setup()
 
 telescope.load_extension('fzf')
 telescope.load_extension('bookmarks')
@@ -42,3 +52,10 @@ telescope.load_extension('changes')
 telescope.load_extension("xray23")
 telescope.load_extension("dash")
 telescope.load_extension('luasnip')
+telescope.load_extension('scriptnames')
+telescope.load_extension('heading')
+telescope.load_extension("packer")
+telescope.load_extension("frecency")
+telescope.load_extension("http")
+telescope.load_extension("tailiscope")
+telescope.load_extension("undo")

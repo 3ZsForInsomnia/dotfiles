@@ -1,4 +1,4 @@
-local o = vim.opt
+local o = vim.o
 
 o.cmdheight = 2
 o.updatetime = 100
@@ -12,17 +12,17 @@ o.relativenumber = true
 o.number = true
 o.smartindent = true
 o.ignorecase = true
+o.smartcase = true
 o.showbreak = '↳ '
 o.showmode = true
 o.foldmethod = 'expr'
 o.foldexpr = 'nvim_treesitter#foldexpr()'
-o.foldlevelstart = 3
+o.foldlevelstart = 6
 o.completeopt = 'menu,noinsert,menuone,noselect,preview'
-o.shortmess:append('c')
+vim.opt.shortmess:append('c')
 
 vim.cmd [[
 syntax sync fromstart
-highlight SpellBad guisp='DarkRed' gui=undercurl cterm=undercurl
 colorscheme moonfly
 
 " -- Ensures syntax highlighting from TS works for tsx files
@@ -32,5 +32,5 @@ augroup SyntaxSettings
 augroup END
 
 " -- Highlight on yank
-au TextYankPost * silent! lua vim.highlight.on_yank()
+au TextYankPost * silent! lua vim.highlight.on_yank({timeout=333})
 ]]
