@@ -2,11 +2,9 @@ local wk = require("which-key")
 wk.register({
   t = {
     name = "Tabs",
-    t = { "<cmd>CHADopen<cr>", "ChadTree Open" },
     n = { "<cmd>tabnew<cr>", "Open a new tab" },
     nt = { "<cmd>tabnew<cr><cmd>terminal<cr>", "Open a terminal in a new tab" },
-    no = { function() print(":tabe " .. vim.fn.expand("%:p:h")) end, "Open file in dir of current buffer" },
-    c = { "<cmd>tabnew<cr><cmd>CHADopen<cr><C-h>Jc", "Open ChadTree at current file" },
+    no = { function() vim.api.nvim_command(":tabe " .. vim.fn.expand("%:p:h")) end, "Open file in dir of current buffer" },
     h = { "<cmd>split<cr>", "Horizontal split" },
     v = { "<cmd>vsplit<cr>", "Vertical split" },
   },
@@ -26,6 +24,8 @@ wk.register({
     l = { "<cmd>cexpr []<cr>", "Clear" },
     d = { "<cmd>colder<cr>", "Go to older list" },
     u = { "<cmd>cnewer<cr>", "Go to newer list" },
+    s = { ":vimgrep //%<left><left>", "Search and add results to qflist" },
+    qt = { "<cmd>TodoQuickFix<cr>", "Add all todos in project to qflist" },
   },
   l = {
     name = "LocList",
@@ -36,6 +36,8 @@ wk.register({
     l = { "<cmd>lexpr []<cr>", "Clear" },
     d = { "<cmd>lolder<cr>", "Go to older list" },
     u = { "<cmd>lnewer<cr>", "Go to newer list" },
+    s = { ":lvimgrep //%<left><left>", "Search and add results to loclist" },
+    lt = { "<cmd>TodoLocList<cr>", "Add all todos in file to loclist" },
   },
 }, { prefix = "<leader>" })
 
@@ -47,7 +49,7 @@ wk.register({
   gt = { "<cmd>bn<cr>", "Go to next buffer" },
   gT = { "<cmd>bp<cr>", "Go to previous buffer" },
   gk = { "<cmd>bd<cr>", "Kill buffer" },
-  gv= { "<cmd>buffers<cr>", "View open buffers" },
+  gv = { "<cmd>buffers<cr>", "View open buffers" },
   g1 = { f(1), "Jump to Buffer 1" },
   g2 = { f(2), "Jump to Buffer 2" },
   g3 = { f(3), "Jump to Buffer 3" },

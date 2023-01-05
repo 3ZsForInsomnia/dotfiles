@@ -30,10 +30,6 @@ local has_words_before = function()
 end
 
 local luasnip = require("luasnip")
-require("luasnip/loaders/from_vscode").lazy_load()
-
-require("luasnip.loaders.from_lua").lazy_load { paths = "~/.config/nvim/lua/snippets/" }
-
 local cmp = require 'cmp'
 
 local t = function(str)
@@ -70,20 +66,14 @@ cmp.setup({
   },
   mapping = {
     ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      elseif has_words_before() then
-        cmp.complete()
+      if luasnip.jumpable(1) then
+        luasnip.jump(1)
       else
         fallback()
       end
     end, { "i", "s" }),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
+      if luasnip.jumpable(-1) then
         luasnip.jump(-1)
       else
         fallback()
@@ -182,9 +172,13 @@ require('cmp_git').setup({})
 
 cmp.setup.cmdline({ '/', '?' }, {
   mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
+  sources = cmp.config.sources({
+    {
+      { name = 'nvim_lsp_document_symbol' }
+    }, {
+      { name = 'buffer' }
+    }
+  })
 })
 
 cmp.setup.cmdline(':', {
@@ -226,6 +220,24 @@ local on_attach = function(_, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
+  local wk = require("which-key")
+
+  wk.register({
+    gD = "Go to declaration",
+    gd = "Go to definition",
+    K = "Hover for context",
+    gi = "Go to implementation",
+    ['<c-k'] = "Show signature",
+    ['<space>wa'] = "Workspace add folder",
+    ['<space>wr'] = "Workspace remove folder",
+    ['<space>wl'] = "Workspace list folders",
+    D = "Go to type definition",
+    rn = "Rename tag under cursor",
+    ca = "Perform code action",
+    gr = "View references",
+    ['<space>fo'] = "LSP format",
+  })
+
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -255,3 +267,7 @@ for _, server in ipairs(lspServers) do
     capabilities = capabilities
   }
 end
+
+vim.cmd [[
+autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })
+]]
