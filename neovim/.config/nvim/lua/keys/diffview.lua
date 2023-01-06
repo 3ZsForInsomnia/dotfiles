@@ -5,24 +5,23 @@ local f = function(command)
 end
 
 wk.register({
-  v = {
-    name = "DiffView",
-    o = { f("Open"), "Open" },
-    ob = { f("Open"), "Open" },
-    c = { f("Close"), "Close" },
-    t = { f("ToggleFiles"), "Toggle Files" },
-    om = { f("Open origin/master"), "Open origin/master" },
-    oi = { f("Open origin/main"), "Open origin/main" },
-    oo = { ":DiffviewOpen origin/", "Open origin/${branch}" },
-    oh = { f("Open HEAD~"), "Open HEAD~${numberOfCommits}" }
+  ['<leader>'] = {
+    v = {
+      name = "DiffView",
+      o = { f("Open"), "Open" },
+      ob = { f("Open"), "Open" },
+      c = { f("Close"), "Close" },
+      t = { f("ToggleFiles"), "Toggle Files" },
+      om = { f("Open origin/master"), "Open origin/master" },
+      oi = { f("Open origin/main"), "Open origin/main" },
+      oo = { ":DiffviewOpen origin/", "Open origin/${branch}" },
+      oh = { f("Open HEAD~"), "Open HEAD~${numberOfCommits}" }
+    },
+    co = "Diffview Choose Ours",
+    ct = "Diffview Choose Theirs",
+    cb = "Diffview Choose Base",
+    dx = "Diffview delete conflict",
   },
-  co = "Diffview Choose Ours",
-  ct = "Diffview Choose Theirs",
-  cb = "Diffview Choose Base",
-  dx = "Diffview delete conflict"
-}, { prefix = "<leader>" })
-
-wk.register({
   [']x'] = "Jump to next conflict marker",
   ['[x'] = "Jump to previous conflict marker",
 })
