@@ -14,7 +14,17 @@ telescope.setup {
       width = 0.95,
       height = 0.95,
       preview_width = 0.5
-    }
+    },
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case',
+      '--hidden',
+    },
   },
   extensions = {
     fzf = {

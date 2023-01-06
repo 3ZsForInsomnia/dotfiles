@@ -62,7 +62,7 @@ local getObservedProps = function(args)
 end
 
 return {
-  s('de', { t('debugger') }),
+  s('de', { t('debugger;') }),
   s({
     trig = 'clv',
     name = 'console.log("$1", $1);',

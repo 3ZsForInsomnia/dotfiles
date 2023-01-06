@@ -1,4 +1,9 @@
 local wk = require("which-key")
+
+local f = function(number)
+  return "<cmd>LualineBuffersJump! " .. number .. "<cr>"
+end
+
 wk.register({
   t = {
     name = "Tabs",
@@ -10,9 +15,23 @@ wk.register({
   },
   b = {
     name = "Buffers",
+    k = { "<cmd>bd<cr>", "Kill buffer" },
+    o = { "<cmd>buffers<cr>", "View open buffers" },
     n = { "<cmd>new<cr>", "New buffer with horizontal split" },
-    nv = { "<cmd>vnew<cr>", "New buffer with vertical split" },
-    tk = { "<cmd>bd!<cr>", "Kill terminal/Exit immediately" },
+    v = { "<cmd>vnew<cr>", "New buffer with vertical split" },
+    t = { "<cmd>bd!<cr>", "Kill terminal/Exit immediately" },
+    ['1'] = { f(1), "Jump to Buffer 1" },
+    ['2'] = { f(2), "Jump to Buffer 2" },
+    ['3'] = { f(3), "Jump to Buffer 3" },
+    ['4'] = { f(4), "Jump to Buffer 4" },
+    ['5'] = { f(5), "Jump to Buffer 5" },
+    ['6'] = { f(6), "Jump to Buffer 6" },
+    ['7'] = { f(7), "Jump to Buffer 7" },
+    ['8'] = { f(8), "Jump to Buffer 8" },
+    ['9'] = { f(9), "Jump to Buffer 9" },
+    ['0'] = { f(0), "Jump to Buffer 10" },
+    a = { f(11), "Jump to Buffer 11" },
+    b = { f(12), "Jump to Buffer 12" },
   },
   c = {
     name = "Quickfix list",
@@ -41,27 +60,9 @@ wk.register({
   },
 }, { prefix = "<leader>" })
 
-local f = function(number)
-  return "<cmd>LualineBuffersJump! " .. number .. "<cr>"
-end
-
 wk.register({
-  gt = { "<cmd>bn<cr>", "Go to next buffer" },
-  gT = { "<cmd>bp<cr>", "Go to previous buffer" },
-  gk = { "<cmd>bd<cr>", "Kill buffer" },
-  gv = { "<cmd>buffers<cr>", "View open buffers" },
-  g1 = { f(1), "Jump to Buffer 1" },
-  g2 = { f(2), "Jump to Buffer 2" },
-  g3 = { f(3), "Jump to Buffer 3" },
-  g4 = { f(4), "Jump to Buffer 4" },
-  g5 = { f(5), "Jump to Buffer 5" },
-  g6 = { f(6), "Jump to Buffer 6" },
-  g7 = { f(7), "Jump to Buffer 7" },
-  g8 = { f(8), "Jump to Buffer 8" },
-  g9 = { f(9), "Jump to Buffer 9" },
-  g0 = { f(0), "Jump to Buffer 10" },
-  ga = { f(11), "Jump to Buffer 11" },
-  gb = { f(12), "Jump to Buffer 12" },
+  [']b'] = { "<cmd>bn<cr>", "Go to next buffer" },
+  ['[b'] = { "<cmd>bp<cr>", "Go to previous buffer" },
 })
 
 local keymap = vim.keymap.set
@@ -70,4 +71,3 @@ keymap("n", "<C-h>", "<C-w>h", silent)
 keymap("n", "<C-j>", "<C-w>j", silent)
 keymap("n", "<C-k>", "<C-w>k", silent)
 keymap("n", "<C-l>", "<C-w>l", silent)
--- keymap("n", "<leader>tno", ":tabe %%", silent)
