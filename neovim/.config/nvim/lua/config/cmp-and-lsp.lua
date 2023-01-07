@@ -1,3 +1,6 @@
+local M = {}
+
+function M.setup()
 local lspServers = {
   'angularls',
   'bashls',
@@ -275,4 +278,6 @@ vim.api.nvim_create_autocmd(
     command = "lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })"
   }
 )
+end
 
+return M
