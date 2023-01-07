@@ -7,6 +7,14 @@ wk.register({
     t = { "<cmd>VimTrello<cr>", "Open Trello" },
     g = { "<cmd>DogeGenerate<cr>", "Generate docstring for whatever is under cursor" },
     f = { "<cmd>Twilight<cr>", "Dim unused code (twilight)" },
+    c = {
+      name = "Color Utils",
+      p = { "<cmd>Colortils picker<cword><cr>", "Picker" },
+      l = { "<cmd>Colortils lighten<cword><cr>", "Lighten" },
+      d = { "<cmd>Colortils darken<cword><cr>", "Darken" },
+      c = { "<cmd>Colortils css<cword><cr>", "CSS colors" },
+      g = { "<cmd>Colortils gradient<cword><cr>", "Gradient" },
+    },
   },
   m = {
     name = "Marks",

@@ -233,6 +233,20 @@ return packer.startup(function(use)
   use 'MunifTanjim/prettier.nvim'
   use 'CRAG666/code_runner.nvim'
   use 'yoshio15/vim-trello'
+  use 'winston0410/cmd-parser.nvim'
+  use {
+    'winston0410/range-highlight.nvim',
+    config = function()
+      require 'range-highlight'.setup {}
+    end,
+  }
+  use {
+    "max397574/colortils.nvim",
+    cmd = "Colortils",
+    config = function()
+      require("colortils").setup()
+    end,
+  }
 
   if packer_bootstrap then
     require('packer').sync()

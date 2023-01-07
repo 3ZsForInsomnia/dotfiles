@@ -89,6 +89,11 @@ _G.packer_plugins = {
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/blamer.nvim",
     url = "https://github.com/APZelos/blamer.nvim"
   },
+  ["cmd-parser.nvim"] = {
+    loaded = true,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/cmd-parser.nvim",
+    url = "https://github.com/winston0410/cmd-parser.nvim"
+  },
   ["cmp-buffer"] = {
     loaded = true,
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/cmp-buffer",
@@ -168,6 +173,15 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/code_runner.nvim",
     url = "https://github.com/CRAG666/code_runner.nvim"
+  },
+  ["colortils.nvim"] = {
+    commands = { "Colortils" },
+    config = { "\27LJ\2\n7\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14colortils\frequire\0" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/opt/colortils.nvim",
+    url = "https://github.com/max397574/colortils.nvim"
   },
   ["dash.nvim"] = {
     loaded = true,
@@ -394,6 +408,12 @@ _G.packer_plugins = {
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/prettier.nvim",
     url = "https://github.com/MunifTanjim/prettier.nvim"
   },
+  ["range-highlight.nvim"] = {
+    config = { "\27LJ\2\nA\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\20range-highlight\frequire\0" },
+    loaded = true,
+    path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/range-highlight.nvim",
+    url = "https://github.com/winston0410/range-highlight.nvim"
+  },
   ["refactoring.nvim"] = {
     loaded = true,
     path = "/Users/zachary.levine/.local/share/nvim/site/pack/packer/start/refactoring.nvim",
@@ -557,6 +577,22 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: range-highlight.nvim
+time([[Config for range-highlight.nvim]], true)
+try_loadstring("\27LJ\2\nA\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\20range-highlight\frequire\0", "config", "range-highlight.nvim")
+time([[Config for range-highlight.nvim]], false)
+
+-- Command lazy-loads
+time([[Defining lazy-load commands]], true)
+pcall(vim.api.nvim_create_user_command, 'Colortils', function(cmdargs)
+          require('packer.load')({'colortils.nvim'}, { cmd = 'Colortils', l1 = cmdargs.line1, l2 = cmdargs.line2, bang = cmdargs.bang, args = cmdargs.args, mods = cmdargs.mods }, _G.packer_plugins)
+        end,
+        {nargs = '*', range = true, bang = true, complete = function()
+          require('packer.load')({'colortils.nvim'}, { cmd = 'Colortils' }, _G.packer_plugins)
+          return vim.fn.getcompletion('Colortils ', 'cmdline')
+      end})
+time([[Defining lazy-load commands]], false)
+
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then
