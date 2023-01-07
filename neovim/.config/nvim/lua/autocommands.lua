@@ -1,6 +1,13 @@
 local ag = vim.api.nvim_create_augroup
 local au = vim.api.nvim_create_autocmd
 
+au('TextYankPost',
+  {
+    pattern = "*",
+    command = "lua vim.highlight.on_yank({timeout=333})"
+  }
+)
+
 au(
   { "BufWinEnter", "WinEnter" },
   {
@@ -22,7 +29,7 @@ au(
 )
 
 au(
-  {"User"},
+  { "User" },
   {
     pattern = "TelescopePreviewerLoaded",
     command = "setlocal wrap",
@@ -35,4 +42,3 @@ au('FileType', {
     vim.opt_local.buflisted = false
   end,
 })
-
