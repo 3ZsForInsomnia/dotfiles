@@ -11,9 +11,11 @@ telescope.setup {
       n = { ["<c-s>"] = trouble.open_with_trouble },
     },
     layout_config = {
-      width = 0.95,
-      height = 0.95,
-      preview_width = 0.5
+      horizontal = {
+        width = 0.95,
+        height = 0.95,
+        preview_width = 0.5
+      }
     },
     vimgrep_arguments = {
       'rg',

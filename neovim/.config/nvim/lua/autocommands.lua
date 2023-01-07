@@ -16,7 +16,7 @@ au(
     pattern = '*',
     command = [[
       startinsert
-      setlocal nonumber norelativenumber nospell laststatus=0 signcolumn=no noruler
+      setlocal nonumber norelativenumber nospell signcolumn=no noruler
     ]]
   }
 )
