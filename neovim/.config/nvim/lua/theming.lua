@@ -20,17 +20,30 @@ o.foldexpr = 'nvim_treesitter#foldexpr()'
 o.foldlevelstart = 6
 o.completeopt = 'menu,noinsert,menuone,noselect,preview'
 vim.opt.shortmess:append('c')
+vim.cmd('colorscheme moonfly')
+vim.cmd('syntax sync fromstart')
 
-vim.cmd [[
-syntax sync fromstart
-colorscheme moonfly
-
-" -- Ensures syntax highlighting from TS works for tsx files
-augroup SyntaxSettings
-  autocmd!
-  autocmd BufNewFile,BufRead *.tsx o.filetype=typescript.typescriptreact
-augroup END
-
-" -- Highlight on yank
-au TextYankPost * silent! lua vim.highlight.on_yank({timeout=333})
-]]
+vim.api.nvim_create_autocmd('ModeChanged', {
+  callback = function()
+    local mode = vim.api.nvim_get_mode().mode
+    local colorsForLineNumbers = {
+      ['i'] = '#7aa2f7',
+      ['c'] = '#e0af68',
+      ['v'] = '#c678dd',
+      ['V'] = '#c678dd',
+      [''] = '#c678dd'
+    }
+    vim.api.nvim_set_hl(0, 'CursorLineNr', {
+      foreground = colorsForLineNumbers[mode] or '#737aa2'
+    })
+    if mode == 'c' then
+      vim.api.nvim_set_hl(0, 'MsgArea', {
+        foreground = colorsForLineNumbers[mode]
+      })
+    else
+      vim.api.nvim_set_hl(0, 'MsgArea', {
+        foreground = "#ffffff"
+      })
+    end
+  end,
+})

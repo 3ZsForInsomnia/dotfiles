@@ -46,6 +46,15 @@ k("s", "<C-e>", "<Plug>luasnip-expand-snippet", {})
 k("i", "<C-e>", "<Plug>luasnip-expand-snippet", {})
 k("i", "<C-l>", "<cmd>lua require('luasnip.extras.select_choice')()<cr>", {})
 
-vim.cmd [[
-  cmap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
-]]
+function pathExpand()
+  if vim.fn.getcmdtype() == ':' then
+    return vim.fn.expand('%:h') .. '/'
+  else
+    return '%%'
+  end
+end
+
+vim.keymap.set("c", "%%",
+  function() return pathExpand() end,
+  { expr = true }
+)
