@@ -23,10 +23,11 @@ o.exrc = true
 o.secure = true
 
 require('impatient')
+require('theming')
 require('plugins')
-require('configs')
 require('keys')
 require('autocommands')
+require('save-restore-session')
 
 g.python3_host_prog = "/usr/bin/python3"
 g.python_host_prog = "/usr/bin/python"

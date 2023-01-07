@@ -34,6 +34,12 @@ return packer.startup(function(use)
   use 'kamykn/popup-menu.nvim'
   use 'wbthomason/packer.nvim'
   use "kkharji/sqlite.lua"
+  use {
+    'stevearc/dressing.nvim',
+    config = function()
+      require('config.ui').setup()
+    end
+  }
 
   --
   --
@@ -46,10 +52,25 @@ return packer.startup(function(use)
   use 'neovim/nvim-lspconfig'
   use 'nvim-lua/lsp-status.nvim'
   use 'onsails/lspkind-nvim'
-  use { 'mfussenegger/nvim-jdtls' }
+  use 'mfussenegger/nvim-jdtls'
   use 'weilbith/nvim-code-action-menu'
-  use 'ThePrimeagen/refactoring.nvim'
-  use "folke/trouble.nvim"
+  use {
+    'ThePrimeagen/refactoring.nvim',
+    config = function()
+      require('refactoring').setup({})
+    end
+  }
+  use {
+    "folke/trouble.nvim",
+    config = function()
+      require("trouble").setup {
+        height = 20,
+        action_keys = {
+          open_tab = { "<c-t>" },
+        },
+      }
+    end
+  }
   use "folke/neodev.nvim"
 
   --
@@ -60,13 +81,26 @@ return packer.startup(function(use)
   --
   use {
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
+    run = ':TSUpdate',
+    config = function()
+      require('config.treesitter')
+    end
   }
   use 'nvim-treesitter/nvim-treesitter-context'
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'RRethy/nvim-treesitter-textsubjects'
-  use 'm-demare/hlargs.nvim'
-  use 'bennypowers/nvim-regexplainer'
+  use {
+    'm-demare/hlargs.nvim',
+    config = function()
+      require('config.hlargs')
+    end
+  }
+  use {
+    'bennypowers/nvim-regexplainer',
+    config = function()
+      require('regexplainer').setup()
+    end
+  }
 
   --
   --
@@ -77,6 +111,9 @@ return packer.startup(function(use)
   use {
     'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
+    config = function()
+      require('config.telescope')
+    end
   }
   use "nvim-telescope/telescope-frecency.nvim"
   use "LukasPietzschmann/telescope-tabs"
@@ -98,6 +135,9 @@ return packer.startup(function(use)
   use({
     'mrjones2014/dash.nvim',
     run = 'make install',
+    config = function()
+      require('config.dash')
+    end
   })
 
   --
@@ -120,16 +160,27 @@ return packer.startup(function(use)
   use 'rcarriga/cmp-dap'
   use 'dcampos/cmp-emmet-vim'
   use 'delphinus/cmp-ctags'
-  use 'hrsh7th/nvim-cmp'
+  use {
+    'hrsh7th/nvim-cmp',
+    config = function()
+      require('config.cmp-and-lsp')
+    end
+  }
   use({
     "L3MON4D3/LuaSnip",
     tag = "v<CurrentMajor>.*",
+    config = function()
+      require('config.luasnip')
+    end
   })
   use 'saadparwaiz1/cmp_luasnip'
   use "rafamadriz/friendly-snippets"
-  -- Unclear if I actually need this - it seems to be build into Luasnip itself?
-  use 'doxnit/cmp-luasnip-choice'
-  use 'jose-elias-alvarez/null-ls.nvim'
+  use {
+    'jose-elias-alvarez/null-ls.nvim',
+    config = function()
+      require('config.null-ls')
+    end
+  }
 
   --
   --
@@ -141,9 +192,24 @@ return packer.startup(function(use)
     'kkoomen/vim-doge',
     run = ':call doge#install()'
   }
-  use 'numToStr/Comment.nvim'
-  use "pavanbhat1999/figlet.nvim"
-  use 'folke/todo-comments.nvim'
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
+  }
+  use {
+    "pavanbhat1999/figlet.nvim",
+    config = function()
+      require("figlet").Config({ font = "3d" })
+    end
+  }
+  use {
+    'folke/todo-comments.nvim',
+    config = function()
+      require("todo-comments").setup()
+    end
+  }
 
   --
   --
@@ -151,11 +217,32 @@ return packer.startup(function(use)
   -- Move around inside of files, between files, with marks, motions, and file exploration
   --
   --
-  use 'rgroli/other.nvim'
-  use "folke/which-key.nvim"
-  use 'nvim-tree/nvim-tree.lua'
-  use 'chentoast/marks.nvim'
+  use {
+    'rgroli/other.nvim',
+    config = function()
+      require('config.alternate')
+    end
+  }
+  use {
+    "folke/which-key.nvim",
+    config = function()
+      require('config.whichkey')
+    end
+  }
+  use {
+    'nvim-tree/nvim-tree.lua',
+    config = function()
+      require('config.file-explorer')
+    end
+  }
+  use {
+    'chentoast/marks.nvim',
+    config = function()
+      require('config.marks')
+    end
+  }
   use 'liuchengxu/vista.vim'
+  use 'mbbill/undotree'
 
   --
   --
@@ -182,11 +269,35 @@ return packer.startup(function(use)
   --
   use 'kyazdani42/nvim-web-devicons'
   use 'bluz71/vim-moonfly-colors'
-  use 'brenoprata10/nvim-highlight-colors'
-  use 'nvim-lualine/lualine.nvim'
+  use {
+    'brenoprata10/nvim-highlight-colors',
+    config = function()
+      require("nvim-highlight-colors").setup {
+        render = 'background',
+        enable_named_colors = true,
+        enable_tailwind = true
+      }
+    end
+  }
+  use {
+    'nvim-lualine/lualine.nvim',
+    config = function()
+      require('config.statusline')
+    end
+  }
   use 'p00f/nvim-ts-rainbow'
-  use 'glepnir/indent-guides.nvim'
-  use "folke/twilight.nvim"
+  use {
+    'glepnir/indent-guides.nvim',
+    config = function()
+      require('config.indent')
+    end
+  }
+  use {
+    "folke/twilight.nvim",
+    config = function()
+      require("twilight").setup()
+    end
+  }
   use 'andymass/vim-matchup'
 
   --
@@ -197,10 +308,18 @@ return packer.startup(function(use)
   --
   use 'kylechui/nvim-surround'
   use 'mattn/emmet-vim'
-  use 'vuki656/package-info.nvim'
+  use {
+    'vuki656/package-info.nvim',
+    config = function()
+      require('package-info').setup()
+    end
+  }
   use {
     "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",
+    config = function()
+      require('config.markdown-preview-config')
+    end
   }
 
   --
@@ -221,8 +340,18 @@ return packer.startup(function(use)
   use 'sindrets/diffview.nvim'
   use 'ruanyl/vim-gh-line'
   use 'APZelos/blamer.nvim'
-  use 'lewis6991/gitsigns.nvim'
-  use 'pwntester/octo.nvim'
+  use {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('gitsigns').setup()
+    end
+  }
+  use {
+    'pwntester/octo.nvim',
+    config = function()
+      require "octo".setup()
+    end
+  }
 
   --
   --
@@ -230,9 +359,21 @@ return packer.startup(function(use)
   -- Some things cannot be categorized. They are banished to this dungeon at the bottom of my plugins.lua
   --
   --
-  use 'MunifTanjim/prettier.nvim'
+  use {
+    'MunifTanjim/prettier.nvim',
+    config = function()
+      require('prettier').setup({
+        bin = 'prettierd',
+      })
+    end
+  }
   use 'CRAG666/code_runner.nvim'
-  use 'yoshio15/vim-trello'
+  use {
+    'yoshio15/vim-trello',
+    config = function()
+      require('config.trello')
+    end
+  }
   use 'winston0410/cmd-parser.nvim'
   use {
     'winston0410/range-highlight.nvim',

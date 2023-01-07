@@ -46,7 +46,7 @@ cmp.setup({
   },
   sources = {
     { name = 'luasnip' },
-    { name = 'luasnip_choice' },
+    -- { name = 'luasnip_choice' },
     { name = "buffer" },
     { name = "nvim_lsp_signature_help" },
     { name = "nvim_lsp" },
