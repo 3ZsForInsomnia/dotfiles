@@ -21,7 +21,7 @@ function _G.DeleteSession(name)
   os.remove("~/vim-sessions/" .. name ".shada")
 end
 
-function _G.DeleteAnOldSessionByName()
+function _G.DeleteSessionByName()
   local files = {}
   for dir in io.popen([[ls -pa ~/vim-sessions/ | grep .vim]]):lines() do table.insert(files, dir) end
   for i = 1, #files do files[i] = string.gsub(files[i], '.vim', '') end

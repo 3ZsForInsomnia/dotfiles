@@ -13,11 +13,11 @@ wk.register({
       sa = { ":lua SaveSession('aliases')<cr>", "Save aliases" },
       st = { ":lua SaveSession('temp')<cr>", "Save temp" },
       r = { "<cmd>lua RestoreSessionByName()<cr>", "Restore by name" },
-      -- rb = { ":lua RestoreSession('')<left><left>", "Restore named session" },
+      rb = { ":lua RestoreSession('')<left><left>", "Restore named session" },
       ra = { ":lua RestoreSession('aliases')<cr>", "Restore aliases" },
       rt = { ":lua RestoreSession('temp')<cr>", "Restore temp" },
       d = { "<cmd>lua DeleteSessionByName()<cr>", "Delete named" },
-      -- db = { ":lua DeleteSession('')<left><left>", "deleted named" },
+      db = { ":lua DeleteSession('')<left><left>", "deleted named" },
     },
     z = {
       name = "Personal",
@@ -35,8 +35,6 @@ wk.register({
     [','] = { "<cmd>nohlsearch<cr>", "Stop highlighting search results" },
   },
   ['<C-[>'] = { "<cmd>pop<cr>", "Pop entry off tag stack" },
-  [',,'] = { "zc", "Close current fold" },
-  ['..'] = { "zo", "Open current fold" },
 })
 wk.register({
   ['<C-c>'] = { "<esc>`^", "Escape and keep location" },

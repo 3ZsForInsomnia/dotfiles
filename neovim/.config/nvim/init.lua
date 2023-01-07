@@ -1,8 +1,12 @@
 local o = vim.opt
 local g = vim.g
-local a = vim.api
+local k = vim.api.nvim_set_keymap
 
 g.mapleader = " "
+g.loaded_netrw = 1
+g.loaded_netrwPlugin = 1
+g.notagrelative = true
+
 o.spell = true
 o.spelllang = 'en_us'
 o.spelloptions = 'camel'
@@ -12,9 +16,7 @@ o.backupdir = '/Users/zachary.levine/.local/state/nvim/backup//'
 o.undofile = true
 o.lazyredraw = true
 o.mouse = ''
-o.grepprg='rg --vimgrep --no-heading'
-g.loaded_netrw = 1
-g.loaded_netrwPlugin = 1
+o.grepprg = 'rg --vimgrep --no-heading'
 -- Enables reading vimrc in folder where vim is opened
 o.exrc = true
 -- Ensures other vimrc files cannot write/do more than o.variables and whatnot
@@ -24,6 +26,7 @@ require('impatient')
 require('plugins')
 require('configs')
 require('keys')
+require('autocommands')
 
 g.python3_host_prog = "/usr/bin/python3"
 g.python_host_prog = "/usr/bin/python"
@@ -34,21 +37,14 @@ g.matchup_matchparen_offscreen = { method = "popup" }
 g.mkdp_filetypes = { "markdown" }
 
 -- Just putting luasnip keybinds here since they won't be shown by whichkey since they aren't normal mode
-a.nvim_set_keymap("i", "<C-j>", "<Plug>luasnip-next-choice", {})
-a.nvim_set_keymap("s", "<C-j>", "<Plug>luasnip-next-choice", {})
-a.nvim_set_keymap("i", "<C-k>", "<Plug>luasnip-prev-choice", {})
-a.nvim_set_keymap("s", "<C-k>", "<Plug>luasnip-prev-choice", {})
-a.nvim_set_keymap("s", "<C-e>", "<Plug>luasnip-expand-snippet", {})
-a.nvim_set_keymap("i", "<C-e>", "<Plug>luasnip-expand-snippet", {})
+k("i", "<C-j>", "<Plug>luasnip-next-choice", {})
+k("s", "<C-j>", "<Plug>luasnip-next-choice", {})
+k("i", "<C-k>", "<Plug>luasnip-prev-choice", {})
+k("s", "<C-k>", "<Plug>luasnip-prev-choice", {})
+k("s", "<C-e>", "<Plug>luasnip-expand-snippet", {})
+k("i", "<C-e>", "<Plug>luasnip-expand-snippet", {})
+k("i", "<C-l>", "<cmd>lua require('luasnip.extras.select_choice')()<cr>", {})
 
 vim.cmd [[
-set noswapfile
-set notagrelative
-
-cmap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
-inoremap <c-l> <cmd>lua require("luasnip.extras.select_choice")()<cr>
-
-autocmd User TelescopePreviewerLoaded setlocal wrap
-autocmd BufWinEnter,WinEnter term://* setlocal filetype=zsh
-au TermOpen * setlocal nospell | :startinsert
+  cmap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 ]]
