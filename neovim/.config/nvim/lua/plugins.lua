@@ -83,7 +83,7 @@ return packer.startup(function(use)
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
-      require('config.treesitter')
+      require('config.treesitter').setup()
     end
   }
   use 'nvim-treesitter/nvim-treesitter-context'
@@ -92,7 +92,7 @@ return packer.startup(function(use)
   use {
     'm-demare/hlargs.nvim',
     config = function()
-      require('config.hlargs')
+      require('config.hlargs').setup()
     end
   }
   use {
@@ -112,7 +112,7 @@ return packer.startup(function(use)
     'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
     config = function()
-      require('config.telescope')
+      require('config.telescope').setup()
     end
   }
   use "nvim-telescope/telescope-frecency.nvim"
@@ -136,7 +136,7 @@ return packer.startup(function(use)
     'mrjones2014/dash.nvim',
     run = 'make install',
     config = function()
-      require('config.dash')
+      require('config.dash').setup()
     end
   })
 
@@ -163,14 +163,14 @@ return packer.startup(function(use)
   use {
     'hrsh7th/nvim-cmp',
     config = function()
-      require('config.cmp-and-lsp')
+      require('config.cmp-and-lsp').setup()
     end
   }
   use({
     "L3MON4D3/LuaSnip",
     tag = "v<CurrentMajor>.*",
     config = function()
-      require('config.luasnip')
+      require('config.luasnip').setup()
     end
   })
   use 'saadparwaiz1/cmp_luasnip'
@@ -178,7 +178,7 @@ return packer.startup(function(use)
   use {
     'jose-elias-alvarez/null-ls.nvim',
     config = function()
-      require('config.null-ls')
+      require('config.null-ls').setup()
     end
   }
 
@@ -220,25 +220,25 @@ return packer.startup(function(use)
   use {
     'rgroli/other.nvim',
     config = function()
-      require('config.alternate')
+      require('config.alternate').setup()
     end
   }
   use {
     "folke/which-key.nvim",
     config = function()
-      require('config.whichkey')
+      require('config.whichkey').setup()
     end
   }
   use {
     'nvim-tree/nvim-tree.lua',
     config = function()
-      require('config.file-explorer')
+      require('config.file-explorer').setup()
     end
   }
   use {
     'chentoast/marks.nvim',
     config = function()
-      require('config.marks')
+      require('config.marks').setup()
     end
   }
   use 'liuchengxu/vista.vim'
@@ -282,14 +282,14 @@ return packer.startup(function(use)
   use {
     'nvim-lualine/lualine.nvim',
     config = function()
-      require('config.statusline')
+      require('config.statusline').setup()
     end
   }
   use 'p00f/nvim-ts-rainbow'
   use {
     'glepnir/indent-guides.nvim',
     config = function()
-      require('config.indent')
+      require('config.indent').setup()
     end
   }
   use {
@@ -318,7 +318,7 @@ return packer.startup(function(use)
     "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",
     config = function()
-      require('config.markdown-preview-config')
+      require('config.markdown-preview-config').setup()
     end
   }
 
@@ -371,7 +371,7 @@ return packer.startup(function(use)
   use {
     'yoshio15/vim-trello',
     config = function()
-      require('config.trello')
+      require('config.trello').setup()
     end
   }
   use 'winston0410/cmd-parser.nvim'

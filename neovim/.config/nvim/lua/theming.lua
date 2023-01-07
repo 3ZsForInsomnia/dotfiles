@@ -42,7 +42,7 @@ vim.api.nvim_create_autocmd('ModeChanged', {
       })
     else
       vim.api.nvim_set_hl(0, 'MsgArea', {
-        foreground = "#ffffff"
+        foreground = "#cccccc"
       })
     end
   end,
