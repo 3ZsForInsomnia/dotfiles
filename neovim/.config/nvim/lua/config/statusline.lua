@@ -17,9 +17,9 @@ function M.setup()
     end
 
     return {
-      added = function() return icons.kind.File .. tostring(results[1]) end,
-      modified = function() return icons.git.Add .. tostring(results[2]) end,
-      removed = function() return icons.git.Remove .. tostring(results[3]) end,
+      added = function() return icons.kind.File .. tostring(results[1] or 0) end,
+      modified = function() return icons.git.Add .. tostring(results[2] or 0) end,
+      removed = function() return icons.git.Remove .. tostring(results[3] or 0) end,
     }
   end
 
