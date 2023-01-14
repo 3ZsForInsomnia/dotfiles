@@ -1,14 +1,52 @@
+---@diagnostic disable: redundant-parameter
 local M = {}
 
 function M.setup()
   local telescope = require("telescope")
   local actions = require("telescope.actions")
   local trouble = require("trouble.providers.telescope")
+  local icons = require('icons')
 
   telescope.setup {
+    pickers = {
+      find_files = {
+        hidden = true,
+        no_ignore = true,
+        find_command = {
+          "fd",
+          "--color=never",
+          "--type",
+          "f",
+          "--hidden",
+          "--follow",
+          "--no-ignore",
+          "--exclude",
+          "node_modules",
+          "--exclude",
+          ".git",
+          "--exclude",
+          "dist",
+          "--exclude",
+          "build",
+          "--exclude",
+          "out",
+          "--exclude",
+          ".next",
+          "--exclude",
+          ".vercel",
+          "--exclude",
+          ".netlify",
+        },
+      }
+    },
     defaults = {
+      prompt_prefix = icons.common.Telescope .. " " .. icons.misc.Carat .. " ",
+      selection_caret = icons.common.Arrow .. " ",
+      entry_prefix = icons.misc.Carat .. " ",
+      multi_icon = " " .. icons.type.Array .. " ",
       wrap_results = true,
       sorting_strategy = "ascending",
+      scroll_strategy = "limit",
       mappings = {
         i = { ["<c-s>"] = trouble.open_with_trouble },
         n = { ["<c-s>"] = trouble.open_with_trouble },

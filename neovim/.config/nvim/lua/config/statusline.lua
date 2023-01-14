@@ -1,6 +1,39 @@
+local icons = require('icons')
+
 local M = {}
 
 function M.setup()
+  local gitStatusForRepo = function()
+    local handle = io.popen('git diff --shortstat')
+    local statusText = handle:read("*a")
+    handle:close()
+
+    local iter = string.gmatch(statusText, '%d+')
+    local results = {}
+    local count = 1
+    for i in iter do
+      results[count] = i
+      count = count + 1
+    end
+
+    return {
+      added = function() return icons.kind.File .. tostring(results[1]) end,
+      modified = function() return icons.git.Add .. tostring(results[2]) end,
+      removed = function() return icons.git.Remove .. tostring(results[3]) end,
+    }
+  end
+
+  local gitSignsForFile = function()
+    local gitsigns = vim.b.gitsigns_status_dict
+    if gitsigns then
+      return {
+        added = gitsigns.added,
+        modified = gitsigns.changed,
+        removed = gitsigns.removed
+      }
+    end
+  end
+
   require('lualine').setup {
     options = {
       icons_enabled = true,
@@ -23,29 +56,21 @@ function M.setup()
     sections = {
       lualine_a = { { 'mode', separator = { left = '' } } },
       lualine_b = {
-        { 'diagnostics',
+        { 'b:gitsigns_head', icon = '', color = { fg = "#77ff77" } },
+        { gitStatusForRepo().added, color = { fg = "#e3c78a" }, separator = '' },
+        { gitStatusForRepo().modified, color = { fg = "#36c692" }, separator = '' },
+        { gitStatusForRepo().removed, color = { fg = "#ff5454" } },
+        {
+          'diagnostics',
           always_visible = true,
           update_in_insert = true,
           sources = { 'nvim_lsp', 'nvim_diagnostic', 'nvim_workspace_diagnostic', }
         },
-        'branch',
       },
-      lualine_c = {
-        'filename',
-      },
+      lualine_c = { 'filename' },
       lualine_x = { 'filetype' },
       lualine_y = { 'progress' },
-      lualine_z = {
-        { 'location', separator = { right = '' }, left_padding = 2 },
-      }
-    },
-    inactive_sections = {
-      lualine_a = {},
-      lualine_b = {},
-      lualine_c = { 'filename' },
-      lualine_x = { 'location' },
-      lualine_y = {},
-      lualine_z = {}
+      lualine_z = { { 'location', separator = { right = '' }, left_padding = 2 } },
     },
     tabline = {
       lualine_a = {
@@ -53,15 +78,15 @@ function M.setup()
       },
     },
     winbar = {
-      lualine_a = {
-        { 'filename', path = 1 }
-      },
-      lualine_b = { 'diff' },
+      lualine_a = { { 'filename', path = 1 } },
+      lualine_b = { { 'diff', source = gitSignsForFile } },
       lualine_c = { 'diagnostics' },
     },
     inactive_winbar = {},
-    extensions = { 'chadtree', 'quickfix', 'nvim-dap-ui' }
+    extensions = { 'nvim-tree', 'quickfix', 'nvim-dap-ui' }
   }
 end
+
+M.setup()
 
 return M
