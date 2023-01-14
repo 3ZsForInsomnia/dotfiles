@@ -8,18 +8,14 @@ function M.setup()
     local statusText = handle:read("*a")
     handle:close()
 
-    local iter = string.gmatch(statusText, '%d+')
-    local results = {}
-    local count = 1
-    for i in iter do
-      results[count] = i
-      count = count + 1
-    end
+    local fileCount = string.match(statusText, '(%d+) file') or "0"
+    local addCount = string.match(statusText, '(%d+) inser') or "0"
+    local delCount = string.match(statusText, '(%d+) del') or "0"
 
     return {
-      added = function() return icons.kind.File .. tostring(results[1] or 0) end,
-      modified = function() return icons.git.Add .. tostring(results[2] or 0) end,
-      removed = function() return icons.git.Remove .. tostring(results[3] or 0) end,
+      added = function() return icons.kind.File .. fileCount end,
+      modified = function() return icons.git.Add .. addCount end,
+      removed = function() return icons.git.Remove .. delCount end,
     }
   end
 
