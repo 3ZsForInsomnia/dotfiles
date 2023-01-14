@@ -37,7 +37,8 @@ wk.register({
       tr = { "<cmd>set relativenumber!<cr>", "Toggle relative line numbers" },
       a = { "<cmd>set number<cr>", "Set absolute line numbers" },
       r = { "<cmd>set relativenumber<cr>", "Set relative line numbers" },
-      l = { "vaw\"qyo<c-r>=luaeval('logThis(vim.fn.getreg(\"q\"))')<cr><esc><up>", "Insta-log anything while in normal mode" },
+      l = { "vaw\"qyo<c-r>=luaeval('logThis(vim.fn.getreg(\"q\"))')<cr><esc><up>",
+        "Insta-log anything while in normal mode" },
     },
     ts = { ":ts", "Go to tag by name" },
     ['dm!'] = { "<cmd>delmarks!<cr>", "Delete all marks" },
@@ -50,7 +51,8 @@ wk.register({
 
 wk.register({
   ['<C-c>'] = { "<esc>`^", "Escape and keep location" },
-  ['<C-l>'] = { "<esc>vaw\"qyo<c-r>=luaeval('logThis(vim.fn.getreg(\"q\"))')<cr><up>", "Insta-log anything while in insert mode" },
+  ['<C-l>'] = { "<esc>vaw\"qyo<c-r>=luaeval('logThis(vim.fn.getreg(\"q\"))')<cr><up>",
+    "Insta-log anything while in insert mode" },
 }, { mode = 'i' })
 
 wk.register({
