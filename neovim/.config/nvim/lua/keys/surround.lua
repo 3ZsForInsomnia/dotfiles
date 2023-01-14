@@ -8,7 +8,7 @@ wk.register({
   s = {
     name = "Surround (custom)",
     ['"'] = { f('"', '"'), "Surround with '\"'" },
-    ["'"] = { f("'", "'"), "Surround with \"'" },
+    ["'"] = { f("'", "'"), "Surround with \'" },
     ['`'] = { f('`', '`'), "Surround with `" },
     ['('] = { f('(', ')'), "Surround with ()" },
     ['{'] = { f('{', '}'), "Surround with {}" },
