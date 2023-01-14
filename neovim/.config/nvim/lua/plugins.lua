@@ -71,7 +71,31 @@ return packer.startup(function(use)
       }
     end
   }
-  use "folke/neodev.nvim"
+  use {
+    "folke/neodev.nvim",
+    config = function()
+      require("neodev").setup({
+        library = {
+          enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
+          -- these settings will be used for your Neovim config directory
+          runtime = true, -- runtime path
+          types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
+          plugins = true, -- installed opt or start plugins in packpath
+          -- you can also specify the list of plugins to make available as a workspace library
+          -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
+        },
+        setup_jsonls = true, -- configures jsonls to provide completion for project specific .luarc.json files
+        -- for your Neovim config directory, the config.library settings will be used as is
+        -- for plugin directories (root_dirs having a /lua directory), config.library.plugins will be disabled
+        -- for any other directory, config.library.enabled will be set to false
+        override = function(root_dir, options) end,
+        -- With lspconfig, Neodev will automatically setup your lua-language-server
+        -- If you disable this, then you have to set {before_init=require("neodev.lsp").before_init}
+        -- in your lsp start options
+        lspconfig = true,
+      })
+    end
+  }
 
   --
   --
@@ -89,6 +113,7 @@ return packer.startup(function(use)
   use 'nvim-treesitter/nvim-treesitter-context'
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'RRethy/nvim-treesitter-textsubjects'
+  use 'nvim-treesitter/playground'
   use {
     'm-demare/hlargs.nvim',
     config = function()
@@ -189,8 +214,14 @@ return packer.startup(function(use)
   --
   --
   use {
-    'kkoomen/vim-doge',
-    run = ':call doge#install()'
+    "danymat/neogen",
+    config = function()
+      require('neogen').setup {
+        enabled = true,
+        snippet_engine = "luasnip",
+        input_after_comment = true, -- (default: true) automatic jump (with insert mode) on inserted annotation
+      }
+    end,
   }
   use {
     'numToStr/Comment.nvim',
@@ -339,11 +370,10 @@ return packer.startup(function(use)
   --
   use 'sindrets/diffview.nvim'
   use 'ruanyl/vim-gh-line'
-  use 'APZelos/blamer.nvim'
   use {
     'lewis6991/gitsigns.nvim',
     config = function()
-      require('gitsigns').setup()
+      require('config.gitsigns').setup()
     end
   }
   use {
@@ -388,6 +418,7 @@ return packer.startup(function(use)
       require("colortils").setup()
     end,
   }
+  use 'dstein64/vim-startuptime'
 
   if packer_bootstrap then
     require('packer').sync()

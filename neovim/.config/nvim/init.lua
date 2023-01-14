@@ -32,7 +32,6 @@ require('save-restore-session')
 g.python3_host_prog = "/usr/bin/python3"
 g.python_host_prog = "/usr/bin/python"
 g.instant_username = 'Zach'
-g.blamer_enabled = 1
 g.db_ui_save_location = '~/.config/db_ui'
 g.matchup_matchparen_offscreen = { method = "popup" }
 g.mkdp_filetypes = { "markdown" }
@@ -46,7 +45,7 @@ k("s", "<C-e>", "<Plug>luasnip-expand-snippet", {})
 k("i", "<C-e>", "<Plug>luasnip-expand-snippet", {})
 k("i", "<C-l>", "<cmd>lua require('luasnip.extras.select_choice')()<cr>", {})
 
-function pathExpand()
+local function pathExpand()
   if vim.fn.getcmdtype() == ':' then
     return vim.fn.expand('%:h') .. '/'
   else
