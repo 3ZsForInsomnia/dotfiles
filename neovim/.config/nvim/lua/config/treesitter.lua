@@ -128,7 +128,8 @@ function M.setup()
     },
     matchup = {
       enable = true,
-    }, playground = {
+    },
+    playground = {
       enable = true,
       disable = {},
       updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code

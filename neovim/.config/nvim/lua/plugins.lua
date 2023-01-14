@@ -108,9 +108,14 @@ return packer.startup(function(use)
     run = ':TSUpdate',
     config = function()
       require('config.treesitter').setup()
-    end
+    end,
   }
-  use 'nvim-treesitter/nvim-treesitter-context'
+  use {
+    'nvim-treesitter/nvim-treesitter-context',
+    config = function()
+      require('config.treesitter-context').setup()
+    end,
+  }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'RRethy/nvim-treesitter-textsubjects'
   use 'nvim-treesitter/playground'
