@@ -13,6 +13,7 @@ wk.register({
     ['('] = { f('(', ')'), "Surround with ()" },
     ['{'] = { f('{', '}'), "Surround with {}" },
     ['['] = { f('[', ']'), "Surround with []" },
+    ['<'] = { f('<', '>'), "Surround with <>" },
     ['$'] = { f('${', '}'), "Surround with ${}" },
   },
 }, { prefix = "<leader>" })
