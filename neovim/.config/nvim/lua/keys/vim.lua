@@ -47,12 +47,19 @@ wk.register({
   ['<C-[>'] = { "<cmd>pop<cr>", "Pop entry off tag stack" },
   ['<C-y>'] = { "10<C-y>", "Scroll up 10 lines without moving cursor" },
   ['<C-e>'] = { "10<C-e>", "Scroll down 10 lines without moving cursor" },
+  ["<C-d>"] = { "<C-d>zz", "Scroll and center text on screen" },
+  ["<C-u>"] = { "<C-u>zz", "Scroll and center text on screen" },
+  ["<M-d>"] = { "\"_d", "Delete but preserve yanked register" },
 })
 
 wk.register({
   ['<C-c>'] = { "<esc>`^", "Escape and keep location" },
   ['<C-l>'] = { "<esc>vaw\"qyo<c-r>=luaeval('logThis(vim.fn.getreg(\"q\"))')<cr><up>",
     "Insta-log anything while in insert mode" },
+  ["<C-j>"] = { "<Plug>luasnip-next-choice", "Cycle to next luasnip choicenode option" },
+  ["<C-k>"] = { "<Plug>luasnip-prev-choice", "Cycle to prev luasnip choicenode option" },
+  ["<C-e>"] = { "<Plug>luasnip-expand-snippet", "Luasnip expand snippet under cursor" },
+  ["<C-s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
 }, { mode = 'i' })
 
 wk.register({
@@ -62,8 +69,17 @@ wk.register({
   },
   ['<C-y>'] = { "10<C-y>", "Scroll up 10 lines without moving cursor" },
   ['<C-e>'] = { "10<C-e>", "Scroll down 10 lines without moving cursor" },
+  ["<C-d>"] = { "\"_d", "Delete but preserve yanked register" },
+  ["<C-s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
 }, { mode = 'v' })
 
 wk.register({
   ['<esc>'] = { "<C-\\><C-n>", "Escape but for terminal mode" },
 }, { mode = 't' })
+
+wk.register({
+  ["<C-j>"] = { "<Plug>luasnip-next-choice", "Cycle to next luasnip choicenode option" },
+  ["<C-k>"] = { "<Plug>luasnip-prev-choice", "Cycle to prev luasnip choicenode option" },
+  ["<C-e>"] = { "<Plug>luasnip-expand-snippet", "Luasnip expand snippet under cursor" },
+  ["<C-s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
+}, { mode = 's' })

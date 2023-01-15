@@ -24,6 +24,29 @@ local strings = require("snippets.utils.strings")
 
 return {
   s({
+    trig = "wk",
+    name = "Create WhichKey Binding",
+    dscr = "$1 = { \"$2\", \"$3\" },",
+  }, {
+    c(1, {
+      i(1, "binding"),
+      sn(nil, {
+        t('["<'),
+        i(1, "binding"),
+        t('>"]')
+      })
+    }),
+    t(" = { \""),
+    c(2, {
+      sn(nil, { t("<cmd>"), i(1), t("<cr>") }),
+      sn(nil, { t(":lua "), i(1, "cmd") }),
+      i(1, "cmd"),
+    }),
+    t("\", \""),
+    i(3, "Desc"),
+    t('\" },')
+  }),
+  s({
     trig = 'lr',
     name = 'local x = require("z.y.x")',
     dsrc = 'Create local var for last item in require path',
