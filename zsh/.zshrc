@@ -1,28 +1,36 @@
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
 source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-export ZSH=/Users/zachary.levine/.oh-my-zsh # Path to your oh-my-zsh installation.
 source ~/.path-modifiers.sh
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
-# Uncomment the following line to enable command auto-correction.
 ENABLE_CORRECTION="true"
 
-plugins=(git colored-man-pages zshmarks you-should-use zsh-autosuggestions)
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-source ~/.p10k.zsh # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+source ~/.p10k.zsh
 source /Users/zachary.levine/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /Users/zachary.levine/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source /Users/zachary.levine/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /Users/zachary.levine/zshmarks/zshmarks.plugin.zsh
+source /Users/zachary.levine/omz-git-completions.zsh
+source /Users/zachary.levine/zsh-you-should-use/you-should-use.plugin.zsh
 zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
-fpath=(~/.zsh/ $fpath)
+fpath=(~/zsh-completions/src ~/.zsh/ $fpath)
 
-autoload -Uz compinit
-for dump in ~/.zcompdump(N.mh+24); do
-  compinit
-done
-compinit -C
+source ~/.bashrc
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+# bindkey '^ ' autosuggest-accept
+
+bindkey -M menuselect '^[h' vi-backward-char
+bindkey -M menuselect '^[l' vi-forward-char
+bindkey '^[k' up-line-or-search
+bindkey '^[k' up-line-or-history
+bindkey '^[j' down-line-or-select
+bindkey '^[j' down-line-or-history
+
+function git_main_branch() {
+  def=`git remote show origin | sed -n '/HEAD branch/s/.*: //p'`
+  echo $def
+}
 
 # Personal automation/logging completions
 alias cli='nocorrect cli'
@@ -39,9 +47,4 @@ _cli_yargs_completions()
 compdef _cli_yargs_completions cli
 ###-end-cli-completions-###
 
-source ~/.bashrc
-
-function git_main_branch() {
-  def=`git remote show origin | sed -n '/HEAD branch/s/.*: //p'`
-  echo $def
-}
+source ~/powerlevel10k/powerlevel10k.zsh-theme

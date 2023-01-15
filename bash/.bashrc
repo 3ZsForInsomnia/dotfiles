@@ -6,6 +6,8 @@ source ~/.bash_profile
 source ~/.utils.sh
 source ~/.nvim-tmux-etc.sh
 
+alias ..='cd ../'
+alias ~='cd ~'
 alias sudo='sudo '
 alias addcreds='ssh-add -K'
 alias getclip='pbpaste'

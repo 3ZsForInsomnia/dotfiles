@@ -2,8 +2,6 @@ local wezterm = require 'wezterm'
 local action = wezterm.action
 local utils = require 'utils'
 
-local PaneResizeAmount = 20
-
 local M = {}
 
 M.Tabs = {
@@ -47,34 +45,13 @@ M.Tabs = {
     mods = 'ALT',
     action = action.ActivateTab(7),
   },
-  {
-    key = '-',
-    mods = 'ALT',
-    action = action.ShowTabNavigator,
-  },
 }
 
 M.Panes = {
-  { key = "a", mods = "ALT", action = action({ ActivatePaneDirection = "Left" }) },
-  { key = "d", mods = "ALT", action = action({ ActivatePaneDirection = "Right" }) },
-  { key = "w", mods = "ALT", action = action({ ActivatePaneDirection = "Up" }) },
-  { key = "x", mods = "ALT", action = action({ ActivatePaneDirection = "Down" }) },
-  {
-    key = 'H',
-    mods = 'CTRL|ALT',
-    action = action.AdjustPaneSize { 'Left', PaneResizeAmount * 2 },
-  },
-  {
-    key = 'J',
-    mods = 'CTRL|ALT',
-    action = action.AdjustPaneSize { 'Down', PaneResizeAmount * 2 },
-  },
-  { key = 'K', mods = 'ALT', action = action.AdjustPaneSize { 'Up', PaneResizeAmount * 2 } },
-  {
-    key = 'L',
-    mods = 'CTRL|ALT',
-    action = action.AdjustPaneSize { 'Right', PaneResizeAmount * 2 },
-  },
+  { key = "h", mods = "CTRL|SHIFT", action = action({ ActivatePaneDirection = "Left" }) },
+  { key = "l", mods = "CTRL|SHIFT", action = action({ ActivatePaneDirection = "Right" }) },
+  { key = "k", mods = "CTRL|SHIFT", action = action({ ActivatePaneDirection = "Up" }) },
+  { key = "j", mods = "CTRL|SHIFT", action = action({ ActivatePaneDirection = "Down" }) },
   { key = 'z', mods = 'ALT', action = action.TogglePaneZoomState },
   { key = "'", mods = 'ALT', action = action.SplitHorizontal },
   { key = ';', mods = 'ALT', action = action.SplitVertical },
@@ -86,17 +63,23 @@ M.Misc = {
     mods = 'CTRL|SHIFT|ALT',
     action = action.EmitEvent 'new-dev-tab'
   },
-  -- {
-  --   key = 'R',
-  --   mods = 'CTRL|SHIFT|ALT',
-  --   action = action.EmitEvent 'new-dev-env'
-  -- },
   -- Turn off the default CMD-m Hide action, allowing CMD-m to
   -- be potentially recognized and handled by the tab
   {
     key = 'Enter',
     mods = 'ALT',
     action = action.DisableDefaultAssignment,
+  },
+  -- Ctrl-R is used by zsh-autocomplete
+  {
+    key = "r",
+    mods = "CTRL",
+    action = action.DisableDefaultAssignment
+  },
+  {
+    key = "R",
+    mods = "CTRL",
+    action = action.DisableDefaultAssignment
   },
   { key = 'v', mods = 'CTRL', action = action.PasteFrom 'Clipboard' },
   { key = "/", mods = "ALT", action = action.Search("CurrentSelectionOrEmptyString") },
