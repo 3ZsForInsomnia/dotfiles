@@ -15,8 +15,8 @@ end
 
 wk.register({
   ["<leader>"] = {
-    p = { "'\"+p", "Paste from clipboard" },
-    y = { "'\"+y", "Copy to clipboard" },
+    pc = { "'\"+p", "Paste from clipboard" },
+    yc = { "'\"+y", "Copy to clipboard" },
     s = {
       name = "Session",
       s = { "<cmd>lua SaveSessionByName()<cr>", "Save with name" },
@@ -44,33 +44,39 @@ wk.register({
     ['dm!'] = { "<cmd>delmarks!<cr>", "Delete all marks" },
     [','] = { "<cmd>nohlsearch<cr>", "Stop highlighting search results" },
   },
-  ['<C-[>'] = { "<cmd>pop<cr>", "Pop entry off tag stack" },
-  ['<C-y>'] = { "10<C-y>", "Scroll up 10 lines without moving cursor" },
-  ['<C-e>'] = { "10<C-e>", "Scroll down 10 lines without moving cursor" },
-  ["<C-d>"] = { "<C-d>zz", "Scroll and center text on screen" },
-  ["<C-u>"] = { "<C-u>zz", "Scroll and center text on screen" },
+  ['<C-'] = {
+    ['[>'] = { "<cmd>pop<cr>", "Pop entry off tag stack" },
+    ['y>'] = { "10<C-y>", "Scroll up 10 lines without moving cursor" },
+    ['e>'] = { "10<C-e>", "Scroll down 10 lines without moving cursor" },
+    ["d>"] = { "<C-d>zz", "Scroll and center text on screen" },
+    ["u>"] = { "<C-u>zz", "Scroll and center text on screen" },
+  },
   ["<M-d>"] = { "\"_d", "Delete but preserve yanked register" },
 })
 
 wk.register({
-  ['<C-c>'] = { "<esc>`^", "Escape and keep location" },
-  ['<C-l>'] = { "<esc>vaw\"qyo<c-r>=luaeval('logThis(vim.fn.getreg(\"q\"))')<cr><up>",
-    "Insta-log anything while in insert mode" },
-  ["<C-j>"] = { "<Plug>luasnip-next-choice", "Cycle to next luasnip choicenode option" },
-  ["<C-k>"] = { "<Plug>luasnip-prev-choice", "Cycle to prev luasnip choicenode option" },
-  ["<C-e>"] = { "<Plug>luasnip-expand-snippet", "Luasnip expand snippet under cursor" },
-  ["<C-s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
+  ['<C-'] = {
+    ['c>'] = { "<esc>`^", "Escape and keep location" },
+    ['l>'] = { "<esc>vaw\"qyo<c-r>=luaeval('logThis(vim.fn.getreg(\"q\"))')<cr><up>",
+      "Insta-log anything while in insert mode" },
+    ["j>"] = { "<Plug>luasnip-next-choice", "Cycle to next luasnip choicenode option" },
+    ["k>"] = { "<Plug>luasnip-prev-choice", "Cycle to prev luasnip choicenode option" },
+    ["e>"] = { "<Plug>luasnip-expand-snippet", "Luasnip expand snippet under cursor" },
+    ["s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
+  },
 }, { mode = 'i' })
 
 wk.register({
   ['<leader>'] = {
-    p = { "'\"+p", "Paste from clipboard" },
-    y = { "'\"+y", "Copy to clipboard" },
+    pc = { "'\"+p", "Paste from clipboard" },
+    yc = { "'\"+y", "Copy to clipboard" },
   },
-  ['<C-y>'] = { "10<C-y>", "Scroll up 10 lines without moving cursor" },
-  ['<C-e>'] = { "10<C-e>", "Scroll down 10 lines without moving cursor" },
-  ["<C-d>"] = { "\"_d", "Delete but preserve yanked register" },
-  ["<C-s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
+  ['<C-'] = {
+    ['y>'] = { "10<C-y>", "Scroll up 10 lines without moving cursor" },
+    ['e>'] = { "10<C-e>", "Scroll down 10 lines without moving cursor" },
+    ["d>"] = { "\"_d", "Delete but preserve yanked register" },
+    ["s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
+  },
 }, { mode = 'v' })
 
 wk.register({
@@ -78,8 +84,10 @@ wk.register({
 }, { mode = 't' })
 
 wk.register({
-  ["<C-j>"] = { "<Plug>luasnip-next-choice", "Cycle to next luasnip choicenode option" },
-  ["<C-k>"] = { "<Plug>luasnip-prev-choice", "Cycle to prev luasnip choicenode option" },
-  ["<C-e>"] = { "<Plug>luasnip-expand-snippet", "Luasnip expand snippet under cursor" },
-  ["<C-s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
+  ['<C-'] = {
+    ["j>"] = { "<Plug>luasnip-next-choice", "Cycle to next luasnip choicenode option" },
+    ["k>"] = { "<Plug>luasnip-prev-choice", "Cycle to prev luasnip choicenode option" },
+    ["e>"] = { "<Plug>luasnip-expand-snippet", "Luasnip expand snippet under cursor" },
+    ["s>"] = { "<cmd>lua require('luasnip.extras.select_choice')()<cr>", "Open select popup for luasnip choice" },
+  }
 }, { mode = 's' })

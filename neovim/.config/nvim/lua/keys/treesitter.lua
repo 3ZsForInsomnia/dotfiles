@@ -10,6 +10,4 @@ wk.register({
   },
   ['[d'] = { function() vim.diagnostic.goto_prev({}) end, "Previous diagnostic" },
   [']d'] = { function() vim.diagnostic.goto_next() end, "Next diagnostic" },
-  
 })
-

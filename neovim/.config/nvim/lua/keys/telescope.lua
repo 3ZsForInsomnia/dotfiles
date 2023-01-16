@@ -6,7 +6,9 @@ local f = function(command)
 end
 
 wk.register({
+  ['<leader>'] = {},
   f = {
+    [''] = { f('live_grep'), "Live search" },
     name = 'Telescope Find',
     f = { f("find_files"), "Files" },
     t = { f(""), "Pickers" },
@@ -80,4 +82,4 @@ wk.register({
       c = { "<cmd>TodoTelescope<cr>", "Find todo comments" },
     }
   },
-}, { prefix = "<leader>" })
+})

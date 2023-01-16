@@ -424,6 +424,7 @@ return packer.startup(function(use)
     end,
   }
   use 'dstein64/vim-startuptime'
+  use "ThePrimeagen/vim-apm"
 
   if packer_bootstrap then
     require('packer').sync()
