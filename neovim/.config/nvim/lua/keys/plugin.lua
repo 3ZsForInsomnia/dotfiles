@@ -5,7 +5,6 @@ wk.register({
     name = "Misc Plugins",
     v = { "<cmd>Vista!!<cr>", "Toggle Vista" },
     t = { "<cmd>VimTrello<cr>", "Open Trello" },
-    -- g = { "<cmd>DogeGenerate<cr>", "Generate docstring for whatever is under cursor" },
     g = { "<cmd>Neogen<cr>", "Generate docstring for whatever is under cursor" },
     f = { "<cmd>Twilight<cr>", "Dim unused code (twilight)" },
     u = { "<cmd>UndotreeToggle<cr>", "UndoTree" },

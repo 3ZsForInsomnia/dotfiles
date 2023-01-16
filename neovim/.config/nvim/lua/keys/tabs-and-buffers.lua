@@ -9,10 +9,12 @@ wk.register({
     t = {
       name = "Tabs",
       w = { "<C-w>T", "Move current split to new tab" },
-      n = { "<cmd>tabnew<cr>", "Open a new tab" },
-      nt = { "<cmd>tabnew<cr><cmd>terminal<cr>", "Open a terminal in a new tab" },
-      no = { function() vim.api.nvim_command(":tabe " .. vim.fn.expand("%:p:h")) end,
-        "Open file in dir of current buffer" },
+      n = {
+        [''] = { "<cmd>tabnew<cr>", "Open a new tab" },
+        t = { "<cmd>tabnew<cr><cmd>terminal<cr>", "Open a terminal in a new tab" },
+        o = { function() vim.api.nvim_command(":tabe " .. vim.fn.expand("%:p:h")) end,
+          "Open file in dir of current buffer" },
+      },
       h = { "<cmd>split<cr>", "Horizontal split" },
       v = { "<cmd>vsplit<cr>", "Vertical split" },
     },
@@ -37,10 +39,12 @@ wk.register({
       b = { f(12), "Jump to Buffer 12" },
     },
     h = {
+      [''] = { "<C-w>10>", "Increase horizontal split size by 8" },
       ['+'] = { "<C-w>10>", "Increase horizontal split size by 8" },
       ['-'] = { "<C-w>10<", "Decrease horizontal split size by 8" },
     },
     v = {
+      [''] = { "<C-w>10+", "Increase vertical split size by 8" },
       ['+'] = { "<C-w>10+", "Increase vertical split size by 8" },
       ['-'] = { "<C-w>10-", "Decrease vertical split size by 8" },
     },
@@ -48,10 +52,12 @@ wk.register({
   },
   ['[b'] = { "<cmd>bp<cr>", "Go to previous buffer" },
   [']b'] = { "<cmd>bn<cr>", "Go to next buffer" },
-  ['<M-h'] = "Focus on pane to left",
-  ['<M-j'] = "Focus on pane to below",
-  ['<M-k'] = "Focus on pane to above",
-  ['<M-l'] = "Focus on pane to right",
+  ['<M-'] = {
+    ['h'] = "Focus on pane to left",
+    ['j'] = "Focus on pane to below",
+    ['k'] = "Focus on pane to above",
+    ['l'] = "Focus on pane to right",
+  },
 })
 
 local keymap = vim.keymap.set

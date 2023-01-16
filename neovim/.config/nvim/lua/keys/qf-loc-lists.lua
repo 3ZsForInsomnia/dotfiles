@@ -1,7 +1,8 @@
 local wk = require('which-key')
 
 wk.register({
-  c = {
+  q = {
+    [''] = { "<cmd>copen<cr>", "Open" },
     name = "Quickfix list",
     c = { "<cmd>cclose<cr>", "Close" },
     o = { "<cmd>copen<cr>", "Open" },
@@ -17,6 +18,7 @@ wk.register({
     qt = { "<cmd>TodoQuickFix<cr>", "Add all todos in project to qflist" },
   },
   l = {
+    [''] = { "<cmd>lopen<cr>", "Open" },
     name = "LocList",
     c = { "<cmd>lclose<cr>", "Close" },
     o = { "<cmd>lopen<cr>", "Open" },
