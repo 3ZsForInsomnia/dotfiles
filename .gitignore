@@ -2,6 +2,7 @@
 resurrect
 .git/
 zsh-syntax-highlighting
+zshmarks
 trello.*
 *work*
 packer_compiled
