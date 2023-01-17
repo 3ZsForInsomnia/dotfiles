@@ -29,6 +29,7 @@ wk.register({
     },
     z = {
       name = "Personal",
+      y = { "<cmd>let @+ = expand('%')<cr>", "Copy filename + path to clipboard" },
       ws = { "<cmd>w<cr><bar><cmd>source %<cr>", "Write and source current file" },
       ['%'] = { "<cmd>source %<cr>", "Source current file" },
       ['%i'] = { "<cmd>source ~/.config/nvim/init.vim<cr>", "Source init.vim" },

@@ -7,6 +7,11 @@ function M.setup()
   local trouble = require("trouble.providers.telescope")
   local icons = require('icons')
 
+  local shortcuts = {
+    ["<c-s>"] = trouble.open_with_trouble,
+    ["C-q"] = actions.send_selected_to_qflist + actions.open_qflist,
+  }
+
   telescope.setup {
     pickers = {
       find_files = {
@@ -48,8 +53,8 @@ function M.setup()
       sorting_strategy = "ascending",
       scroll_strategy = "limit",
       mappings = {
-        i = { ["<c-s>"] = trouble.open_with_trouble },
-        n = { ["<c-s>"] = trouble.open_with_trouble },
+        i = shortcuts,
+        n = shortcuts,
       },
       layout_config = {
         horizontal = {
