@@ -63,10 +63,14 @@ pre_validation() {
 autoload -U add-zsh-hook
 add-zsh-hook preexec pre_validation
 
-bindkey -M menuselect '^[h' vi-backward-char
-bindkey -M menuselect '^[l' vi-forward-char
-bindkey '^[k' up-line-or-search
-bindkey '^[j' down-line-or-select
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+# use the vi navigation keys in menu completion
+bindkey '^j' expand-or-complete 
+bindkey -M menuselect '^h' vi-backward-char
+bindkey -M menuselect '^k' vi-up-line-or-history
+bindkey -M menuselect '^l' vi-forward-char
+bindkey -M menuselect '^j' vi-down-line-or-history
 
 function git_main_branch() {
   def=`git remote show origin | sed -n '/HEAD branch/s/.*: //p'`

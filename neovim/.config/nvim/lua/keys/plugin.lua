@@ -1,4 +1,5 @@
 local wk = require("which-key")
+local P = require('pomo.pomo')
 
 wk.register({
   p = {
@@ -8,6 +9,7 @@ wk.register({
     g = { "<cmd>Neogen<cr>", "Generate docstring for whatever is under cursor" },
     f = { "<cmd>Twilight<cr>", "Dim unused code (twilight)" },
     u = { "<cmd>UndotreeToggle<cr>", "UndoTree" },
+    n = { P.openPomoBuffer, "Create a new Pomo" },
     startup = { "<cmd>StartupTime<cr>", "Pretty StartupTime viewer" },
     c = {
       [''] = { "<cmd>Colortils picker #<cword><cr>", "Picker" },

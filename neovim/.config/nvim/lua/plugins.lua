@@ -34,6 +34,7 @@ return packer.startup(function(use)
   use 'kamykn/popup-menu.nvim'
   use 'wbthomason/packer.nvim'
   use "kkharji/sqlite.lua"
+  use 'rcarriga/nvim-notify'
   use {
     'stevearc/dressing.nvim',
     config = function()

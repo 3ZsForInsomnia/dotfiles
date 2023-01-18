@@ -116,26 +116,6 @@ M.Misc = {
       alphabet = "1234567890",
     })
   },
-  -- {
-  --   key = 'c',
-  --   mods = 'CTRL',
-  --   action = wezterm.action_callback(function(window, pane)
-  --     local has_selection = window:get_selection_text_for_pane(pane) ~= ''
-  --     if has_selection then
-  --       window:perform_action(
-  --         action.CopyTo 'ClipboardAndPrimarySelection',
-  --         pane
-  --       )
-  --
-  --       window:perform_action(action.ClearSelection, pane)
-  --     else
-  --       window:perform_action(
-  --         action.SendKey { key = 'c', mods = 'CTRL' },
-  --         pane
-  --       )
-  --     end
-  --   end),
-  -- },
   {
     key = "LeftArrow",
     mods = "OPT",
