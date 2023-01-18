@@ -10,15 +10,21 @@ alias ..='cd ../'
 alias ~='cd ~'
 alias sudo='sudo '
 alias addcreds='ssh-add -K'
+
 alias getclip='pbpaste'
 alias setclip='pbcopy'
 
 alias :q='exit'
 alias q='exit'
+
+alias cat='bat'
+alias lua='lua-5.1'
+
 alias ls='exa -lahUFm --git -I ".git" --icons'
 alias lsg='ls G'
 alias lsr='exa -lahRGFUm --git -I ".git"--icons'
 alias lsd='exa -lahD --icons -I ".git"' 
+
 alias c='clear'
 alias rmrf='rm -rf'
 alias cls='c; ls'
