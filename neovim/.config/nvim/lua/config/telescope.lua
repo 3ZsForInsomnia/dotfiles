@@ -45,6 +45,7 @@ function M.setup()
       }
     },
     defaults = {
+      file_ignore_patterns = { "node_modules", ".git/", "dist/", "build/", "target/" },
       prompt_prefix = icons.common.Telescope .. " " .. icons.misc.Carat .. " ",
       selection_caret = icons.common.Arrow .. " ",
       entry_prefix = icons.misc.Carat .. " ",
