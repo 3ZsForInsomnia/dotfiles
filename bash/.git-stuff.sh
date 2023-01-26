@@ -216,6 +216,14 @@ function git_current_branch() {
   fi
   echo ${ref#refs/heads/}
 }
+function ggp() {
+  if [[ "$#" != 0 ]] && [[ "$#" != 1 ]]; then
+    git push origin "${*}"
+  else
+    [[ "$#" == 0 ]] && local b="$(git_current_branch)"
+    git push origin "${b:=$1}"
+  fi
+}
 
 ### Gists
 alias getGistID='gist --list | peco | cut -d "/" -f 4 | cut -d " " -f 1'
