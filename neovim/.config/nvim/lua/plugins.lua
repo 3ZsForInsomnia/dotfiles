@@ -35,6 +35,7 @@ return packer.startup(function(use)
   use 'wbthomason/packer.nvim'
   use "kkharji/sqlite.lua"
   use 'rcarriga/nvim-notify'
+  use "zdcthomas/yop.nvim"
   use {
     'stevearc/dressing.nvim',
     config = function()

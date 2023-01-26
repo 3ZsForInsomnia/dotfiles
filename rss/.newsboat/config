@@ -1,0 +1,51 @@
+auto-reload yes
+max-items 100
+show-read-feeds no
+confirm-mark-all-feeds-read no
+confirm-mark-feed-read no
+always-display-description yes
+keep-articles-days 7
+
+browser "open %u"
+
+# unbind keys
+unbind-key ENTER
+unbind-key j
+unbind-key k
+unbind-key q
+unbind-key N
+unbind-key K
+unbind-key a
+unbind-key A
+unbind-key m
+unbind-key d
+
+# bind keys - vim style
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit
+bind-key q hard-quit
+bind-key g home
+bind-key G end
+bind-key ^d pagedown
+bind-key ^u pageup
+bind-key n next-feed
+bind-key p prev-feed
+bind-key a mark-feed-read
+bind-key A mark-all-feeds-read
+bind-key m set-tag
+bind-key d clear-tag
+
+color background         default   default
+color listnormal         default   default
+color listnormal_unread  default   default
+color listfocus          black     yellow
+color listfocus_unread   black     yellow
+color info               default   black
+color article            default   default
+
+# highlights
+highlight article "^(Title):.*$" blue default
+highlight article "https?://[^ ]+" red default
+highlight article "\\[image\\ [0-9]+\\]" green default

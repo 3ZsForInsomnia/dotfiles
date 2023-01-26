@@ -26,17 +26,19 @@ matches:
     replace: "between"
   - trigger: "gthr"
     replace: "go through"
-  - trigger: ":a"
-    replace: "ADPR-"
   - trigger: "tbh"
     replace: "to be honest"
+  - trigger: "Tbh"
+    replace: "To be honest"
   - trigger: "wrt"
     replace: "with regard to"
+  - trigger: "Wrt"
+    replace: "With regard to"
   - trigger: ":sig"
     replace: >
             Thank you,
               --Zachary Levine
-  - trigger: ":re"
+  - trigger: "RE"
     replace: "Report Editor"
 
   # And much more! For more information, visit the docs: https://espanso.org/docs/
