@@ -81,14 +81,23 @@ end
 
 Pomo.notify = function(timeRemaining, level)
   if level == nil or level == '' then level = vim.log.levels.DEBUG end
-  notify(Pomo.curr.name .. ' has ' .. timeRemaining .. ' minutes remaining', level)
+  local message = Pomo.curr.name .. ' has ' .. timeRemaining .. ' minutes left'
+  notify(message, level)
+  os.execute('say ' .. message)
+  os.execute(
+    'terminal-notifier -title "' .. Pomo.curr.name ..
+    '" -message "Pomo has ' .. timeRemaining .. ' minutes left"'
+  )
 end
 
 Pomo.startTimers = function()
   notify('Starting ' .. Pomo.curr.name, vim.log.levels.INFO)
 
   local fullLengthTimer = vim.defer_fn(function()
-    notify('Completed ' .. Pomo.curr.name .. '!', vim.log.levels.INFO)
+    local message = 'Completed ' .. Pomo.curr.name .. '!'
+    notify(message, vim.log.levels.INFO)
+    os.execute('say ' .. message)
+    os.execute('terminal-notifier -message "Pomo complete" -title "' .. Pomo.curr.name .. '"')
   end, ms(Pomo.curr.duration_set))
   table.insert(Pomo.timers, fullLengthTimer)
 
@@ -160,7 +169,7 @@ Pomo.logToDb = function()
 end
 
 Pomo.onFinish = function()
-  for _,timer in ipairs(Pomo.timers) do
+  for _, timer in ipairs(Pomo.timers) do
     if not timer:is_closing() then
       timer:close()
     end

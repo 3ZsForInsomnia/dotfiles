@@ -147,6 +147,7 @@ return packer.startup(function(use)
       require('config.telescope').setup()
     end
   }
+  use "nvim-telescope/telescope-live-grep-args.nvim"
   use "nvim-telescope/telescope-frecency.nvim"
   use "LukasPietzschmann/telescope-tabs"
   use "benfowler/telescope-luasnip.nvim"

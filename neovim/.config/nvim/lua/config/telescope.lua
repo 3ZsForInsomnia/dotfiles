@@ -5,11 +5,19 @@ function M.setup()
   local telescope = require("telescope")
   local actions = require("telescope.actions")
   local trouble = require("trouble.providers.telescope")
+  local lga_actions = require("telescope-live-grep-args.actions")
   local icons = require('icons')
 
   local shortcuts = {
-    ["<c-s>"] = trouble.open_with_trouble,
-    ["C-q"] = actions.send_selected_to_qflist + actions.open_qflist,
+    ["<M-t>"] = trouble.open_with_trouble,
+    ["<M-q>"] = actions.send_to_qflist + actions.open_qflist,
+    ["<M-a>"] = actions.add_to_qflist + actions.open_qflist,
+    ["<C-s>"] = actions.add_selection,
+    ["<C-r>"] = actions.remove_selection,
+    ["<M-d>"] = actions.drop_all,
+    ["<M-s>"] = actions.select_all,
+    ["<C-z>"] = actions.center,
+    ["<C-w>"] = actions.which_key,
   }
 
   telescope.setup {
@@ -94,18 +102,28 @@ function M.setup()
         -- Provide debug messages
         debug = false,
       },
-    },
-    xray23 = {
-      sessionDir = "~/vim-sessions",
-    },
-    heading = {
-      treesitter = true,
+      xray23 = {
+        sessionDir = "~/vim-sessions",
+      },
+      heading = {
+        treesitter = true,
+      },
+      live_grep_args = {
+        auto_quoting = true,
+        mappings = {
+          i = {
+            ["<C-k>"] = lga_actions.quote_prompt(),
+            ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+          },
+        },
+      },
     },
   }
 
   require "telescope-tabs".setup()
 
   telescope.load_extension('fzf')
+  telescope.load_extension('live_grep_args')
   telescope.load_extension('bookmarks')
   telescope.load_extension('changes')
   telescope.load_extension("xray23")

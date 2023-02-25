@@ -110,13 +110,6 @@ M.Misc = {
     }),
   },
   {
-    key = "s",
-    mods = "ALT",
-    action = action.PaneSelect({
-      alphabet = "1234567890",
-    })
-  },
-  {
     key = "LeftArrow",
     mods = "OPT",
     action = action { SendString = "\x1bb" }

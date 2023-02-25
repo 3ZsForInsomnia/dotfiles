@@ -5,15 +5,19 @@ local f = function(command)
   return "<cmd>Telescope " .. command .. "<cr>"
 end
 
+local live = function()
+  return { "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<cr>", "Live search" }
+end
+
 wk.register({
   ['<leader>'] = {
     f = {
-      [''] = { f('live_grep'), "Live search" },
+      [''] = live(),
       name = 'Telescope Find',
       f = { f("find_files"), "Files" },
       t = { f(""), "Pickers" },
       fr = { f("frecency"), "Frecency" },
-      sl = { f("live_grep"), "Live Search" },
+      sl = live(),
       ss = { f("grep_string"), "String" },
       h = { f("search_history"), "Search History" },
       r = { f("resume"), "Resume previous search" },
