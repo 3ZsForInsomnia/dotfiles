@@ -15,7 +15,7 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 source "$HOME/.profile"
 
 export PATH=$PATH:/opt/apache-maven/bin
-export GOPATH=~/go/
+export GOPATH=~/src/go/
 
 export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;;"
 
