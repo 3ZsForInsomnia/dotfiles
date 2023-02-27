@@ -54,3 +54,12 @@ if (command === "block") {
 } else if (command === "unblock") {
   unblockHosts(args);
 }
+exec("dscacheutil -flushcache", (err, stdout, stderr) => {
+  if (err) {
+    log("Error flushing dns cache", err);
+  } else if (stderr) {
+    log("StdErr flushing dns cache", stderr);
+  } else {
+    log("Successfully flushed cache");
+  }
+});
