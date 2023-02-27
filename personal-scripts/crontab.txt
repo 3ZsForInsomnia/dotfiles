@@ -1,0 +1,5 @@
+30 */18 * * 5 sudo node /Users/zachary.levine/site-block.js block $(command cat /Users/zachary.levine/shabbat-sites-to-block.txt)
+30 */20 * * 6 sudo node /Users/zachary.levine/site-block.js unblock $(command cat /Users/zachary.levine/shabbat-sites-to-block.txt)
+
+0 * * * 0 sudo node /Users/zachary.levine/site-block.js unblock $(command cat /Users/zachary.levine/seamless-to-block.txt)
+0 * * * 1 sudo node /Users/zachary.levine/site-block.js block $(command cat /Users/zachary.levine/seamless-to-block.txt)
