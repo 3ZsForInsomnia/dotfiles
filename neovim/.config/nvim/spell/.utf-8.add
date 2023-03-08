@@ -17,7 +17,7 @@ vimrc
 vimrc
 vimrc
 configs
-vim/!
+#im/!
 wezterm
 utils
 b/!
@@ -39,7 +39,7 @@ luasnip
 table/!
 number
 nvim
-vim
+#im
 api
 config/!
 print/!
@@ -68,3 +68,13 @@ async
 param
 url
 let
+vim/!
+python3
+autocommands
+popup
+vim
+fn
+prog
+usr
+pomo
+send_to_qflist/!

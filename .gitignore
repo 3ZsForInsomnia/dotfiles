@@ -2,6 +2,9 @@
 resurrect
 .git/
 zsh-syntax-highlighting
+zshmarks
+zsh-autocomplete
+zsh-autosuggestions
 trello.*
 *work*
 packer_compiled

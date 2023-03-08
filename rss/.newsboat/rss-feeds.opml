@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<opml version="1.0">
+    <head>
+        <title>Zach subscriptions in feedly Cloud</title>
+    </head>
+    <body>
+        <outline text="Art" title="Art"/>
+        <outline text="Misc Frontend" title="Misc Frontend">
+            <outline type="rss" text="CSS-Tricks" title="CSS-Tricks" xmlUrl="https://css-tricks.com/feed/" htmlUrl="https://css-tricks.com"/>
+            <outline type="rss" text="John Papa" title="John Papa" xmlUrl="http://feeds.feedburner.com/JohnPapa" htmlUrl="https://www.johnpapa.net/"/>
+            <outline type="rss" text="Kent C. Dodds Blog" title="Kent C. Dodds Blog" xmlUrl="https://kentcdodds.com/blog/rss.xml" htmlUrl="https://kentcdodds.com/blog"/>
+            <outline type="rss" text="Sympolymathesy, by Chris Krycho" title="Sympolymathesy, by Chris Krycho" xmlUrl="http://www.chriskrycho.com/feed.xml" htmlUrl="https://v5.chriskrycho.com/"/>
+            <outline type="rss" text="nrwl" title="nrwl" xmlUrl="https://blog.nrwl.io/feed" htmlUrl="https://blog.nrwl.io?source=rss----1e21061103c7---4"/>
+            <outline type="rss" text="Cory Rylan Front End Web Development Blog" title="Cory Rylan Front End Web Development Blog" xmlUrl="https://coryrylan.com/feed.xml" htmlUrl="https://coryrylan.com/"/>
+            <outline type="rss" text="Lea Verou" title="Lea Verou" xmlUrl="http://feeds2.feedburner.com/leaverou" htmlUrl="https://lea.verou.me"/>
+        </outline>
+        <outline text="Fashion" title="Fashion"/>
+        <outline text="Programming" title="Programming">
+            <outline type="rss" text="The Clean Code Blog" title="The Clean Code Blog" xmlUrl="http://blog.cleancoder.com/atom.xml" htmlUrl="http://blog.cleancoder.com/"/>
+            <outline type="rss" text="This Week In Neovim" title="This Week In Neovim" xmlUrl="https://this-week-in-neovim.org/rss" htmlUrl="https://this-week-in-neovim.org"/>
+            <outline type="rss" text="Marius Schulz" title="Marius Schulz" xmlUrl="http://feeds.feedburner.com/mariusschulz" htmlUrl="https://mariusschulz.com/"/>
+            <outline type="rss" text="Baeldung" title="Baeldung" xmlUrl="https://feeds.feedblitz.com/baeldung" htmlUrl="https://www.baeldung.com"/>
+            <outline type="rss" text="DEV Community 👩‍💻👨‍💻" title="DEV Community 👩‍💻👨‍💻" xmlUrl="http://thepracticaldev.com/feed" htmlUrl="https://dev.to"/>
+            <outline type="rss" text="TypeScript" title="TypeScript" xmlUrl="http://blogs.msdn.com/b/typescript/rss.aspx" htmlUrl="https://devblogs.microsoft.com/typescript/"/>
+            <outline type="rss" text="Lua: news" title="Lua: news" xmlUrl="http://www.lua.org/news.rss" htmlUrl="http://www.lua.org/news.html"/>
+        </outline>
+        <outline text="Humor" title="Humor">
+            <outline type="rss" text="xkcd.com" title="xkcd.com" xmlUrl="http://xkcd.com/rss.xml" htmlUrl="https://xkcd.com/"/>
+        </outline>
+        <outline text="Finance" title="Finance">
+            <outline type="rss" text="The Reformed Broker" title="The Reformed Broker" xmlUrl="http://www.thereformedbroker.com/feed/" htmlUrl="https://thereformedbroker.com"/>
+            <outline type="rss" text="A Wealth of Common Sense" title="A Wealth of Common Sense" xmlUrl="http://awealthofcommonsense.com/feed/" htmlUrl="https://awealthofcommonsense.com"/>
+        </outline>
+        <outline text="Angular" title="Angular">
+            <outline type="rss" text="Angular Blog" title="Angular Blog" xmlUrl="https://blog.angular.io/feed" htmlUrl="https://blog.angular.io?source=rss----447683c3d9a3---4"/>
+            <outline type="rss" text="Blogs on juri.dev" title="Blogs on juri.dev" xmlUrl="http://feeds.feedburner.com/juristrumpflohner" htmlUrl="https://juristr.com/blog/"/>
+            <outline type="rss" text="Netanel Basal" title="Netanel Basal" xmlUrl="https://netbasal.com/feed" htmlUrl="https://netbasal.com?source=rss----a117514594dd---4"/>
+            <outline type="rss" text="Stories by Victor Savkin on Medium" title="Stories by Victor Savkin on Medium" xmlUrl="https://medium.com/feed/@vsavkin" htmlUrl="https://medium.com/@vsavkin?source=rss-76fc1db4149b------2"/>
+        </outline>
+        <outline text="Tech" title="Tech">
+            <outline type="rss" text="Stories by alpha2phi on Medium" title="Stories by alpha2phi on Medium" xmlUrl="https://medium.com/feed/@alpha2phi" htmlUrl="https://medium.com/@alpha2phi?source=rss-d7c7ddf5c65d------2"/>
+            <outline type="rss" text="phaazon.net blog" title="phaazon.net blog" xmlUrl="https://phaazon.net/blog/feed" htmlUrl="https://phaazon.net/blog"/>
+            <outline type="rss" text="Martin Fowler" title="Martin Fowler" xmlUrl="http://martinfowler.com/bliki/bliki.atom" htmlUrl="https://martinfowler.com"/>
+        </outline>
+        <outline text="Music" title="Music">
+            <outline type="rss" text="Louder Sound" title="Louder Sound" xmlUrl="http://www.metalhammer.co.uk/rss" htmlUrl="http://airedale.futurecdn.net/feeds/en_feed_3a953301.rss-fse?site=loudersound"/>
+            <outline type="rss" text="Loudwire" title="Loudwire" xmlUrl="http://loudwire.com/feed/" htmlUrl="https://loudwire.com"/>
+            <outline type="rss" text="BLABBERMOUTH.NET RSS Feed" title="BLABBERMOUTH.NET RSS Feed" xmlUrl="http://www.blabbermouth.net/feed.rss" htmlUrl="https://blabbermouth.net/feed"/>
+            <outline type="rss" text="Angry Metal Guy" title="Angry Metal Guy" xmlUrl="http://www.angrymetalguy.com/feed/" htmlUrl="https://www.angrymetalguy.com/"/>
+            <outline type="rss" text="MetalSucks" title="MetalSucks" xmlUrl="http://www.metalsucks.net/feed/rss/" htmlUrl="https://www.metalsucks.net/"/>
+            <outline type="rss" text="Metal Injection" title="Metal Injection" xmlUrl="http://feeds2.feedburner.com/metalinjection" htmlUrl="https://metalinjection.net/"/>
+        </outline>
+        <outline text="React" title="React">
+            <outline type="rss" text="Dan Abramov's Overreacted Blog RSS Feed" title="Dan Abramov's Overreacted Blog RSS Feed" xmlUrl="https://overreacted.io/rss.xml" htmlUrl="https://overreacted.io"/>
+            <outline type="rss" text="React" title="React" xmlUrl="http://facebook.github.io/react/feed.xml" htmlUrl="https://reactjs.org"/>
+        </outline>
+        <outline text="Server side" title="Server side">
+            <outline type="rss" text="Artsy Engineering" title="Artsy Engineering" xmlUrl="http://artsy.github.io/feed" htmlUrl="https://artsy.github.io/"/>
+        </outline>
+        <outline text="Security" title="Security">
+            <outline type="rss" text="Schneier on Security" title="Schneier on Security" xmlUrl="http://www.schneier.com/blog/index.rdf" htmlUrl="https://www.schneier.com"/>
+            <outline type="rss" text="Krebs on Security" title="Krebs on Security" xmlUrl="http://krebsonsecurity.com/feed/" htmlUrl="https://krebsonsecurity.com"/>
+            <outline type="rss" text="Google Online Security Blog" title="Google Online Security Blog" xmlUrl="http://feeds.feedburner.com/GoogleOnlineSecurityBlog" htmlUrl="http://security.googleblog.com/"/>
+        </outline>
+        <outline text="Design" title="Design">
+            <outline type="rss" text="Nir and Far" title="Nir and Far" xmlUrl="http://feeds.feedburner.com/NirAndFar" htmlUrl="https://www.nirandfar.com/"/>
+            <outline type="rss" text="Smashing Magazine" title="Smashing Magazine" xmlUrl="http://rss1.smashingmagazine.com/feed/" htmlUrl="https://www.smashingmagazine.com/"/>
+        </outline>
+        <outline text="Web Development" title="Web Development">
+            <outline type="rss" text="Ben Nadel's Web Development and User Experience Feed @ BenNadel.com" title="Ben Nadel's Web Development and User Experience Feed @ BenNadel.com" xmlUrl="https://www.bennadel.com/rss" htmlUrl="https://www.bennadel.com/"/>
+            <outline type="rss" text="David Walsh Blog" title="David Walsh Blog" xmlUrl="http://feeds.feedburner.com/Bludice" htmlUrl="https://davidwalsh.name"/>
+        </outline>
+    </body>
+</opml>

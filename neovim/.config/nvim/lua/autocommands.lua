@@ -36,6 +36,21 @@ au(
   }
 )
 
+vim.cmd [[
+  function! RemoveQFItem()
+    let curqfidx = line('.') - 1
+    let qfall = getqflist()
+    call remove(qfall, curqfidx)
+    call setqflist(qfall, 'r')
+    :copen
+  endfunction
+  :command! RemoveQFItem :call RemoveQFItem()
+]]
+au('FileType', {
+  pattern = 'qf',
+  command = "map <buffer> dd <cmd>RemoveQFItem<cr>",
+})
+
 au('FileType', {
   pattern = 'qf',
   callback = function()

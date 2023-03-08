@@ -206,6 +206,18 @@ alias gback='git reset HEAD~1'
 #     echo 'Done!'
 # }
 
+function git_current_branch() {
+  echo $(git rev-parse --abbrev-ref HEAD)
+}
+function ggp() {
+  if [[ "$#" != 0 ]] && [[ "$#" != 1 ]]; then
+    git push origin "${*}"
+  else
+    [[ "$#" == 0 ]] && local b="$(git_current_branch)"
+    git push origin "${b:=$1}"
+  fi
+}
+
 ### Gists
 alias getGistID='gist --list | peco | cut -d "/" -f 4 | cut -d " " -f 1'
 gistu() {
