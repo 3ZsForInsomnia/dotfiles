@@ -28,6 +28,4 @@ alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.
 
 alias keepAwake='cd /Applications; ./delay-screensaver.command'
 
-function rename_wezterm_title {
-  echo "\x1b]1337;SetUserVar=panetitle=$(echo -n $1 | base64)\x07"
-}
+alias rss='newsboat;'

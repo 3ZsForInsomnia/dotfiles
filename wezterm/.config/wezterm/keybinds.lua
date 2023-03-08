@@ -2,8 +2,6 @@ local wezterm = require 'wezterm'
 local action = wezterm.action
 local utils = require 'utils'
 
-local PaneResizeAmount = 20
-
 local M = {}
 
 M.Tabs = {
@@ -47,34 +45,13 @@ M.Tabs = {
     mods = 'ALT',
     action = action.ActivateTab(7),
   },
-  {
-    key = '-',
-    mods = 'ALT',
-    action = action.ShowTabNavigator,
-  },
 }
 
 M.Panes = {
-  { key = "a", mods = "ALT", action = action({ ActivatePaneDirection = "Left" }) },
-  { key = "d", mods = "ALT", action = action({ ActivatePaneDirection = "Right" }) },
-  { key = "w", mods = "ALT", action = action({ ActivatePaneDirection = "Up" }) },
-  { key = "x", mods = "ALT", action = action({ ActivatePaneDirection = "Down" }) },
-  {
-    key = 'H',
-    mods = 'CTRL|ALT',
-    action = action.AdjustPaneSize { 'Left', PaneResizeAmount * 2 },
-  },
-  {
-    key = 'J',
-    mods = 'CTRL|ALT',
-    action = action.AdjustPaneSize { 'Down', PaneResizeAmount * 2 },
-  },
-  { key = 'K', mods = 'ALT', action = action.AdjustPaneSize { 'Up', PaneResizeAmount * 2 } },
-  {
-    key = 'L',
-    mods = 'CTRL|ALT',
-    action = action.AdjustPaneSize { 'Right', PaneResizeAmount * 2 },
-  },
+  { key = "h", mods = "CTRL|SHIFT", action = action({ ActivatePaneDirection = "Left" }) },
+  { key = "l", mods = "CTRL|SHIFT", action = action({ ActivatePaneDirection = "Right" }) },
+  { key = "k", mods = "CTRL|SHIFT", action = action({ ActivatePaneDirection = "Up" }) },
+  { key = "j", mods = "CTRL|SHIFT", action = action({ ActivatePaneDirection = "Down" }) },
   { key = 'z', mods = 'ALT', action = action.TogglePaneZoomState },
   { key = "'", mods = 'ALT', action = action.SplitHorizontal },
   { key = ';', mods = 'ALT', action = action.SplitVertical },
@@ -86,11 +63,6 @@ M.Misc = {
     mods = 'CTRL|SHIFT|ALT',
     action = action.EmitEvent 'new-dev-tab'
   },
-  -- {
-  --   key = 'R',
-  --   mods = 'CTRL|SHIFT|ALT',
-  --   action = action.EmitEvent 'new-dev-env'
-  -- },
   -- Turn off the default CMD-m Hide action, allowing CMD-m to
   -- be potentially recognized and handled by the tab
   {
@@ -98,8 +70,33 @@ M.Misc = {
     mods = 'ALT',
     action = action.DisableDefaultAssignment,
   },
-  { key = 'v', mods = 'CTRL', action = action.PasteFrom 'Clipboard' },
-  { key = "/", mods = "ALT", action = action.Search("CurrentSelectionOrEmptyString") },
+  -- Ctrl-Q is used by telescope
+  {
+    key = "Q",
+    mods = "CTRL",
+    action = action.DisableDefaultAssignment,
+  },
+  {
+    key = "q",
+    mods = "CTRL",
+    action = action.DisableDefaultAssignment,
+  },
+  {
+    key = "q",
+    mods = "CTRL|SHIFT",
+    action = action.DisableDefaultAssignment,
+  },
+  -- Ctrl-R is used by zsh-autocomplete
+  {
+    key = "r",
+    mods = "CTRL",
+    action = action.DisableDefaultAssignment
+  },
+  {
+    key = "R",
+    mods = "CTRL",
+    action = action.DisableDefaultAssignment
+  },
   {
     key = "r",
     mods = "ALT",
@@ -111,33 +108,6 @@ M.Misc = {
         replace_current = false,
       },
     }),
-  },
-  {
-    key = "s",
-    mods = "ALT",
-    action = action.PaneSelect({
-      alphabet = "1234567890",
-    })
-  },
-  {
-    key = 'c',
-    mods = 'CTRL',
-    action = wezterm.action_callback(function(window, pane)
-      local has_selection = window:get_selection_text_for_pane(pane) ~= ''
-      if has_selection then
-        window:perform_action(
-          action.CopyTo 'ClipboardAndPrimarySelection',
-          pane
-        )
-
-        window:perform_action(action.ClearSelection, pane)
-      else
-        window:perform_action(
-          action.SendKey { key = 'c', mods = 'CTRL' },
-          pane
-        )
-      end
-    end),
   },
   {
     key = "LeftArrow",

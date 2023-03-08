@@ -144,16 +144,16 @@ function M.setup()
         return lspkind.cmp_format(
           { with_text = true,
             menu = {
-              nvim_lsp = "[LSP]",
-              buffer = "[Buffer]",
-              nvim_lua = "[Lua]",
-              luasnips = "[Snippets]",
-              treesitter = "[Treesitter]",
-              look = "[Look]",
-              path = "[Path]",
-              spell = "[Spell]",
-              calc = "[Calc]",
-              emoji = "[Emoji]",
+              nvim_lsp = "LSP",
+              buffer = "Buffer",
+              nvim_lua = "Lua",
+              luasnips = "Snippets",
+              treesitter = "Treesitter",
+              look = "Look",
+              path = "Path",
+              spell = "Spell",
+              calc = "Calc",
+              emoji = "Emoji",
             },
           })(entry, vim_item)
       end

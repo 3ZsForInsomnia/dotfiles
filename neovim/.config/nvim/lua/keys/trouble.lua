@@ -7,6 +7,7 @@ end
 wk.register({
   ['<leader>'] = {
     t = {
+      [''] = { f(""), "Toggle Diagnostics list" },
       name = "View diagnostics (Trouble)",
       t = { f(""), "Toggle Diagnostics list" },
       w = { f("workspace_diagnostics"), "Show Workspace Diagnostics" },

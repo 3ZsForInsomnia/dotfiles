@@ -34,6 +34,8 @@ return packer.startup(function(use)
   use 'kamykn/popup-menu.nvim'
   use 'wbthomason/packer.nvim'
   use "kkharji/sqlite.lua"
+  use 'rcarriga/nvim-notify'
+  use "zdcthomas/yop.nvim"
   use {
     'stevearc/dressing.nvim',
     config = function()
@@ -145,6 +147,7 @@ return packer.startup(function(use)
       require('config.telescope').setup()
     end
   }
+  use "nvim-telescope/telescope-live-grep-args.nvim"
   use "nvim-telescope/telescope-frecency.nvim"
   use "LukasPietzschmann/telescope-tabs"
   use "benfowler/telescope-luasnip.nvim"
@@ -424,6 +427,7 @@ return packer.startup(function(use)
     end,
   }
   use 'dstein64/vim-startuptime'
+  use "ThePrimeagen/vim-apm"
 
   if packer_bootstrap then
     require('packer').sync()
