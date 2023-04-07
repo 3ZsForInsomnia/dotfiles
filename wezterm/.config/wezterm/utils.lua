@@ -1,5 +1,18 @@
 local M = {}
 
+M.shortenPath = function(cwd)
+  cwd = string.gsub(cwd, '/Users/zachary.levine/', '')
+  cwd = string.gsub(cwd, '/Users/zachary.levine', 'Home')
+  cwd = string.gsub(cwd, 'src/', '')
+  cwd = string.gsub(cwd, '/Volumes/code/', '')
+  cwd = string.gsub(cwd, '.config', '.c')
+  cwd = string.gsub(cwd, 'neovim', 'nv')
+  cwd = string.gsub(cwd, 'wezterm', 'wez', 1)
+  cwd = string.gsub(cwd, '/iverson', '')
+
+  return cwd
+end
+
 local lpad = function(str, len, char)
     if char == nil then char = ' ' end
     return str .. string.rep(char, len - #str)

@@ -6,13 +6,13 @@ setopt correct_all
 setopt append_history
 
 source ~/.p10k.zsh
-# source /Users/zachary.levine/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-source /Users/zachary.levine/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /Users/zachary.levine/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-source /Users/zachary.levine/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /Users/zachary.levine/zshmarks/zshmarks.plugin.zsh
-source /Users/zachary.levine/omz-git-completions.zsh
-source /Users/zachary.levine/zsh-you-should-use/you-should-use.plugin.zsh
+# source /home/zach/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+source /home/zach/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/zach/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source /home/zach/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /home/zach/zshmarks/zshmarks.plugin.zsh
+source /home/zach/omz-git-completions.zsh
+source /home/zach/zsh-you-should-use/you-should-use.plugin.zsh
 zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
 fpath=(~/zsh-completions/src ~/.zsh/ $fpath)
 
@@ -93,3 +93,6 @@ compdef _cli_yargs_completions cli
 ###-end-cli-completions-###
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
+
+mkdir -p ~/.local/bin
+# ln -s /usr/bin/batcat ~/.local/bin/bat

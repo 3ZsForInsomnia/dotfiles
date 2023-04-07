@@ -12,7 +12,7 @@ backup() {
 }
 
 getPort() {
-  eval 'lsof -nP -iTCP:$1 G LISTEN'
+  eval 'lsof -n -i :$1 G LISTEN'
 }
 killPort() {
   str=$(getPort $1 A '{print $2}')

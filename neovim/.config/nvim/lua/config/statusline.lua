@@ -11,11 +11,43 @@ M.statusValues = {
   untracked = 0,
 }
 
+local isInRepo = function()
+  local handle = io.popen('git rev-parse --is-inside-work-tree')
+  local isInRepo = handle:read("*a")
+  handle:close()
+  return isInRepo == 'true'
+end
+
+local handleIfInRepoOrNot = function(func)
+  if isInRepo() then
+    return func()
+  else
+    return 'N/A'
+  end
+end
+
 M.gitStatus = {
-  added = function() return icons.kind.File .. M.statusValues.fileCount end,
-  modified = function() return icons.git.Add .. M.statusValues.addCount end,
-  removed = function() return icons.git.Remove .. M.statusValues.delCount end,
-  untracked = function() return icons.kind.Module .. ' ' .. M.statusValues.untracked end,
+  added = function()
+    return handleIfInRepoOrNot(function()
+      return
+          icons.kind.File .. M.statusValues.fileCount
+    end)
+  end,
+  modified = function()
+    return handleIfInRepoOrNot(function()
+      return icons.git.Add .. M.statusValues.addCount
+    end)
+  end,
+  removed = function()
+    return handleIfInRepoOrNot(function()
+      return icons.git.Remove .. M.statusValues.delCount
+    end)
+  end,
+  untracked = function()
+    return handleIfInRepoOrNot(function()
+      return icons.kind.Module .. ' ' .. M.statusValues.untracked
+    end)
+  end,
 }
 
 M.gitStatusForRepo = function()
@@ -73,11 +105,11 @@ function M.setup()
     sections = {
       lualine_a = { { 'mode', separator = { left = '' } } },
       lualine_b = {
-        { 'b:gitsigns_head', icon = '', color = { fg = "#77ff77" } },
+        { 'b:gitsigns_head',     icon = '',               color = { fg = "#77ff77" } },
         { M.gitStatus.untracked, color = { fg = "#74b2ff" }, separator = '' },
-        { M.gitStatus.added, color = { fg = "#e3c78a" }, separator = '' },
-        { M.gitStatus.modified, color = { fg = "#36c692" }, separator = '' },
-        { M.gitStatus.removed, color = { fg = "#ff5454" } },
+        { M.gitStatus.added,     color = { fg = "#e3c78a" }, separator = '' },
+        { M.gitStatus.modified,  color = { fg = "#36c692" }, separator = '' },
+        { M.gitStatus.removed,   color = { fg = "#ff5454" } },
         {
           'diagnostics',
           always_visible = true,
@@ -105,6 +137,6 @@ function M.setup()
   }
 end
 
-M.timer:start(2000, 2000, function() M.gitStatusForRepo() end)
+-- M.timer:start(2000, 2000, function() M.gitStatusForRepo() end)
 
 return M

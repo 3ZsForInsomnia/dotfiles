@@ -6,7 +6,8 @@ confirm-mark-feed-read no
 always-display-description yes
 keep-articles-days 7
 
-browser "open %u"
+browser "xdg-open '%u'"
+# browser "open %u"
 
 # unbind keys
 unbind-key ENTER

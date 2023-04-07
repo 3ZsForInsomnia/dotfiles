@@ -21,7 +21,8 @@ alias q='exit'
 alias cat='bat'
 alias lua='lua-5.1'
 
-alias ls='exa -lahUFm --git -I ".git" --icons'
+# alias ls='exa -lahUFm --git -I ".git" --icons'
+alias ls='exa -lahUFm'
 alias lsg='ls G'
 alias lsr='exa -lahRGFUm --git -I ".git"--icons'
 alias lsd='exa -lahD --icons -I ".git"' 
@@ -40,7 +41,7 @@ alias rebash='source ~/.bashrc'
 alias repro='source ~/.bash_profile'
 alias rezsh='exec zsh'
 
-alias unstow='stow --target=/Users/zachary.levine/'
+alias unstow='stow --target=/home/zach/'
 function unstowAll() {
   cd ~/src/dotfiles/
   for d in */ ; do

@@ -1,9 +1,9 @@
-source ~/.java.sh
+# source ~/.java.sh
 source ~/.js-ts.sh
 source ~/.git-stuff.sh
 source ~/.python.sh
 source ~/.searching.sh
-source ~/.work-utils.sh
+# source ~/.work-utils.sh
 source ~/.misc.sh
 source ~/.db.sh
 
@@ -29,3 +29,4 @@ alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.
 alias keepAwake='cd /Applications; ./delay-screensaver.command'
 
 alias rss='newsboat;'
+alias gmail='neomutt'

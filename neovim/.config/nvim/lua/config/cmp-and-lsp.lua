@@ -13,7 +13,7 @@ function M.setup()
     'html',
     'jdtls',
     'jsonls',
-    'sumneko_lua',
+    'lua_ls',
     'marksman',
     'pylsp',
     'sqlls',
