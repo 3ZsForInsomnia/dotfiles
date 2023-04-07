@@ -165,13 +165,13 @@ return packer.startup(function(use)
   use 'crispgm/telescope-heading.nvim'
   use "nvim-telescope/telescope-file-browser.nvim"
   use "nvim-telescope/telescope-packer.nvim"
-  use({
-    'mrjones2014/dash.nvim',
-    run = 'make install',
-    config = function()
-      require('config.dash').setup()
-    end
-  })
+  --use({
+  --  'mrjones2014/dash.nvim',
+  --  run = 'make install',
+  --  config = function()
+  --    require('config.dash').setup()
+  --  end
+  --})
 
   --
   --
@@ -243,12 +243,12 @@ return packer.startup(function(use)
       require("figlet").Config({ font = "3d" })
     end
   }
-  use {
-    'folke/todo-comments.nvim',
-    config = function()
-      require("todo-comments").setup()
-    end
-  }
+  --use {
+  --  'folke/todo-comments.nvim',
+  --  config = function()
+  --    require("todo-comments").setup()
+  --  end
+  --}
 
   --
   --
@@ -406,12 +406,12 @@ return packer.startup(function(use)
     end
   }
   use 'CRAG666/code_runner.nvim'
-  use {
-    'yoshio15/vim-trello',
-    config = function()
-      require('config.trello').setup()
-    end
-  }
+  --use {
+  --  'yoshio15/vim-trello',
+  --  config = function()
+  --    require('config.trello').setup()
+  --  end
+  --}
   use 'winston0410/cmd-parser.nvim'
   use {
     'winston0410/range-highlight.nvim',

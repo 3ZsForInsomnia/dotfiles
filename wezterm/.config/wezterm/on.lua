@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 local mux = wezterm.mux
 local utils = require("utils")
-local work = require('work-related')
+-- local work = require('work-related')
 
 local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 local SOLID_RIGHT_ARROW = utf8.char(0xe0b0)
@@ -25,7 +25,7 @@ local getProjectPath = function(pane)
     end
   end
 
-  cwd = work.shortenPath(cwd)
+  -- cwd = work.shortenPath(cwd)
 
   return cwd, hostname
 end

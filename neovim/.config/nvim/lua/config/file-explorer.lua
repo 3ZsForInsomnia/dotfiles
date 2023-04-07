@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  local exclude = { "^.git$", "^node_modules$", "^.cache$" }
+  local exclude = { "^.git$", "^node_modules$", "^.cache$", "^dist$" }
 
   require("nvim-tree").setup {
     auto_reload_on_write = true,
