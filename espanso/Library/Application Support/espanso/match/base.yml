@@ -52,7 +52,5 @@ matches:
     replace: >
             Thank you,
               --Zachary Levine
-  - trigger: "RE"
-    replace: "Report Editor"
 
   # And much more! For more information, visit the docs: https://espanso.org/docs/

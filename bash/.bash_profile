@@ -30,3 +30,4 @@ alias keepAwake='cd /Applications; ./delay-screensaver.command'
 
 alias rss='newsboat;'
 alias gmail='neomutt'
+. "$HOME/.cargo/env"
