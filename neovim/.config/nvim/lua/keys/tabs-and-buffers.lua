@@ -62,7 +62,7 @@ wk.register({
 
 local keymap = vim.keymap.set
 local silent = { silent = true }
-keymap("n", "<M-h>", "<C-w>h", silent)
-keymap("n", "<M-j>", "<C-w>j", silent)
-keymap("n", "<M-k>", "<C-w>k", silent)
-keymap("n", "<M-l>", "<C-w>l", silent)
+-- keymap("n", "<C-h>", "<C-w>h", silent)
+-- keymap("n", "<C-j>", "<C-w>j", silent)
+-- keymap("n", "<C-k>", "<C-w>k", silent)
+-- keymap("n", "<C-l>", "<C-w>l", silent)

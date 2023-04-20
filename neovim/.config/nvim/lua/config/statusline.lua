@@ -12,7 +12,11 @@ M.statusValues = {
 }
 
 local isInRepo = function()
-  local handle = io.popen('git rev-parse --is-inside-work-tree')
+  local handle = io.popen([[
+    if GPATH=`git rev-parse --show-toplevel --quiet 2>/dev/null`; then
+      echo "repo: $GPATH"
+    fi
+  ]])
   local isInRepo = handle:read("*a")
   handle:close()
   return isInRepo == 'true'

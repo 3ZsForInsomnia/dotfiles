@@ -8,6 +8,8 @@ source ~/.nvim-tmux-etc.sh
 source ~/.packagers-handling.sh
 
 alias ..='cd ../'
+alias ...='..; ..;'
+alias ....='..; ..; ..;'
 alias ~='cd ~'
 alias sudo='sudo '
 alias addcreds='ssh-add -K'
@@ -48,3 +50,4 @@ function unstowAll() {
       unstow $d
   done
 }
+. "$HOME/.cargo/env"

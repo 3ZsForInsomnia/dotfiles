@@ -44,9 +44,6 @@ local function pathExpand()
   end
 end
 
-vim.keymap.set("c", "%%",
-  function() return pathExpand() end,
-  { expr = true }
-)
+vim.keymap.set("c", "%%", function() return pathExpand() end, { expr = true })
 
 -- require('pomo.pomo')

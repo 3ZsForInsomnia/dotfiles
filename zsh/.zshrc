@@ -8,7 +8,7 @@ setopt append_history
 source ~/.p10k.zsh
 # source /home/zach/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 source /home/zach/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /home/zach/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+# source /home/zach/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source /home/zach/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /home/zach/zshmarks/zshmarks.plugin.zsh
 source /home/zach/omz-git-completions.zsh

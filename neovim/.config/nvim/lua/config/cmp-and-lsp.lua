@@ -15,7 +15,6 @@ function M.setup()
     'jsonls',
     'lua_ls',
     'marksman',
-    'pylsp',
     'sqlls',
     'tailwindcss',
     'tsserver',
