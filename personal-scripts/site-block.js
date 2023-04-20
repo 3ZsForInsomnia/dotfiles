@@ -2,11 +2,8 @@
 
 const { execSync } = require("child_process");
 const { readFileSync, appendFileSync } = require("fs");
-const os = require('os');
 
 const logFile = "/tmp/site-block.txt";
-
-const hostsFile = () => os.platform() !== 'win32' ? '/etc/hosts' : 'c:\\Windows\\System32\\Drivers\\etchostsosts';
 
 const log = (str, param) => {
   const date = new Date();
@@ -23,7 +20,7 @@ const log = (str, param) => {
 
 const unblockHosts = (hosts) => {
   hosts.forEach((host) => {
-    execSync(`sed -i "" "/${host}/d" ${hostsFile()}`, (err, stdout, stderr) => {
+    execSync(`sed -i "" "/${host}/d" /etc/hosts`, (err, stdout, stderr) => {
       if (err) {
         log("Error", err);
       } else if (stderr) {
