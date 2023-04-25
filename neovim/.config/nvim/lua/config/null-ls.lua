@@ -38,6 +38,10 @@ function M.setup()
       null_ls.builtins.formatting.sqlfluff.with({
         extra_args = { "--dialect", "mysql" }, -- change to your dialect
       }),
+      null_ls.builtins.formatting.black.with({
+        extra_args = { "--line-length=120" }
+      }),
+      null_ls.builtins.formatting.isort,
 
       null_ls.builtins.hover.dictionary,
       null_ls.builtins.hover.printenv,

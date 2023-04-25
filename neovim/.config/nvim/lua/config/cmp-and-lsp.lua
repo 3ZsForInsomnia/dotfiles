@@ -19,6 +19,7 @@ function M.setup()
     'tailwindcss',
     'tsserver',
     'vimls',
+    'pyright',
   }
 
   require("mason").setup()
