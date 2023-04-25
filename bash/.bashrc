@@ -20,7 +20,11 @@ alias setclip='pbcopy'
 alias :q='exit'
 alias q='exit'
 
-alias cat='bat'
+if [[ $(uname) == "Darwin" ]]; then
+  alias cat='bat'
+elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+  alias cat='batcat'
+fi
 alias lua='lua-5.1'
 
 # alias ls='exa -lahUFm --git -I ".git" --icons'

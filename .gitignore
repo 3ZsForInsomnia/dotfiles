@@ -7,4 +7,5 @@ zsh-autocomplete
 zsh-autosuggestions
 trello.*
 *work*
+.env
 packer_compiled

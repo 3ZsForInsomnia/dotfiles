@@ -16,7 +16,6 @@ function M.setup()
       "html",
       "markdown",
       "python",
-      "pyright",
       "scss",
       "css",
       "regex",
