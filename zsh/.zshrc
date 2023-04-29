@@ -26,6 +26,11 @@ ZVM_VI_HIGHLIGHT_BACKGROUND=#fe9a4a
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
+XDG_CACHE_HOME=$HOME/.cache
+XDG_CONFIG_HOME=$HOME/.config
+XDG_DATA_HOME=$HOME/.local/share
+XDG_STATE_HOME=$HOME/.local/state
+
 # https://dev.to/equiman/reveal-the-command-behind-an-alias-with-zsh-4d96
 local cmd_alias=""
 
@@ -96,3 +101,7 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 mkdir -p ~/.local/bin
 # ln -s /usr/bin/batcat ~/.local/bin/bat
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

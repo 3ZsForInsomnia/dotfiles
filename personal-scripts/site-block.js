@@ -1,72 +1,47 @@
-#!/usr/bin/env node
+const { readFileSync, createWriteStream } = require("fs");
+const { format } = require("util");
+const hostile = require("hostile");
 
-const { execSync } = require("child_process");
-const { readFileSync, appendFileSync } = require("fs");
+const logFileLocation =
+  process.env.SITEBLOCK_LOGFILE ??
+  process.env.HOME + "/.local/state/site-block.log";
 
-const logFile = "/tmp/site-block.txt";
-
-const log = (str, param) => {
-  const date = new Date();
-
-  if (param) {
-    const argsString =
-      typeof param === "string" ? param : param.map((arg) => `\n${arg}`);
-
-    appendFileSync(logFile, `${date}: ${str} - ${argsString}`);
-  } else {
-    appendFileSync(logFile, `${date}: ${str}`);
-  }
+const logFile = createWriteStream(logFileLocation, { flags: "w" });
+const log = (str) => {
+  const strToLog = `SiteBlock: ${str}\n`;
+  logFile.write(format(strToLog));
+  process.stdout.write(format(strToLog));
 };
 
-const unblockHosts = (hosts) => {
-  hosts.forEach((host) => {
-    execSync(`sed -i "" "/${host}/d" /etc/hosts`, (err, stdout, stderr) => {
-      if (err) {
-        log("Error", err);
-      } else if (stderr) {
-        log("StdErr: ", stderr);
-      } else {
-        log("Successfully unblocked hosts: ", host);
-        log(">> ", stdout);
-      }
-    });
-  });
-};
+const [command, ...siteGroups] = process.argv.slice(2);
+log(`Args passed: ${command}, ${siteGroups}`);
 
-const blockHosts = (hosts) => {
-  hosts.forEach((host) => {
-    execSync(
-      `sh -c -e \"echo '127.0.0.1\t${host}' >> /etc/hosts\"`,
-      (err, stdout, stderr) => {
-        if (err) {
-          log("Error", err);
-        } else if (stderr) {
-          log("StdErr: ", stderr);
-        } else {
-          log(">> ", stdout);
-        }
-      }
-    );
-  });
-};
-
-const [command, ...args] = process.argv.slice(2);
-
-log("\n\nNew Entry", [command, args]);
-if (command === "block") {
-  blockHosts(args);
-} else if (command === "unblock") {
-  unblockHosts(args);
+if (command !== "block" && command !== "unblock") {
+  log(
+    `You used an invalid command: ${command}! The only valid commands are "block" and "unblock"!`
+  );
+  return;
 }
-execSync(
-  "sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder",
-  (err, stdout, stderr) => {
-    if (err) {
-      log("Error flushing dns cache", err);
-    } else if (stderr) {
-      log("StdErr flushing dns cache", stderr);
-    } else {
-      log("Successfully flushed cache");
-    }
+
+const func = command === "block" ? "set" : "remove";
+
+let configLocation = process.env.SITEBLOCK_CONFIG;
+if (!configLocation) {
+  configLocation = process.env.HOME + "/.config/site-block/site-block.json";
+}
+log(`Config location: ${configLocation}`);
+
+const config = JSON.parse(readFileSync(configLocation, "utf-8"));
+
+siteGroups.forEach((siteGroup) => {
+  if (!config[siteGroup])
+    log(`A site group you provided was not recognized: ${siteGroup}`);
+  else {
+    log(`Working on site group ${siteGroup}`);
+    config[siteGroup].forEach((site) => {
+      const error = hostile[func]("127.0.0.1", site);
+      if (error && error !== true) log(`Failed to ${command} ${site}, due to error: ${error}`);
+      else log(`Successfully ${command}ed ${site}`);
+    });
   }
-);
+});
