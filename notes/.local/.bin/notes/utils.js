@@ -1,7 +1,10 @@
 import { readFileSync, writeFileSync } from "fs";
 import { execSync } from "child_process";
+import * as dotenv from 'dotenv';
 
-const notesLocation = "/home/zach/code/notes";
+dotenv.config({ path: "/home/zach/.local/.bin/notes/.env" });
+export const { NOTES_LOCATION: notesLocation } = process.env;
+
 const homeNote = `${notesLocation}/00 - Home.md`;
 
 export const slice = (num) => (str) => str.slice(num);

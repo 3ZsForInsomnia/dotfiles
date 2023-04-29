@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/3ZsForInsomnia/dotfiles/issues"
   },
-  "homepage": "https://github.com/3ZsForInsomnia/dotfiles#readme"
+  "homepage": "https://github.com/3ZsForInsomnia/dotfiles#readme",
+  "dependencies": {
+    "hostile": "^1.3.3"
+  }
 }
