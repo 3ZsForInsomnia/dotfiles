@@ -429,6 +429,14 @@ return packer.startup(function(use)
   use 'dstein64/vim-startuptime'
   use "ThePrimeagen/vim-apm"
 
+  use {
+    "epwalsh/obsidian.nvim",
+    config = function()
+      require("config.obsidian").setup()
+    end
+  }
+  use "godlygeek/tabular"
+
   if packer_bootstrap then
     require('packer').sync()
   end

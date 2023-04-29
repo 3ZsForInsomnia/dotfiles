@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  require 'nvim-treesitter.configs'.setup {
+  require("nvim-treesitter.configs").setup({
     ensure_installed = {
       "javascript",
       "lua",
@@ -28,15 +28,16 @@ function M.setup()
     auto_install = true,
     highlight = {
       enable = true, -- false will disable the whole extension
+      additional_vim_regex_highlighting = { "markdown" },
       disable = {}, -- list of language that will be disabled
     },
     textsubjects = {
       enable = true,
-      prev_selection = ',', -- (Optional) keymap to select the previous selection
+      prev_selection = ",", -- (Optional) keymap to select the previous selection
       keymaps = {
-        ['.'] = 'textsubjects-smart',
-        [';'] = 'textsubjects-container-outer',
-        ['i;'] = 'textsubjects-container-inner',
+        ["."] = "textsubjects-smart",
+        [";"] = "textsubjects-container-outer",
+        ["i;"] = "textsubjects-container-inner",
       },
     },
     textobjects = {
@@ -59,60 +60,58 @@ function M.setup()
           ["ao"] = "@block.outer",
           ["io"] = "@block.inner",
           ["am"] = "@comment.inner",
-        }
+        },
       },
       move = {
         enable = true,
         set_jumps = true,
         goto_next_start = {
-          ['[F'] = '@function.outer',
-          ['[C'] = '@class.outer',
-          ['[A'] = '@call.outer',
-          ['[O'] = '@block.outer',
-          ['[I'] = '@conditional.outer',
-          ['[L'] = '@loop.outer'
+          ["[F"] = "@function.outer",
+          ["[C"] = "@class.outer",
+          ["[A"] = "@call.outer",
+          ["[O"] = "@block.outer",
+          ["[I"] = "@conditional.outer",
+          ["[L"] = "@loop.outer",
         },
         goto_next_end = {
-          [']f'] = '@function.outer',
-          [']c'] = '@class.outer',
-          [']a'] = '@call.outer',
-          [']o'] = '@block.outer',
-          [']i'] = '@conditional.outer',
-          [']l'] = '@loop.outer'
+          ["]f"] = "@function.outer",
+          ["]c"] = "@class.outer",
+          ["]a"] = "@call.outer",
+          ["]o"] = "@block.outer",
+          ["]i"] = "@conditional.outer",
+          ["]l"] = "@loop.outer",
         },
         goto_previous_start = {
-          ['[f'] = '@function.outer',
-          ['[c'] = '@class.outer',
-          ['[a'] = '@call.outer',
-          ['[o'] = '@block.outer',
-          ['[i'] = '@conditional.outer',
-          ['[l'] = '@loop.outer'
+          ["[f"] = "@function.outer",
+          ["[c"] = "@class.outer",
+          ["[a"] = "@call.outer",
+          ["[o"] = "@block.outer",
+          ["[i"] = "@conditional.outer",
+          ["[l"] = "@loop.outer",
         },
         goto_previous_end = {
-          [']F'] = '@function.outer',
-          [']C'] = '@class.outer',
-          [']A'] = '@call.outer',
-          [']O'] = '@block.outer',
-          [']I'] = '@conditional.outer',
-          [']L'] = '@loop.outer'
-        }
+          ["]F"] = "@function.outer",
+          ["]C"] = "@class.outer",
+          ["]A"] = "@call.outer",
+          ["]O"] = "@block.outer",
+          ["]I"] = "@conditional.outer",
+          ["]L"] = "@loop.outer",
+        },
       },
       swap = {
         enable = true,
         swap_next = { ["<leader>xp"] = "@parameter.inner" },
-        swap_previous = { ["<leader>xP"] = "@parameter.inner" }
-      }
+        swap_previous = { ["<leader>xP"] = "@parameter.inner" },
+      },
     },
-    indent = {
-      enable = true,
-    },
+    indent = { enable = true },
     incremental_selection = {
       enable = true,
       keymaps = {
-        init_selection = '<CR>',
-        scope_incremental = '<CR>',
-        node_incremental = '<TAB>',
-        node_decremental = '<S-TAB>',
+        init_selection = "<CR>",
+        scope_incremental = "<CR>",
+        node_incremental = "<TAB>",
+        node_decremental = "<S-TAB>",
       },
     },
     rainbow = {
@@ -123,31 +122,27 @@ function M.setup()
       -- colors = {}, -- table of hex strings
       -- termcolors = {} -- table of colour name strings
     },
-    autotag = {
-      enable = true,
-    },
-    matchup = {
-      enable = true,
-    },
+    autotag = { enable = true },
+    matchup = { enable = true },
     playground = {
       enable = true,
       disable = {},
-      updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+      updatetime = 25,      -- Debounced time for highlighting nodes in the playground from source code
       persist_queries = false, -- Whether the query persists across vim sessions
       keybindings = {
-        toggle_query_editor = 'o',
-        toggle_hl_groups = 'i',
-        toggle_injected_languages = 't',
-        toggle_anonymous_nodes = 'a',
-        toggle_language_display = 'I',
-        focus_language = 'f',
-        unfocus_language = 'F',
-        update = 'R',
-        goto_node = '<cr>',
-        show_help = '?',
+        toggle_query_editor = "o",
+        toggle_hl_groups = "i",
+        toggle_injected_languages = "t",
+        toggle_anonymous_nodes = "a",
+        toggle_language_display = "I",
+        focus_language = "f",
+        unfocus_language = "F",
+        update = "R",
+        goto_node = "<cr>",
+        show_help = "?",
       },
-    }
-  }
+    },
+  })
 end
 
 return M

@@ -40,7 +40,8 @@ siteGroups.forEach((siteGroup) => {
     log(`Working on site group ${siteGroup}`);
     config[siteGroup].forEach((site) => {
       const error = hostile[func]("127.0.0.1", site);
-      if (error && error !== true) log(`Failed to ${command} ${site}, due to error: ${error}`);
+      if (error && error !== true)
+        log(`Failed to ${command} ${site}, due to error: ${error}`);
       else log(`Successfully ${command}ed ${site}`);
     });
   }

@@ -5,14 +5,14 @@ local f = function(cmd)
 end
 
 wk.register({
-  o = {
+  r = {
     name = "Go to related",
     s = { f("css"), "css/scss file", },
     c = { f("controller"), "controller file", },
     m = { f("model"), "model file", },
     j = { f("component"), "component file", },
-    e = { f("hbs"), "hbs file", },
-    h = { f("html"), "html file", },
+    hb = { f("hbs"), "hbs file", },
+    ht = { f("html"), "html file", },
     a = {
       name = "Any matching",
       j = { f("anyjs"), "js file" },
