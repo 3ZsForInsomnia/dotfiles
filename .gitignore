@@ -1,10 +1,6 @@
 .DS_Store
 resurrect
 .git/
-zsh-syntax-highlighting
-zshmarks
-zsh-autocomplete
-zsh-autosuggestions
 trello.*
 *work*
 .env
