@@ -9,3 +9,4 @@ trello.*
 *work*
 .env
 packer_compiled
+node_modules
