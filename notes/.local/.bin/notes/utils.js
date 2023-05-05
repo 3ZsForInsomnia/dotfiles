@@ -1,25 +1,25 @@
 import { readFileSync, writeFileSync } from "fs";
 import { execSync } from "child_process";
-import * as dotenv from 'dotenv';
+import * as dotenv from "dotenv";
 
 dotenv.config({ path: "/home/zach/.local/.bin/notes/.env" });
 export const { NOTES_LOCATION: notesLocation } = process.env;
 
 const homeNote = `${notesLocation}/00 - Home.md`;
 
-export const slice = (num) => (str) => str.slice(num);
+export const slice = (start) => (str) => str.slice(start);
 export const truthy = (val) => !!val;
 export const hasItems = (val) => val && val.length > 0;
 
 const maxStringLength = 75;
-export const truncateString = (str) =>
-  str && str.length > maxStringLength
-    ? str.substring(0, maxStringLength) + "..."
+export const truncateString = (str, length) =>
+  str && str.length > (length || maxStringLength)
+    ? str.substring(0, length || maxStringLength) + "..."
     : str;
 export const replace =
   (pattern, replaceWith = "") =>
-  (str) =>
-    str.replace(pattern, replaceWith);
+    (str) =>
+      str.replace(pattern, replaceWith);
 
 export const justNumbers = (str) => str.replace(/(^\d+)(.+$)/i, "$1");
 
@@ -30,18 +30,18 @@ export const sortDate = (date1, date2) => {
   if (date1 > date2) return 1;
   if (date1 < date2) return -1;
   else return 0;
-}
+};
 export const sortDateByProp = (prop) => (obj1, obj2) => {
   const date1 = new Date(obj1[prop]);
   const date2 = new Date(obj2[prop]);
 
   return sortDate(date1, date2);
-}
+};
 
 const getBoundaries = (lines, heading) => {
-  const regex = new RegExp("[#+] " + heading);
+  const anyLevelHeading = new RegExp("[#+] " + heading);
 
-  const headingIndex = lines.findIndex((line) => line.match(regex));
+  const headingIndex = lines.findIndex((line) => line.match(anyLevelHeading));
   let currLine = headingIndex;
   while (lines[currLine + 1].trim().startsWith("- ")) currLine++;
 
@@ -50,8 +50,10 @@ const getBoundaries = (lines, heading) => {
 
 const replaceWithinBoundaries = (text, start, end, newList) => {
   const textCopy = [...text];
-  const removed = textCopy.splice(start + 1, end - start);
-  const added = textCopy.splice(start + 1, 0, newList.join("\n"));
+  const newText =
+    newList?.length > 0 && newList.join ? newList.join("") : newList;
+  textCopy.splice(start + 1, end - start);
+  textCopy.splice(start + 1, 0, newText.trim());
 
   return textCopy;
 };
@@ -65,7 +67,7 @@ export const replaceListUnderHeading = (heading, newList) => {
   writeHomeNote(newText.join("\n"));
 };
 
-export const run = (command, callback) => {
+export const run = (command) => {
   try {
     return execSync(command).toString();
   } catch (e) {

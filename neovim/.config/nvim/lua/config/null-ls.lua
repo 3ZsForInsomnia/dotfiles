@@ -24,6 +24,11 @@ function M.setup()
       }),
       null_ls.builtins.diagnostics.stylelint,
       null_ls.builtins.diagnostics.zsh,
+      null_ls.builtins.diagnostics.pylint.with({
+        diagnostics_postprocess = function(diagnostic)
+          diagnostic.code = diagnostic.message_id
+        end,
+      }),
 
       null_ls.builtins.formatting.google_java_format,
       null_ls.builtins.formatting.lua_format,
@@ -38,9 +43,7 @@ function M.setup()
       null_ls.builtins.formatting.sqlfluff.with({
         extra_args = { "--dialect", "mysql" }, -- change to your dialect
       }),
-      null_ls.builtins.formatting.black.with({
-        extra_args = { "--line-length=120" }
-      }),
+      null_ls.builtins.formatting.black.with({ extra_args = { "--line-length=100" } }),
       null_ls.builtins.formatting.isort,
 
       null_ls.builtins.hover.dictionary,

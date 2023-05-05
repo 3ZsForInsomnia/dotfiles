@@ -437,6 +437,10 @@ return packer.startup(function(use)
   }
   use "godlygeek/tabular"
 
+  use "tyru/open-browser.vim"
+  use "aklt/plantuml-syntax"
+  use "weirongxu/plantuml-previewer.vim"
+
   if packer_bootstrap then
     require('packer').sync()
   end

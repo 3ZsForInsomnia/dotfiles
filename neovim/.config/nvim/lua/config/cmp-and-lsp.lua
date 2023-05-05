@@ -20,6 +20,7 @@ function M.setup()
     'tsserver',
     'vimls',
     'pyright',
+    'pylsp',
   }
 
   require("mason").setup()

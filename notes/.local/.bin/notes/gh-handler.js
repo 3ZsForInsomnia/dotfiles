@@ -2,7 +2,6 @@ import * as dotenv from "dotenv";
 import {
   run,
   truncateString,
-  datify,
   dateDiff,
   replaceListUnderHeading,
   hasItems,
@@ -43,13 +42,11 @@ const getLastActivity = (reviews, comments, commits) => {
 };
 
 const createPrEntry = ({
-  number,
   title,
   url,
   state,
   author,
   mergeable,
-  updatedAt,
   createdAt,
   commits,
   comments,
@@ -57,20 +54,17 @@ const createPrEntry = ({
   mergeStateStatus,
   isDraft,
 }) =>
-  `- [${truncateString(title)}](${url}) by ${author.login} | State: ${
-    ghMarkers[state]
-  } - Review/CI Status: ${ghMarkers[mergeStateStatus]}${
-    isDraft ? ` - Draft ghMarkers[draft] - ` : ""
+  `- [${truncateString(title)}](${url}) by ${author.login} | State: ${ghMarkers[state]
+  } - Review/CI Status: ${ghMarkers[mergeStateStatus]}${isDraft ? ` - Draft ghMarkers[draft] - ` : ""
   } - Mergeable: ${ghMarkers[mergeable]}
     - Last touched: ${getLastActivity(
-      reviews,
-      comments,
-      commits
-    ).toDateString()} | Open for ${dateDiff(
+    reviews,
+    comments,
+    commits
+  ).toDateString()} | Open for ${dateDiff(
     new Date(createdAt),
     new Date()
-  )} days${hasItems(commits) ? ` | Commits: ${commits.length}` : ""}${
-    hasItems(comments) ? ` | Comments: ${comments.length}` : ""
+  )} days${hasItems(commits) ? ` | Commits: ${commits.length}` : ""}${hasItems(comments) ? ` | Comments: ${comments.length}` : ""
   }${hasItems(reviews) ? ` | Reviews: ${reviews.length}` : ""}`;
 
 const getPrs = (repo) =>
@@ -83,8 +77,7 @@ export const handleGhPrs = () => {
     .filter((pr) =>
       uniquePrs.has(pr.number) ? false : uniquePrs.add(pr.number)
     );
-  const prNodes =
-    prs.length === 0 ? (prNodes = "- No PRs!") : prs.map(createPrEntry);
-
-  replaceListUnderHeading("Current PR's", prNodes);
+  prs.length === 0
+    ? replaceListUnderHeading("Current PR's", "- No PRs!")
+    : replaceListUnderHeading("Current PR's", prs.map(createPrEntry));
 };

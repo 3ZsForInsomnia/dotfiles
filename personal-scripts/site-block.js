@@ -1,10 +1,11 @@
 const { readFileSync, createWriteStream } = require("fs");
+import { join } from 'path';
 const { format } = require("util");
 const hostile = require("hostile");
 
 const logFileLocation =
   process.env.SITEBLOCK_LOGFILE ??
-  process.env.HOME + "/.local/state/site-block.log";
+  join(process.env.HOME, ".local", "state", "site-block.log");
 
 const logFile = createWriteStream(logFileLocation, { flags: "w" });
 const log = (str) => {
@@ -27,7 +28,7 @@ const func = command === "block" ? "set" : "remove";
 
 let configLocation = process.env.SITEBLOCK_CONFIG;
 if (!configLocation) {
-  configLocation = process.env.HOME + "/.config/site-block/site-block.json";
+  configLocation = join(process.env.HOME, ".config", "site-block", "site-block.json");
 }
 log(`Config location: ${configLocation}`);
 
