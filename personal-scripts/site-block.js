@@ -1,5 +1,5 @@
 const { readFileSync, createWriteStream } = require("fs");
-import { join } from 'path';
+const { join } = require('path');
 const { format } = require("util");
 const hostile = require("hostile");
 

@@ -71,7 +71,7 @@ export const run = (command) => {
   try {
     return execSync(command).toString();
   } catch (e) {
-    console.error("Command failed: ", e);
+    console.error("Command failed: ", e.toString());
   }
 };
 
