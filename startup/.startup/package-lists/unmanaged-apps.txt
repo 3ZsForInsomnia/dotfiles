@@ -1,0 +1,14 @@
+Mac:
+chrome.dmg https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg
+TIDAL.dmg https://download.tidal.com/desktop/TIDAL.x64.dmg
+insomnia.dmg https://github.com/Kong/insomnia/releases/download/core%402023.2.2/Insomnia.Core-2023.2.2.dmg
+obsidian.dmg https://github.com/obsidianmd/obsidian-releases/releases/download/v1.3.4/Obsidian-1.3.4-universal.dmg
+
+Linux:
+chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+insomnia.deb https://github.com/Kong/insomnia/releases/download/core%402023.2.2/Insomnia.Core-2023.2.2.deb
+wezterm.deb https://github.com/wez/wezterm/releases/download/nightly/wezterm-nightly.Ubuntu22.04.deb
+
+Windows:
+googlechrome.exe https://dl.google.com/tag/s/appguid={8A69D345-D564-463c-AFF1-A69D9E530F96}&iid={91A77F18-01A2-47AF-8B2B-7A9A78D677F7}&lang=en&browser=3&usagestats=1&appname=Google%20Chrome&needsadmin=prefers&ap=x64-stable&dl=installdata&sig=O/bkTtzTzkDKc+QWtHbLtnf9XzOs+rE2ZS+JKIIaD4=
+TIDALSetup.exe https://download.tidal.com/desktop/TIDALSetup.exe

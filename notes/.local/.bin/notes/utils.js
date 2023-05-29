@@ -37,6 +37,7 @@ export const sortDateByProp = (prop) => (obj1, obj2) => {
 
   return sortDate(date1, date2);
 };
+export const sortByProp = (prop) => (a, b) => a[prop] - b[prop];
 
 const getBoundaries = (lines, heading) => {
   const anyLevelHeading = new RegExp("[#+] " + heading);

@@ -6,6 +6,7 @@ import {
   truthy,
   replace,
   truncateString,
+  sortByProp,
 } from "./utils.js";
 
 const boardsWithLists = [

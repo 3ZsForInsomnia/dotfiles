@@ -79,3 +79,6 @@ usr
 pomo
 send_to_qflist/!
 params
+txt
+luarocks
+rmrf
