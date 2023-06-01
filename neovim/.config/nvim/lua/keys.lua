@@ -4,6 +4,7 @@
 require("keys.dap")
 require("keys.db")
 require("keys.diffview")
+require("keys.neotest")
 require("keys.nvim-tree")
 require("keys.obsidian")
 require("keys.other")

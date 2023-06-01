@@ -36,6 +36,7 @@ return packer.startup(function(use)
   use "kkharji/sqlite.lua"
   use 'rcarriga/nvim-notify'
   use "zdcthomas/yop.nvim"
+  use "antoinemadec/FixCursorHold.nvim"
   use {
     'stevearc/dressing.nvim',
     config = function()
@@ -208,6 +209,7 @@ return packer.startup(function(use)
   })
   use 'saadparwaiz1/cmp_luasnip'
   use "rafamadriz/friendly-snippets"
+  use "johnpapa/vscode-angular-snippets"
   use {
     'jose-elias-alvarez/null-ls.nvim',
     config = function()
@@ -282,6 +284,36 @@ return packer.startup(function(use)
   }
   use 'liuchengxu/vista.vim'
   use 'mbbill/undotree'
+
+  --
+  --
+  -- Testing (Neotest)
+  -- Because tests are useful, I *guess*
+  --
+  --
+  use "haydenmeade/neotest-jest"
+  use {
+    "nvim-neotest/neotest",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim"
+    },
+    config = function()
+      require('neotest').setup({
+        adapters = {
+          require('neotest-jest')({
+            jestCommand = "npm test --",
+            jestConfigFile = "custom.jest.config.ts",
+            env = { CI = true },
+            cwd = function(path)
+              return vim.fn.getcwd()
+            end,
+          }),
+        }
+      })
+    end
+  }
 
   --
   --
