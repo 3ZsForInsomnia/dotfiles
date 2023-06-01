@@ -20,6 +20,7 @@ o.grepprg = 'rg --vimgrep --no-heading'
 o.exrc = true
 -- Ensures other vimrc files cannot write/do more than o.variables and whatnot
 o.secure = true
+o.shada = "!,'100,<50,s10,h"
 
 require('impatient')
 require('theming')
