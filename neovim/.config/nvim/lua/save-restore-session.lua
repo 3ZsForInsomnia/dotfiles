@@ -6,20 +6,30 @@ local function getSessions()
   return files
 end
 
-local function determineIfChangesPresent()
+local function areThereChangesPresent()
   local filesChanged = io.popen("git status --porcelain=v1 2>/dev/null | wc -l"):read()
-  return filesChanged == 0
+  return filesChanged > 0
 end
 
 local function getCurrentBranch()
   return io.popen("git branch --show-current"):read()
 end
 
-local function getBranches()
+local function getBranchesAndStashes()
   local branches = {}
+
   for branch in io.popen("git branch"):lines() do
-    table.insert(branches, branch)
+    local safeName = safeBranchNames(branch)
+    table.insert(branches, safeName)
   end
+
+  for stash in io.popen("git stash list"):lines() do
+    if string.find(stash, "nvim session: ", 1) then
+      local safeName = safeBranchNames(stash)
+      table.insert(branches, safeName)
+    end
+  end
+
   return branches
 end
 
@@ -75,7 +85,16 @@ function _G.DeleteSessionByName()
   end)
 end
 
-function _G.SaveCurrentBranchSessionAndSwitch()
+local function gitStashOrCommit(text, choice)
+  vim.ui.input({
+    prompt = text .. " message:",
+    default = "nvim session: " .. choice,
+  }, function(input)
+    os.execute("git " .. text .. ' -m "' .. input .. '"')
+  end)
+end
+
+local function getAndSaveCurrBranch()
   local currBranch = getCurrentBranch()
   local sessionName = safeBranchNames(currBranch)
   _G.SaveSession(sessionName)
@@ -91,65 +110,75 @@ function _G.SaveCurrentBranchSessionAndSwitch()
     end
   end)
 
-  local sessions = getSessions()
-  local branches = getBranches()
-  for i = 1, #branches do
-    branches[i] = safeBranchNames(branches[i])
+  return sessionName
+end
+
+local function restoreSessionWithGit(sessions, choice)
+  if string.find(choice, "nvim session: ", 1) then
+    os.execute("git stash apply stash^{/" .. choice .. "}")
+  else
+    os.execute("git checkout " .. choice)
   end
+
+  for _, session in pairs(sessions) do
+    if session == choice then
+      _G.RestoreSession(choice)
+    end
+  end
+end
+
+local function handleGitChanges(choice)
+  local changesPresent = areThereChangesPresent()
+  if changesPresent then
+    vim.ui.select({ "commit", "stash", "discard" }, {
+      "You have changes in git - what do you want to do with them?",
+      format_item = function(item)
+        return string.sub(item, 1, 1):upper() .. string.sub(item, 2)
+      end,
+    }, function(selection)
+      if selection == "commit" then
+        gitStashOrCommit("commit", choice)
+      end
+      if selection == "stash" then
+        gitStashOrCommit("stash", choice)
+      end
+      if selection == "discard" then
+        os.execute("git fetch origin; git reset --hard origin/" .. choice)
+      end
+    end)
+  end
+end
+
+local function formatBranchesBasedOnIfItHasASession(sessions)
+  return function(item)
+    for _, session in pairs(sessions) do
+      if session == item then
+        return item
+      end
+    end
+
+    return item .. "*"
+  end
+end
+
+function _G.SaveCurrentBranchSessionAndSwitch()
+  local sessionName = getAndSaveCurrBranch()
+
+  local sessions = getSessions()
+  local branches = getBranchesAndStashes()
 
   vim.ui.select(branches, {
     prompt = "Select branch: \nNote: * means this branch is *not* associated with a session yet",
-    format_item = function(item)
-      for _, session in pairs(sessions) do
-        if session == item then
-          return item
-        end
-      end
-
-      return item .. "*"
-    end,
+    format_item = formatBranchesBasedOnIfItHasASession(sessions),
   }, function(choice)
     if choice then
       if choice == sessionName then
         return -- If we select the branch we are already on, do nothing
       end
-      local changesPresent = determineIfChangesPresent()
-      if not changesPresent then
-        vim.ui.select({ "commit", "stash", "discard" }, {
-          "You have changes in git - what do you want to do with them?",
-          format_item = function(item)
-            return string.sub(item, 1, 1):upper() .. string.sub(item, 2)
-          end,
-        }, function(selection)
-          if selection == "commit" then
-            vim.ui.input({
-              prompt = "Commit message:",
-              default = "temp commit nvim session: " .. choice,
-            }, function(input)
-              os.execute('git commit -m "' .. input .. '"')
-            end)
-          end
-          if selection == "stash" then
-            vim.ui.input({
-              prompt = "Stash name:",
-              default = "stash nvim session: " .. choice,
-            }, function(input)
-              os.execute("git stash push -m " .. input)
-            end)
-          end
-          if selection == "discard" then
-            os.execute("git fetch origin; git reset --hard origin/" .. choice)
-          end
-        end)
-      end
 
-      os.execute("git checkout " .. choice)
+      handleGitChanges(choice)
 
-      for _, session in pairs(sessions) do
-        if session == choice then
-          _G.RestoreSession(choice)
-        end
-      end
+      restoreSessionWithGit(sessions, choice)
     end
   end)
 end
