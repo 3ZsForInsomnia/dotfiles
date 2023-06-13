@@ -1,4 +1,3 @@
----@diagnostic disable: redundant-parameter
 local M = {}
 
 function M.setup()
@@ -50,7 +49,7 @@ function M.setup()
           "--exclude",
           ".netlify",
         },
-      }
+      },
     },
     defaults = {
       file_ignore_patterns = { "node_modules", ".git/", "dist/", "build/", "target/" },
@@ -85,10 +84,10 @@ function M.setup()
     },
     extensions = {
       fzf = {
-        fuzzy = true, -- false will only do exact matching
+        fuzzy = true,                   -- false will only do exact matching
         override_generic_sorter = true, -- override the generic sorter
-        override_file_sorter = true, -- override the file sorter
-        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+        override_file_sorter = true,    -- override the file sorter
+        case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
         -- the default case_mode is "smart_case"
       },
       bookmarks = {
@@ -127,7 +126,7 @@ function M.setup()
   telescope.load_extension('bookmarks')
   telescope.load_extension('changes')
   telescope.load_extension("xray23")
-  --telescope.load_extension("dash")
+  telescope.load_extension("dash")
   telescope.load_extension('luasnip')
   telescope.load_extension('scriptnames')
   telescope.load_extension('heading')
@@ -136,6 +135,7 @@ function M.setup()
   telescope.load_extension("http")
   telescope.load_extension("tailiscope")
   telescope.load_extension("undo")
+  telescope.load_extension("angular")
 end
 
 return M

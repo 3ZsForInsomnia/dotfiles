@@ -46,7 +46,7 @@ alias rebash='source ~/.bashrc'
 alias repro='source ~/.bash_profile'
 alias rezsh='exec zsh'
 
-alias unstow='stow --target=/home/zach/'
+alias unstow='stow --target=/Users/zachary/'
 function unstowAll() {
   cd ~/src/dotfiles/
   for d in */ ; do

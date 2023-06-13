@@ -2,8 +2,8 @@ local M = {}
 
 function M.setup()
   local opts = {
-    dir = "/mnt/c/Users/comra/code/notes",
-    -- dir = "~/code/notes",
+    -- dir = "/mnt/c/Users/comra/code/notes",
+    dir = "~/code/notes",
     completion = { nvim_cmp = true },
     note_id_func = function(title)
       return title

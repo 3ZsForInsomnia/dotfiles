@@ -38,6 +38,7 @@ function M.setup()
       null_ls.builtins.formatting.markdown_toc, -- add <!-- toc --> to *.md to trigger
       null_ls.builtins.formatting.mdformat,
       null_ls.builtins.formatting.prettierd,
+      null_ls.builtins.formatting.stylelint,
       null_ls.builtins.formatting.sql_formatter,
       null_ls.builtins.formatting.stylua,
       null_ls.builtins.formatting.sqlfluff.with({

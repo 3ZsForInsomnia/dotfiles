@@ -22,4 +22,4 @@
 # 
 # m h  dom mon dow   command
 
-0 * * * * HOME=/home/zach node /home/zach/.local/.bin/notes/index.js hourly >> /var/log/cron.log 2>&1
+# 0 * * * * HOME=/home/zach node /home/zach/.local/.bin/notes/index.js hourly >> /var/log/cron.log 2>&1

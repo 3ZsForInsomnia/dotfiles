@@ -7,12 +7,17 @@ setopt append_history
 
 source ~/.p10k.zsh
 # source /home/zach/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-source /home/zach/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # source /home/zach/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-source /home/zach/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /home/zach/zshmarks/zshmarks.plugin.zsh
-source /home/zach/omz-git-completions.zsh
-source /home/zach/zsh-you-should-use/you-should-use.plugin.zsh
+# source /home/zach/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source /home/zach/zsh-autosuggestions/zsh-autosuggestions.zsh
+# source /home/zach/zshmarks/zshmarks.plugin.zsh
+# source /home/zach/omz-git-completions.zsh
+# source /home/zach/zsh-you-should-use/you-should-use.plugin.zsh
+source /Users/zachary/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /Users/zachary/zshmarks/zshmarks.plugin.zsh
+source /Users/zachary/omz-git-completions.zsh
+source /Users/zachary/zsh-you-should-use/you-should-use.plugin.zsh
+source /Users/zachary/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
 fpath=(~/zsh-completions/src ~/.zsh/ $fpath)
 
@@ -105,3 +110,4 @@ mkdir -p ~/.local/bin
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH="/opt/homebrew/bin:$PATH"

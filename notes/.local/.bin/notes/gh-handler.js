@@ -77,7 +77,9 @@ export const handleGhPrs = () => {
     .filter((pr) =>
       uniquePrs.has(pr.number) ? false : uniquePrs.add(pr.number)
     );
-  prs.length === 0
-    ? replaceListUnderHeading("Current PR's", "- No PRs!")
-    : replaceListUnderHeading("Current PR's", prs.map(createPrEntry));
+  // TODO: fix request - should only retrieve my PR's
+  console.log("prs", prs);
+  // prs.length === 0
+  //   ? replaceListUnderHeading("Current PR's", "- No PRs!")
+  //   : replaceListUnderHeading("Current PR's", prs.map(createPrEntry));
 };

@@ -19,7 +19,7 @@ local isInRepo = function()
   ]])
   local isInRepo = handle:read("*a")
   handle:close()
-  return isInRepo == 'true'
+  return string.len(isInRepo) > 0
 end
 
 local handleIfInRepoOrNot = function(func)
@@ -57,7 +57,6 @@ M.gitStatus = {
 M.gitStatusForRepo = function()
   local handle = io.popen('git diff --shortstat')
   local statusText = handle:read("*a")
-  handle:close()
 
   handle = io.popen('git ls-files --others --exclude-standard | wc -l')
   local untracked = handle:read("*a")
@@ -73,6 +72,7 @@ M.gitStatusForRepo = function()
     delCount = delCount,
     untracked = untracked,
   }
+  handle:close()
 end
 
 function M.setup()
@@ -141,6 +141,6 @@ function M.setup()
   }
 end
 
--- M.timer:start(2000, 2000, function() M.gitStatusForRepo() end)
+M.timer:start(10000, 10000, function() M.gitStatusForRepo() end)
 
 return M

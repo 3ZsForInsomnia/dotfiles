@@ -7,7 +7,7 @@ const commands = {
   gh: () => handleGhPrs(),
   trello: () => handleTrello(),
   all: () => { handleTrello(); handleGhPrs(); },
-  hourly: () => { handleTrello(); handleGhPrs(); },
+  hourly: () => { handleTrello(); }, //handleGhPrs(); },
 };
 
 if (command in commands) commands[command]();

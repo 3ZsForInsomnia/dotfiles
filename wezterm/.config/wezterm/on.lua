@@ -1,7 +1,6 @@
 local wezterm = require("wezterm")
 local mux = wezterm.mux
 local utils = require("utils")
--- local work = require('work-related')
 
 local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 local SOLID_RIGHT_ARROW = utf8.char(0xe0b0)
@@ -25,7 +24,7 @@ local getProjectPath = function(pane)
     end
   end
 
-  -- cwd = work.shortenPath(cwd)
+  cwd = utils.shortenPath(cwd)
 
   return cwd, hostname
 end
@@ -48,6 +47,9 @@ local createStatusRight = function(window, pane)
   table.insert(cells, mem)
   local cpu = utils.getCpuUsage()
   table.insert(cells, cpu)
+
+  utils.setupWeatherRequests()
+  table.insert(cells, utils.weather)
 
   -- Color palette for the backgrounds of each cell
   local colors = {

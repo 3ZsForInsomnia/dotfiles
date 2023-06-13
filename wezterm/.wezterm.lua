@@ -3,15 +3,14 @@ local keybinds = require 'keybinds'
 require 'on'
 
 return {
-  term = 'wezterm',
-  font = wezterm.font 'Fira Code',
-  font_size = 16,
+  font = wezterm.font 'FiraCode Nerd Font Mono',
+  font_size = 18,
   underline_position = -3,
   underline_thickness = 2,
   switch_to_last_active_tab_when_closing_tab = true,
   use_fancy_tab_bar = true,
   window_frame = {
-    font_size = 20,
+    font_size = 18,
     active_titlebar_bg = '#000',
     inactive_titlebar_bg = '#666',
   },
@@ -21,7 +20,7 @@ return {
   },
   keys = keybinds.create_keybinds(),
   key_tables = keybinds.key_tables,
-	mouse_bindings = keybinds.mouse_bindings,
+  mouse_bindings = keybinds.mouse_bindings,
   colors = {
     compose_cursor = 'orange',
   },

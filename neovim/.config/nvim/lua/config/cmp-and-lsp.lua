@@ -229,7 +229,7 @@ function M.setup()
     local b = l.buf
 
     wk.register({
-      l = {
+      ["<leader>l"] = {
         name = "LSP",
         a = { b.code_action, "Perform code action" },
         D = { b.declaration, "Declaration" },

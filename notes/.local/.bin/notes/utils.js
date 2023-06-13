@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { execSync } from "child_process";
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: "/home/zach/.local/.bin/notes/.env" });
+dotenv.config({ path: "/Users/zachary/.local/.bin/notes/.env" });
 export const { NOTES_LOCATION: notesLocation } = process.env;
 
 const homeNote = `${notesLocation}/00 - Home.md`;

@@ -82,7 +82,7 @@ return packer.startup(function(use)
           enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
           -- these settings will be used for your Neovim config directory
           runtime = true, -- runtime path
-          types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
+          types = true,   -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
           plugins = true, -- installed opt or start plugins in packpath
           -- you can also specify the list of plugins to make available as a workspace library
           -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
@@ -158,21 +158,29 @@ return packer.startup(function(use)
   use("HUAHUAI23/telescope-session.nvim")
   use {
     'nvim-telescope/telescope-fzf-native.nvim',
-    run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+    run =
+    'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
+  use "3ZsForInsomnia/telescope-angular"
   use 'dhruvmanila/telescope-bookmarks.nvim'
   use 'debugloop/telescope-undo.nvim'
   use "LinArcX/telescope-scriptnames.nvim"
   use 'crispgm/telescope-heading.nvim'
   use "nvim-telescope/telescope-file-browser.nvim"
   use "nvim-telescope/telescope-packer.nvim"
-  --use({
-  --  'mrjones2014/dash.nvim',
-  --  run = 'make install',
-  --  config = function()
-  --    require('config.dash').setup()
-  --  end
-  --})
+  use {
+    "axkirillov/easypick.nvim",
+    config = function()
+      require('config.easypick').setup()
+    end
+  }
+  use({
+   'mrjones2014/dash.nvim',
+   run = 'make install',
+   config = function()
+     require('config.dash').setup()
+   end
+  })
 
   --
   --
@@ -358,12 +366,6 @@ return packer.startup(function(use)
   }
   use 'p00f/nvim-ts-rainbow'
   use {
-    'glepnir/indent-guides.nvim',
-    config = function()
-      require('config.indent').setup()
-    end
-  }
-  use {
     "folke/twilight.nvim",
     config = function()
       require("twilight").setup()
@@ -468,6 +470,29 @@ return packer.startup(function(use)
     end
   }
   use "godlygeek/tabular"
+  use {
+    'Equilibris/nx.nvim',
+    config = function()
+      require("nx").setup {
+        -- Base command to run all other nx commands, some other values may be:
+        -- - `npm nx`
+        -- - `yarn nx`
+        -- - `pnpm nx`
+        nx_cmd_root = 'nx',
+
+        -- Command running capabilities,
+        -- see nx.m.command-runners for more details
+        command_runner = require('nx.command-runners').terminal_cmd(),
+        -- Form rendering capabilities,
+        -- see nx.m.form-renderers for more detials
+        form_renderer = require('nx.form-renderers').telescope(),
+
+        -- Whether or not to load nx configuration,
+        -- see nx.loading-and-reloading for more details
+        read_init = true,
+      }
+    end
+  }
 
   use "tyru/open-browser.vim"
   use "aklt/plantuml-syntax"

@@ -37,6 +37,7 @@ wk.register({
         m = { f("marks"), "Marks" },
         b = { f("buffers"), "Buffers" },
         r = { f("registers"), "Registers" },
+        c = { "<cmd>Easypick clipboard<cr>", "Clipboard" },
         t = { f("tags"), "Tags" },
         tb = { f("current_buffer_tags"), "Tags in buffer" },
       },
@@ -87,9 +88,9 @@ wk.register({
         p = { f("packer"), "Packer information/actions" },
         f = { f("file_browser"), "Find files" },
         fo = { f("folder_browser"), "Find folders" },
+        a = { f("angular"), "Angular modules" },
         c = { "<cmd>TodoTelescope<cr>", "Find todo comments" },
       }
     },
-
   },
 })

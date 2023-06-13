@@ -82,3 +82,9 @@ params
 txt
 luarocks
 rmrf
+enum
+scss
+css
+test
+html
+Autocomplete

@@ -43,7 +43,7 @@ fi
 cd ~;
 mkdir code;
 cd code;
-git clone https://github.com/3ZsForInsomnia/dotfiles;
+git clone --recurse-submodules https://github.com/3ZsForInsomnia/dotfiles;
 source ./dotfiles/bash/.bashrc;
 unstowAll;
 cd ~;
@@ -59,6 +59,9 @@ installAllCoreItems;
 
 # Setup RSA key
 # Log into lastpass CLI
+git config --global core.excludesfile ~/.gitignore_global
+git config --global user.name "Zachary Levine"
+git config --global user.email "Zach@ZJLevine.dev"
 
 # These must be run manually as they depend on git/dotfiles/lastpass
 installRest() {

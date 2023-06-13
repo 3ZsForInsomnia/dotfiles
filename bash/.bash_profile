@@ -11,6 +11,12 @@ alias src='j src'
 alias utils='j utils'
 alias dots='j dots'
 
+alias fe='j fe'
+alias plat='j plat'
+alias sur='j sur'
+alias kit='j kit'
+alias shared='j shared'
+
 alias twerk='node ~/src/logging-cli/index.js'
 alias mightTwerk='twerk -p'
 alias mightTwerkCore='twerk -c -p'

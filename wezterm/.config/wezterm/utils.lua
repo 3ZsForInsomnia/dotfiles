@@ -1,21 +1,17 @@
+local time = require('wezterm').time
+
 local M = {}
 
 M.shortenPath = function(cwd)
-  cwd = string.gsub(cwd, '/Users/zachary.levine/', '')
-  cwd = string.gsub(cwd, '/Users/zachary.levine', 'Home')
-  cwd = string.gsub(cwd, 'src/', '')
-  cwd = string.gsub(cwd, '/Volumes/code/', '')
+  print("cwd", cwd)
+  cwd = string.gsub(cwd, '/Users/zachary/', '')
+  cwd = string.gsub(cwd, '/Users/zachary', 'Home')
+  cwd = string.gsub(cwd, 'code/', '')
   cwd = string.gsub(cwd, '.config', '.c')
   cwd = string.gsub(cwd, 'neovim', 'nv')
   cwd = string.gsub(cwd, 'wezterm', 'wez', 1)
-  cwd = string.gsub(cwd, '/iverson', '')
 
   return cwd
-end
-
-local lpad = function(str, len, char)
-    if char == nil then char = ' ' end
-    return str .. string.rep(char, len - #str)
 end
 
 local runShellCommand = function(cmd)
@@ -38,6 +34,19 @@ function M.getCpuUsage()
   local formatted = string.format("%03d", result)
   return "CPU: " .. formatted .. "%"
 end
+
+function M.getWeather()
+  local result = runShellCommand('curl "wttr.in/HuntersPoint?format=1&u"')
+  M.weather = result .. '  '
+end
+
+local fifteenMinutes = 900
+function M.setupWeatherRequests()
+  M.getWeather()
+  time.call_after(fifteenMinutes, M.setupWeatherRequests)
+end
+
+M.weather = ""
 
 function M.merge_lists(t1, t2, t3)
   local result = {}

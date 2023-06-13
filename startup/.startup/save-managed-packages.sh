@@ -27,6 +27,3 @@ luaPack;
 brewOrApt;
 cd ~;
 )'
-
-# This is just a helper really, but very plugin/tooling related so keeping it here
-alias goToNvimPlugins='cd ~/.local/share/nvim/site/pack/packer/'

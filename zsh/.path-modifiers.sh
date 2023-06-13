@@ -24,7 +24,7 @@ export GOPATH=~/src/go/
 export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;;"
 
 # Required for opening browser in WSL
-export BROWSER=wslview
+# export BROWSER=wslview
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
