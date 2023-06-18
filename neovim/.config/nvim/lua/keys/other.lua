@@ -8,10 +8,10 @@ wk.register({
   r = {
     name = "Go to related files",
     [""] = { f(""), "Other" },
-    c = { f("style"), "style (css, scss, theme)", },
+    s = { f("style"), "style (css, scss, theme)", },
     i = { f("types"), "types (interface, type, enum)", },
     t = { f("test"), "test (test, spec, mock)", },
-    h = { f("html"), "html (html, any other template)", },
+    h = { f("template"), "html (html, any other template)", },
     a = {
       name = "Angular",
       [""] = { f("angular"), "Angular (service, routing, module, component, directive, pipe)" },
@@ -19,7 +19,7 @@ wk.register({
       r = { f("routing"), "routing", },
       m = { f("module"), "module", },
       p = { f("pipe"), "pipe", },
-      j = { f("component"), "component", },
+      c = { f("component"), "component", },
       d = { f("directive"), "directive", },
     },
     n = {

@@ -13,11 +13,11 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +69 apps/platform/src/app/tech/impersonate/components/impersonate-page/impersonate-page.component.ts
+badd +1 apps/platform/src/app/features/slides/store/slides.actions.ts
 argglobal
 %argdel
-$argadd .
-edit apps/platform/src/app/tech/impersonate/components/impersonate-page/impersonate-page.component.ts
+$argadd NvimTree_1
+edit apps/platform/src/app/features/slides/store/slides.actions.ts
 argglobal
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
@@ -27,24 +27,12 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-14
-normal! zc
-27
-normal! zc
-43
-normal! zo
-64
-normal! zo
-70
-normal! zo
-78
-normal! zo
-let s:l = 69 - ((27 * winheight(0) + 27) / 54)
+let s:l = 1 - ((0 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 69
-normal! 032|
+keepjumps 1
+normal! 0
 lcd ~/code/fe
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'

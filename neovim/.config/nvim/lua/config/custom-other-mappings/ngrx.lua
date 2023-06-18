@@ -1,408 +1,121 @@
 local M = {}
 
-M.ngrx = {
-  pattern = "/(.*)/(.*)/*.\\(reducer\\|effects\\|actions\\|mock\\|spec|\\interface\\|enum\\|state\\|selectors\\).ts$",
-  target = {
-    {
-      target = "/%1/%2/%2.reducer.ts",
-      context = "ngrx"
-    },
-    {
-      target = "/%1/%2/%2.spec.ts",
-      context = "ngrx"
-    },
-    {
-      target = "/%1/%2/%2.mock.ts",
-      context = "ngrx"
-    },
-    {
-      target = "/%1/%2/%2.interface.ts",
-      context = "ngrx"
-    },
-    {
-      target = "/%1/%2/%2.enum.ts",
-      context = "ngrx"
-    },
-    {
-      target = "/%1/%2/%2.actions.ts",
-      context = "ngrx"
-    },
-    {
-      target = "/%1/%2/%2.effects.ts",
-      context = "ngrx"
-    },
-    {
-      target = "/%1/%2/%2.state.ts",
-      context = "ngrx"
-    },
-    {
-      target = "/%1/%2.selectors.ts",
-      context = "ngrx"
-    },
-  }
+local ngrx = {
+  actions = {
+    target = "/%1/%2/%3.actions.ts",
+    context = "actions",
+  },
+  selectors = {
+    target = "/%1/%2/%3.selectors.ts",
+    context = "selectors",
+  },
+  reducer = {
+    target = "/%1/%2/%3.reducer.ts",
+    context = "reducer",
+  },
+  effects = {
+    target = "/%1/%2/%3.effects.ts",
+    context = "effects",
+  },
+  test = {
+    target = "/%1/%2/%3.spec.ts",
+    context = "test",
+  },
+  state = {
+    target = "/%1/%2/%3.state.ts",
+    context = "state",
+  },
 }
 
 M.actions = {
-  pattern = "/(.*)/(.*)/*.component.ts$",
-  target = {
-    {
-      target = "/%1/*/*.directive.ts",
-      context = "directive"
+  {
+    pattern = "/(.*)/(.*)/(.*).actions.ts$",
+    target = {
+      ngrx.selectors,
+      ngrx.reducer,
+      ngrx.effects,
+      ngrx.test,
+      ngrx.state
     },
-    {
-      target = "/%1/*/*.pipe.ts",
-      context = "pipe"
-    },
-    {
-      target = "/%1/*/*.service.ts",
-      context = "service"
-    },
-    {
-      target = "/%1/%2/%2.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/%2/%2.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/%2/%2.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/%2/%2.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1.module.ts",
-      context = "module"
-    },
-    {
-      target = "/%2.module.ts",
-      context = "module"
-    },
-    {
-      target = "/%1.routing.ts",
-      context = "routing"
-    }
-  }
-}
-
-M.effects = {
-  pattern = "/(.*)/(.*)/*.directive.ts$",
-  target = {
-    {
-      target = "/%1/%2/%2.component.ts",
-      context = "component"
-    },
-    {
-      target = "/%1/*/*.pipe.ts",
-      context = "pipe"
-    },
-    {
-      target = "/%1/*/*.service.ts",
-      context = "service"
-    },
-    {
-      target = "/%1/%2/%2.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/%2/%2.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/%2/%2.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/%2/%2.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1.module.ts",
-      context = "module"
-    },
-    {
-      target = "/%2.module.ts",
-      context = "module"
-    },
-    {
-      target = "/%1.routing.ts",
-      context = "routing"
-    }
-  }
+  },
 }
 
 M.selectors = {
-  pattern = "/(.*)/(.*)/*.service.ts$",
-  target = {
-    {
-      target = "/%1/*/*.component.ts",
-      context = "component"
+  {
+    pattern = "/(.*)/(.*)/(.*).selectors.ts$",
+    target = {
+      ngrx.actions,
+      ngrx.reducer,
+      ngrx.effects,
+      ngrx.test,
+      ngrx.state
     },
-    {
-      target = "/%1/*/*.directive.ts",
-      context = "directive"
-    },
-    {
-      target = "/%1/%2/%2.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/%2/%2.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/%2/%2.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/%2/%2.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.pipe.ts",
-      context = "pipe"
-    },
-    {
-      target = "/%1.module.ts",
-      context = "module"
-    },
-    {
-      target = "/%2.module.ts",
-      context = "module"
-    },
-    {
-      target = "/%1.routing.ts",
-      context = "routing"
-    }
-  }
-}
-
-M.state = {
-  pattern = "/(.*)/(.*)/*.pipe.ts$",
-  target = {
-    {
-      target = "/%1/*/*.component.ts",
-      context = "component"
-    },
-    {
-      target = "/%1/*/*.directive.ts",
-      context = "directive"
-    },
-    {
-      target = "/%1/%2/%2.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/%2/%2.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/%2/%2.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/%2/%2.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.service.ts",
-      context = "service"
-    },
-    {
-      target = "/%1.module.ts",
-      context = "module"
-    },
-    {
-      target = "/%2.module.ts",
-      context = "module"
-    },
-    {
-      target = "/%1.routing.ts",
-      context = "routing"
-    }
-  }
+  },
 }
 
 M.reducer = {
-  pattern = "/(.*).routing.ts$",
-  target = {
-    {
-      target = "/%1/*/*.component.ts",
-      context = "component"
+  {
+    pattern = "/(.*)/(.*)/(.*).reducer.ts$",
+    target = {
+      ngrx.actions,
+      ngrx.selectors,
+      ngrx.effects,
+      ngrx.test,
+      ngrx.state
     },
-    {
-      target = "/%1/*/*.directive.ts",
-      context = "directive"
+  },
+}
+
+M.effects = {
+  {
+    pattern = "/(.*)/(.*)/(.*).effects.ts$",
+    target = {
+      ngrx.actions,
+      ngrx.selectors,
+      ngrx.reducer,
+      ngrx.test,
+      ngrx.state
     },
-    {
-      target = "/%1/*/*.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.pipe.ts",
-      context = "pipe"
-    },
-    {
-      target = "/%1/*/*.service.ts",
-      context = "service"
-    },
-    {
-      target = "/%1.module.ts",
-      context = "module"
-    }
-  }
+  },
 }
 
 M.test = {
-  pattern = "/(.*).module.ts$",
-  target = {
-    {
-      target = "/%1/*/*.component.ts",
-      context = "component"
+  {
+    pattern = "/(.*)/(.*)/(.*).spec.ts$",
+    target = {
+      ngrx.actions,
+      ngrx.selectors,
+      ngrx.effects,
+      ngrx.reducer,
+      ngrx.state
     },
-    {
-      target = "/%1/*/*.directive.ts",
-      context = "directive"
+  },
+}
+
+M.state = {
+  {
+    pattern = "/(.*)/(.*)/(.*).state.ts$",
+    target = {
+      ngrx.actions,
+      ngrx.selectors,
+      ngrx.effects,
+      ngrx.reducer,
+      ngrx.test
     },
-    {
-      target = "/%1/*/*.spec.ts",
-      context = "test"
+  },
+}
+
+M.ngrx = {
+  {
+    pattern = "/(.*)/(.*)/(.*).ts$",
+    target = {
+      ngrx.actions,
+      ngrx.selections,
+      ngrx.effects,
+      ngrx.reducer,
+      ngrx.test,
+      ngrx.state,
     },
-    {
-      target = "/%1/*/*.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*/*.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*/*.pipe.ts",
-      context = "pipe"
-    },
-    {
-      target = "/%1/*/*.service.ts",
-      context = "service"
-    },
-    {
-      target = "/%1/*.component.ts",
-      context = "component"
-    },
-    {
-      target = "/%1/*.directive.ts",
-      context = "directive"
-    },
-    {
-      target = "/%1/*.spec.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*.mock.ts",
-      context = "test"
-    },
-    {
-      target = "/%1/*.interface.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*.enum.ts",
-      context = "type"
-    },
-    {
-      target = "/%1/*.pipe.ts",
-      context = "pipe"
-    },
-    {
-      target = "/%1/*.service.ts",
-      context = "service"
-    },
-    {
-      target = "/%1.routing.ts",
-      context = "routing"
-    }
   }
 }
 

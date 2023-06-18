@@ -88,3 +88,7 @@ css
 test
 html
 Autocomplete
+Injectable
+concat
+rxjs
+ngrx
