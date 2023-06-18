@@ -14,6 +14,7 @@ function M.setup()
       angular.routing,
       angular.service,
       angular.directive,
+      angular.ngstyles,
       styles
     },
     transformers = {

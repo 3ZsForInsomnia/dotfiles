@@ -67,19 +67,28 @@ const createPrEntry = ({
   )} days${hasItems(commits) ? ` | Commits: ${commits.length}` : ""}${hasItems(comments) ? ` | Comments: ${comments.length}` : ""
   }${hasItems(reviews) ? ` | Reviews: ${reviews.length}` : ""}`;
 
-const getPrs = (repo) =>
-  `gh pr list --repo=${repo} --json title,number,author,url,comments,commits,state,createdAt,updatedAt,mergeable,reviews,mergeStateStatus,isDraft`;
+const getMyPrs = (repo) =>
+  `gh pr list --repo=${repo} --json title,number,author,assignees,url,comments,commits,state,createdAt,updatedAt,mergeable,reviews,mergeStateStatus,isDraft --author "@me"`;
+
+const getAssignedPrs = (repo) =>
+  `gh pr list --repo=${repo} --json title,number,author,assignees,url,comments,commits,state,createdAt,updatedAt,mergeable,reviews,mergeStateStatus,isDraft --assignee "@me"`;
 
 export const handleGhPrs = () => {
   const uniquePrs = new Set();
-  const prs = repos
-    .flatMap((repo) => JSON.parse(run(getPrs(repo))))
+  const myPrs = repos
+    .flatMap((repo) => JSON.parse(run(getMyPrs(repo))))
     .filter((pr) =>
       uniquePrs.has(pr.number) ? false : uniquePrs.add(pr.number)
     );
-  // TODO: fix request - should only retrieve my PR's
+  const assignedPrs = repos
+    .flatMap((repo) => JSON.parse(run(getAssignedPrs(repo))))
+    .filter((pr) =>
+      uniquePrs.has(pr.number) ? false : uniquePrs.add(pr.number)
+    );
+
+  const prs = [...myPrs, ...assignedPrs];
   console.log("prs", prs);
-  // prs.length === 0
-  //   ? replaceListUnderHeading("Current PR's", "- No PRs!")
-  //   : replaceListUnderHeading("Current PR's", prs.map(createPrEntry));
+  prs.length === 0
+    ? replaceListUnderHeading("Current PR's", "- No PRs!")
+    : replaceListUnderHeading("Current PR's", prs.map(createPrEntry));
 };

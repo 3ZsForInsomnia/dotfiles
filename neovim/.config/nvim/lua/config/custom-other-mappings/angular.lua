@@ -509,5 +509,71 @@ M.test = {
   }
 }
 
+M.ngstyles = {
+  pattern =
+  "/(.*)/(.*)/*.component\\|theme\\).\\(scss\\|css\\|html\\)$",
+  target = {
+    {
+      target = "/%1/%2/%2.component.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.spec.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.mock.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.interface.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.enum.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.directive.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.pipe.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.service.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2.module.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.module.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1.module.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2.module.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1/%2/%2.routing.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1.routing.ts",
+      context = "angular"
+    },
+    {
+      target = "/%1.routing.ts",
+      context = "angular"
+    }
+  }
+}
 
 return M
