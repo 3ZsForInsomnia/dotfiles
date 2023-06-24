@@ -1,5 +1,5 @@
 installZsh() {
-  if [ $INSTALLING_ON == 'linux'] then
+  if [ $INSTALLING_ON == 'linux']; then
     zshLocation = command -v zsh;
     sudo echo $zshLocation >> /etc/shells
     sudo chsh -s $(which zsh) $USER
@@ -9,7 +9,7 @@ installZsh() {
 }
 
 installXcode() {
-  if [ $INSTALLING_ON == 'mac'] then
+  if [ $INSTALLING_ON == 'mac']; then
     xcode-select --install;
   fi
 }

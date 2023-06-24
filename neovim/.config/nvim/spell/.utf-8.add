@@ -92,3 +92,4 @@ Injectable
 concat
 rxjs
 ngrx
+get

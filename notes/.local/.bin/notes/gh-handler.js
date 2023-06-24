@@ -68,10 +68,10 @@ const createPrEntry = ({
   }${hasItems(reviews) ? ` | Reviews: ${reviews.length}` : ""}`;
 
 const getMyPrs = (repo) =>
-  `gh pr list --repo=${repo} --json title,number,author,assignees,url,comments,commits,state,createdAt,updatedAt,mergeable,reviews,mergeStateStatus,isDraft --author "@me"`;
+  `/opt/homebrew/bin/gh pr list --repo=${repo} --json title,number,author,assignees,url,comments,commits,state,createdAt,updatedAt,mergeable,reviews,mergeStateStatus,isDraft --author "@me"`;
 
 const getAssignedPrs = (repo) =>
-  `gh pr list --repo=${repo} --json title,number,author,assignees,url,comments,commits,state,createdAt,updatedAt,mergeable,reviews,mergeStateStatus,isDraft --assignee "@me"`;
+  `/opt/homebrew/bin/gh pr list --repo=${repo} --json title,number,author,assignees,url,comments,commits,state,createdAt,updatedAt,mergeable,reviews,mergeStateStatus,isDraft --assignee "@me"`;
 
 export const handleGhPrs = () => {
   const uniquePrs = new Set();

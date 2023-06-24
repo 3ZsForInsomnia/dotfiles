@@ -1,7 +1,7 @@
 installNeovim() {
-  if [ "$INSTALLING_ON" == 'mac'] then
+  if [ "$INSTALLING_ON" == 'mac']; then
     installNewSystem --HEAD neovim
-  elif [ "$INSTALLING_ON" == 'linux' ] then
+  elif [ "$INSTALLING_ON" == 'linux' ]; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
     sudo apt-get update
     installNewSystem neovim
@@ -11,13 +11,13 @@ installNeovim() {
 installEspanso() {
   cd ~/tools;
 
-  if [ "$INSTALLING_ON" == 'mac' ] then
+  if [ "$INSTALLING_ON" == 'mac' ]; then
     # Actual download handled by Brew
     # Current folder setup is correct for Mac
-  elif [ "$INSTALLING_ON" == 'linux' ] then
+  elif [ "$INSTALLING_ON" == 'linux' ]; then
     wget https://github.com/federico-terzi/espanso/releases/download/v2.1.8/espanso-debian-x11-amd64.deb
     sudo apt install ./espanso-debian-x11-amd64.deb
-  elif [ $"INSTALLING_ON" == 'win' ] then
+  elif [ $"INSTALLING_ON" == 'win' ]; then
     # Requires running powershell in admin, mostly here for documentation
     url="C:\\Users\\comra\\code\\dotfiles\\espanso\\Library\\Application Support\\espanso\\"
     powershellSymlink "$urlconfig\\default.yml" "default.yml"

@@ -122,5 +122,4 @@ M.angular = {
   },
 }
 
-
 return M

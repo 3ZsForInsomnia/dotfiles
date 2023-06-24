@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# $1 = on/off
+# $2 = slack status
+# $3 = time, or emoji
+# $4 = emoji
+if [ "$1" == 'on' ]; then
+  if [ -z "$4" ]; then
+    emoji="tomato"
+  else
+    emoji=$4
+  fi
+
+  shortcuts run "dnd on";
+  curl $ZAPIER_WEBHOOK -G --data-urlencode "message=$2" --data-urlencode "emoji=:$emoji:" --data-url-encode "time=$3"
+  node ~/luxafor.js "red"
+elif [ "$1" == 'off' ]; then
+  if [ -z "$3" ]; then
+    emoji=""
+  else
+    emoji=$3
+  fi
+
+  shortcuts run "dnd off";
+  curl $ZAPIER_WEBHOOK -G --data-urlencode "message=$2" --data-urlencode "emoji=:$emoji:"
+  node ~/luxafor.js "off"
+else
+  echo "Your command (\"$1\") was unrecognized! The options currently supported are \"on\" and \"off\""
+fi

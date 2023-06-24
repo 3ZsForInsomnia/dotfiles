@@ -14,7 +14,7 @@ isMacLinuxOrWin() {
 system=$(isMacLinuxOrWin);
 export INSTALLING_ON=$system
 
-if [ "$system" == 'mac'] then
+if [ "$system" == 'mac']; then
   brew update && brew upgrade;
   if ! [ -x "$(command -v git)" ]; then
     brew install git;
@@ -26,7 +26,7 @@ if [ "$system" == 'mac'] then
     brew install curl;
   fi
   brew install stow;
-elif [ "$system" == 'linux' ] then
+elif [ "$system" == 'linux' ]; then
   sudo apt update && sudo apt upgrade;
   if ! [ -x "$(command -v git)" ]; then
     sudo apt install git;

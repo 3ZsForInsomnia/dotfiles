@@ -17,9 +17,9 @@ local isInRepo = function()
       echo "repo: $GPATH"
     fi
   ]])
-  local isInRepo = handle:read("*a")
+  local repo = handle:read("*a")
   handle:close()
-  return string.len(isInRepo) > 0
+  return string.len(repo) > 0
 end
 
 local handleIfInRepoOrNot = function(func)
@@ -55,6 +55,17 @@ M.gitStatus = {
 }
 
 M.gitStatusForRepo = function()
+  if not isInRepo() then
+    M.statusValues = {
+      fileCount = "N/A",
+      addCount = "N/A",
+      delCount = "N/A",
+      untracked = "N/A",
+    }
+
+    return
+  end
+
   local handle = io.popen('git diff --shortstat')
   local statusText = handle:read("*a")
 

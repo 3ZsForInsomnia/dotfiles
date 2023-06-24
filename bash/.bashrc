@@ -1,3 +1,9 @@
+if [[ $(uname) == "Darwin" ]]; then
+  export MY_SYSTEM="mac"
+elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+  export MY_SYSTEM="linux"
+fi
+
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
@@ -5,6 +11,7 @@ source ~/.dash-g-aliases.sh
 source ~/.bash_profile
 source ~/.utils.sh
 source ~/.nvim-tmux-etc.sh
+source ~/work.sh
 
 alias ..='cd ../'
 alias ...='..; ..;'
@@ -13,15 +20,12 @@ alias ~='cd ~'
 alias sudo='sudo '
 alias addcreds='ssh-add -K'
 
-alias getclip='pbpaste'
-alias setclip='pbcopy'
-
 alias :q='exit'
 alias q='exit'
 
-if [[ $(uname) == "Darwin" ]]; then
+if [[ "$MY_SYSTEM" == "mac" ]]; then
   alias cat='bat'
-elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+elif [[ "$MY_SYSTEM" == "linux" ]]; then
   alias cat='batcat'
 fi
 alias lua='lua-5.1'
@@ -53,4 +57,3 @@ function unstowAll() {
       unstow $d
   done
 }
-. "$HOME/.cargo/env"

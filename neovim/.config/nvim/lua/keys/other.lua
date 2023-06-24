@@ -15,12 +15,9 @@ wk.register({
     a = {
       name = "Angular",
       [""] = { f("angular"), "Angular (service, routing, module, component, directive, pipe)" },
-      s = { f("service"), "service", },
       r = { f("routing"), "routing", },
       m = { f("module"), "module", },
-      p = { f("pipe"), "pipe", },
       c = { f("component"), "component", },
-      d = { f("directive"), "directive", },
     },
     n = {
       name = "NgRx",

@@ -15,7 +15,11 @@ alias -g K='| awky'
 awky() {
   awk -v var="$1" '{print $var}'
 }
-# alias -g PC='| pbcopy'
-# alias -g PP='| pbpaste'
-alias -g PC='| xclip -sel clip'
-alias -g PP='| xclip -sel clip -o'
+
+if [ "$MY_SYSTEM" = "linux" ]; then
+  alias -g PC='| xclip -sel clip'
+  alias -g PP='| xclip -sel clip -o'
+elif [ "$MY_SYSTEM" = "mac" ]; then
+  alias -g PC='| pbcopy'
+  alias -g PP='| pbpaste'
+fi

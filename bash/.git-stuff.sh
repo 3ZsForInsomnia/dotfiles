@@ -26,27 +26,43 @@ alias gibid='g commit -a --amend -C head'
 alias gce='g commit --allow-empty'
 alias gc='g commit -v -m'
 gac() {
-  $(ga $1)
-  $(gc $2)
+  $(ga $2)
+  $(gc $1)
 }
 gacp() {
-  $(gac $1 $2)
+  if [ -z "$2" ]
+  then
+    location="."
+  else
+    location=$2
+  fi
+
+  $(gac $1 $location)
   $(ggp)
 }
 gcbc() { # Checkout new branch and commit
   $(gco $1)
 }
+# What is arg 2?
 gcbcp() { # Checkout new branch, commit and push
   $(gcbc $1 $2)
   $(ggp)
 }
 gab() { # Add and checkout new branch
-  $(ga $1)
-  $(gco $2)
+  if [ -z "$2" ]
+  then
+    location="."
+  else
+    location=$2
+  fi
+
+  $(ga $location)
+  $(gco $1)
 }
+# 1 = branch, 2 = message, 3 = directory/path
 gacbc() { # Add, checkout new branch, commit
-  $(gab $1 $2)
-  $(gc $3)
+  $(gab $1 $3)
+  $(gc $2)
 }
 gacbcp() { # Add, checkout new branch, commit, push
   $(gabc $1 $2 $3)

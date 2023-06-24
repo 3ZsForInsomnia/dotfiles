@@ -88,9 +88,9 @@ installAppForMac() {
 }
 
 installViaBrewCaskOrSnap() {
-  if [ "$INSTALLING_ON" == 'linux' ] then
+  if [ "$INSTALLING_ON" == 'linux' ]; then
     sudo snap install $1;
-  elif [ "$INSTALLING_ON" == 'mac' ] then
+  elif [ "$INSTALLING_ON" == 'mac' ]; then
     brew install --cask $1;
   fi;
   

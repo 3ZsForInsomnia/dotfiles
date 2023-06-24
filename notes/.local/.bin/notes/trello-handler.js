@@ -6,7 +6,6 @@ import {
   truthy,
   replace,
   truncateString,
-  sortByProp,
 } from "./utils.js";
 
 const boardsWithLists = [
@@ -25,8 +24,8 @@ const inProgress = boardsWithLists.map((a) => [a[0], a[2]]);
 const overdue = [];
 
 const getCardsInList = ([board, list]) =>
-  `trello show-cards -b ${board} -l ${list}`;
-const getCardDetails = (cardId) => `trello card-details ${cardId}`;
+  `/usr/local/bin/trello show-cards -b ${board} -l ${list}`;
+const getCardDetails = (cardId) => `/usr/local/bin/trello card-details ${cardId}`;
 const createCardUrl = (id) => `https://trello.com/c/${id}/`;
 
 const extractID = (text) => {
@@ -75,7 +74,9 @@ const extractDetails = (board, id, text) => {
 const getCards = (entries) =>
   entries.flatMap(([board, list]) => {
     const cardsInList = getCardsInList([board, list]);
-    return run(cardsInList)
+    const cards = run(cardsInList);
+
+    if (cards?.length > 0) return cards
       .split("\n")
       .filter(truthy)
       .slice(1)

@@ -13,7 +13,6 @@ function M.setup()
       unpack(ng.module),
       unpack(ng.routing),
       unpack(ng.other),
-      -- unpack(ng.angular),
 
       unpack(ngrx.actions),
       unpack(ngrx.effects),
@@ -21,6 +20,8 @@ function M.setup()
       unpack(ngrx.state),
       unpack(ngrx.test),
       unpack(ngrx.selectors),
+
+      -- unpack(ng.angular),
       -- unpack(ngrx.ngrx),
     },
     transformers = {
