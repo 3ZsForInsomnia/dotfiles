@@ -1,32 +1,30 @@
 source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 source ~/.path-modifiers.sh
+source ~/.p10k.zsh
+source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 setopt auto_cd
 setopt correct_all
 setopt append_history
 
-source ~/.p10k.zsh
-# source /home/zach/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-# source /home/zach/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-# source /home/zach/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# source /home/zach/zsh-autosuggestions/zsh-autosuggestions.zsh
-# source /home/zach/zshmarks/zshmarks.plugin.zsh
-# source /home/zach/omz-git-completions.zsh
-# source /home/zach/zsh-you-should-use/you-should-use.plugin.zsh
-source /Users/zachary/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /Users/zachary/zshmarks/zshmarks.plugin.zsh
-source /Users/zachary/omz-git-completions.zsh
-source /Users/zachary/zsh-you-should-use/you-should-use.plugin.zsh
-source /Users/zachary/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source $HOME/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# source $HOME/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+# source $HOME/z/zsh-z.plugin.zsh
+source $HOME/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/zshmarks/zshmarks.plugin.zsh
+source $HOME/omz-git-completions.zsh
+source $HOME/zsh-you-should-use/you-should-use.plugin.zsh
+source $HOME/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
 fpath=(~/zsh-completions/src ~/.zsh/ $fpath)
 
 source ~/.bashrc
 
-ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
-ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
-ZVM_VI_HIGHLIGHT_FOREGROUND=#000000
-ZVM_VI_HIGHLIGHT_BACKGROUND=#fe9a4a
+# ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
+# ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+# ZVM_VI_HIGHLIGHT_FOREGROUND=#000000
+# ZVM_VI_HIGHLIGHT_BACKGROUND=#fe9a4a
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -88,21 +86,19 @@ function git_main_branch() {
 }
 
 # Personal automation/logging completions
-alias cli='nocorrect cli'
+#alias cli='nocorrect cli'
 
-_cli_yargs_completions()
-{
-  local reply
-  local si=$IFS
-  IFS=$'
-' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" cli --get-yargs-completions "${words[@]}"))
-  IFS=$si
-  _describe 'values' reply
-}
+#_cli_yargs_completions()
+#{
+#  local reply
+#  local si=$IFS
+#  IFS=$'
+#' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" cli --get-yargs-completions "${words[@]}"))
+#  IFS=$si
+#  _describe 'values' reply
+#}
 compdef _cli_yargs_completions cli
 ###-end-cli-completions-###
-
-source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 mkdir -p ~/.local/bin
 # ln -s /usr/bin/batcat ~/.local/bin/bat
@@ -111,3 +107,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH="/opt/homebrew/bin:$PATH"
+
+# export WEZTERM_LOG=trace

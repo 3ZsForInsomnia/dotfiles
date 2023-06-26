@@ -1,6 +1,6 @@
 alias -g P='| peco'
 alias -g L='| less'
-alias -g G='| grep'
+alias -g G='| rg'
 alias -g C='| cut'
 alias -g J='| jq'
 alias -g W='> wtf.txt'

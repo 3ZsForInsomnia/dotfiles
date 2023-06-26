@@ -4,6 +4,8 @@ elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
   export MY_SYSTEM="linux"
 fi
 
+export FZF_DEFAULT_COMMAND='fd -H --type f'
+export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border --bind "ctrl-d:preview-down" --bind "ctrl-u:preview-up"'
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
@@ -29,12 +31,6 @@ elif [[ "$MY_SYSTEM" == "linux" ]]; then
   alias cat='batcat'
 fi
 alias lua='lua-5.1'
-
-# alias ls='exa -lahUFm --git -I ".git" --icons'
-alias ls='exa -lahUFm'
-alias lsg='ls G'
-alias lsr='exa -lahRGFUm --git -I ".git"--icons'
-alias lsd='exa -lahD --icons -I ".git"' 
 
 alias c='clear'
 alias rmrf='rm -rf'

@@ -26,3 +26,7 @@ alias ogogh='o http://mayccoll.github.io/Gogh/'
 
 alias lpa='lpass'
 alias lpas='lpa show --password'
+
+# Neccessary as http-server (npx library) asserts its alias as http, which httpie uses
+alias http='/opt/homebrew/bin/http' # This is httpie's script
+alias http-server='$HOME/.npm/_npx/e5196fa6dc3cecbc/node_modules/.bin/http-server'

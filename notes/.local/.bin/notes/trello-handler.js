@@ -59,14 +59,14 @@ const extractDetails = (board, id, text) => {
   const hasDueDate = lines.findIndex((line) => line.startsWith("Due "));
   let dueDate;
   if (hasDueDate > -1)
-    dueDate = new Date(lines[hasDueDate].substring(4)).toDateString();
+    dueDate = new Date(lines[hasDueDate].substring(4));
 
   const url = createCardUrl(id);
 
   const card = { board, title, dueDate, labels, url };
 
   const now = new Date();
-  if (card && card.dueDate < now) overdue.push(card);
+  if (card.dueDate && card.dueDate < now) overdue.push(card);
 
   return card;
 };
