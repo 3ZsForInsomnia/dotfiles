@@ -25,7 +25,8 @@ const overdue = [];
 
 const getCardsInList = ([board, list]) =>
   `/usr/local/bin/trello show-cards -b ${board} -l ${list}`;
-const getCardDetails = (cardId) => `/usr/local/bin/trello card-details ${cardId}`;
+const getCardDetails = (cardId) =>
+  `/usr/local/bin/trello card-details ${cardId}`;
 const createCardUrl = (id) => `https://trello.com/c/${id}/`;
 
 const extractID = (text) => {
@@ -58,8 +59,7 @@ const extractDetails = (board, id, text) => {
 
   const hasDueDate = lines.findIndex((line) => line.startsWith("Due "));
   let dueDate;
-  if (hasDueDate > -1)
-    dueDate = new Date(lines[hasDueDate].substring(4));
+  if (hasDueDate > -1) dueDate = new Date(lines[hasDueDate].substring(4));
 
   const url = createCardUrl(id);
 
@@ -76,14 +76,15 @@ const getCards = (entries) =>
     const cardsInList = getCardsInList([board, list]);
     const cards = run(cardsInList);
 
-    if (cards?.length > 0) return cards
-      .split("\n")
-      .filter(truthy)
-      .slice(1)
-      .filter(hasItems)
-      .flatMap(slice(1))
-      .map(extractID)
-      .map((id) => extractDetails(board, id, run(getCardDetails(id))));
+    if (cards?.length > 0)
+      return cards
+        .split("\n")
+        .filter(truthy)
+        .slice(1)
+        .filter(hasItems)
+        .flatMap(slice(1))
+        .map(extractID)
+        .map((id) => extractDetails(board, id, run(getCardDetails(id))));
   });
 
 const createCardEntry = ({ board, title, url, dueDate, labels }) =>
@@ -109,4 +110,11 @@ export const handleTrello = () => {
 
   if (hasItems(overdue))
     replaceListUnderHeading("Overdue", overdue.map(createCardEntry));
+};
+
+export const getInProgressCards = () => {
+  const inProgressCards = getCards(inProgress)
+    .filter(truthy)
+    .map(createCardEntry);
+  return hasItems(inProgressCards) ? inProgressCards : [];
 };

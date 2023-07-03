@@ -5,7 +5,7 @@ local f = function(cmd)
 end
 
 wk.register({
-  r = {
+  a = {
     name = "Go to related files",
     [""] = { f(""), "Other" },
     s = { f("style"), "style (css, scss, theme)", },

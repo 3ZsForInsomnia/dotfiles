@@ -4,7 +4,8 @@
   "description": "Dot my files and cross my T's",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "hostile": "node ./node_modules/.bin/hostile"
   },
   "repository": {
     "type": "git",

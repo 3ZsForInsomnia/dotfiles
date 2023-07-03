@@ -37,6 +37,8 @@ function M.setup()
           "--exclude",
           ".git",
           "--exclude",
+          "tags",
+          "--exclude",
           "dist",
           "--exclude",
           "build",

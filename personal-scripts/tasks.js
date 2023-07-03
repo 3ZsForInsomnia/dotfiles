@@ -1,13 +1,16 @@
-const https = require("https");
-const { exec } = require('node:child_process')
-const list = require("cli-list-select");
+const https = ("https");
+const { exec } = ("node:child_process");
+const list = ("cli-list-select");
+const { getInProgressCards } = ("../notes/.local/.bin/notes/trello-handler");
 const { CLICKUP_TEAM, CLICKUP_ME, CLICKUP_KEY } = process.env;
 
+const defaultItems = ["I am in a meeeting", "Zach is working", "custom"];
+
 const [time, ...args] = process.argv.slice(2);
-if (!time) time = 25;
+if (!time) time = 30;
 const dndDuration = time * 1000;
 
-const prettyTask = (task) => `${task.name} - ${task.url}`;
+const prettyTask = (task) => `Curr: ${task.name} - ${task.url}`;
 const sortTasks = (a, b) => a.due_date > b.due_date;
 
 const options = {
@@ -19,6 +22,8 @@ const options = {
 };
 
 const getMyTickets = (callback) => {
+  const trello = getInProgressCards();
+
   https.get(options, (resp) => {
     let str = "";
     resp.on("data", function(chunk) {
@@ -27,8 +32,8 @@ const getMyTickets = (callback) => {
 
     resp.on("end", function() {
       const data = JSON.parse(str).tasks.sort(sortTasks).map(prettyTask);
-      list(data, { singleCheck: true }).then((choice) =>
-        callback(data[choice.index])
+      list([...data, ...trello, ...defaultItems], { singleCheck: true }).then((choice) =>
+        callback(data[choice.index] === "custom" ? args[0] : data[choice.index])
       );
     });
   });
@@ -38,9 +43,9 @@ const ticketName = (task) => task.split(" - https")[0];
 
 const fn = (data) => {
   const status = ticketName(data);
-  exec(`dnd on "Working on: ${status}" ${time}`, (error) => {
+  exec(`dnd on "${status}" ${time}`, (error) => {
     if (error) {
-      console.error("Could not execute command: ", error)
+      console.error("Could not execute command: ", error);
       process.exit();
     }
 
@@ -48,9 +53,9 @@ const fn = (data) => {
       exec(`dnd off ""`, (error) => {
         error
           ? console.error("Failed to turn DND off: ", error)
-          : console.log('Congrats, you did some work!');
+          : console.log("Congrats, you did some work!");
         process.exit();
-      })
+      });
     }, dndDuration);
   });
 };

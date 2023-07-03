@@ -2,10 +2,13 @@ const { readFileSync, createWriteStream } = require("fs");
 const { join } = require('path');
 const { format } = require("util");
 const hostile = require("hostile");
+import * as dotenv from "dotenv";
+
+dotenv.config({ path: "/Users/zachary/.config/site-block/.env" });
 
 const logFileLocation =
   process.env.SITEBLOCK_LOGFILE ??
-  join(process.env.HOME, ".local", "state", "site-block.log");
+  join(process.env.HOME, ".local", "state", "site-block", "site-block.log");
 
 const logFile = createWriteStream(logFileLocation, { flags: "w" });
 const log = (str) => {

@@ -158,7 +158,8 @@ alias gdm='deleteMerged'
 
 ### Branches
 gcob() {
-  eval 'gcb levine/$1'
+  # eval 'gcb levine/$1'
+  eval 'gcb zl-$1'
 }
 feat() {
   eval 'gcb feature/$1'

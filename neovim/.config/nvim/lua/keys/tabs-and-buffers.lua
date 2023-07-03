@@ -39,12 +39,10 @@ wk.register({
       b = { f(12), "Jump to Buffer 12" },
     },
     h = {
-      [''] = { "<C-w>10>", "Increase horizontal split size by 8" },
       ['+'] = { "<C-w>10>", "Increase horizontal split size by 8" },
       ['-'] = { "<C-w>10<", "Decrease horizontal split size by 8" },
     },
     v = {
-      [''] = { "<C-w>10+", "Increase vertical split size by 8" },
       ['+'] = { "<C-w>10+", "Increase vertical split size by 8" },
       ['-'] = { "<C-w>10-", "Decrease vertical split size by 8" },
     },
