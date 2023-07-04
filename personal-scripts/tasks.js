@@ -1,16 +1,36 @@
-const https = ("https");
-const { exec } = ("node:child_process");
-const list = ("cli-list-select");
-const { getInProgressCards } = ("../notes/.local/.bin/notes/trello-handler");
+const https = require("https");
+const { execSync } = require("node:child_process");
+const nfzf = require("node-fzf");
 const { CLICKUP_TEAM, CLICKUP_ME, CLICKUP_KEY } = process.env;
+
+const boards = [
+  "0 Inbox",
+  "1 Job",
+  "2 Projects",
+  "3 Music",
+  "4 Chores",
+  "5 Health",
+  "6 Reading",
+];
+const getCardsForBoard = (board) =>
+  `trello show-cards -b "${board}" -l "Doing"`;
+const cards = [];
+const prettifyCard = (card) => card.split("\n")[1].split(" - ")[1];
+
+boards.forEach((board) => {
+  const cmd = getCardsForBoard(board);
+  const output = execSync(cmd);
+  const card = prettifyCard(output.toString());
+  if (card) cards.push(card);
+});
 
 const defaultItems = ["I am in a meeeting", "Zach is working", "custom"];
 
-const [time, ...args] = process.argv.slice(2);
+let [time, ...args] = process.argv.slice(2);
 if (!time) time = 30;
-const dndDuration = time * 1000;
+const dndDuration = time * 60;
 
-const prettyTask = (task) => `Curr: ${task.name} - ${task.url}`;
+const prettyTask = (task) => `${task.name} - ${task.url}`;
 const sortTasks = (a, b) => a.due_date > b.due_date;
 
 const options = {
@@ -22,8 +42,6 @@ const options = {
 };
 
 const getMyTickets = (callback) => {
-  const trello = getInProgressCards();
-
   https.get(options, (resp) => {
     let str = "";
     resp.on("data", function(chunk) {
@@ -32,8 +50,11 @@ const getMyTickets = (callback) => {
 
     resp.on("end", function() {
       const data = JSON.parse(str).tasks.sort(sortTasks).map(prettyTask);
-      list([...data, ...trello, ...defaultItems], { singleCheck: true }).then((choice) =>
-        callback(data[choice.index] === "custom" ? args[0] : data[choice.index])
+      const allItems = [...data, ...cards, ...defaultItems];
+      nfzf(allItems, (choice) =>
+        callback(
+          choice.selected.value === "custom" ? args[0] : choice.selected.value
+        )
       );
     });
   });
@@ -43,21 +64,9 @@ const ticketName = (task) => task.split(" - https")[0];
 
 const fn = (data) => {
   const status = ticketName(data);
-  exec(`dnd on "${status}" ${time}`, (error) => {
-    if (error) {
-      console.error("Could not execute command: ", error);
-      process.exit();
-    }
 
-    setTimeout(() => {
-      exec(`dnd off ""`, (error) => {
-        error
-          ? console.error("Failed to turn DND off: ", error)
-          : console.log("Congrats, you did some work!");
-        process.exit();
-      });
-    }, dndDuration);
-  });
+  execSync(`dnd on "Currently working on: ${status}" ${time}`);
+  execSync(`sleep ${dndDuration}; terminal-notifier -title "DND turning off" -message "${status}" -sound default`);
 };
 
 getMyTickets(fn);

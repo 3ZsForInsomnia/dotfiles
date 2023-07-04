@@ -12,7 +12,7 @@ if [ "$1" == 'on' ]; then
   fi
 
   shortcuts run "dnd on";
-  curl $ZAPIER_WEBHOOK -G --data-urlencode "message=$2" --data-urlencode "emoji=:$emoji:" --data-url-encode "time=$3"
+  curl $ZAPIER_WEBHOOK -G --data-urlencode "message=$2" --data-urlencode "emoji=:$emoji:" --data-urlencode "time=$3"
   node ~/luxafor.js "red"
 elif [ "$1" == 'off' ]; then
   if [ -z "$3" ]; then
