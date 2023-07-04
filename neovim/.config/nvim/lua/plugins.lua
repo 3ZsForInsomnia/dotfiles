@@ -24,25 +24,25 @@ local packer = require("packer")
 packer.init({ max_jobs = 50, git = { clone_timeout = 300 } })
 
 local lspServers = {
-  'angularls',
-  'bashls',
-  'cssls',
-  'ember',
-  'emmet_ls',
-  'eslint',
-  'grammarly',
-  'graphql',
-  'html',
-  'jdtls',
-  'jsonls',
-  'lua_ls',
-  'marksman',
-  'sqlls',
-  'tailwindcss',
-  'tsserver',
-  'vimls',
-  'pyright',
-  'pylsp',
+  "angularls",
+  "bashls",
+  "cssls",
+  "ember",
+  "emmet_ls",
+  "eslint",
+  "grammarly",
+  "graphql",
+  "html",
+  "jdtls",
+  "jsonls",
+  "lua_ls",
+  "marksman",
+  "sqlls",
+  "tailwindcss",
+  "tsserver",
+  "vimls",
+  "pyright",
+  "pylsp",
 }
 
 return packer.startup(function(use)
@@ -83,16 +83,22 @@ return packer.startup(function(use)
         "williamboman/mason.nvim",
         config = function()
           require("mason").setup()
-        end
+        end,
       },
       {
         "williamboman/mason-lspconfig.nvim",
         config = function()
-          require("mason-lspconfig").setup({ ensure_installed = lspServers })
-        end
+          require("mason-lspconfig").setup({
+            ensure_installed = lspServers,
+          })
+        end,
       },
       "mfussenegger/nvim-jdtls",
-      { "weilbith/nvim-code-action-menu", cmd = "CodeActionMenu", event = "BufReadPost" },
+      {
+        "weilbith/nvim-code-action-menu",
+        cmd = "CodeActionMenu",
+        event = "BufReadPost",
+      },
     },
   })
   use({
@@ -205,7 +211,7 @@ return packer.startup(function(use)
         "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
       },
       "3ZsForInsomnia/telescope-angular",
-      "dhruvmanila/telescope-bookmarks.nvim",
+      -- { "dhruvmanila/telescope-bookmarks.nvim", opt = true },
       "debugloop/telescope-undo.nvim",
       "LinArcX/telescope-scriptnames.nvim",
       "crispgm/telescope-heading.nvim",
@@ -236,36 +242,46 @@ return packer.startup(function(use)
   -- For all my text completion and code-styling needs
   --
   --
-  use("hrsh7th/cmp-buffer")
-  use("hrsh7th/cmp-path")
-  use("hrsh7th/cmp-cmdline")
-  use("hrsh7th/cmp-nvim-lua")
-  use("hrsh7th/cmp-nvim-lsp")
-  use("hrsh7th/cmp-nvim-lsp-signature-help")
-  use("hrsh7th/cmp-nvim-lsp-document-symbol")
-  use("kristijanhusak/vim-dadbod-completion")
-  use("ray-x/cmp-treesitter")
-  use("quangnguyen30192/cmp-nvim-tags")
-  use("petertriho/cmp-git")
-  use("dcampos/cmp-emmet-vim")
-  use("delphinus/cmp-ctags")
-  use({
-    "hrsh7th/nvim-cmp",
-    config = function()
-      require("config.cmp-and-lsp").setup()
-    end,
-  })
-
   use({
     "L3MON4D3/LuaSnip",
     tag = "v<CurrentMajor>.*",
+    module = "luasnip",
+    event = "BufReadPost",
     config = function()
       require("config.luasnip").setup()
     end,
+    requires = {
+      { "rafamadriz/friendly-snippets", after = "LuaSnip" },
+      { "johnpapa/vscode-angular-snippets", after = "LuaSnip" },
+      {
+        "hrsh7th/nvim-cmp",
+        after = { "LuaSnip", "nvim-navic" },
+        config = function()
+          require("config.cmp-and-lsp").setup()
+        end,
+      },
+      { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
+      { "delphinus/cmp-ctags", after = "nvim-cmp" },
+      { "hrsh7th/cmp-buffer", after = "nvim-cmp" },
+      { "hrsh7th/cmp-path", after = "nvim-cmp" },
+      { "hrsh7th/cmp-cmdline", after = "nvim-cmp" },
+      { "hrsh7th/cmp-nvim-lua", after = "nvim-cmp" },
+      { "hrsh7th/cmp-nvim-lsp" }, --after = "LuaSnip" },
+      { "hrsh7th/cmp-nvim-lsp-signature-help", after = "nvim-cmp" },
+      { "hrsh7th/cmp-nvim-lsp-document-symbol", after = "nvim-cmp" },
+      { "kristijanhusak/vim-dadbod-completion", after = "nvim-cmp" },
+      { "ray-x/cmp-treesitter", after = "nvim-cmp" },
+      { "quangnguyen30192/cmp-nvim-tags", after = "nvim-cmp" },
+      { "dcampos/cmp-emmet-vim", after = "nvim-cmp" },
+      {
+        "petertriho/cmp-git",
+        after = "nvim-cmp",
+        config = function()
+          require('cmp_git').setup({})
+        end
+      },
+    },
   })
-  use("saadparwaiz1/cmp_luasnip")
-  use("rafamadriz/friendly-snippets")
-  use("johnpapa/vscode-angular-snippets")
 
   use({
     "jose-elias-alvarez/null-ls.nvim",
@@ -305,14 +321,14 @@ return packer.startup(function(use)
   })
   use({
     "numToStr/Comment.nvim",
-    event = "VimEnter",
+    event = "BufReadPost",
     config = function()
       require("Comment").setup()
     end,
   })
   use({
     "folke/todo-comments.nvim",
-    event = "VimEnter",
+    event = "BufReadPost",
     config = function()
       require("todo-comments").setup()
     end,
@@ -345,13 +361,13 @@ return packer.startup(function(use)
   })
   use({
     "chentoast/marks.nvim",
-    event = "VimEnter",
+    event = "BufReadPost",
     config = function()
       require("config.marks").setup()
     end,
   })
   use({ "liuchengxu/vista.vim", cmd = "Vista" })
-  use({ "mbbill/undotree", event = "VimEnter" })
+  use({ "mbbill/undotree", event = "BufReadPost" })
 
   --
   --
@@ -425,12 +441,12 @@ return packer.startup(function(use)
   })
   use({
     "nvim-lualine/lualine.nvim",
-    event = "VimEnter",
+    event = "BufReadPost",
     config = function()
       require("config.statusline").setup()
     end,
   })
-  use({ "SmiteshP/nvim-navic", requires = "neovim/nvim-lspconfig" })
+  use({ "SmiteshP/nvim-navic", event = "BufReadPost", requires = "neovim/nvim-lspconfig" })
   use({
     "folke/twilight.nvim",
     cmd = "Twilight",
@@ -439,7 +455,7 @@ return packer.startup(function(use)
       require("twilight").setup()
     end,
   })
-  use({ "andymass/vim-matchup", event = "VimEnter" })
+  use({ "andymass/vim-matchup", event = "BufReadPost" })
 
   --
   --
@@ -447,7 +463,7 @@ return packer.startup(function(use)
   -- Filetype specific-ish plugins for filetype specific-ish tasks
   --
   --
-  use({ "kylechui/nvim-surround", event = "VimEnter" })
+  use({ "kylechui/nvim-surround", event = "BufReadPost" })
   use({ "mattn/emmet-vim", ft = { "html", "jsx", "tsx", "hbs" } })
   use({
     "vuki656/package-info.nvim",
@@ -484,7 +500,7 @@ return packer.startup(function(use)
   use({ "ruanyl/vim-gh-line", cmd = { "GH", "GHInteractive" } })
   use({
     "lewis6991/gitsigns.nvim",
-    event = "VimEnter",
+    event = "BufReadPost",
     config = function()
       require("config.gitsigns").setup()
     end,
@@ -520,7 +536,7 @@ return packer.startup(function(use)
   })
   use({
     "winston0410/range-highlight.nvim",
-    event = "VimEnter",
+    event = "BufReadPost",
     config = function()
       require("range-highlight").setup({})
     end,
@@ -562,8 +578,8 @@ return packer.startup(function(use)
     end,
   })
 
-  use({ "aklt/plantuml-syntax", ft = "uml" })
-  use({ "weirongxu/plantuml-previewer.vim", ft = "uml" })
+  use({ "aklt/plantuml-syntax", ft = "uml", opt = true })
+  use({ "weirongxu/plantuml-previewer.vim", ft = "uml", opt = true })
 
   if packer_bootstrap then
     require("packer").sync()

@@ -123,7 +123,7 @@ function M.setup()
 
   telescope.load_extension('fzf')
   telescope.load_extension('live_grep_args')
-  telescope.load_extension('bookmarks')
+  -- telescope.load_extension('bookmarks')
   telescope.load_extension('changes')
   telescope.load_extension("xray23")
   telescope.load_extension("file_browser")

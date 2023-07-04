@@ -1,9 +1,10 @@
+local ls = require("luasnip")
+
 local M = {}
 
 function M.setup()
   local types = require("luasnip.util.types")
 
-  local ls = require("luasnip")
   require("luasnip/loaders/from_vscode").lazy_load()
   require("luasnip.loaders.from_lua").lazy_load { paths = "~/.config/nvim/lua/snippets/" }
   ls.filetype_extend('typescript', { 'javascript' })

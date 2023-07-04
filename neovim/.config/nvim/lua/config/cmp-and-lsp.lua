@@ -1,27 +1,27 @@
 local M = {}
 
 function M.setup()
-local lspServers = {
-  'angularls',
-  'bashls',
-  'cssls',
-  'ember',
-  'emmet_ls',
-  'eslint',
-  'grammarly',
-  'graphql',
-  'html',
-  'jdtls',
-  'jsonls',
-  'lua_ls',
-  'marksman',
-  'sqlls',
-  'tailwindcss',
-  'tsserver',
-  'vimls',
-  'pyright',
-  'pylsp',
-}
+  local lspServers = {
+    'angularls',
+    'bashls',
+    'cssls',
+    'ember',
+    'emmet_ls',
+    'eslint',
+    'grammarly',
+    'graphql',
+    'html',
+    'jdtls',
+    'jsonls',
+    'lua_ls',
+    'marksman',
+    'sqlls',
+    'tailwindcss',
+    'tsserver',
+    'vimls',
+    'pyright',
+    'pylsp',
+  }
 
   -- local has_words_before = function()
   --   unpack = unpack or table.unpack
@@ -29,19 +29,19 @@ local lspServers = {
   --   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
   -- end
 
-  local luasnip = require("luasnip")
-  local cmp = require 'cmp'
+  local cmp = require('cmp')
+  local luasnip = require("luasnip") 
 
   local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
   end
 
-  local lspkind = require 'lspkind'
+  local lspkind = require('lspkind')
 
   cmp.setup({
     snippet = {
       expand = function(args)
-        require('luasnip').lsp_expand(args.body)
+        luasnip.lsp_expand(args.body)
       end
     },
     sources = {
@@ -167,7 +167,6 @@ local lspServers = {
       { name = 'buffer' },
     })
   })
-  require('cmp_git').setup({})
 
   cmp.setup.cmdline({ '/', '?' }, {
     mapping = cmp.mapping.preset.cmdline(),
