@@ -1,6 +1,8 @@
 local M = {}
 
 function M.setup()
+  require("telescope").load_extension("dash")
+
   local dashConfig = {
     search_engine = 'google', -- fallback when no results in dash
     debounce = 500,

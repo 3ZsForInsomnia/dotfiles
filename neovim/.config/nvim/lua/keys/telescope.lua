@@ -1,5 +1,4 @@
 local wk = require("which-key")
-local trouble = require("trouble.providers.telescope")
 
 local f = function(command)
   return "<cmd>Telescope " .. command .. "<cr>"
@@ -23,7 +22,7 @@ wk.register({
       r = { f("resume"), "Resume previous search" },
       c = {
         [''] = { f("quickfix"), "Quickfix files" },
-        name = "Telescope changes/loc/qf lists",
+        name = "Changes/loc/qf lists",
         c = { f("changes"), "Changes" },
         u = { f("undo"), "Undo stack" },
         q = { f("quickfix"), "Quickfix files" },
@@ -32,8 +31,7 @@ wk.register({
         l = { f("loclist"), "Location list" },
       },
       b = {
-        name = "Telescope buffers/tags/marks",
-        w = { f("telescope-tabs list-tabs"), "Tabs" },
+        name = "Buffers/tags/marks",
         m = { f("marks"), "Marks" },
         b = { f("buffers"), "Buffers" },
         r = { f("registers"), "Registers" },
@@ -43,7 +41,7 @@ wk.register({
       },
       g = {
         [''] = { "<cmd>Easypick changed_files<cr>", "Changed" },
-        name = "Telescope Git",
+        name = "Git",
         f = { f("git_files"), "Files" },
         h = { "<cmd>Easypick changed_files<cr>", "Changed" },
         b = { f("git_branches"), "Branches" },
@@ -54,7 +52,7 @@ wk.register({
       },
       d = {
         [''] = { "<cmd>Dash<cr>", "Dash Search" },
-        name = "Telescope Search Documentation",
+        name = "Search Documentation",
         s = { f("luasnip"), "Snippets" },
         ht = { f("http list"), "Http codes" },
         t = { f("tailiscope"), "Tailwind" },
@@ -67,12 +65,10 @@ wk.register({
         k = { f("keymaps"), "Keybindings" },
       },
       l = {
-        [''] = { trouble.open_with_trouble, "Show diagnostics" },
-        name = "Telescope LSP",
+        name = "LSP",
         r = { f("lsp_references"), "References" },
         i = { f("lsp_incoming_calls"), "Incoming calls" },
         o = { f("lsp_outgoing_calls"), "Outgoing calls" },
-        d = { trouble.open_with_trouble, "Show diagnostics" },
         ds = { f("lsp_document_symbols"), "Document symbols" },
         w = { f("lsp_workspace_symbols"), "Workspace symbols" },
         im = { f("lsp_implementations"), "Implementations" },
@@ -82,7 +78,7 @@ wk.register({
           "Search workspace symbol under cursor (even in comments)" },
       },
       m = {
-        name = "Telescope Misc",
+        name = "Misc",
         sn = { f("scriptnames"), "See all scripts sourced in config" },
         s = { f("xray23 list"), "Vim Sessions" },
         h = { f("heading"), "Document headings" },

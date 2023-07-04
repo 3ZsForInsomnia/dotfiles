@@ -10,7 +10,7 @@ function M.setup()
     end,
     disable_frontmatter = false,
     templates = {
-      subdir = "8 - Resources/0 - Templates",
+      subdir = "9 - Resources/90 - Templates",
       date_format = "%Y-%m-%d",
       time_format = "%H:%M",
     },

@@ -3,12 +3,12 @@ local M = {}
 function M.setup()
   local telescope = require("telescope")
   local actions = require("telescope.actions")
-  local trouble = require("trouble.providers.telescope")
+  -- local trouble = require("trouble.providers.telescope")
   local lga_actions = require("telescope-live-grep-args.actions")
   local icons = require('icons')
 
   local shortcuts = {
-    ["<M-t>"] = trouble.open_with_trouble,
+    -- ["<M-t>"] = trouble.open_with_trouble,
     ["<M-q>"] = actions.send_to_qflist + actions.open_qflist,
     ["<M-a>"] = actions.add_to_qflist + actions.open_qflist,
     ["<C-s>"] = actions.add_selection,
@@ -121,14 +121,12 @@ function M.setup()
     },
   }
 
-  require "telescope-tabs".setup()
-
   telescope.load_extension('fzf')
   telescope.load_extension('live_grep_args')
   telescope.load_extension('bookmarks')
   telescope.load_extension('changes')
   telescope.load_extension("xray23")
-  telescope.load_extension("dash")
+  telescope.load_extension("file_browser")
   telescope.load_extension('luasnip')
   telescope.load_extension('scriptnames')
   telescope.load_extension('heading')

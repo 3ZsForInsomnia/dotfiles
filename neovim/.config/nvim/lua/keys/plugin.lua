@@ -48,10 +48,3 @@ wk.register({
     },
   },
 }, { prefix = "<leader>" })
-
-wk.register({
-  p = {
-    name = "Misc Plugins",
-    sr = { "<plug>SnipRun", "SnipRun" },
-  }
-}, { prefix = "<leader>", mode = "v" })

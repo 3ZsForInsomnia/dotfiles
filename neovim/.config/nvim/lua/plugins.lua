@@ -23,6 +23,28 @@ local packer = require("packer")
 -- Prevents Packer hanging and failing to update when there are too many plugins
 packer.init({ max_jobs = 50, git = { clone_timeout = 300 } })
 
+local lspServers = {
+  'angularls',
+  'bashls',
+  'cssls',
+  'ember',
+  'emmet_ls',
+  'eslint',
+  'grammarly',
+  'graphql',
+  'html',
+  'jdtls',
+  'jsonls',
+  'lua_ls',
+  'marksman',
+  'sqlls',
+  'tailwindcss',
+  'tsserver',
+  'vimls',
+  'pyright',
+  'pylsp',
+}
+
 return packer.startup(function(use)
   --
   --
@@ -30,7 +52,6 @@ return packer.startup(function(use)
   -- Packer itself, UI component and function libraries used by other plugins
   --
   --
-  use("lewis6991/impatient.nvim")
   use("MunifTanjim/nui.nvim")
   use("nvim-lua/plenary.nvim")
   use("kamykn/popup-menu.nvim")
@@ -38,13 +59,15 @@ return packer.startup(function(use)
   use("kkharji/sqlite.lua")
   use("rcarriga/nvim-notify")
   use("zdcthomas/yop.nvim")
-  use("antoinemadec/FixCursorHold.nvim")
+  use("winston0410/cmd-parser.nvim")
+  use("dstein64/vim-startuptime")
   use({
     "stevearc/dressing.nvim",
     config = function()
       require("config.ui").setup()
     end,
   })
+  use("onsails/lspkind-nvim")
 
   --
   --
@@ -52,30 +75,47 @@ return packer.startup(function(use)
   -- For all things LSP related that is not (explicitly) part of the Treesitter ecosystem
   --
   --
-  use("williamboman/mason.nvim")
-  use("williamboman/mason-lspconfig.nvim")
-  use("neovim/nvim-lspconfig")
-  use("nvim-lua/lsp-status.nvim")
-  use("onsails/lspkind-nvim")
-  use("mfussenegger/nvim-jdtls")
-  use("weilbith/nvim-code-action-menu")
+  use({
+    "neovim/nvim-lspconfig",
+    -- event = { "BufReadPost" },
+    requires = {
+      {
+        "williamboman/mason.nvim",
+        config = function()
+          require("mason").setup()
+        end
+      },
+      {
+        "williamboman/mason-lspconfig.nvim",
+        config = function()
+          require("mason-lspconfig").setup({ ensure_installed = lspServers })
+        end
+      },
+      "mfussenegger/nvim-jdtls",
+      { "weilbith/nvim-code-action-menu", cmd = "CodeActionMenu", event = "BufReadPost" },
+    },
+  })
   use({
     "ThePrimeagen/refactoring.nvim",
+    module = "refactoring",
     config = function()
       require("refactoring").setup({})
     end,
   })
   use({
     "folke/trouble.nvim",
+    cmd = "TroubleToggle",
     config = function()
       require("trouble").setup({
         height = 20,
         action_keys = { open_tab = { "<c-t>" } },
       })
+      require("keys.trouble-lazy")
     end,
   })
   use({
     "folke/neodev.nvim",
+    ft = "lua",
     config = function()
       require("neodev").setup({
         library = {
@@ -121,14 +161,14 @@ return packer.startup(function(use)
   })
   use("nvim-treesitter/nvim-treesitter-textobjects")
   use("RRethy/nvim-treesitter-textsubjects")
-  use("nvim-treesitter/playground")
   use({
     "m-demare/hlargs.nvim",
+    event = "VimEnter",
     config = function()
       require("config.hlargs").setup()
     end,
   })
-  use "HiPhish/nvim-ts-rainbow2"
+  use("HiPhish/nvim-ts-rainbow2")
   use({
     "bennypowers/nvim-regexplainer",
     config = function()
@@ -144,39 +184,46 @@ return packer.startup(function(use)
   --
   use({
     "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
+    cmd = "Telescope",
+    module = "telescope",
+    keys = { "<leader>f" },
+    tag = "0.1.2",
     config = function()
       require("config.telescope").setup()
     end,
+    requires = {
+      "nvim-telescope/telescope-live-grep-args.nvim",
+      "nvim-telescope/telescope-frecency.nvim",
+      "benfowler/telescope-luasnip.nvim",
+      "barrett-ruth/telescope-http.nvim",
+      "danielvolchek/tailiscope.nvim",
+      "LinArcX/telescope-changes.nvim",
+      "HUAHUAI23/telescope-session.nvim",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        run =
+        "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+      },
+      "3ZsForInsomnia/telescope-angular",
+      "dhruvmanila/telescope-bookmarks.nvim",
+      "debugloop/telescope-undo.nvim",
+      "LinArcX/telescope-scriptnames.nvim",
+      "crispgm/telescope-heading.nvim",
+      "nvim-telescope/telescope-file-browser.nvim",
+      "nvim-telescope/telescope-packer.nvim",
+    },
   })
-  use("nvim-telescope/telescope-live-grep-args.nvim")
-  use("nvim-telescope/telescope-frecency.nvim")
-  use("LukasPietzschmann/telescope-tabs")
-  use("benfowler/telescope-luasnip.nvim")
-  use("barrett-ruth/telescope-http.nvim")
-  use("danielvolchek/tailiscope.nvim")
-  use("LinArcX/telescope-changes.nvim")
-  use("HUAHUAI23/telescope-session.nvim")
-  use({
-    "nvim-telescope/telescope-fzf-native.nvim",
-    run =
-    "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-  })
-  use("3ZsForInsomnia/telescope-angular")
-  use("dhruvmanila/telescope-bookmarks.nvim")
-  use("debugloop/telescope-undo.nvim")
-  use("LinArcX/telescope-scriptnames.nvim")
-  use("crispgm/telescope-heading.nvim")
-  use("nvim-telescope/telescope-file-browser.nvim")
-  use("nvim-telescope/telescope-packer.nvim")
+
   use({
     "axkirillov/easypick.nvim",
+    cmd = "Easypick",
     config = function()
       require("config.easypick").setup()
     end,
   })
   use({
     "mrjones2014/dash.nvim",
+    cmd = { "Dash", "DashWord" },
     run = "make install",
     config = function()
       require("config.dash").setup()
@@ -200,7 +247,6 @@ return packer.startup(function(use)
   use("ray-x/cmp-treesitter")
   use("quangnguyen30192/cmp-nvim-tags")
   use("petertriho/cmp-git")
-  use("rcarriga/cmp-dap")
   use("dcampos/cmp-emmet-vim")
   use("delphinus/cmp-ctags")
   use({
@@ -209,6 +255,7 @@ return packer.startup(function(use)
       require("config.cmp-and-lsp").setup()
     end,
   })
+
   use({
     "L3MON4D3/LuaSnip",
     tag = "v<CurrentMajor>.*",
@@ -219,14 +266,19 @@ return packer.startup(function(use)
   use("saadparwaiz1/cmp_luasnip")
   use("rafamadriz/friendly-snippets")
   use("johnpapa/vscode-angular-snippets")
+
   use({
     "jose-elias-alvarez/null-ls.nvim",
+    opt = true,
+    event = "InsertEnter",
     config = function()
       require("config.null-ls").setup()
     end,
   })
   use({
     "ckolkey/ts-node-action",
+    event = "InsertEnter",
+    opt = true,
     requires = { "nvim-treesitter" },
     config = function()
       require("ts-node-action").setup({})
@@ -241,6 +293,8 @@ return packer.startup(function(use)
   --
   use({
     "danymat/neogen",
+    cmd = "Neogen",
+    module = "neogen",
     config = function()
       require("neogen").setup({
         enabled = true,
@@ -251,16 +305,18 @@ return packer.startup(function(use)
   })
   use({
     "numToStr/Comment.nvim",
+    event = "VimEnter",
     config = function()
       require("Comment").setup()
     end,
   })
-  -- use {
-  --  'folke/todo-comments.nvim',
-  --  config = function()
-  --    require("todo-comments").setup()
-  --  end
-  -- }
+  use({
+    "folke/todo-comments.nvim",
+    event = "VimEnter",
+    config = function()
+      require("todo-comments").setup()
+    end,
+  })
 
   --
   --
@@ -270,6 +326,7 @@ return packer.startup(function(use)
   --
   use({
     "rgroli/other.nvim",
+    cmd = "Other",
     config = function()
       require("config.alternate").setup()
     end,
@@ -288,12 +345,13 @@ return packer.startup(function(use)
   })
   use({
     "chentoast/marks.nvim",
+    event = "VimEnter",
     config = function()
       require("config.marks").setup()
     end,
   })
-  use("liuchengxu/vista.vim")
-  use("mbbill/undotree")
+  use({ "liuchengxu/vista.vim", cmd = "Vista" })
+  use({ "mbbill/undotree", event = "VimEnter" })
 
   --
   --
@@ -301,14 +359,10 @@ return packer.startup(function(use)
   -- Because tests are useful, I *guess*
   --
   --
-  use("haydenmeade/neotest-jest")
   use({
     "nvim-neotest/neotest",
-    requires = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "antoinemadec/FixCursorHold.nvim",
-    },
+    requires = { "haydenmeade/neotest-jest" },
+    module = "neotest",
     config = function()
       require("neotest").setup({
         adapters = {
@@ -331,16 +385,24 @@ return packer.startup(function(use)
   -- For when I need to figure out what dumb thing I did
   --
   --
-  use("theHamsta/nvim-dap-virtual-text")
-  use("rcarriga/nvim-dap-ui")
-  use("mfussenegger/nvim-dap-python")
-  use("nvim-telescope/telescope-dap.nvim")
-  use("mxsdev/nvim-dap-vscode-js")
   use({
-    "microsoft/vscode-js-debug",
-    run = "npm install --legacy-peer-deps && npm run compile",
+    "mfussenegger/nvim-dap",
+    module = "dap",
+    opt = true,
+    requires = {
+      { "theHamsta/nvim-dap-virtual-text",   opt = true },
+      { "rcarriga/nvim-dap-ui",              opt = true },
+      { "mfussenegger/nvim-dap-python",      opt = true },
+      { "nvim-telescope/telescope-dap.nvim", opt = true },
+      { "mxsdev/nvim-dap-vscode-js",         opt = true },
+      { "rcarriga/cmp-dap",                  opt = true },
+      {
+        "microsoft/vscode-js-debug",
+        opt = true,
+        run = "npm install --legacy-peer-deps && npm run compile",
+      },
+    },
   })
-  use("mfussenegger/nvim-dap")
 
   --
   --
@@ -352,6 +414,7 @@ return packer.startup(function(use)
   use("bluz71/vim-moonfly-colors")
   use({
     "brenoprata10/nvim-highlight-colors",
+    ft = { "css", "scss", "jsx", "tsx", "lua", "sh", "bash", "zsh" },
     config = function()
       require("nvim-highlight-colors").setup({
         render = "background",
@@ -362,6 +425,7 @@ return packer.startup(function(use)
   })
   use({
     "nvim-lualine/lualine.nvim",
+    event = "VimEnter",
     config = function()
       require("config.statusline").setup()
     end,
@@ -369,11 +433,13 @@ return packer.startup(function(use)
   use({ "SmiteshP/nvim-navic", requires = "neovim/nvim-lspconfig" })
   use({
     "folke/twilight.nvim",
+    cmd = "Twilight",
+    module = "twilight",
     config = function()
       require("twilight").setup()
     end,
   })
-  use("andymass/vim-matchup")
+  use({ "andymass/vim-matchup", event = "VimEnter" })
 
   --
   --
@@ -381,16 +447,18 @@ return packer.startup(function(use)
   -- Filetype specific-ish plugins for filetype specific-ish tasks
   --
   --
-  use("kylechui/nvim-surround")
-  use("mattn/emmet-vim")
+  use({ "kylechui/nvim-surround", event = "VimEnter" })
+  use({ "mattn/emmet-vim", ft = { "html", "jsx", "tsx", "hbs" } })
   use({
     "vuki656/package-info.nvim",
+    ft = "json",
     config = function()
       require("package-info").setup()
     end,
   })
   use({
     "iamcco/markdown-preview.nvim",
+    ft = "markdown",
     run = "cd app && npm install",
     config = function()
       require("config.markdown-preview-config").setup()
@@ -403,8 +471,8 @@ return packer.startup(function(use)
   -- Because DBeaver sucks
   --
   --
-  use("tpope/vim-dadbod")
-  use("kristijanhusak/vim-dadbod-ui")
+  use({ "tpope/vim-dadbod", cmd = { "DB" } })
+  use({ "kristijanhusak/vim-dadbod-ui", cmd = { "DBUI", "DBUIToggle" } })
 
   --
   --
@@ -412,16 +480,18 @@ return packer.startup(function(use)
   -- Git statuses and diffs and PRs, oh my
   --
   --
-  use("sindrets/diffview.nvim")
-  use("ruanyl/vim-gh-line")
+  use({ "sindrets/diffview.nvim", cmd = { "Diffview", "DiffviewOpen" } })
+  use({ "ruanyl/vim-gh-line", cmd = { "GH", "GHInteractive" } })
   use({
     "lewis6991/gitsigns.nvim",
+    event = "VimEnter",
     config = function()
       require("config.gitsigns").setup()
     end,
   })
   use({
     "pwntester/octo.nvim",
+    cmd = "Octo",
     config = function()
       require("octo").setup()
     end,
@@ -435,20 +505,22 @@ return packer.startup(function(use)
   --
   use({
     "MunifTanjim/prettier.nvim",
+    cmd = { "Prettier", "PrettierFragment", "PrettierPartial" },
     config = function()
       require("prettier").setup({ bin = "prettierd" })
     end,
   })
-  use("CRAG666/code_runner.nvim")
-  -- use {
-  --  'yoshio15/vim-trello',
-  --  config = function()
-  --    require('config.trello').setup()
-  --  end
-  -- }
-  use("winston0410/cmd-parser.nvim")
+  use({ "CRAG666/code_runner.nvim", cmd = { "RunCode", "RunFile" } })
+  use({
+    "yoshio15/vim-trello",
+    cmd = "VimTrello",
+    config = function()
+      require("config.trello").setup()
+    end,
+  })
   use({
     "winston0410/range-highlight.nvim",
+    event = "VimEnter",
     config = function()
       require("range-highlight").setup({})
     end,
@@ -460,43 +532,38 @@ return packer.startup(function(use)
       require("colortils").setup()
     end,
   })
-  use("dstein64/vim-startuptime")
-  use("ThePrimeagen/vim-apm")
-
   use({
     "epwalsh/obsidian.nvim",
+    cmd = {
+      "Obsidian",
+      "ObsidianNew",
+      "ObsidianOpen",
+      "ObsidianToday",
+      "ObsidianTemplate",
+      "ObsidianQuickSwitch",
+      "ObsidianSearch",
+    },
     config = function()
       require("config.obsidian").setup()
     end,
   })
-  use("godlygeek/tabular")
+  use({ "godlygeek/tabular", cmd = "Tabularize" })
   use({
     "Equilibris/nx.nvim",
+    module = "nx",
+    requires = { "nvim-telescope/telescope.nvim" },
     config = function()
       require("nx").setup({
-        -- Base command to run all other nx commands, some other values may be:
-        -- - `npm nx`
-        -- - `yarn nx`
-        -- - `pnpm nx`
         nx_cmd_root = "nx",
-
-        -- Command running capabilities,
-        -- see nx.m.command-runners for more details
         command_runner = require("nx.command-runners").terminal_cmd(),
-        -- Form rendering capabilities,
-        -- see nx.m.form-renderers for more detials
         form_renderer = require("nx.form-renderers").telescope(),
-
-        -- Whether or not to load nx configuration,
-        -- see nx.loading-and-reloading for more details
         read_init = true,
       })
     end,
   })
 
-  use("tyru/open-browser.vim")
-  use("aklt/plantuml-syntax")
-  use("weirongxu/plantuml-previewer.vim")
+  use({ "aklt/plantuml-syntax", ft = "uml" })
+  use({ "weirongxu/plantuml-previewer.vim", ft = "uml" })
 
   if packer_bootstrap then
     require("packer").sync()

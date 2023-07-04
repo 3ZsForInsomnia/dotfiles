@@ -1,37 +1,33 @@
 local M = {}
 
 function M.setup()
-  local lspServers = {
-    'angularls',
-    'bashls',
-    'cssls',
-    'ember',
-    'emmet_ls',
-    'eslint',
-    'grammarly',
-    'graphql',
-    'html',
-    'jdtls',
-    'jsonls',
-    'lua_ls',
-    'marksman',
-    'sqlls',
-    'tailwindcss',
-    'tsserver',
-    'vimls',
-    'pyright',
-    'pylsp',
-  }
+local lspServers = {
+  'angularls',
+  'bashls',
+  'cssls',
+  'ember',
+  'emmet_ls',
+  'eslint',
+  'grammarly',
+  'graphql',
+  'html',
+  'jdtls',
+  'jsonls',
+  'lua_ls',
+  'marksman',
+  'sqlls',
+  'tailwindcss',
+  'tsserver',
+  'vimls',
+  'pyright',
+  'pylsp',
+}
 
-  require("mason").setup()
-  require("mason-lspconfig").setup({ ensure_installed = lspServers })
-  require("nvim-surround").setup()
-
-  local has_words_before = function()
-    unpack = unpack or table.unpack
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-  end
+  -- local has_words_before = function()
+  --   unpack = unpack or table.unpack
+  --   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  --   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+  -- end
 
   local luasnip = require("luasnip")
   local cmp = require 'cmp'
@@ -50,13 +46,13 @@ function M.setup()
     },
     sources = {
       { name = 'luasnip' },
-      { name = "buffer" },
       { name = "nvim_lsp_signature_help" },
       { name = "nvim_lsp" },
-      { name = "path" },
+      { name = "treesitter" },
       { name = "emmet_vim" },
       { name = "ctags" },
-      { name = "treesitter" },
+      { name = "path" },
+      { name = "buffer" },
       {
         name = 'spell',
         option = {
@@ -160,7 +156,7 @@ function M.setup()
     },
     enabled = function()
       return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
-          or require("cmp_dap").is_dap_buffer()
+          -- or require("cmp_dap").is_dap_buffer()
     end
   })
 
@@ -204,12 +200,6 @@ function M.setup()
         }
       }
     })
-  })
-
-  require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-    sources = {
-      { name = "dap" },
-    },
   })
 
   local lsp_flags = {

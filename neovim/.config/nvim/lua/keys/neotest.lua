@@ -1,4 +1,3 @@
--- vim.api.nvim_set_keymap("n", "<leader>tw", "<cmd>lua require('neotest').run.run({ jestCommand = 'jest --watch ' })<cr>", {})
 local wk = require("which-key")
 
 wk.register({
