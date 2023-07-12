@@ -8,8 +8,9 @@ function M.setup()
       null_ls.builtins.code_actions.eslint_d,
       null_ls.builtins.code_actions.refactoring,
       null_ls.builtins.code_actions.gomodifytags,
-      null_ls.builtins.code_actions.gitsigns,
-      null_ls.builtins.code_actions.ts_node_action,
+      -- null_ls.builtins.code_actions.gitsigns,
+      -- null_ls.builtins.code_actions.ts_node_action,
+      -- require("typescript.extensions.null-ls.code-actions"),
 
       null_ls.builtins.diagnostics.eslint_d,
       null_ls.builtins.diagnostics.checkstyle.with({

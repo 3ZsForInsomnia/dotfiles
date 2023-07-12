@@ -1,66 +1,68 @@
 local wk = require("which-key")
+local v = vim
+local a = v.api
+
+local deleteNoNameBuffers = function()
+	local buffers = v.tbl_filter(function(buf)
+		return a.nvim_buf_is_valid(buf) and a.nvim_buf_get_option(buf, "buflisted")
+	end, a.nvim_list_bufs())
+
+	for _, buffer in ipairs(buffers) do
+		if a.nvim_buf_get_name(buffer) == "" then
+      a.nvim_buf_delete(buffer, {})
+		end
+	end
+end
 
 local f = function(number)
-  return "<cmd>LualineBuffersJump! " .. number .. "<cr>"
+	return "<cmd>LualineBuffersJump! " .. number .. "<cr>"
 end
 
 wk.register({
-  ['<leader>'] = {
-    t = {
-      name = "Tabs",
-      w = { "<C-w>T", "Move current split to new tab" },
-      n = {
-        [''] = { "<cmd>tabnew<cr>", "Open a new tab" },
-        t = { "<cmd>tabnew<cr><cmd>terminal<cr>", "Open a terminal in a new tab" },
-        o = { function() vim.api.nvim_command(":tabe " .. vim.fn.expand("%:p:h")) end,
-          "Open file in dir of current buffer" },
-      },
-      h = { "<cmd>split<cr>", "Horizontal split" },
-      v = { "<cmd>vsplit<cr>", "Vertical split" },
-    },
-    b = {
-      name = "Buffers",
-      k = { "<cmd>bd<cr>", "Kill buffer" },
-      o = { "<cmd>buffers<cr>", "View open buffers" },
-      n = { "<cmd>new<cr>", "New buffer with horizontal split" },
-      v = { "<cmd>vnew<cr>", "New buffer with vertical split" },
-      t = { "<cmd>bd!<cr>", "Kill terminal/Exit immediately" },
-      ['1'] = { f(1), "Jump to Buffer 1" },
-      ['2'] = { f(2), "Jump to Buffer 2" },
-      ['3'] = { f(3), "Jump to Buffer 3" },
-      ['4'] = { f(4), "Jump to Buffer 4" },
-      ['5'] = { f(5), "Jump to Buffer 5" },
-      ['6'] = { f(6), "Jump to Buffer 6" },
-      ['7'] = { f(7), "Jump to Buffer 7" },
-      ['8'] = { f(8), "Jump to Buffer 8" },
-      ['9'] = { f(9), "Jump to Buffer 9" },
-      ['0'] = { f(0), "Jump to Buffer 10" },
-      a = { f(11), "Jump to Buffer 11" },
-      b = { f(12), "Jump to Buffer 12" },
-    },
-    h = {
-      ['+'] = { "<C-w>10>", "Increase horizontal split size by 8" },
-      ['-'] = { "<C-w>10<", "Decrease horizontal split size by 8" },
-    },
-    v = {
-      ['+'] = { "<C-w>10+", "Increase vertical split size by 8" },
-      ['-'] = { "<C-w>10-", "Decrease vertical split size by 8" },
-    },
-    ['='] = { "<C-w>=", "Equalize split sizes" },
-  },
-  ['[b'] = { "<cmd>bp<cr>", "Go to previous buffer" },
-  [']b'] = { "<cmd>bn<cr>", "Go to next buffer" },
-  ['<M-'] = {
-    ['h'] = "Focus on pane to left",
-    ['j'] = "Focus on pane to below",
-    ['k'] = "Focus on pane to above",
-    ['l'] = "Focus on pane to right",
-  },
+	["<leader>b"] = {
+		name = "Buffers",
+		n = { "<cmd>new<cr><C-w>o", "Create new" },
+		t = { "<cmd>new<cr><C-w>o<cmd>terminal<cr>", "Create new" },
+		k = { "<cmd>bd<cr>", "Kill" },
+    u = { deleteNoNameBuffers, "Kill all unnamed buffers" },
+    l = { "<cmd>JABSOpen<cr>", "View open" },
+		g = { ":b ", "Go to" },
+		c = { "<C-g>", "Show path" },
+		a = { "<cmd>b#<cr>", "Go to last edited" },
+		r = { ":bd ", "Kill by name/pattern" },
+		o = {
+			function()
+				v.api.nvim_command(":e " .. v.fn.expand("%:p:h"))
+			end,
+			"Open file in dir of current buffer",
+		},
+		q = { "<cmd>bd!<cr>", "Kill terminal/Exit immediately" },
+		["1"] = { f(1), "Jump to Buffer 1" },
+		["2"] = { f(2), "Jump to Buffer 2" },
+		["3"] = { f(3), "Jump to Buffer 3" },
+		["4"] = { f(4), "Jump to Buffer 4" },
+		["5"] = { f(5), "Jump to Buffer 5" },
+		["6"] = { f(6), "Jump to Buffer 6" },
+		["7"] = { f(7), "Jump to Buffer 7" },
+		["8"] = { f(8), "Jump to Buffer 8" },
+		["9"] = { f(9), "Jump to Buffer 9" },
+		["0"] = { f(0), "Jump to Buffer 10" },
+		h = {
+			[""] = { "<cmd>split<cr>", "Create new horizontal split" },
+			n = { "<cmd>split<cr>", "New buffer with horizontal split" },
+			["+"] = { "<C-w>10>", "Increase horizontal split size by 8" },
+			["-"] = { "<C-w>10<", "Decrease horizontal split size by 8" },
+		},
+		v = {
+			[""] = { "<cmd>vsplit<cr>", "Create new vertical split" },
+			n = { "<cmd>vsplit<cr>", "Create new vertical split" },
+			["+"] = { "<C-w>10+", "Increase vertical split size by 8" },
+			["-"] = { "<C-w>10-", "Decrease vertical split size by 8" },
+		},
+		["="] = { "<C-w>=", "Equalize split sizes" },
+	},
+	["[b"] = { "<cmd>bp<cr>", "Go to previous buffer" },
+	["]b"] = { "<cmd>bn<cr>", "Go to next buffer" },
+	["<C-w>o"] = "Fullscreen current buffer if in buffer split",
+	["<C-w>c"] = "Close split",
 })
-
-local keymap = vim.keymap.set
-local silent = { silent = true }
--- keymap("n", "<C-h>", "<C-w>h", silent)
--- keymap("n", "<C-j>", "<C-w>j", silent)
--- keymap("n", "<C-k>", "<C-w>k", silent)
--- keymap("n", "<C-l>", "<C-w>l", silent)

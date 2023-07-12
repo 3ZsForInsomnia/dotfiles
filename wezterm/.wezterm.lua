@@ -17,6 +17,8 @@ return {
   window_padding = {
     bottom = 0,
     top = 0,
+    left = 0,
+    right = 0
   },
   keys = keybinds.create_keybinds(),
   key_tables = keybinds.key_tables,

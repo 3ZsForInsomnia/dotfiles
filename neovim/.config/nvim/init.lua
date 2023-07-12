@@ -24,6 +24,9 @@ o.exrc = true
 o.secure = true
 o.shada = "!,'100,<50,s10,h"
 
+o.timeoutlen = 300
+o.timeout = true
+
 v.loader.enable()
 require("theming")
 require("plugins")
@@ -49,5 +52,3 @@ end
 v.keymap.set("c", "%%", function()
   return pathExpand()
 end, { expr = true })
-
--- require('pomo.pomo')

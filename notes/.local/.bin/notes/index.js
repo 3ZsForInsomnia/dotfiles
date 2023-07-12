@@ -18,7 +18,7 @@ const commands = {
     handleGhPrs();
   },
   everyFourHours: () => {
-    getTheWeather();
+    // getTheWeather();
   },
 };
 

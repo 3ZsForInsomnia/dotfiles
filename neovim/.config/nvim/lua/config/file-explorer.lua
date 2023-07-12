@@ -9,9 +9,6 @@ function M.setup()
     hijack_cursor = false,
     hijack_netrw = true,
     hijack_unnamed_buffer_when_opening = false,
-    -- ignore_buffer_on_setup = false,
-    -- open_on_setup = false,
-    -- open_on_setup_file = false,
     sort_by = "name",
     root_dirs = {},
     prefer_startup_root = false,
@@ -109,8 +106,8 @@ function M.setup()
       symlink_destination = true,
     },
     hijack_directories = {
-      enable = true,
-      auto_open = true,
+      enable = false,
+      auto_open = false,
     },
     update_focused_file = {
       enable = false,

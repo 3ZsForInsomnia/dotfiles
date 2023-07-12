@@ -4,6 +4,7 @@ local M = {}
 
 M.shortenPath = function(cwd)
   print("cwd", cwd)
+  -- cwd = string.gsub(cwd, '%20', '')
   cwd = string.gsub(cwd, '/Users/zachary/', '')
   cwd = string.gsub(cwd, '/Users/zachary', 'Home')
   cwd = string.gsub(cwd, 'code/', '')

@@ -13,13 +13,14 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +186 neovim/.config/nvim/lua/config/statusline.lua
-badd +370 neovim/.config/nvim/lua/plugins.lua
-badd +7 neovim/.config/nvim/lua/config/cmp-and-lsp.lua
+badd +79 ~/code/dotfiles/neovim/.config/nvim/lua/keys/vim.lua
+badd +69 neovim/.config/nvim/lua/config/whichkey.lua
+badd +28 neovim/.config/nvim/init.lua
+badd +78 neovim/.config/nvim/lua/config/marks.lua
 argglobal
 %argdel
-$argadd ~/code/dotfiles/
-edit neovim/.config/nvim/lua/config/statusline.lua
+$argadd ~/code/dotfiles
+edit neovim/.config/nvim/lua/config/whichkey.lua
 wincmd t
 let s:save_winminheight = &winminheight
 let s:save_winminwidth = &winminwidth
@@ -28,6 +29,7 @@ set winheight=1
 set winminwidth=0
 set winwidth=1
 argglobal
+balt ~/code/dotfiles/neovim/.config/nvim/lua/keys/vim.lua
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -36,13 +38,16 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 183 - ((21 * winheight(0) + 17) / 35)
+3
+normal! zo
+4
+normal! zo
+let s:l = 69 - ((17 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 183
+keepjumps 69
 normal! 0
-lcd ~/code/dotfiles
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

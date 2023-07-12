@@ -69,12 +69,18 @@ function M.setup()
       annotate = true,
     },
     mappings = {
-      next_bookmark0 = "M0",
-      next_bookmark9 = "M9",
-      next_bookmark8 = "M8",
-      next_bookmark7 = "M7",
-      next_bookmark6 = "M6",
-      next_bookmark5 = "M5",
+      next_bookmark0 = "]0",
+      next_bookmark9 = "]9",
+      next_bookmark8 = "]8",
+      next_bookmark7 = "]7",
+      next_bookmark6 = "]6",
+      next_bookmark5 = "]5",
+      prev_bookmark0 = "[0",
+      prev_bookmark9 = "[9",
+      prev_bookmark8 = "[8",
+      prev_bookmark7 = "[7",
+      prev_bookmark6 = "[6",
+      prev_bookmark5 = "[5",
     }
   })
 end

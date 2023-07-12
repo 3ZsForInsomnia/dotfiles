@@ -1,10 +1,11 @@
-local o = vim.o
-local c = vim.cmd
-local a = vim.api
+local v = vim
+local o = v.o
+local c = v.cmd
+local a = v.api
 local h = a.nvim_set_hl
 
 o.cmdheight = 2
-o.updatetime = 100
+o.updatetime = 75
 o.cursorline = true
 o.expandtab = true
 o.shiftwidth = 2
@@ -25,7 +26,7 @@ o.foldcolumn = "3"
 o.signcolumn = "yes:4"
 o.numberwidth = 5
 o.completeopt = 'menu,noinsert,menuone,noselect,preview'
-vim.opt.shortmess:append('c')
+v.opt.shortmess:append('c')
 c('colorscheme moonfly')
 c('syntax sync fromstart')
 
@@ -68,7 +69,7 @@ h(0, 'CursorLineSign', {
 -- Mode specific MsgArea, CursorLineNr and LineNr formatting
 a.nvim_create_autocmd('ModeChanged', {
   callback = function()
-    local mode = vim.api.nvim_get_mode().mode
+    local mode = v.api.nvim_get_mode().mode
     local colorsForCursorLine = {
       ['i'] = '#00ff00',
       ['n'] = '#00ffff',

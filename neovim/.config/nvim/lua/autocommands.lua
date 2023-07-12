@@ -57,3 +57,19 @@ au('FileType', {
     vim.opt_local.buflisted = false
   end,
 })
+
+vim.cmd [[
+  function! E()
+    function! A(timer)
+      echo ""
+    endfunction
+    call timer_start(4000, 'A')
+  endfunction
+  :command! E :call E()
+]]
+au("CursorHold",
+  {
+    pattern = "*",
+    command = "call E()"
+  }
+)

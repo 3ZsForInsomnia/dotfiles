@@ -48,8 +48,8 @@ local createStatusRight = function(window, pane)
   local cpu = utils.getCpuUsage()
   table.insert(cells, cpu)
 
-  utils.setupWeatherRequests()
-  table.insert(cells, utils.weather)
+  -- utils.setupWeatherRequests()
+  -- table.insert(cells, utils.weather)
 
   -- Color palette for the backgrounds of each cell
   local colors = {

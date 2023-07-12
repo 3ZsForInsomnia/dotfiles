@@ -100,8 +100,8 @@ function M.setup()
       },
       swap = {
         enable = true,
-        swap_next = { ["<leader>xp"] = "@parameter.inner" },
-        swap_previous = { ["<leader>xP"] = "@parameter.inner" },
+        swap_next = { ["<leader>swp"] = "@parameter.inner" },
+        swap_previous = { ["<leader>swP"] = "@parameter.inner" },
       },
     },
     indent = { enable = true },

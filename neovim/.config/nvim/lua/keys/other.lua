@@ -29,4 +29,4 @@ wk.register({
       s = { f("selectors"), "selectors", },
     },
   },
-}, { prefix = "<leader>" })
+}, { prefix = "<leader>f" })

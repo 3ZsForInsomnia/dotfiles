@@ -3,6 +3,6 @@ set -e
 PATH="/usr/local/bin:$PATH"
 trap 'rm -f "$$.tags"' EXIT
 git ls-files | \
-  ctags --tag-relative -L - -f"$$.tags" --languages=-javascript,sql,java,jsx,tsx,typescript,python
-mv "$$.tags" ".tags"
+  ctags --tag-relative -L - -f"$$.tags" --languages=-javascript,sql,java,jsx,tsx,typescript,python --excmd=number
+mv "$$.tags" "tags"
 

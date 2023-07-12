@@ -21,6 +21,8 @@
 alias cst='c && gst' # Clear and get status
 alias gstuno='gst -uno' # much faster for large commit histories but doesn't show untracked
 
+alias currBranch='git rev-parse --abbrev-ref HEAD PC'
+
 ### Committing
 alias gibid='g commit -a --amend -C head'		
 alias gce='g commit --allow-empty'
@@ -126,6 +128,7 @@ function gstaa() {
     git stash apply $(git stash list | grep "$1" | cut -d: -f1 | head -n 1)
   fi
 }
+# List stashes in Peco, and apply the selected stash if any is chosen
 function gstala() {
   a=$(gstl P)
   if [ -n "$a" ]
@@ -140,10 +143,10 @@ stashThenRunAndApply() {
   $(gstaa)
 }
 stashMergeMas() {
-  $(stashThenRunAndApply(pullMasThenMerge))
+  $(stashThenRunAndApply pullMasThenMerge)
 }
 stashRebaseMas() {
-  $(stashThenRunAndApply(pullMasThenRebase))
+  $(stashThenRunAndApply pullMasThenRebase)
 }
 alias gstamm='stashMergeMas'
 alias gstarm='stashRebaseMas'
@@ -249,4 +252,71 @@ gistr() {
 setupGit() {
   git config --global alias.ctags '!.git/hooks/ctags';
   git config --global init.templatedir '~/.git_template'
+}
+
+### FZF-based git helpers
+fcoc() {
+  local commits commit
+  commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
+  commit=$(echo "$commits" | fzf --tac +s +m -e) &&
+  git checkout $(echo "$commit" | sed "s/ .*//")
+}
+# fbr - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
+fbr() {
+  local branches branch
+  branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
+  branch=$(echo "$branches" |
+           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
+# fco_preview - checkout git branch/tag, with a preview showing the commits between the tag/branch and HEAD
+fco_preview() {
+  local tags branches target
+  branches=$(
+    git --no-pager branch --all \
+      --format="%(if)%(HEAD)%(then)%(else)%(if:equals=HEAD)%(refname:strip=3)%(then)%(else)%1B[0;34;1mbranch%09%1B[m%(refname:short)%(end)%(end)" \
+    | sed '/^$/d') || return
+  tags=$(
+    git --no-pager tag | awk '{print "\x1b[35;1mtag\x1b[m\t" $1}') || return
+  target=$(
+    (echo "$branches"; echo "$tags") |
+    fzf --no-hscroll --no-multi -n 2 \
+        --ansi --preview="git --no-pager log -150 --pretty=format:%s '..{2}'") || return
+  git checkout $(awk '{print $2}' <<<"$target" )
+}
+# fcoc_preview - checkout git commit with previews
+fcoc_preview() {
+  local commit
+  commit=$( glNoGraph |
+    fzf --no-sort --reverse --tiebreak=index --no-multi \
+        --ansi --preview="$_viewGitLogLine" ) &&
+  git checkout $(echo "$commit" | sed "s/ .*//")
+}
+# fstash - easier way to deal with stashes
+# type fstash to get a list of your stashes
+# enter shows you the contents of the stash
+# ctrl-d shows a diff of the stash against your current HEAD
+# ctrl-b checks the stash out as a branch, for easier merging
+fstash() {
+  local out q k sha
+  while out=$(
+    git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
+    fzf --ansi --no-sort --query="$q" --print-query \
+        --expect=ctrl-d,ctrl-b);
+  do
+    mapfile -t out <<< "$out"
+    q="${out[0]}"
+    k="${out[1]}"
+    sha="${out[-1]}"
+    sha="${sha%% *}"
+    [[ -z "$sha" ]] && continue
+    if [[ "$k" == 'ctrl-d' ]]; then
+      git diff $sha
+    elif [[ "$k" == 'ctrl-b' ]]; then
+      git stash branch "stash-$sha" $sha
+      break;
+    else
+      git stash show -p $sha
+    fi
+  done
 }
