@@ -50,7 +50,7 @@ M.setup = function()
 
 		keymap = {
 			close = "D",
-			jump = "<space>",
+			jump = "<cr>",
 			h_split = "h",
 			v_split = "v",
 			preview = "p",

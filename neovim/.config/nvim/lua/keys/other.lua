@@ -7,21 +7,21 @@ end
 wk.register({
   a = {
     name = "Go to related files",
-    [""] = { f(""), "Other" },
+    o = { f(""), "Other" },
     s = { f("style"), "style (css, scss, theme)", },
     i = { f("types"), "types (interface, type, enum)", },
     t = { f("test"), "test (test, spec, mock)", },
     h = { f("template"), "html (html, any other template)", },
     a = {
       name = "Angular",
-      [""] = { f("angular"), "Angular (service, routing, module, component, directive, pipe)" },
+      a = { f("angular"), "Angular (service, routing, module, component, directive, pipe)" },
       r = { f("routing"), "routing", },
       m = { f("module"), "module", },
       c = { f("component"), "component", },
     },
     n = {
       name = "NgRx",
-      [""] = { f("ngrx"), "NgRx (actions, reducer, effects, state/module, selectors)" },
+      n = { f("ngrx"), "NgRx (actions, reducer, effects, state/module, selectors)" },
       a = { f("actions"), "actions", },
       r = { f("reducer"), "reducer", },
       e = { f("effects"), "effects", },

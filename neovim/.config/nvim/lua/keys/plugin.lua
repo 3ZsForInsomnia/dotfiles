@@ -104,7 +104,7 @@ wk.register({
 }, { prefix = "<leader>" })
 
 -- This is here since it is mostly intended to be used with tables in Obsidian notes
-wk.register({ t = { ":Tabularize /", "Tabularize text based on pattern" } }, { mode = "v" })
+wk.register({ ["<C-t"] = { ":Tabularize /", "Tabularize text based on pattern" } }, { mode = "v" })
 
 wk.register({
 	r = {

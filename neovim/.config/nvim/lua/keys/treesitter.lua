@@ -7,7 +7,6 @@ wk.register({
     e = { function() d.open_float() end, "Open floating diagnostic window" },
     l = { function() d.setloclist() end, "Set diagnostics in loclist" },
     q = { function() d.setqflist() end, "Add all diagnostics to quickfix" },
-    pt = { "<cmd>TSPlaygroundToggle<cr>", "TS Playground Toggle" },
   },
   ['[d'] = { function() d.goto_prev({}) end, "Previous diagnostic" },
   [']d'] = { function() d.goto_next() end, "Next diagnostic" },

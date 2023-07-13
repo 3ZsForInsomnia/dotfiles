@@ -12,6 +12,7 @@ M.shortenPath = function(cwd)
   cwd = string.gsub(cwd, 'neovim', 'nv')
   cwd = string.gsub(cwd, 'wezterm', 'wez', 1)
 
+  cwd = string.sub(cwd, 1, 1):upper() .. string.sub(cwd, 2, -1)
   return cwd
 end
 

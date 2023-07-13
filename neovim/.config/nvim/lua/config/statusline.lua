@@ -165,11 +165,11 @@ function M.setup()
 				{ "location", separator = { right = "" }, left_padding = 2 },
 			},
 		},
-		tabline = {
-			lualine_z = { { "filename", path = 1 } },
-		},
+		-- tabline = {
+		-- 	lualine_z = { { "filename", path = 1 } },
+		-- },
 		winbar = {
-      -- Starting with B due to nicer theming on B and C sections
+			-- Starting with B due to nicer theming on B and C sections
 			lualine_b = { "diagnostics", { "diff", source = gitSignsForFile } },
 			lualine_c = {
 				"navic",
@@ -180,10 +180,10 @@ function M.setup()
 		inactive_winbar = {},
 		extensions = { "nvim-tree", "quickfix", "nvim-dap-ui" },
 	})
-end
 
-M.timer:start(10000, 10000, function()
-	M.gitStatusForRepo()
-end)
+	M.timer:start(10000, 10000, function()
+		M.gitStatusForRepo()
+	end)
+end
 
 return M

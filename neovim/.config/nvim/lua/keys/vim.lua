@@ -16,29 +16,27 @@ end
 wk.register({
 	["<leader>"] = {
 		s = {
-			name = "Session",
+			name = "Sessions",
 			s = {
-				name = "Save",
-				n = { "<cmd>lua SaveSessionByName()<cr>", "Save with name" },
-				a = { "<cmd>lua SaveSession('aliases')<cr>", "Save aliases" },
-				t = { "<cmd>lua SaveSession('temp')<cr>", "Save temp" },
+				name = "Save sessions",
+				n = { "<cmd>lua SaveSessionByName()<cr>", "With name" },
+				a = { "<cmd>lua SaveSession('aliases')<cr>", "Aliases" },
+				t = { "<cmd>lua SaveSession('temp')<cr>", "Temp" },
 			},
 			r = {
-				name = "Restore",
-				n = { "<cmd>lua RestoreSessionByName()<cr>", "Restore by name" },
-				a = { "<cmd>lua RestoreSession('aliases')<cr>", "Restore aliases" },
-				t = { "<cmd>lua RestoreSession('temp')<cr>", "Restore temp" },
+				name = "Restore sessions",
+				n = { "<cmd>lua RestoreSessionByName()<cr>", "By name" },
+				a = { "<cmd>lua RestoreSession('aliases')<cr>", "Aliases" },
+				t = { "<cmd>lua RestoreSession('temp')<cr>", "Temp" },
 			},
-			d = { "<cmd>lua DeleteSessionByName()<cr>", "Delete named" },
+			d = { "<cmd>lua DeleteSessionByName()<cr>", "Delete named session" },
 		},
 		z = {
 			name = "Personal",
 			y = {
-				"<cmd>let @+ = expand('%')<cr>",
-				"Copy filename + path to clipboard",
+				"<cmd>let @+ = expand('%:.')<cr>",
+				"Copy filename + relative path to clipboard",
 			},
-			p = { "'\"+p", "Paste from clipboard" },
-			c = { "'\"+y", "Copy to clipboard" },
 			ws = {
 				"<cmd>w<cr><bar><cmd>source %<cr>",
 				"Write and source current file",
@@ -64,10 +62,6 @@ wk.register({
 	},
 	["<C-"] = {
 		["[>"] = { "<cmd>pop<cr>", "Pop entry off tag stack" },
-		["y>"] = { "10<C-y>", "Scroll up 10 lines without moving cursor" },
-		["e>"] = { "10<C-e>", "Scroll down 10 lines without moving cursor" },
-		["d>"] = { "<C-d>zz", "Scroll and center text on screen" },
-		["u>"] = { "<C-u>zz", "Scroll and center text on screen" },
 	},
 	["<M-d>"] = { '"_d', "Delete but preserve yanked register" },
 })
@@ -104,38 +98,7 @@ wk.register({
 
 wk.register({
 	["<C-"] = {
-		["c>"] = { "<esc>`^", "Escape and keep location" },
-		["l>"] = {
-			'<esc>vaw"qyo<c-r>=luaeval(\'logThis(vim.fn.getreg("q"))\')<cr><up>',
-			"Insta-log anything while in insert mode",
-		},
-		["j>"] = {
-			"<Plug>luasnip-next-choice",
-			"Cycle to next luasnip choicenode option",
-		},
-		["k>"] = {
-			"<Plug>luasnip-prev-choice",
-			"Cycle to prev luasnip choicenode option",
-		},
-		["e>"] = {
-			"<Plug>luasnip-expand-snippet",
-			"Luasnip expand snippet under cursor",
-		},
-		["s>"] = {
-			"<cmd>lua require('luasnip.extras.select_choice')()<cr>",
-			"Open select popup for luasnip choice",
-		},
-	},
-}, { mode = "i" })
-
-wk.register({
-	["<leader>"] = {
-		pc = { "'\"+p", "Paste from clipboard" },
-		yc = { "'\"+y", "Copy to clipboard" },
-	},
-	["<C-"] = {
-		["y>"] = { "10<C-y>", "Scroll up 10 lines without moving cursor" },
-		["e>"] = { "10<C-e>", "Scroll down 10 lines without moving cursor" },
+		["c>"] = { '"+y', "Copy to clipboard" },
 		["d>"] = { '"_d', "Delete but preserve yanked register" },
 		["s>"] = {
 			"<cmd>lua require('luasnip.extras.select_choice')()<cr>",
@@ -166,3 +129,29 @@ wk.register({
 		},
 	},
 }, { mode = "s" })
+
+wk.register({
+	["<C-"] = {
+		["c>"] = { "<esc>`^", "Escape and keep location" },
+		["l>"] = {
+			'<esc>vaw"qyo<c-r>=luaeval(\'logThis(vim.fn.getreg("q"))\')<cr><up>',
+			"Insta-log anything while in insert mode",
+		},
+		["j>"] = {
+			"<Plug>luasnip-next-choice",
+			"Cycle to next luasnip choicenode option",
+		},
+		["k>"] = {
+			"<Plug>luasnip-prev-choice",
+			"Cycle to prev luasnip choicenode option",
+		},
+		["e>"] = {
+			"<Plug>luasnip-expand-snippet",
+			"Luasnip expand snippet under cursor",
+		},
+		["s>"] = {
+			"<cmd>lua require('luasnip.extras.select_choice')()<cr>",
+			"Open select popup for luasnip choice",
+		},
+	},
+}, { mode = "i" })

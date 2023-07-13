@@ -2,7 +2,7 @@
 -- <leader> ${namespace} ${verb} ${noun}
 -- All pieces are optional, however, but should follow this order for all pieces present
 require("keys.db-and-dap")
-require("keys.diffview")
+require("keys.git")
 require("keys.nvim-tree")
 require("keys.other")
 require("keys.plugin")

@@ -154,24 +154,16 @@ M.key_tables = {
     { key = "q", mods = "NONE", action = action.CopyMode("Close") },
 
     -- move cursor
-    { key = "LeftArrow", mods = "NONE", action = action.CopyMode("MoveLeft") },
-    { key = "DownArrow", mods = "NONE", action = action.CopyMode("MoveDown") },
-    { key = "UpArrow", mods = "NONE", action = action.CopyMode("MoveUp") },
-    { key = "RightArrow", mods = "NONE", action = action.CopyMode("MoveRight") },
-
     { key = "h", mods = "NONE", action = action.CopyMode("MoveLeft") },
     { key = "j", mods = "NONE", action = action.CopyMode("MoveDown") },
     { key = "k", mods = "NONE", action = action.CopyMode("MoveUp") },
     { key = "l", mods = "NONE", action = action.CopyMode("MoveRight") },
 
     -- move word
-    { key = "RightArrow", mods = "ALT", action = action.CopyMode("MoveForwardWord") },
-    { key = "LeftArrow", mods = "ALT", action = action.CopyMode("MoveBackwardWord") },
-
     { key = "w", mods = "NONE", action = action.CopyMode("MoveForwardWord") },
     { key = "b", mods = "NONE", action = action.CopyMode("MoveBackwardWord") },
 
-    -- What is this?
+    -- Move to char/space at end of next word
     {
       key = "e",
       mods = "NONE",
@@ -186,7 +178,7 @@ M.key_tables = {
 
     -- move start/end
     { key = "0", mods = "NONE", action = action.CopyMode("MoveToStartOfLine") },
-    { key = "a", mods = "CTRL", action = action.CopyMode("MoveToStartOfLineContent") },
+    { key = "^", mods = "CTRL", action = action.CopyMode("MoveToStartOfLineContent") },
 
     { key = "$", mods = "NONE", action = action.CopyMode("MoveToEndOfLineContent") },
     { key = "e", mods = "CTRL", action = action.CopyMode("MoveToEndOfLineContent") },
@@ -234,13 +226,15 @@ M.key_tables = {
 
     -- scroll
     { key = "g", mods = "NONE", action = action.CopyMode("MoveToScrollbackTop") },
-    { key = "z", mods = "NONE", action = action.CopyMode("MoveToViewportMiddle") },
-    { key = "G", mods = "NONE", action = action.CopyMode("MoveToScrollbackBottom") },
+    { key = "G", mods = "SHIFT", action = action.CopyMode("MoveToScrollbackBottom") },
+
+    { key = "H", mods = "SHIFT", action = action.CopyMode("MoveToViewportTop") },
+    { key = "M", mods = "SHIFT", action = action.CopyMode("MoveToViewportMiddle") },
+    { key = "L", mods = "SHIFT", action = action.CopyMode("MoveToViewportBottom") },
+
     { key = "o", mods = "NONE", action = action.CopyMode("MoveToSelectionOtherEnd") },
     { key = "O", mods = "NONE", action = action.CopyMode("MoveToSelectionOtherEndHoriz") },
 
-    { key = "PageUp", mods = "NONE", action = action.CopyMode("PageUp") },
-    { key = "PageDown", mods = "NONE", action = action.CopyMode("PageDown") },
     { key = "b", mods = "CTRL", action = action.CopyMode("PageUp") },
     { key = "f", mods = "CTRL", action = action.CopyMode("PageDown") },
 

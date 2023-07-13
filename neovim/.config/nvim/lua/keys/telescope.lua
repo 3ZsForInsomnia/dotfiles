@@ -12,20 +12,18 @@ wk.register({
   ['<leader>'] = {
     f = {
       name = 'Telescope Find',
-      [''] = live(),
       j = live(),
       f = { f("find_files"), "Files" },
-      p = { f(""), "Pickers" },
+      p = { f("pickers"), "Pickers" },
       y = { f("frecency"), "Frecency" },
       s = { f("grep_string"), "String" },
       h = { f("search_history"), "Search History" },
       r = { f("resume"), "Resume previous search" },
       c = {
         name = "Changes/loc/qf lists",
-        [''] = { f("quickfix"), "Quickfix files" },
         c = { f("changes"), "Changes" },
         u = { f("undo"), "Undo stack" },
-        q = { f("quickfix"), "Quickfix files" },
+        f = { f("quickfix"), "Quickfix files" },
         h = { f("quickfixhistory"), "Quickfix history" },
         j = { f("jumplist"), "Jumplist" },
         l = { f("loclist"), "Location list" },
@@ -40,7 +38,6 @@ wk.register({
       },
       g = {
         name = "Git",
-        [''] = { "<cmd>Easypick changed_files<cr>", "Changed" },
         f = { f("git_files"), "Files" },
         h = { "<cmd>Easypick changed_files<cr>", "Changed" },
         b = { f("git_branches"), "Branches" },
@@ -51,7 +48,6 @@ wk.register({
       },
       d = {
         name = "Search Documentation",
-        [''] = { "<cmd>Dash<cr>", "Dash Search" },
         s = { f("luasnip"), "Snippets" },
         e = { f("http list"), "Http codes" },
         t = { f("tailiscope"), "Tailwind" },

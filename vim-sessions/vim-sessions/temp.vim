@@ -13,23 +13,14 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +79 ~/code/dotfiles/neovim/.config/nvim/lua/keys/vim.lua
-badd +69 neovim/.config/nvim/lua/config/whichkey.lua
-badd +28 neovim/.config/nvim/init.lua
-badd +78 neovim/.config/nvim/lua/config/marks.lua
+badd +538 neovim/.config/nvim/lua/plugins.lua
+badd +82 ~/code/dotfiles/neovim/.config/nvim/lua/config/neogit.lua
+badd +19 ~/code/dotfiles/neovim/.config/nvim/lua/keys/neogit.lua
 argglobal
 %argdel
 $argadd ~/code/dotfiles
-edit neovim/.config/nvim/lua/config/whichkey.lua
-wincmd t
-let s:save_winminheight = &winminheight
-let s:save_winminwidth = &winminwidth
-set winminheight=0
-set winheight=1
-set winminwidth=0
-set winwidth=1
+edit ~/code/dotfiles/neovim/.config/nvim/lua/keys/neogit.lua
 argglobal
-balt ~/code/dotfiles/neovim/.config/nvim/lua/keys/vim.lua
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -38,16 +29,12 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-3
-normal! zo
-4
-normal! zo
-let s:l = 69 - ((17 * winheight(0) + 17) / 35)
+let s:l = 19 - ((18 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 69
-normal! 0
+keepjumps 19
+normal! 043|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -55,8 +42,6 @@ endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20
 let &shortmess = s:shortmess_save
-let &winminheight = s:save_winminheight
-let &winminwidth = s:save_winminwidth
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)

@@ -228,8 +228,7 @@ function M.setup()
 		wk.register({
 			["<leader>l"] = {
 				name = "LSP",
-				-- a = { b.code_action, "Perform code action" },
-        a = { "<cmd>CodeActionMenu<cr>", "Perform code actions" },
+				a = { "<cmd>CodeActionMenu<cr>", "Perform code actions" },
 				D = { b.declaration, "Declaration" },
 				d = { b.definition, "Definition" },
 				i = { b.implementation, "Implementation" },

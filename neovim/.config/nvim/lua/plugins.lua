@@ -101,14 +101,6 @@ return packer.startup(function(use)
 			},
 			{
 				"weilbith/nvim-code-action-menu",
-				requires = {
-					{
-						"kosayoda/nvim-lightbulb",
-						config = function()
-							require("nvim-lightbulb").setup({ autocmd = { enabled = true } })
-						end,
-					},
-				},
 				cmd = "CodeActionMenu",
 				after = "nvim-lspconfig",
 			},
@@ -130,7 +122,7 @@ return packer.startup(function(use)
 				height = 20,
 				action_keys = { open_tab = { "<c-t>" } },
 			})
-			require("keys.trouble-lazy")
+			-- require("keys.trouble-lazy")
 		end,
 	})
 	use({
@@ -453,12 +445,13 @@ return packer.startup(function(use)
 	--
 	use("kyazdani42/nvim-web-devicons")
 	use("bluz71/vim-moonfly-colors")
-	-- use({
-	-- 	"karb94/neoscroll.nvim",
-	-- 	config = function()
-	-- 		require("config.scroll-config").setup()
-	-- 	end,
-	-- })
+	use({
+		"karb94/neoscroll.nvim",
+    event = "BufReadPost",
+		config = function()
+			require("config.scroll-config").setup()
+		end,
+	})
 	use({
 		"brenoprata10/nvim-highlight-colors",
 		ft = { "css", "scss", "jsx", "tsx", "lua", "sh", "bash", "zsh" },
@@ -529,15 +522,24 @@ return packer.startup(function(use)
 	-- Git statuses and diffs and PRs, oh my
 	--
 	--
-	use({ "sindrets/diffview.nvim", cmd = { "Diffview", "DiffviewOpen" } })
+	use({ "sindrets/diffview.nvim" })
 	use({ "ruanyl/vim-gh-line", cmd = { "GH", "GHInteractive" } })
 	use({
 		"lewis6991/gitsigns.nvim",
-		event = "BufReadPost",
 		config = function()
 			require("config.gitsigns").setup()
+      require("keys.git").setup()
 		end,
 	})
+  use ({
+    "NeogitOrg/neogit",
+    event = "BufReadPost",
+    cmd = "Neogit",
+    module = "neogit",
+    config = function()
+      require("config.neogit").setup()
+    end,
+  })
 	use({
 		"pwntester/octo.nvim",
 		cmd = "Octo",
