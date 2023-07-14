@@ -63,7 +63,7 @@ vim.cmd [[
     function! A(timer)
       echo ""
     endfunction
-    call timer_start(4000, 'A')
+    call timer_start(7500, 'A')
   endfunction
   :command! E :call E()
 ]]

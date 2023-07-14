@@ -13,14 +13,24 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +538 neovim/.config/nvim/lua/plugins.lua
-badd +82 ~/code/dotfiles/neovim/.config/nvim/lua/config/neogit.lua
-badd +19 ~/code/dotfiles/neovim/.config/nvim/lua/keys/neogit.lua
+badd +24 ~/code/dotfiles/neovim/.config/nvim/lua/config/neogit.lua
+badd +1 ~/code/dotfiles/neovim/.config/nvim/lua/config/telescope.lua
+badd +8 neovim/.config/nvim/lua/config/diffview.lua
+badd +66 neovim/.config/nvim/lua/autocommands.lua
+badd +4 neovim/.config/nvim/syntax/NeogitStatus.vim
 argglobal
 %argdel
 $argadd ~/code/dotfiles
-edit ~/code/dotfiles/neovim/.config/nvim/lua/keys/neogit.lua
+edit ~/code/dotfiles/neovim/.config/nvim/lua/config/neogit.lua
+wincmd t
+let s:save_winminheight = &winminheight
+let s:save_winminwidth = &winminwidth
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
 argglobal
+balt neovim/.config/nvim/syntax/NeogitStatus.vim
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -29,12 +39,16 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 19 - ((18 * winheight(0) + 11) / 22)
+3
+normal! zo
+6
+normal! zo
+let s:l = 24 - ((17 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 19
-normal! 043|
+keepjumps 24
+normal! 0
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -42,13 +56,14 @@ endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20
 let &shortmess = s:shortmess_save
+let &winminheight = s:save_winminheight
+let &winminwidth = s:save_winminwidth
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
 set hlsearch
-nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :

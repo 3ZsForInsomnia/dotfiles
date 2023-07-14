@@ -53,6 +53,8 @@ function M.setup()
 					"out",
 					"--exclude",
 					".next",
+          "--exclude",
+          "vim-sessions",
 					"--exclude",
 					".vercel",
 					"--exclude",

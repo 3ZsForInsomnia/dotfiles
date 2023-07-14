@@ -13,6 +13,10 @@ local f = function(command)
 	return "<cmd>Diffview" .. command .. "<cr>"
 end
 
+local n = function(command)
+	return "<cmd>Neogit " .. command .. "<cr>"
+end
+
 local M = {}
 
 M.setup = function(bufnr)
@@ -87,10 +91,7 @@ M.setup = function(bufnr)
 				v = { f("Open"), "Open" },
 				c = { f("Close"), "Close" },
 				m = {
-					function()
-						print(f("Open origin/" .. mainBranch()))
-					end,
-					"origin/${mainBranchName}",
+					f("Open origin/" .. mainBranch()), ("origin/${mainBranchName}"),
 				},
 				o = { ":DiffviewOpen origin/", "Open origin/${branch}" },
 				h = { ":DiffviewOpen HEAD~n", "Open HEAD~${numberOfCommits}" },
@@ -105,6 +106,17 @@ M.setup = function(bufnr)
 					gs.setloclist(0, 0)
 				end,
 				"Send all hunks in current buffer to loc list",
+			},
+			n = {
+				name = "Neogit view",
+				s = { n(""), "Status" },
+				c = { n("commit"), "Commit" },
+				r = { n("rebase"), "Rebase" },
+				m = { n("merge"), "Merge" },
+				l = { n("log"), "Log" },
+				t = { n("stash"), "Stash" },
+				b = { n("branch"), "Branch" },
+				p = { n("cherry_pick"), "Cherry pick" },
 			},
 		},
 		gx = "Diffview delete conflict",
