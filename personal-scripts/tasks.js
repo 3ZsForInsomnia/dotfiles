@@ -1,7 +1,7 @@
 const https = require("https");
 const { execSync } = require("node:child_process");
 const nfzf = require("node-fzf");
-const { CLICKUP_TEAM, CLICKUP_ME, CLICKUP_KEY } = process.env;
+const { CLICKUP_TEAM, CLICKUP_ME, CLICKUP_KEY, DEFAULT_TASK_TIME } = process.env;
 
 const boards = [
   "0 Inbox",
@@ -27,7 +27,7 @@ boards.forEach((board) => {
 const defaultItems = ["I am in a meeeting", "Zach is working", "custom"];
 
 let [time, ...args] = process.argv.slice(2);
-if (!time) time = 30;
+if (!time) time = DEFAULT_TASK_TIME;
 const dndDuration = time * 60;
 
 const prettyTask = (task) => `${task.name} - ${task.url}`;

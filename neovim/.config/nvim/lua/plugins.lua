@@ -200,6 +200,13 @@ return packer.startup(function(use)
 			require("config.linting").setup()
 		end,
 	})
+  use({
+    "lewis6991/hover.nvim",
+    event = "BufReadPost",
+    config = function()
+      require("config.hover").setup()
+    end
+  })
 
 	--
 	--
