@@ -6,6 +6,7 @@ source ~/.searching.sh
 # source ~/.work-utils.sh
 source ~/.misc.sh
 source ~/.db.sh
+source ~/.dates.sh
 
 alias src='j src'
 alias utils='j utils'
@@ -35,5 +36,11 @@ alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.
 alias keepAwake='cd /Applications; ./delay-screensaver.command'
 
 alias rss='newsboat;'
-alias gmail='neomutt'
+alias mail='neomutt'
+alias cal='gcalcli'
 . "$HOME/.cargo/env"
+
+export TZ='America/New_York';
+export CRON_LOG='$HOME/.local/state/cron/cron.log'
+
+alias getTheWeather='curl "wttr.in/HuntersPoint?format=1&u" > ~/.local/state/weather/currentWeather.txt'

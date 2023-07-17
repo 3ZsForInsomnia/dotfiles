@@ -173,6 +173,8 @@ return packer.startup(function(use)
 		end,
 	})
 	use("HiPhish/nvim-ts-rainbow2")
+  use("windwp/nvim-ts-autotag")
+  use("theHamsta/nvim-treesitter-pairs")
 	use({
 		"bennypowers/nvim-regexplainer",
 		config = function()

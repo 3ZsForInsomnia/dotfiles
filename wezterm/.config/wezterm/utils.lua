@@ -1,5 +1,3 @@
-local time = require('wezterm').time
-
 local M = {}
 
 M.shortenPath = function(cwd)
@@ -14,6 +12,14 @@ M.shortenPath = function(cwd)
 
   cwd = string.sub(cwd, 1, 1):upper() .. string.sub(cwd, 2, -1)
   return cwd
+end
+
+local readFile = function(file)
+  local handle = io.open(file, 'r')
+  local data = handle:read('*a')
+  handle:close()
+
+  return data
 end
 
 local runShellCommand = function(cmd)
@@ -33,22 +39,23 @@ end
 
 function M.getCpuUsage()
   local result = runShellCommand('ps -A -o %cpu | awk \'{s+=$1} END {print s ""}\'')
+  result = math.floor(result)
   local formatted = string.format("%03d", result)
   return "CPU: " .. formatted .. "%"
 end
 
 function M.getWeather()
-  local result = runShellCommand('curl "wttr.in/HuntersPoint?format=1&u"')
-  M.weather = result .. '  '
+  local weather = readFile("/Users/zachary/.local/state/weather/currentWeather.txt")
+  weather = string.gsub(weather, "\n", "")
+  return weather
 end
 
-local fifteenMinutes = 900
-function M.setupWeatherRequests()
-  M.getWeather()
-  time.call_after(fifteenMinutes, M.setupWeatherRequests)
+function M.getNextEvent()
+  local event = readFile("/Users/zachary/.local/state/cal/nextEvent.txt")
+  event = string.gsub(event, "\n", "")
+  print("event: ", event)
+  return event .. '  '
 end
-
-M.weather = ""
 
 function M.merge_lists(t1, t2, t3)
   local result = {}

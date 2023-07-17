@@ -10,7 +10,7 @@ _G.logThis = function(str)
 		return 'print("' .. str .. '", vim.inspect(' .. str .. "))"
 	end
 
-	return "echo " .. str
+	return "echo $" .. str
 end
 
 wk.register({

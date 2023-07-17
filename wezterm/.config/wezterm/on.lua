@@ -33,10 +33,8 @@ local createStatusRight = function(window, pane)
   -- Each element holds the text for a cell in a "powerline" style << fade
   local cells = {}
 
-  local cwd, hostname = getProjectPath(pane)
-  table.insert(cells, ' ' .. cwd)
-  table.insert(cells, hostname)
-  table.insert(cells, pane:get_domain_name())
+  local cwd = getProjectPath(pane)
+  table.insert(cells, '  ' .. cwd)
   local mode, n = string.gsub(pane:get_title(), "(.+) mode: .*", "%1", 1)
   if mode == nil or n == 0 then
     mode = 'Normal'
@@ -47,9 +45,10 @@ local createStatusRight = function(window, pane)
   table.insert(cells, mem)
   local cpu = utils.getCpuUsage()
   table.insert(cells, cpu)
-
-  -- utils.setupWeatherRequests()
-  -- table.insert(cells, utils.weather)
+  local weather = utils.getWeather()
+  table.insert(cells, weather)
+  local event = utils.getNextEvent()
+  table.insert(cells, event)
 
   -- Color palette for the backgrounds of each cell
   local colors = {
