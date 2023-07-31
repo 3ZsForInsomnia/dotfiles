@@ -89,7 +89,8 @@ local createStatusRight = function(window, pane)
     push(cell, #cells == 0)
   end
 
-  window:set_right_status(wezterm.format(elements))
+  -- window:set_right_status(wezterm.format(elements))
+  return wezterm.format(elements)
 end
 
 wezterm.on('update-status', function(window, pane)

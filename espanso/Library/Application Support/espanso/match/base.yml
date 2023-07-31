@@ -22,6 +22,8 @@ matches:
     replace: "zachary.levine89@gmail.com"
   - trigger: ":e3"
     replace: "zachary@ethic.com"
+  - trigger: ":fn"
+    form: "[^[[index]]]: "
   - trigger: "bw"
     replace: "between"
   - trigger: "Bw"

@@ -1,7 +1,7 @@
-alias wttr='curl "wttr.in/HuntersPoint?u"'
-alias wttr1='curl "wttr.in/HuntersPoint?1"'
-alias wttr3='curl "wttr.in/HuntersPoint?format=3&u"'
-alias wttrpng='curl "wttr.in/HuntersPoint.png?u" > ~/Downloads/wttr.png && open ~/Downloads/wttr.png'
+alias wttr="curl 'wttr.in/$MY_LOCATION?u'"
+alias wttr1="curl 'wttr.in/$MY_LOCATION?1'"
+alias wttr3="curl 'wttr.in/$MY_LOCATION?format=3&u'"
+alias wttrpng="curl 'wttr.in/$MY_LOCATION.png?u' > ~/Downloads/wttr.png && open ~/Downloads/wttr.png"
 
 alias fuckitup='~/fuckitup.js'
 function fup() {
@@ -34,3 +34,4 @@ alias http-server='$HOME/.npm/_npx/e5196fa6dc3cecbc/node_modules/.bin/http-serve
 alias task='node ~/tasks.js'
 
 alias img='wezterm imgcat '
+alias ms='mailsync'

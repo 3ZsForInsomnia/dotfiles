@@ -6,7 +6,7 @@ convertsecs() {
 }
 
 function nextEvent() {
-  data=$(agenda 1 nocolor | head -2 | tail -1)
+  data=$(gcalcli --nocolor agenda --no-military --nostarted --nodeclined --details length --details location "$(date)" "$(date -v+1d -v0H)" | head -2 | tail -1)
   a=$(echo "$data" | cut -f 2-5 -d " " | xargs)
   time="$(date +%Y) $a"
   event=$(echo "$data" | cut -f 6- -d " " | xargs)
@@ -20,37 +20,11 @@ function nextEvent() {
   echo "$diff2 until event: $event"
 }
 
-function agenda() {
-  if [[ -z "$1" ]]; then
-    day="1"
-  else
-    day=$1
-  fi
-
-  if [[ "$1" == "t" ]]; then
-    gcalcli agenda --no-military \
-      --nodeclined \
-      --nostarted \
-      --details length \
-      --details location \
-      "$(date -v+1d -v0H)" "$(date -v+2d -v0H)"\;
-  elif [[ "$2" == "nocolor" ]]; then
-    gcalcli --nocolor agenda --no-military \
-      --nodeclined \
-      --nostarted \
-      --details length \
-      --details location \
-      "$(date)" "$(date -v+"$day"d -v0H)"\;
-  elif [[ -z "$2" ]]; then
-    gcalcli agenda --no-military \
-      --nodeclined \
-      --nostarted \
-      --details length \
-      --details location \
-      "$(date)" "$(date -v+"$day"d -v0H)"\;
-  fi
-}
-
 alias tomorrow='date -v+1d -v0H'
 alias writeNextEventToFile='nextEvent > /Users/zachary/.local/state/cal/nextEvent.txt'
-alias ag='agenda'
+alias ag="$HOME/.local/bin/dates.js"
+alias ag1='cal agenda "$(date)" "$(tomorrow)"'
+alias agm="ag -e 'aft'"
+alias aga="ag -e 'eve' -s 'aft'"
+alias age="ag -e 'mid' -s 'eve'"
+alias agt="ag -n 1"

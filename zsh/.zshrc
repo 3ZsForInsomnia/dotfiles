@@ -1,6 +1,7 @@
 source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 source ~/.path-modifiers.sh
 source ~/.p10k.zsh
+source ~/custom-completions.zsh
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 setopt auto_cd
@@ -29,10 +30,10 @@ source ~/.bashrc
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-XDG_CACHE_HOME=$HOME/.cache
-XDG_CONFIG_HOME=$HOME/.config
-XDG_DATA_HOME=$HOME/.local/share
-XDG_STATE_HOME=$HOME/.local/state
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_STATE_HOME=$HOME/.local/state
 
 # https://dev.to/equiman/reveal-the-command-behind-an-alias-with-zsh-4d96
 local cmd_alias=""
@@ -85,27 +86,16 @@ function git_main_branch() {
   echo $def
 }
 
-# Personal automation/logging completions
-#alias cli='nocorrect cli'
-
-#_cli_yargs_completions()
-#{
-#  local reply
-#  local si=$IFS
-#  IFS=$'
-#' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" cli --get-yargs-completions "${words[@]}"))
-#  IFS=$si
-#  _describe 'values' reply
-#}
-compdef _cli_yargs_completions cli
-###-end-cli-completions-###
-
-mkdir -p ~/.local/bin
-# ln -s /usr/bin/batcat ~/.local/bin/bat
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH:$HOME/bin"
+export BROWSER=open
 
-# export WEZTERM_LOG=trace
+NPM_PACKAGES="${XDG_DATA_HOME}/.npm-packages"
+
+export PATH="$PATH:$NPM_PACKAGES/bin"
+
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"

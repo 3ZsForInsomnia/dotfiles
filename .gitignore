@@ -8,3 +8,4 @@ packer_compiled
 node_modules
 rss/.newsboat/cache.db
 shada
+vim-sessions

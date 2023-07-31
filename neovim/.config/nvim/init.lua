@@ -24,7 +24,7 @@ o.exrc = true
 o.secure = true
 o.shada = "!,'100,<50,s10,h"
 
-o.timeoutlen = 300
+o.timeoutlen = 500
 o.timeout = true
 
 v.loader.enable()

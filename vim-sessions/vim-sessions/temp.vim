@@ -13,15 +13,15 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 wezterm/.wezterm.lua
-badd +52 ~/code/dotfiles/wezterm/.config/wezterm/on.lua
-badd +47 wezterm/.config/wezterm/utils.lua
+badd +506 neovim/.config/nvim/lua/plugins.lua
+badd +20 bash/.dates.sh
+badd +34 ~/code/dotfiles/bash/.local/bin/dates.js
 argglobal
 %argdel
-$argadd .
-edit ~/code/dotfiles/wezterm/.config/wezterm/on.lua
+$argadd ~/code/dotfiles
+edit neovim/.config/nvim/lua/plugins.lua
 argglobal
-balt wezterm/.wezterm.lua
+balt ~/code/dotfiles/bash/.local/bin/dates.js
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -30,14 +30,42 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-32
+505
 normal! zo
-let s:l = 50 - ((18 * winheight(0) + 18) / 36)
+508
+normal! zo
+515
+normal! zo
+541
+normal! zo
+548
+normal! zo
+557
+normal! zo
+571
+normal! zo
+579
+normal! zo
+586
+normal! zo
+593
+normal! zo
+600
+normal! zo
+616
+normal! zo
+620
+normal! zo
+633
+normal! zo
+645
+normal! zo
+let s:l = 506 - ((21 * winheight(0) + 22) / 44)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 50
-normal! 03|
+keepjumps 506
+normal! 0
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

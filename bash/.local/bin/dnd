@@ -4,6 +4,7 @@
 # $2 = slack status
 # $3 = time, or emoji
 # $4 = emoji
+# $5 = what sites to block, none, socialMedia, all, misc
 if [ "$1" == 'on' ]; then
   if [ -z "$4" ]; then
     emoji="tomato"
@@ -11,12 +12,19 @@ if [ "$1" == 'on' ]; then
     emoji=$4
   fi
 
+  if [[ -z "$5" ]]; then
+    block="socialMedia"
+  else
+    block=$5
+  fi
+
   shortcuts run "dnd on";
   curl $ZAPIER_WEBHOOK -G \
     --data-urlencode "message=$2" \
     --data-urlencode "emoji=:$emoji:" \
     --data-urlencode "time='in $3 minutes'";
-  node ~/luxafor.js "red"
+  node ~/luxafor.js "red";
+  node ~/site-block.js "block" "$block";
 elif [ "$1" == 'off' ]; then
   if [ -z "$3" ]; then
     emoji="large_green_circle"
@@ -30,9 +38,22 @@ elif [ "$1" == 'off' ]; then
     message=$2
   fi
 
+  if [[ -z "$4" ]]; then
+    color="green"
+  else
+    color=$4
+  fi
+
+  if [[ -z "$5" ]]; then
+    unblock="socialMedia"
+  else
+    unblock=$5
+  fi
+
   shortcuts run "dnd off";
-  curl $ZAPIER_WEBHOOK -G --data-urlencode "message=$message" --data-urlencode "emoji=:$emoji:"
-  node ~/luxafor.js "off"
+  curl $ZAPIER_WEBHOOK -G --data-urlencode "message=$message" --data-urlencode "emoji=:$emoji:";
+  node ~/luxafor.js "$color";
+  node ~/site-block.js "unblock" "$unblock";
 else
-  echo "Your command (\"$1\") was unrecognized! The options currently supported are \"on\" and \"off\""
+  echo "Your command (\"$1\") was unrecognized! The options currently supported are \"on\" and \"off\"";
 fi

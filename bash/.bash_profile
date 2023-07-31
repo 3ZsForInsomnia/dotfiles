@@ -7,6 +7,7 @@ source ~/.searching.sh
 source ~/.misc.sh
 source ~/.db.sh
 source ~/.dates.sh
+source ~/.config/mutt/base.sh
 
 alias src='j src'
 alias utils='j utils'
@@ -43,4 +44,11 @@ alias cal='gcalcli'
 export TZ='America/New_York';
 export CRON_LOG='$HOME/.local/state/cron/cron.log'
 
-alias getTheWeather='curl "wttr.in/HuntersPoint?format=1&u" > ~/.local/state/weather/currentWeather.txt'
+alias getTheWeather="curl 'wttr.in/$MY_LOCATION?format=1&u' > ~/.local/state/weather/currentWeather.txt"
+
+alias scon="/Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli --uid $(id -u $(whoami))"
+function scos() {
+  d=$(date -v+"$2"M -Iminutes)
+  l="$SELFCONTROL_BLOCKLISTS$1.selfcontrol"
+  scon start --blocklist "$l" --enddate "$d"
+}

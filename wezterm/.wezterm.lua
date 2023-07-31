@@ -10,8 +10,10 @@ return {
   underline_thickness = 2,
   switch_to_last_active_tab_when_closing_tab = true,
   use_fancy_tab_bar = true,
+  tab_bar_at_bottom = true,
+  status_update_interval = 500,
   window_frame = {
-    font_size = 18,
+    font_size = 14,
     active_titlebar_bg = '#000',
     inactive_titlebar_bg = '#666',
   },

@@ -60,7 +60,7 @@ lua
 ffffff/!
 969fb8/!
 function
-c/!
+#/!
 javascript
 print
 ajax
@@ -95,3 +95,6 @@ ngrx
 get
 workspace
 echo/!
+c/!
+C/!
+healthcheck

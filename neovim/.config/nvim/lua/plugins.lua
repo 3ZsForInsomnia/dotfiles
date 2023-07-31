@@ -173,8 +173,8 @@ return packer.startup(function(use)
 		end,
 	})
 	use("HiPhish/nvim-ts-rainbow2")
-  use("windwp/nvim-ts-autotag")
-  use("theHamsta/nvim-treesitter-pairs")
+	use("windwp/nvim-ts-autotag")
+	use("theHamsta/nvim-treesitter-pairs")
 	use({
 		"bennypowers/nvim-regexplainer",
 		config = function()
@@ -202,13 +202,13 @@ return packer.startup(function(use)
 			require("config.linting").setup()
 		end,
 	})
-  use({
-    "lewis6991/hover.nvim",
-    event = "BufReadPost",
-    config = function()
-      require("config.hover").setup()
-    end
-  })
+	use({
+		"lewis6991/hover.nvim",
+		event = "BufReadPost",
+		config = function()
+			require("config.hover").setup()
+		end,
+	})
 
 	--
 	--
@@ -456,7 +456,7 @@ return packer.startup(function(use)
 	use("bluz71/vim-moonfly-colors")
 	use({
 		"karb94/neoscroll.nvim",
-    event = "BufReadPost",
+		event = "BufReadPost",
 		config = function()
 			require("config.scroll-config").setup()
 		end,
@@ -472,7 +472,12 @@ return packer.startup(function(use)
 			})
 		end,
 	})
-  use({'matbme/JABS.nvim', config = function() require("config.jabs").setup() end })
+	use({
+		"matbme/JABS.nvim",
+		config = function()
+			require("config.jabs").setup()
+		end,
+	})
 	use({
 		"nvim-lualine/lualine.nvim",
 		event = "BufReadPost",
@@ -498,7 +503,7 @@ return packer.startup(function(use)
 	-- Filetype specific-ish plugins for filetype specific-ish tasks
 	--
 	--
-	use({ "kylechui/nvim-surround", event = "BufReadPost" })
+	use({ "kylechui/nvim-surround", event = "BufReadPost", config = function() require("nvim-surround").setup({}) end })
 	use({ "mattn/emmet-vim", ft = { "html", "jsx", "tsx", "hbs" } })
 	use({
 		"vuki656/package-info.nvim",
@@ -537,18 +542,18 @@ return packer.startup(function(use)
 		"lewis6991/gitsigns.nvim",
 		config = function()
 			require("config.gitsigns").setup()
-      require("keys.git").setup()
+			require("keys.git").setup()
 		end,
 	})
-  use ({
-    "NeogitOrg/neogit",
-    event = "BufReadPost",
-    cmd = "Neogit",
-    module = "neogit",
-    config = function()
-      require("config.neogit").setup()
-    end,
-  })
+	use({
+		"NeogitOrg/neogit",
+		event = "BufReadPost",
+		cmd = "Neogit",
+		module = "neogit",
+		config = function()
+			require("config.neogit").setup()
+		end,
+	})
 	use({
 		"pwntester/octo.nvim",
 		cmd = "Octo",
@@ -629,6 +634,22 @@ return packer.startup(function(use)
 		"m4xshen/hardtime.nvim",
 		config = function()
 			require("hardtime").setup()
+		end,
+	})
+
+	--
+	--
+	-- Email. For emailing things.
+	--
+	--
+	use({
+		"Konfekt/vim-notmuch-addrlookup",
+		requires = {
+			"Konfekt/vim-mutt-aliases",
+			"https://github.com/Konfekt/vim-mailquery",
+		},
+		config = function()
+			require("config.mail").setup()
 		end,
 	})
 

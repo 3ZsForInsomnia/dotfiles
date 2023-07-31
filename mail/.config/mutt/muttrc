@@ -1,0 +1,18 @@
+# vim: filetype=neomuttrc
+source /usr/local/share/mutt-wizard/mutt-wizard.muttrc
+source /Users/zachary/.config/mutt/accounts/comrade.topanga@gmail.com.muttrc
+macro index,pager i1 '<sync-mailbox><enter-command>source /Users/zachary/.config/mutt/accounts/comrade.topanga@gmail.com.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to comrade.topanga@gmail.com"
+
+set editor = "nvim +':set textwidth=0'"
+macro index,pager i2 '<sync-mailbox><enter-command>source /Users/zachary/.config/mutt/accounts/zachary@ethic.com.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to zachary@ethic.com"
+
+set use_threads=threads sort=last-date sort_aux=date
+unset envelope_from_address
+set use_envelope_from
+
+macro index,pager y "<enter-command>unset resolve<enter><enter-command>unset trash<enter><clear-flag>N<enter-command>set resolve<enter><delete-message><enter>"
+
+# Contacts management - goobook syncs with gmail
+set query_command="goobook query %s"
+bind editor <Tab> complete-query
+macro index,pager a "<pipe-message>goobook add<return>" "add the sender address to Google contacts"

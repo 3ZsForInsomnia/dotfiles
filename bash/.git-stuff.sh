@@ -28,7 +28,14 @@ alias gibid='g commit -a --amend -C head'
 alias gce='g commit --allow-empty'
 alias gc='g commit -v -m'
 gac() {
-  $(ga $2)
+  if [ -z "$2" ]
+  then
+    location="."
+  else
+    location=$2
+  fi
+
+  $(ga $location)
   $(gc $1)
 }
 gacp() {
