@@ -1,42 +1,36 @@
 local ag = vim.api.nvim_create_augroup
 local au = vim.api.nvim_create_autocmd
 
-au('TextYankPost',
-  {
-    pattern = "*",
-    command = "lua vim.highlight.on_yank({timeout=333})"
-  }
-)
+au("BufWritePost", {
+	pattern = "*",
+	command = "FormatWrite",
+})
 
-au(
-  { "BufWinEnter", "WinEnter" },
-  {
-    pattern = "term://*",
-    command = "setlocal filetype=zsh",
-  }
-)
-ag('term_open_insert', {})
-au(
-  { "TermOpen" },
-  {
-    group = 'term_open_insert',
-    pattern = '*',
-    command = [[
+au("TextYankPost", {
+	pattern = "*",
+	command = "lua vim.highlight.on_yank({timeout=333})",
+})
+
+au({ "BufWinEnter", "WinEnter" }, {
+	pattern = "term://*",
+	command = "setlocal filetype=zsh",
+})
+ag("term_open_insert", {})
+au({ "TermOpen" }, {
+	group = "term_open_insert",
+	pattern = "*",
+	command = [[
       startinsert
       setlocal nonumber norelativenumber nospell signcolumn=no noruler
-    ]]
-  }
-)
+    ]],
+})
 
-au(
-  { "User" },
-  {
-    pattern = "TelescopePreviewerLoaded",
-    command = "setlocal wrap",
-  }
-)
+au({ "User" }, {
+	pattern = "TelescopePreviewerLoaded",
+	command = "setlocal wrap",
+})
 
-vim.cmd [[
+vim.cmd([[
   function! RemoveQFItem()
     let curqfidx = line('.') - 1
     let qfall = getqflist()
@@ -45,20 +39,20 @@ vim.cmd [[
     :copen
   endfunction
   :command! RemoveQFItem :call RemoveQFItem()
-]]
-au('FileType', {
-  pattern = 'qf',
-  command = "map <buffer> dd <cmd>RemoveQFItem<cr>",
+]])
+au("FileType", {
+	pattern = "qf",
+	command = "map <buffer> dd <cmd>RemoveQFItem<cr>",
 })
 
-au('FileType', {
-  pattern = 'qf',
-  callback = function()
-    vim.opt_local.buflisted = false
-  end,
+au("FileType", {
+	pattern = "qf",
+	callback = function()
+		vim.opt_local.buflisted = false
+	end,
 })
 
-vim.cmd [[
+vim.cmd([[
   function! E()
     function! A(timer)
       echo ""
@@ -66,10 +60,8 @@ vim.cmd [[
     call timer_start(7500, 'A')
   endfunction
   :command! E :call E()
-]]
-au("CursorHold",
-  {
-    pattern = "*",
-    command = "call E()"
-  }
-)
+]])
+au("CursorHold", {
+	pattern = "*",
+	command = "call E()",
+})

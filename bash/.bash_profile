@@ -48,7 +48,19 @@ alias getTheWeather="curl 'wttr.in/$MY_LOCATION?format=1&u' > ~/.local/state/wea
 
 alias scon="/Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli --uid $(id -u $(whoami))"
 function scos() {
-  d=$(date -v+"$2"M -Iminutes)
-  l="$SELFCONTROL_BLOCKLISTS$1.selfcontrol"
+  if [[ -z "$1" ]]; then
+    block="socialMedia"
+  else
+    block=$1
+  fi
+
+  if [[ -z "$2" ]]; then
+    t="26"
+  else
+    t=$2
+  fi
+
+  d=$(date -v+"$t"M -Iminutes)
+  l="$SELFCONTROL_BLOCKLISTS$block.selfcontrol"
   scon start --blocklist "$l" --enddate "$d"
 }

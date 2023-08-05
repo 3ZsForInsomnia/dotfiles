@@ -36,6 +36,8 @@ wk.register({
 			n = { ":ObsidianNew ", "Create new note" },
 			q = { "<cmd>ObsidianQuickSwitch<cr>", "Open quick switcher" },
 			i = { "<cmd>ObsidianTemplate<cr>", "Insert template selected" },
+			l = { "<cmd>ObsidianLink<cr>", "Create link" },
+			f = { "<cmd>ObsidianFollowLink<cr>", "Follow link" },
 			o = {
 				"<cmd>ObsidianOpen<cr>",
 				"Open note in current buffer in Obsidian app",

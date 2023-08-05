@@ -503,7 +503,13 @@ return packer.startup(function(use)
 	-- Filetype specific-ish plugins for filetype specific-ish tasks
 	--
 	--
-	use({ "kylechui/nvim-surround", event = "BufReadPost", config = function() require("nvim-surround").setup({}) end })
+	use({
+		"kylechui/nvim-surround",
+		event = "BufReadPost",
+		config = function()
+			require("nvim-surround").setup({})
+		end,
+	})
 	use({ "mattn/emmet-vim", ft = { "html", "jsx", "tsx", "hbs" } })
 	use({
 		"vuki656/package-info.nvim",

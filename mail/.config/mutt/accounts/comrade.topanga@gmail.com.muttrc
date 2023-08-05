@@ -17,3 +17,5 @@ set record = "+Sent"
 
 macro index o "<shell-escape>mailsync comrade.topanga@gmail.com<enter>" "sync comrade.topanga@gmail.com"
 mailboxes "=INBOX" "=[Gmail]/Drafts"
+
+set mailcap_path = $XDG_CONFIG_HOME/mutt/accounts/comrade.topanga@gmail.com.mailcap

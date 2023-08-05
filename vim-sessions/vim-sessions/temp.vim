@@ -3,7 +3,7 @@ let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd ~/code/dotfiles
+cd ~/code/fe
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
@@ -13,15 +13,14 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +506 neovim/.config/nvim/lua/plugins.lua
-badd +20 bash/.dates.sh
-badd +34 ~/code/dotfiles/bash/.local/bin/dates.js
+badd +11 apps/platform/src/app/features/prospects/components/prospect-v2/prospect-details-portfolio-review/prospect-details-portfolio-review.component.ts
+badd +10 ~/code/fe/apps/platform/src/app/features/prospects/components/prospect-v2/prospect-details-portfolio-review/prospect-details-portfolio-review.component.html
 argglobal
 %argdel
-$argadd ~/code/dotfiles
-edit neovim/.config/nvim/lua/plugins.lua
+$argadd .
+edit apps/platform/src/app/features/prospects/components/prospect-v2/prospect-details-portfolio-review/prospect-details-portfolio-review.component.ts
 argglobal
-balt ~/code/dotfiles/bash/.local/bin/dates.js
+balt ~/code/fe/apps/platform/src/app/features/prospects/components/prospect-v2/prospect-details-portfolio-review/prospect-details-portfolio-review.component.html
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -30,42 +29,12 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-505
-normal! zo
-508
-normal! zo
-515
-normal! zo
-541
-normal! zo
-548
-normal! zo
-557
-normal! zo
-571
-normal! zo
-579
-normal! zo
-586
-normal! zo
-593
-normal! zo
-600
-normal! zo
-616
-normal! zo
-620
-normal! zo
-633
-normal! zo
-645
-normal! zo
-let s:l = 506 - ((21 * winheight(0) + 22) / 44)
+let s:l = 11 - ((10 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 506
-normal! 0
+keepjumps 11
+normal! 064|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

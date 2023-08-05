@@ -37,11 +37,11 @@ alias c='clear'
 alias rmrf='rm -rf'
 alias cls='c; ls'
 
-alias bashrc='v ~/src/dotfiles/.bashrc'
-alias bashpro='v ~/src/dotfiles/.bash_profile'
-alias vimrc='v ~/src/dotfiles/neovim/.config/nvim/init.lua'
-alias zshrc='v ~/src/dotfiles/zsh/.zshrc'
-alias wezrc='v ~/src/dotfiles/wezterm/.wezterm.lua'
+alias bashrc='v ~/code/dotfiles/.bashrc'
+alias bashpro='v ~/code/dotfiles/.bash_profile'
+alias vimrc='v ~/code/dotfiles/neovim/.config/nvim/init.lua'
+alias zshrc='v ~/code/dotfiles/zsh/.zshrc'
+alias wezrc='v ~/code/dotfiles/wezterm/.wezterm.lua'
 
 alias rebash='source ~/.bashrc'
 alias repro='source ~/.bash_profile'
@@ -49,8 +49,16 @@ alias rezsh='exec zsh'
 
 alias unstow='stow --target=/Users/zachary/'
 function unstowAll() {
-  cd ~/src/dotfiles/
-  for d in */ ; do
-      unstow $d
+  cd ~/code/dotfiles/
+  for d in */; do
+    unstow $d
   done
+}
+
+function default() {
+  if [[ -z "$1" ]]; then
+    echo "$2"
+  else
+    echo "$1"
+  fi
 }

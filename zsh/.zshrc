@@ -4,6 +4,10 @@ source ~/.p10k.zsh
 source ~/custom-completions.zsh
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+
 setopt auto_cd
 setopt correct_all
 setopt append_history
@@ -28,7 +32,7 @@ source ~/.bashrc
 # ZVM_VI_HIGHLIGHT_BACKGROUND=#fe9a4a
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_STRATEGY=(completion history)
 
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_CONFIG_HOME=$HOME/.config
@@ -72,7 +76,7 @@ pre_validation() {
 autoload -U add-zsh-hook
 add-zsh-hook preexec pre_validation
 
-# zstyle ':completion:*' menu select
+zstyle ':completion:*' menu select
 zmodload zsh/complist
 # use the vi navigation keys in menu completion
 # bindkey '^j' expand-or-complete 
@@ -86,16 +90,18 @@ function git_main_branch() {
   echo $def
 }
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH="/opt/homebrew/bin:$PATH:$HOME/bin"
 export BROWSER=open
 
 NPM_PACKAGES="${XDG_DATA_HOME}/.npm-packages"
-
 export PATH="$PATH:$NPM_PACKAGES/bin"
 
 # Preserve MANPATH if you already defined it somewhere in your config.
 # Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
 export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+
+GPG_TTY=$(tty)
+export GPG_TTY

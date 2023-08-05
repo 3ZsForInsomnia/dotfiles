@@ -38,11 +38,10 @@ function M.setup()
 			end,
 		},
 		sources = {
-			{ name = "luasnip" },
 			{ name = "nvim_lsp_signature_help" },
       { name = "nvim_lsp_document_symbol" },
 			{ name = "nvim_lsp" },
-			{ name = "treesitter" },
+			{ name = "luasnip" },
 			{ name = "emmet_vim" },
 			{ name = "ctags" },
 			{ name = "path" },
@@ -56,6 +55,7 @@ function M.setup()
 					end,
 				},
 			},
+			{ name = "treesitter" },
 		},
 		mapping = {
 			["<Tab>"] = cmp.mapping(function(fallback)

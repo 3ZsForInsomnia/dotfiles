@@ -18,6 +18,7 @@ function lsrFunc() {
 alias lsr='lsrFunc'
 alias lsrg='exa -lahRTFUm --git -I ".git"--icons G'
 
+alias grep='rg -i'
 alias find='fd -H'
 alias f='find'
 
