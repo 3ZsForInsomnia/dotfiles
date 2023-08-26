@@ -12,6 +12,7 @@ source ~/.config/mutt/base.sh
 alias src='j src'
 alias utils='j utils'
 alias dots='j dots'
+alias shots='j shots'
 
 alias fe='j fe'
 alias plat='j plat'

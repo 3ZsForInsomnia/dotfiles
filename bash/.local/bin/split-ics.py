@@ -25,6 +25,7 @@ def extract_event(lines):
 
     if len(lines) > 0:
         event.append(lines.pop(0))
+        event.append("\n")
 
         return "\n".join(event)
     else:
