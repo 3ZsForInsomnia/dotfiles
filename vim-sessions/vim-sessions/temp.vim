@@ -13,14 +13,23 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +11 apps/platform/src/app/features/prospects/components/prospect-v2/prospect-details-portfolio-review/prospect-details-portfolio-review.component.ts
-badd +10 ~/code/fe/apps/platform/src/app/features/prospects/components/prospect-v2/prospect-details-portfolio-review/prospect-details-portfolio-review.component.html
+badd +78 ~/code/fe/apps/platform/src/app/features/prospects/pages/prospect-page-v2/prospect-page-v2.component.ts
+badd +266 ~/code/fe/apps/platform/src/app/features/prospects/prospects.routing.ts
+badd +12 ~/code/fe/apps/platform/src/app/features/prospects/pages/prospect-state-debug-v2/prospect-state-debug-v2.component.ts
+badd +1 ~/code/fe/apps/platform/src/app/features/prospects/pages/prospect-state-debug-v2/prospect-state-debug-v2.component.html
 argglobal
 %argdel
-$argadd .
-edit apps/platform/src/app/features/prospects/components/prospect-v2/prospect-details-portfolio-review/prospect-details-portfolio-review.component.ts
+$argadd ~/code/fe
+edit ~/code/fe/apps/platform/src/app/features/prospects/pages/prospect-page-v2/prospect-page-v2.component.ts
+wincmd t
+let s:save_winminheight = &winminheight
+let s:save_winminwidth = &winminwidth
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
 argglobal
-balt ~/code/fe/apps/platform/src/app/features/prospects/components/prospect-v2/prospect-details-portfolio-review/prospect-details-portfolio-review.component.html
+balt ~/code/fe/apps/platform/src/app/features/prospects/prospects.routing.ts
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -29,12 +38,16 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 11 - ((10 * winheight(0) + 18) / 36)
+25
+normal! zo
+77
+normal! zo
+let s:l = 78 - ((32 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 11
-normal! 064|
+keepjumps 78
+normal! 04|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -42,6 +55,8 @@ endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20
 let &shortmess = s:shortmess_save
+let &winminheight = s:save_winminheight
+let &winminwidth = s:save_winminwidth
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)

@@ -65,6 +65,7 @@ wk.register({
 	},
 	["<M-d>"] = { '"_d', "Delete but preserve yanked register" },
 	["<esc>"] = { "<esc><cmd>nohlsearch<cr>", "Escape and stop highlighting search" },
+	["*"] = { "*zz", "Search word under cursor and center" },
 })
 
 wk.register({
@@ -135,29 +136,29 @@ wk.register({
 	['"""'] = { '"<C-o>A"', 'Wrap everything from cursor to end of line in ""' },
 	['""w'] = { '"<C-o>w<bs>" ', 'Wrap everything from cursor to end of word in ""' },
 	['""b'] = { '"<C-o>2b"', 'Wrap everything from cursor to end of word in ""' },
-	['<C-;>'] = { '<C-o>diw"<c-o>p" <c-o>2b<bs>', 'Wrap current word in ""' },
+	["<C-;>"] = { '<C-o>diw"<c-o>p" <c-o>2b<bs>', 'Wrap current word in ""' },
 
 	["'''"] = { "'<C-o>A'", "Wrap everything from cursor to end of line in ''" },
 	["''w"] = { "'<C-o>w<bs>' ", "Wrap everything from cursor to end of word in ''" },
 	["''b"] = { "'<C-o>2b'", "Wrap everything from cursor to end of word in ''" },
-	['<C-\'>'] = { "<C-o>diw'<c-o>p' <c-o>2b<bs>", "Wrap current word in ''" },
+	["<C-'>"] = { "<C-o>diw'<c-o>p' <c-o>2b<bs>", "Wrap current word in ''" },
 
 	["((("] = { "(<C-o>A)", "Wrap everything from cursor to end of line in ()" },
 	["((w"] = { "(<C-o>w<bs>) ", "Wrap next word in ()" },
 	["((b"] = { ")<C-o>2b(", "Wrap previous word in ()" },
-	['<C-9>'] = { "<C-o>diw(<c-o>p) <c-o>2b<bs>", "Wrap current word in ()" },
+	["<C-9>"] = { "<C-o>diw(<c-o>p) <c-o>2b<bs>", "Wrap current word in ()" },
 
 	["{{{"] = { "{<C-o>A}", "Wrap everything from cursor to end of line in {}" },
 	["{{w"] = { "{<C-o>w<bs>} ", "Wrap next word in {}" },
 	["{{b"] = { "}<C-o>2b{", "Wrap previous word in {}" },
-	['<C-8>'] = { "<C-o>diw{<c-o>p} <c-o>2b<bs>", "Wrap current word in {}" },
+	["<C-8>"] = { "<C-o>diw{<c-o>p} <c-o>2b<bs>", "Wrap current word in {}" },
 
 	["[[["] = { "[<C-o>A]", "Wrap everything from cursor to end of line in []" },
 	["[[w"] = { "[<C-o>w<bs>] ", "Wrap next word in []" },
 	["[[b"] = { "]<C-o>2b[", "Wrap previous word in []" },
-	['<C-7>'] = { "<C-o>diw[<c-o>p] <c-o>2b<bs>", "Wrap current word in []" },
+	["<C-7>"] = { "<C-o>diw[<c-o>p] <c-o>2b<bs>", "Wrap current word in []" },
 
-  ['<C-4>'] = { "<C-o>diw${<c-o>p} <c-o>2b<bs>", "Wrap current word in ${}" },
+	["<C-4>"] = { "<C-o>diw${<c-o>p} <c-o>2b<bs>", "Wrap current word in ${}" },
 
 	["<C-"] = {
 		["c>"] = { "<esc>`^", "Escape and keep location" },

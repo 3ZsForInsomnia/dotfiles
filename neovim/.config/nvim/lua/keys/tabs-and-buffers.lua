@@ -9,7 +9,7 @@ local deleteNoNameBuffers = function()
 
 	for _, buffer in ipairs(buffers) do
 		if a.nvim_buf_get_name(buffer) == "" then
-      a.nvim_buf_delete(buffer, {})
+			a.nvim_buf_delete(buffer, {})
 		end
 	end
 end
@@ -24,8 +24,8 @@ wk.register({
 		n = { "<cmd>new<cr><C-w>o", "Create new" },
 		t = { "<cmd>new<cr><C-w>o<cmd>terminal<cr>", "Create new" },
 		k = { "<cmd>bd<cr>", "Kill" },
-    u = { deleteNoNameBuffers, "Kill all unnamed buffers" },
-    l = { "<cmd>JABSOpen<cr>", "View open" },
+		u = { deleteNoNameBuffers, "Kill all unnamed buffers" },
+		l = { "<cmd>JABSOpen<cr>", "View open" },
 		g = { ":b ", "Go to" },
 		c = { "<C-g>", "Show path" },
 		a = { "<cmd>b#<cr>", "Go to last edited" },
@@ -65,4 +65,9 @@ wk.register({
 	["]b"] = { "<cmd>bn<cr>", "Go to next buffer" },
 	["<C-w>o"] = "Fullscreen current buffer if in buffer split",
 	["<C-w>c"] = "Close split",
+})
+
+wk.register({
+	zh = { "Hzz", "Go to top of page and center it" },
+	zl = { "Lzz", "Go to bottom of page and center it" },
 })

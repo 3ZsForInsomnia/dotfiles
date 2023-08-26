@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 dotenv.config({ path: "/Users/zachary/.local/.bin/notes/.env" });
 export const { NOTES_LOCATION: notesLocation } = process.env;
 
-const homeNote = `${notesLocation}/00 - Home.md`;
+const homeNote = `${notesLocation}/A0 - Home.md`;
 
 export const slice = (start) => (str) => str.slice(start);
 export const truthy = (val) => !!val;
@@ -18,8 +18,8 @@ export const truncateString = (str, length) =>
     : str;
 export const replace =
   (pattern, replaceWith = "") =>
-    (str) =>
-      str.replace(pattern, replaceWith);
+  (str) =>
+    str.replace(pattern, replaceWith);
 
 export const justNumbers = (str) => str.replace(/(^\d+)(.+$)/i, "$1");
 

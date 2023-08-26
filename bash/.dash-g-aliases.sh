@@ -1,4 +1,5 @@
 alias -g P='| peco'
+alias -g F='| fzf'
 alias -g L='| less'
 alias -g G='| rg -i '
 alias -g C='| cut'

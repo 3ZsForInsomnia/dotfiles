@@ -29,7 +29,7 @@ alias emptyTheMightTwerk='twerk -x'
 alias killTwerkHistory='twerk -xxx'
 alias didTwerk='twerk -d'
 
-alias trackedTime='node ~/src/logging-cli/harvest/client.js';
+alias trackedTime='node ~/src/logging-cli/harvest/client.js'
 alias food='node ~/src/logging-cli/cal-score.js'
 alias shareTodaysTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js -t); echo $value PC; echo $value'
 alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js); echo $value PC; echo $value'
@@ -39,15 +39,16 @@ alias keepAwake='cd /Applications; ./delay-screensaver.command'
 alias rss='newsboat;'
 alias mail='neomutt'
 alias cal='gcalcli'
-. "$HOME/.cargo/env"
+# . "$HOME/.cargo/env"
 
-export TZ='America/New_York';
-export CRON_LOG='$HOME/.local/state/cron/cron.log'
+export TZ='America/New_York'
+export CRON_LOG="$HOME/.local/state/cron/cron.log"
 
 alias getTheWeather="curl 'wttr.in/$MY_LOCATION?format=1&u' > ~/.local/state/weather/currentWeather.txt"
 
-alias scon="/Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli --uid $(id -u $(whoami))"
-function scos() {
+# alias scon="/Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli --uid $(id -u $(whoami))"
+alias scon="/Applications/SelfControl.app/Contents/MacOS/org.eyebeam.SelfControl $(id -u $(whoami)) --install"
+function selfControlBlock() {
   if [[ -z "$1" ]]; then
     block="socialMedia"
   else
@@ -60,7 +61,11 @@ function scos() {
     t=$2
   fi
 
-  d=$(date -v+"$t"M -Iminutes)
+  d="$(date -v+"$t"M -u "+%Y-%m-%d %H:%M:%S")"
   l="$SELFCONTROL_BLOCKLISTS$block.selfcontrol"
-  scon start --blocklist "$l" --enddate "$d"
+  # scon start --blocklist "$l" --enddate "$d"
+  scon "$l" "$d"
 }
+alias scos="selfControlBlock"
+
+alias lux="node ~/luxafor.js"

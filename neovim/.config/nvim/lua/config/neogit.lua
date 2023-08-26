@@ -76,9 +76,11 @@ M.setup = function()
 				folded = true,
 			},
 			unpulled = {
+				hidden = false,
 				folded = true,
 			},
 			unmerged = {
+				hidden = false,
 				folded = true,
 			},
 			recent = {
@@ -86,20 +88,7 @@ M.setup = function()
 			},
 		},
 		-- override/add mappings
-		mappings = {
-			-- modify status buffer mappings
-			status = {
-				-- Adds a mapping with "B" as key that does the "BranchPopup" command
-				["B"] = "BranchPopup",
-				-- Removes the default mapping of "s"
-				["s"] = "",
-			},
-			-- Modify fuzzy-finder buffer mappings
-			finder = {
-				-- Binds <cr> to trigger select action
-				["<cr>"] = "select",
-			},
-		},
+		mappings = {},
 	})
 end
 

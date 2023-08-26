@@ -20,6 +20,7 @@ source $HOME/zshmarks/zshmarks.plugin.zsh
 source $HOME/omz-git-completions.zsh
 source $HOME/zsh-you-should-use/you-should-use.plugin.zsh
 source $HOME/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $HOME/auto-trello.zsh
 
 zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
 fpath=(~/zsh-completions/src ~/.zsh/ $fpath)
@@ -105,3 +106,5 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
 GPG_TTY=$(tty)
 export GPG_TTY
+
+export CMAKE_INSTALL_PREFIX=/usr/local/bin/

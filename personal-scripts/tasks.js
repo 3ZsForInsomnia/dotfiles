@@ -1,7 +1,8 @@
 const https = require("https");
 const { execSync } = require("node:child_process");
 const nfzf = require("node-fzf");
-const { CLICKUP_TEAM, CLICKUP_ME, CLICKUP_KEY, DEFAULT_TASK_TIME } = process.env;
+const { CLICKUP_TEAM, CLICKUP_ME, CLICKUP_KEY, DEFAULT_TASK_TIME } =
+  process.env;
 
 const boards = [
   "0 Inbox",
@@ -15,7 +16,7 @@ const boards = [
 const getCardsForBoard = (board) =>
   `trello show-cards -b "${board}" -l "Doing"`;
 const cards = [];
-const prettifyCard = (card) => card.split("\n")[1].split(" - ")[1];
+const prettifyCard = (card) => card.split("\n")[1];
 
 boards.forEach((board) => {
   const cmd = getCardsForBoard(board);
@@ -26,11 +27,11 @@ boards.forEach((board) => {
 
 const defaultItems = ["I am in a meeeting", "Zach is working", "custom"];
 
-let [time, ...args] = process.argv.slice(2);
+let [useDnd, time, ...args] = process.argv.slice(2);
 if (!time) time = DEFAULT_TASK_TIME;
 const dndDuration = time * 60;
 
-const prettyTask = (task) => `${task.name} - ${task.url}`;
+const prettyTask = (task) => `c:${task.id} ${task.name} - ${task.url}`;
 const sortTasks = (a, b) => a.due_date > b.due_date;
 
 const options = {
@@ -41,33 +42,69 @@ const options = {
   },
 };
 
-const getMyTickets = (callback) => {
+const request = (options, callback) => {
   https.get(options, (resp) => {
     let str = "";
-    resp.on("data", function(chunk) {
+    resp.on("data", function (chunk) {
       str += chunk;
     });
 
-    resp.on("end", function() {
-      const data = JSON.parse(str).tasks.sort(sortTasks).map(prettyTask);
-      const allItems = [...data, ...cards, ...defaultItems];
-      nfzf(allItems, (choice) =>
-        callback(
-          choice.selected.value === "custom" ? args[0] : choice.selected.value
-        )
-      );
+    resp.on("end", function () {
+      callback(str);
     });
   });
 };
 
-const ticketName = (task) => task.split(" - https")[0];
+const getMyTickets = (callback) => {
+  const onEndCallback = (str) => {
+    const data = JSON.parse(str).tasks.sort(sortTasks).map(prettyTask);
+    const allItems = [...data, ...cards, ...defaultItems];
+    nfzf(allItems, (choice) =>
+      callback(
+        choice.selected.value === "custom" ? args[0] : choice.selected.value
+      )
+    );
+  };
+
+  request(options, onEndCallback);
+};
+
+const ticketName = (task) =>
+  task.split(" - https")[0].split(" ").slice(1).join(" ");
 
 const fn = (data) => {
   const status = ticketName(data);
 
   execSync(`dnd on "Currently working on: ${status}" ${time}`);
-  execSync(`sleep ${dndDuration}; terminal-notifier -title "DND turning off" -message "${status}" -sound default`);
-  execSync(`dnd off`)
+  execSync(
+    `sleep ${dndDuration}; terminal-notifier -title "DND turning off" -message "${status}" -sound default`
+  );
+  execSync(`dnd off`);
 };
 
-getMyTickets(fn);
+const prettyPrintClickUpticket = (task) => {
+  return task;
+};
+
+if (useDnd) getMyTickets(fn);
+else {
+  getMyTickets((card) => {
+    if (card.match(/\* [\w\d]+ - /)) {
+      const id = card.split(" - ")[0].replace("* ", "");
+      const detailsCommand = `trello card-details ${id}`;
+      console.log(execSync(detailsCommand).toString());
+      process.exit();
+    } else {
+      const id = card.split(" ")[0].replace("c:", "");
+      const cardDetailOptions = {
+        ...options,
+        path: `/api/v2/task/${id}/`,
+      };
+      const clickupDetailsCallback = (str) => {
+        console.log(prettyPrintClickUpticket(str));
+        process.exit();
+      };
+      request(cardDetailOptions, clickupDetailsCallback);
+    }
+  });
+}

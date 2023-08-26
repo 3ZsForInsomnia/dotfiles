@@ -1,7 +1,7 @@
 local M = {}
 
-local sp = "cspell"
-local esl = { "eslint_d", sp }
+-- local sp = "cspell"
+local esl = { "eslint_d" }
 
 M.setup = function()
 	local lint = require("lint")
@@ -13,20 +13,21 @@ M.setup = function()
 		typescriptreact = esl,
 		zsh = { "shellcheck" },
 		sh = { "shellcheck" },
-		yaml = { "yamllint", sp },
-		css = { "stylelint", sp },
-		scss = { "stylelint", sp },
-		markdown = { "markdownlint", sp },
-		lua = { "luacheck", sp },
-		json = { "jsonlint", sp },
-		python = { "flake8", sp },
+		yaml = { "yamllint" },
+		css = { "stylelint" },
+		scss = { "stylelint" },
+		markdown = { "markdownlint" },
+		lua = { "luacheck" },
+		json = { "jsonlint" },
+		python = { "flake8" },
+		-- yaml = { "yamllint", sp },
+		-- css = { "stylelint", sp },
+		-- scss = { "stylelint", sp },
+		-- markdown = { "markdownlint", sp },
+		-- lua = { "luacheck", sp },
+		-- json = { "jsonlint", sp },
+		-- python = { "flake8", sp },
 	}
-
-	vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-		callback = function()
-			lint.try_lint()
-		end,
-	})
 end
 
 return M

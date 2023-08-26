@@ -15,7 +15,7 @@ matches:
       - name: mydate
         type: date
         params:
-          format: "%m/%d/%Y"
+          format: "%Y-%m-%d"
   - trigger: ":e1"
     replace: "comrade.topanga@gmail.com"
   - trigger: ":e2"
@@ -56,7 +56,7 @@ matches:
     replace: "If I remember correctly"
   - trigger: ":sig"
     replace: >
-            Thank you,
-              --Zachary Levine
+      Thank you,
+        --Zachary Levine
 
 # And much more! For more information, visit the docs: https://espanso.org/docs/

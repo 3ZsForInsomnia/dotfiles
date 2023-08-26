@@ -63,6 +63,7 @@ end
 
 return {
 	s("de", { t("debugger;") }),
+	s({ trig = "cl", name = "console.log", dscr = "Log a thing" }, { t('console.log("'), i(1), t('");') }),
 	s(
 		{ trig = "clv", name = 'console.log("$1", $1);', dscr = "Log a thing" },
 		{ t('console.log("'), i(1), t('", '), rep(1), t(");") }

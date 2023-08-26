@@ -15,7 +15,7 @@ o.swapfile = false
 o.backup = true
 o.backupdir = "/Users/zachary/.local/state/nvim/backup//"
 o.undofile = true
-o.lazyredraw = true
+o.lazyredraw = false
 o.mouse = ""
 o.grepprg = "rg --vimgrep --no-heading"
 -- Enables reading vimrc in folder where vim is opened
@@ -23,6 +23,7 @@ o.exrc = true
 -- Ensures other vimrc files cannot write/do more than o.variables and whatnot
 o.secure = true
 o.shada = "!,'100,<50,s10,h"
+o.shadafile = "/Users/zachary/vim-sessions/main.shada"
 
 o.timeoutlen = 500
 o.timeout = true
@@ -42,13 +43,13 @@ g.matchup_matchparen_offscreen = { method = "popup" }
 g.mkdp_filetypes = { "markdown" }
 
 local function pathExpand()
-  if v.fn.getcmdtype() == ":" then
-    return v.fn.expand("%:h") .. "/"
-  else
-    return "%%"
-  end
+	if v.fn.getcmdtype() == ":" then
+		return v.fn.expand("%:h") .. "/"
+	else
+		return "%%"
+	end
 end
 
 v.keymap.set("c", "%%", function()
-  return pathExpand()
+	return pathExpand()
 end, { expr = true })

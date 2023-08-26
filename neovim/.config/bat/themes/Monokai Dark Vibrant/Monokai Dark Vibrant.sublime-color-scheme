@@ -1,0 +1,242 @@
+{
+  "name": "Monokai Dark Vibrant",
+  "author": "",
+  "globals": {
+    "background": "#16171D",
+    "foreground": "#f8f8f0",
+    "caret": "#f8f8f0",
+    "block_caret": "#f8f8f0",
+    "line_highlight": "#1F2328",
+    "misspelling": "#c24038",
+    "fold_marker": "#C5C5C5",
+    "accent": "#C5C5C5",
+    "gutter": "",
+    "gutter_foreground": "#495162",
+    "line_diff_added": "#00809B33",
+    "line_diff_modified": "",
+    "line_diff_deleted": "",
+    "selection": "#3E4451",
+    "inactive_selection": "#2c313a",
+    "inactive_selection_foreground": "#d7dae0",
+    "highlight": "#314365",
+    "find_highlight": "#314365",
+    "find_highlight_foreground": "#C5C5C5",
+    "guide": "#3B4048",
+    "active_guide": "",
+    "stack_guide": "",
+    "brackets_foreground": "",
+    "tags_foreground": "",
+    "shadow": ""
+  },
+  "variables": {
+    "black": "",
+    "white": "",
+    "red": "",
+    "green": "",
+    "yellow": "",
+    "orange": "",
+    "blue": "",
+    "magenta": "",
+    "cyan": ""
+  },
+  "rules": [
+    {
+      "name": "Comment",
+      "foreground": "#ABABAB",
+      "font_style": "",
+      "scope": "comment"
+    },
+    {
+      "name": "Comment annotations",
+      "foreground": "#19D1E5",
+      "font_style": "",
+      "scope": "storage.type.class.jsdoc"
+    },
+    {
+      "name": "Comment variable",
+      "foreground": "#FFFFFF",
+      "font_style": "",
+      "scope": "variable.other.jsdoc"
+    },
+    {
+      "name": "Operators",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "keyword.operator"
+    },
+    {
+      "name": "Default modifiers",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "storage.modifier"
+    },
+    {
+      "name": "Class/Constructor modifier",
+      "foreground": "#19D1E5",
+      "font_style": "",
+      "scope": "storage.type"
+    },
+    {
+      "name": "Functions",
+      "foreground": "#81F900",
+      "font_style": "",
+      "scope": "entity.name.function, meta.function-call.generic"
+    },
+    {
+      "name": "Class types",
+      "foreground": "#45A1ED",
+      "font_style": "",
+      "scope": "entity.name.type"
+    },
+    {
+      "name": "Inherritance",
+      "foreground": "#81F900",
+      "font_style": "",
+      "scope": "entity.other.inherited-class"
+    },
+    {
+      "name": "Tag",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "entity.name.tag"
+    },
+    {
+      "name": "Section",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "entity.name.section"
+    },
+    {
+      "name": "Attribute",
+      "foreground": "#81F900",
+      "font_style": "",
+      "scope": "entity.other.attribute-name"
+    },
+    {
+      "name": "This",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "variable.language"
+    },
+    {
+      "name": "Constant",
+      "foreground": "#19D1E5",
+      "font_style": "",
+      "scope": "constant.language"
+    },
+    {
+      "name": "Arguments",
+      "foreground": "#FF9700",
+      "font_style": "",
+      "scope": "variable.parameter"
+    },
+    {
+      "name": "String",
+      "foreground": "#FFD945",
+      "font_style": "",
+      "scope": "string"
+    },
+    {
+      "name": "Numbers",
+      "foreground": "#FF4DFF",
+      "font_style": "",
+      "scope": "constant.numeric"
+    },
+    {
+      "name": "Boolean",
+      "foreground": "#FF4DFF",
+      "font_style": "",
+      "scope": "constant.language.boolean, constant.language.json"
+    },
+    {
+      "name": "Property",
+      "foreground": "#FFFFFF",
+      "font_style": "",
+      "scope": "variable.other.property"
+    },
+    {
+      "name": "Object property",
+      "foreground": "#45A1ED",
+      "font_style": "",
+      "scope": "variable.other.object"
+    },
+    {
+      "name": "Expressions begin/end",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "punctuation.definition.template-expression.begin, punctuation.definition.template-expression.end, punctuation.definition.interpolation.begin.bracket.curly, punctuation.definition.interpolation.end.bracket.curly"
+    },
+    {
+      "name": "Variable accessor",
+      "foreground": "#FFFFFF",
+      "font_style": "",
+      "scope": "punctuation.accessor, punctuation.definition.entity"
+    },
+    {
+      "name": "Seprator key/value",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "punctuation.separator.key-value"
+    },
+    {
+      "name": "Seprator key/value mapping",
+      "foreground": "#FFFFFF",
+      "font_style": "",
+      "scope": "punctuation.separator.key-value.mapping"
+    },
+    {
+      "name": "Headings",
+      "foreground": "#ABABAB",
+      "font_style": "",
+      "scope": "punctuation.definition.heading"
+    },
+    {
+      "name": "Keyword",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "keyword"
+    },
+    {
+      "name": "Other keywords",
+      "foreground": "#19D1E5",
+      "font_style": "",
+      "scope": "keyword.type"
+    },
+    {
+      "name": "Support",
+      "foreground": "#19D1E5",
+      "font_style": "",
+      "scope": "support"
+    },
+    {
+      "name": "Support functions",
+      "foreground": "#81F900",
+      "font_style": "",
+      "scope": "support.function"
+    },
+    {
+      "name": "Support class",
+      "foreground": "#45A1ED",
+      "font_style": "",
+      "scope": "support.class"
+    },
+    {
+      "name": "Support class component",
+      "foreground": "#FF3F4F",
+      "font_style": "",
+      "scope": "support.class.component"
+    },
+    {
+      "name": "Support class built in",
+      "foreground": "#45A1ED",
+      "font_style": "",
+      "scope": "support.class.builtin"
+    },
+    {
+      "name": "Support link",
+      "foreground": "#19D1E5",
+      "font_style": "",
+      "scope": "markup.underline"
+    }
+  ]
+}

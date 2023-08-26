@@ -54,13 +54,18 @@ return packer.startup(function(use)
 	--
 	use("MunifTanjim/nui.nvim")
 	use("nvim-lua/plenary.nvim")
-	use("kamykn/popup-menu.nvim")
 	use("wbthomason/packer.nvim")
 	use("kkharji/sqlite.lua")
 	use("rcarriga/nvim-notify")
 	use("zdcthomas/yop.nvim")
 	use("winston0410/cmd-parser.nvim")
 	use({ "dstein64/vim-startuptime", cmd = "StartupTime" })
+	use({
+		"folke/noice.nvim",
+		config = function()
+			require("config.noice").setup()
+		end,
+	})
 	use({
 		"stevearc/dressing.nvim",
 		config = function()
@@ -122,7 +127,6 @@ return packer.startup(function(use)
 				height = 20,
 				action_keys = { open_tab = { "<c-t>" } },
 			})
-			-- require("keys.trouble-lazy")
 		end,
 	})
 	use({
@@ -141,6 +145,12 @@ return packer.startup(function(use)
 				override = function(root_dir, options) end,
 				lspconfig = true,
 			})
+		end,
+	})
+	use({
+		"smjonas/inc-rename.nvim",
+		config = function()
+			require("inc_rename").setup()
 		end,
 	})
 
@@ -167,7 +177,7 @@ return packer.startup(function(use)
 	use("RRethy/nvim-treesitter-textsubjects")
 	use({
 		"m-demare/hlargs.nvim",
-		event = "VimEnter",
+		event = "BufReadPost",
 		config = function()
 			require("config.hlargs").setup()
 		end,
@@ -177,8 +187,9 @@ return packer.startup(function(use)
 	use("theHamsta/nvim-treesitter-pairs")
 	use({
 		"bennypowers/nvim-regexplainer",
+		event = "BufReadPost",
 		config = function()
-			require("regexplainer").setup()
+			require("config.regexplainer").setup()
 		end,
 	})
 
@@ -377,6 +388,7 @@ return packer.startup(function(use)
 		"folke/which-key.nvim",
 		config = function()
 			require("config.whichkey").setup()
+			require("keys.git").setup()
 		end,
 	})
 	use({
@@ -542,14 +554,16 @@ return packer.startup(function(use)
 	-- Git statuses and diffs and PRs, oh my
 	--
 	--
-	use({ "sindrets/diffview.nvim" })
-	use({ "ruanyl/vim-gh-line", cmd = { "GH", "GHInteractive" } })
 	use({
 		"lewis6991/gitsigns.nvim",
+		event = "BufReadPost",
 		config = function()
 			require("config.gitsigns").setup()
-			require("keys.git").setup()
 		end,
+		requires = {
+			"sindrets/diffview.nvim",
+			{ "ruanyl/vim-gh-line", cmd = { "GH", "GHInteractive" } },
+		},
 	})
 	use({
 		"NeogitOrg/neogit",
@@ -605,6 +619,7 @@ return packer.startup(function(use)
 	})
 	use({
 		"epwalsh/obsidian.nvim",
+		event = "BufReadPost",
 		cmd = {
 			"Obsidian",
 			"ObsidianNew",
@@ -616,6 +631,7 @@ return packer.startup(function(use)
 		},
 		config = function()
 			require("config.obsidian").setup()
+			require("keys.obsidian")
 		end,
 	})
 	use({ "godlygeek/tabular", cmd = "Tabularize" })
@@ -640,6 +656,16 @@ return packer.startup(function(use)
 		"m4xshen/hardtime.nvim",
 		config = function()
 			require("hardtime").setup()
+		end,
+	})
+
+	use({
+		"niuiic/code-shot.nvim",
+		requires = {
+			"niuiic/core.nvim",
+		},
+		config = function()
+			require("config.code-screenshots").setup()
 		end,
 	})
 

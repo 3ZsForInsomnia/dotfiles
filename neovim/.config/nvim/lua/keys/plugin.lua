@@ -4,9 +4,49 @@ local f = function(command)
 	return "<cmd>lua require('refactoring').refactor('" .. command .. "')<cr>"
 end
 
+local v = vim.fn
+local getRangeByMarksOrLines = function(a, b)
+	local locA = v.getpos("'" .. a)
+	local locB = v.getpos("'" .. b)
+
+	local s_start = { row = locA[2], col = locA[3] }
+	-- Add +1 to ending line number to since it is exclusive of end
+	local s_end = { row = locB[2] + 1, col = locB[3] }
+
+	return { s_start = s_start, s_end = s_end }
+end
+
+local splitRange = function(range)
+	local parts = string.gmatch(range, ",")
+	local a = parts[1]
+	local b = parts[2]
+
+	return getRangeByMarksOrLines(a, b)
+end
+
+local takeSnapshotBetweenMarks = function()
+	local config = { prompt = 'Select two marks, comma separated (e.g. "a,b"' }
+	local callback = function(input)
+		local range = splitRange(input)
+		require("code-shot").shot(range)
+	end
+
+	vim.ui.input(config, callback)
+end
+
 wk.register({
 	p = {
 		name = "Misc Plugins",
+		s = {
+			name = "Screenshots",
+			s = { "<cmd>lua require('code-shot').shot()", "Take codeshot of file" },
+			m = {
+				function()
+					takeSnapshotBetweenMarks()
+				end,
+				"Take codeshot between marks",
+			},
+		},
 		v = { "<cmd>Vista!!<cr>", "Toggle Vista" },
 		t = { "<cmd>VimTrello<cr>", "Open Trello" },
 		g = {
@@ -29,19 +69,6 @@ wk.register({
 			d = { "<cmd>Colortils darken #<cword><cr>", "Darken" },
 			c = { "<cmd>Colortils css #<cword><cr>", "CSS colors" },
 			g = { "<cmd>Colortils gradient #<cword><cr>", "Gradient" },
-		},
-		o = {
-			name = "Obsidian",
-			t = { "<cmd>ObsidianToday<cr>", "Open today's note" },
-			n = { ":ObsidianNew ", "Create new note" },
-			q = { "<cmd>ObsidianQuickSwitch<cr>", "Open quick switcher" },
-			i = { "<cmd>ObsidianTemplate<cr>", "Insert template selected" },
-			l = { "<cmd>ObsidianLink<cr>", "Create link" },
-			f = { "<cmd>ObsidianFollowLink<cr>", "Follow link" },
-			o = {
-				"<cmd>ObsidianOpen<cr>",
-				"Open note in current buffer in Obsidian app",
-			},
 		},
 		q = {
 			name = "Bookmarks Quickfix list",
@@ -106,7 +133,15 @@ wk.register({
 }, { prefix = "<leader>" })
 
 -- This is here since it is mostly intended to be used with tables in Obsidian notes
-wk.register({ ["<C-t"] = { ":Tabularize /", "Tabularize text based on pattern" } }, { mode = "v" })
+wk.register({
+	["<C-t"] = { ":Tabularize /", "Tabularize text based on pattern" },
+	["CS"] = {
+		function()
+			require("code-shot").shot()
+		end,
+		"Take codeshot",
+	},
+}, { mode = "v" })
 
 wk.register({
 	r = {

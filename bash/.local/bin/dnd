@@ -1,5 +1,13 @@
 #!/bin/bash
 
+function default() {
+  if [[ -z "$1" ]]; then
+    echo "$2"
+  else
+    echo "$1"
+  fi
+}
+
 # $1 = on/off
 # $2 = slack status
 # $3 = time, or emoji
@@ -11,21 +19,29 @@ if [ "$1" == 'on' ]; then
   emoji=$(default "$4" "tomato")
   block=$(default "$5" "socialMedia")
 
-  shortcuts run "dnd on";
+  shortcuts run "dnd on"
   curl $ZAPIER_WEBHOOK -G \
     --data-urlencode "message=$status" \
     --data-urlencode "emoji=:$emoji:" \
-    --data-urlencode "time='in $time minutes'";
-  node ~/luxafor.js "red";
-  scos "$time" "$block"
+    --data-urlencode "time='in $time minutes'"
+  node ~/luxafor.js "red"
+
+  # d="--enddate $(date -v+"$time"M "+%Y-%m-%d %H:%M:%S")"
+  # l="--blocklist $SELFCONTROL_BLOCKLISTS$block.selfcontrol"
+  d="$(date -v+"$time"M "+%Y-%m-%d %H:%M:%S")"
+  l="$SELFCONTROL_BLOCKLISTS$block.selfcontrol"
+  me=$(whoami)
+  id="--uid $(id -u "$me")"
+  /Applications/SelfControl.app/Contents/MacOS/org.eyebeam.SelfControl "$id" --install "$l" "$d"
+  # /Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli "$id" start "$l" "$d"
 elif [ "$1" == 'off' ]; then
   message=$(default "$2" "Busy")
   emoji=$(default "$3" "26")
   color=$(default "$4" "tomato")
 
-  shortcuts run "dnd off";
-  curl $ZAPIER_WEBHOOK -G --data-urlencode "message=$message" --data-urlencode "emoji=:$emoji:";
-  node ~/luxafor.js "$color";
+  shortcuts run "dnd off"
+  curl $ZAPIER_WEBHOOK -G --data-urlencode "message=$message" --data-urlencode "emoji=:$emoji:"
+  node ~/luxafor.js "$color"
 else
-  echo "Your command (\"$1\") was unrecognized! The options currently supported are \"on\" and \"off\"";
+  echo "Your command (\"$1\") was unrecognized! The options currently supported are \"on\" and \"off\""
 fi

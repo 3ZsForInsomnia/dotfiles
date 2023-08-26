@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+
+EVENT_START = "BEGIN:VEVENT"
+EVENT_END = "END:VEVENT"
+CALENDAR_END = "\nEND:VCALENDAR"
+
+
+def get_preamble(lines):
+    preamble = ""
+    while lines[0] != EVENT_START:
+        preamble += lines.pop(0) + "\n"
+
+    return preamble
+
+
+def extract_event(lines):
+    event = []
+
+    while len(lines) > 0 and lines[0] != EVENT_END:
+        line = lines.pop(0)
+        event.append(line)
+
+    if len(lines) > 0:
+        event.append(lines.pop(0))
+
+        return "\n".join(event)
+    else:
+        return None
+
+
+def extract_events(data):
+    lines = data.split("\n")
+    lines.pop()
+    events = []
+
+    preamble = get_preamble(lines)
+
+    while len(lines) > 0:
+        event = extract_event(lines)
+        if event is not None:
+            events.append(event)
+
+    return preamble, events
+
+
+def populate_chunk(preamble, events):
+    chunk = preamble
+
+    while len(events) > 0 and len(chunk) + len(CALENDAR_END) < max_size:
+        chunk += events.pop(0)
+
+    chunk += CALENDAR_END
+    return chunk
+
+
+def create_chunks_from_events(preamble, events):
+    chunks = []
+
+    while len(events) > 0:
+        chunk = populate_chunk(preamble, events)
+        if chunk is not None:
+            chunks.append(chunk)
+
+    return chunks
+
+
+def write_new_files(output_location, chunks):
+    if not os.path.exists(output_location):
+        os.makedirs(output_location)
+
+    for i, chunk in enumerate(chunks):
+        filename = output_location + str(i) + ".ics"
+        file = open(filename, "w")
+        file.write(chunk)
+
+
+input = sys.argv[1]
+max_size = int(sys.argv[2]) * 1000
+output = ""
+
+if input is None or max_size is None:
+    raise ValueError("Input and max_size must be provided")
+
+if len(sys.argv) == 4:
+    output = sys.argv[3]
+else:
+    output = "." + os.path.dirname(input) + os.sep
+    output = output + os.path.splitext(os.path.basename(input))[0] + os.sep
+
+file = open(input, "r")
+data = file.read()
+
+preamble, events = extract_events(data)
+chunks = create_chunks_from_events(preamble, events)
+write_new_files(output, chunks)

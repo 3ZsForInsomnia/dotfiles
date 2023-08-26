@@ -6,6 +6,13 @@ au("BufWritePost", {
 	command = "FormatWrite",
 })
 
+au("BufWritePost", {
+	pattern = "*",
+	callback = function()
+		require("lint").try_lint()
+	end,
+})
+
 au("TextYankPost", {
 	pattern = "*",
 	command = "lua vim.highlight.on_yank({timeout=333})",
@@ -57,7 +64,7 @@ vim.cmd([[
     function! A(timer)
       echo ""
     endfunction
-    call timer_start(7500, 'A')
+    call timer_start(15000, 'A')
   endfunction
   :command! E :call E()
 ]])

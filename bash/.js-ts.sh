@@ -21,7 +21,7 @@ alias yr='y run'
 alias yrs='yr $s'
 alias yw='y $w'
 alias ys='y $s'
-alias yt='y test'		
+alias yt='y test'
 alias yty='y typeCheck'
 alias yspf='ys --prerender=false'
 alias yl='y lint'
@@ -29,7 +29,7 @@ alias ybys='yb && ys'
 alias ydev='y dev'
 alias ylibd='y library:dev'
 alias ystory='echo "no" | y storybook'
-alias yan='y analyze'		
+alias yan='y analyze'
 
 alias n='npm'
 alias ni='n i'
@@ -53,7 +53,8 @@ alias nrsass='n rebuild node-sass --force'
 
 alias e='ember'
 
-alias ngc='ng g c'
+# alias ngc='ng g c'
+alias ngc='nx g c'
 alias ngs='ng g service'
 alias ngp='ng g pipe'
 alias ngm='ng g module'
@@ -61,12 +62,12 @@ alias ngm='ng g module'
 alias jup='jest --updateSnapshot'
 
 alias lerb='lerna bootstrap'
-lernadd() {		
+lernadd() {
   eval 'lerna add $1 packages/$2'
-}		
-lernadddev() {		
-  eval 'lerna add $1 packages/$2 --dev'		
-}		
+}
+lernadddev() {
+  eval 'lerna add $1 packages/$2 --dev'
+}
 
 # alias yalp='yalc publish'
 # alias yala='yalc add'

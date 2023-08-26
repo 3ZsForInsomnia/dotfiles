@@ -39,7 +39,7 @@ function M.setup()
 		},
 		sources = {
 			{ name = "nvim_lsp_signature_help" },
-      { name = "nvim_lsp_document_symbol" },
+			{ name = "nvim_lsp_document_symbol" },
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
 			{ name = "emmet_vim" },
@@ -262,7 +262,13 @@ function M.setup()
 					},
 				},
 			},
-			K = { b.hover, "Context" },
+			-- K = { b.hover, "Context" },
+			K = {
+				function()
+					require("hover").hover()
+				end,
+				"Context",
+			},
 			["<C-k>"] = { b.signature_help, "Show signature" },
 		}, bufopts)
 	end
@@ -276,6 +282,11 @@ function M.setup()
 			capabilities = capabilities,
 		})
 	end
+
+	-- local util = require("lspconfig.util")
+	-- require("lspconfig")["angularls"].configure("angularls", {
+	-- 	root_dir = util.root_pattern("angular.json", "project.json"),
+	-- })
 
 	require("typescript").setup({
 		disable_commands = false,
