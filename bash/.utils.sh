@@ -11,6 +11,8 @@ backup() {
   eval 'cp $1 $1.bak'
 }
 
+alias sortProcsByFilesOpen='lsof -n A '{print $1}' | uniq -c SO -rn H -n 5'
+
 getPort() {
   eval 'lsof -n -i :$1 G LISTEN'
 }
@@ -27,8 +29,7 @@ alias kp='killProcess'
 alias lc='wc -l'
 # $1=file extension
 lineCountForFolder() {
-  if [ -z $1 ]
-  then
+  if [ -z $1 ]; then
     find . -name '*.*' | xargs wc -l
   else
     find . -name "*.${1}" | xargs wc -l

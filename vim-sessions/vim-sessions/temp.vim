@@ -13,14 +13,16 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +78 ~/code/fe/apps/platform/src/app/features/prospects/pages/prospect-page-v2/prospect-page-v2.component.ts
-badd +266 ~/code/fe/apps/platform/src/app/features/prospects/prospects.routing.ts
-badd +12 ~/code/fe/apps/platform/src/app/features/prospects/pages/prospect-state-debug-v2/prospect-state-debug-v2.component.ts
-badd +1 ~/code/fe/apps/platform/src/app/features/prospects/pages/prospect-state-debug-v2/prospect-state-debug-v2.component.html
+badd +1 ~/code/fe/jest.preset.js
+badd +3 libs/shared/src/lib/core/services/csv-json-validator/csv-json-validate.service.spec.ts
+badd +3 libs/shared/src/lib/core/services/validation/validation.service.spec.ts
+badd +1 ~/code/fe/libs/shared/src/lib/core/services/csv-json-validator/csv-json-validator.service.ts
+badd +2 ~/code/fe/libs/shared/src/lib/core/services/validation/validation.service.ts
+badd +22 ~/code/fe/libs/shared/src/lib/forms/interfaces/form-search.interface.ts
 argglobal
 %argdel
-$argadd ~/code/fe
-edit ~/code/fe/apps/platform/src/app/features/prospects/pages/prospect-page-v2/prospect-page-v2.component.ts
+$argadd .
+edit ~/code/fe/libs/shared/src/lib/core/services/validation/validation.service.ts
 wincmd t
 let s:save_winminheight = &winminheight
 let s:save_winminwidth = &winminwidth
@@ -29,7 +31,7 @@ set winheight=1
 set winminwidth=0
 set winwidth=1
 argglobal
-balt ~/code/fe/apps/platform/src/app/features/prospects/prospects.routing.ts
+balt ~/code/fe/libs/shared/src/lib/forms/interfaces/form-search.interface.ts
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -38,16 +40,18 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-25
+16
 normal! zo
-77
+70
 normal! zo
-let s:l = 78 - ((32 * winheight(0) + 20) / 40)
+71
+normal! zo
+let s:l = 2 - ((1 * winheight(0) + 9) / 18)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 78
-normal! 04|
+keepjumps 2
+normal! 02|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

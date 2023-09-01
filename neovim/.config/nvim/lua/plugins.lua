@@ -56,7 +56,14 @@ return packer.startup(function(use)
 	use("nvim-lua/plenary.nvim")
 	use("wbthomason/packer.nvim")
 	use("kkharji/sqlite.lua")
-	use("rcarriga/nvim-notify")
+	use({
+		"rcarriga/nvim-notify",
+		config = function()
+			require("notify").setup({
+				max_width = 120,
+			})
+		end,
+	})
 	use("zdcthomas/yop.nvim")
 	use("winston0410/cmd-parser.nvim")
 	use({ "dstein64/vim-startuptime", cmd = "StartupTime" })
@@ -320,14 +327,6 @@ return packer.startup(function(use)
 		},
 	})
 
-	-- use({
-	-- 	"jose-elias-alvarez/null-ls.nvim",
-	-- 	opt = true,
-	-- 	event = "InsertEnter",
-	-- 	config = function()
-	-- 		require("config.null-ls").setup()
-	-- 	end,
-	-- })
 	use({
 		"ckolkey/ts-node-action",
 		event = "InsertEnter",
@@ -578,7 +577,7 @@ return packer.startup(function(use)
 		"pwntester/octo.nvim",
 		cmd = "Octo",
 		config = function()
-			require("octo").setup()
+			require("config.octo").setup()
 		end,
 	})
 
@@ -655,7 +654,7 @@ return packer.startup(function(use)
 	use({
 		"m4xshen/hardtime.nvim",
 		config = function()
-			require("hardtime").setup()
+			require("config.hardtime").setup()
 		end,
 	})
 

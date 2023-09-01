@@ -38,6 +38,10 @@ function M.setup()
 					"--follow",
 					"--no-ignore",
 					"--exclude",
+					"packer_compiled.lua",
+					"--exclude",
+					".luarc.json",
+					"--exclude",
 					"node_modules",
 					"--exclude",
 					".git",
@@ -53,8 +57,8 @@ function M.setup()
 					"out",
 					"--exclude",
 					".next",
-          "--exclude",
-          "vim-sessions",
+					"--exclude",
+					"vim-sessions",
 					"--exclude",
 					".vercel",
 					"--exclude",
@@ -63,7 +67,15 @@ function M.setup()
 			},
 		},
 		defaults = {
-			file_ignore_patterns = { "node_modules", ".git/", "dist/", "build/", "target/" },
+			file_ignore_patterns = {
+				"node_modules",
+				".git/",
+				"dist/",
+				"build/",
+				"target/",
+				".luarc.json",
+				"packer_compiled.lua",
+			},
 			prompt_prefix = icons.common.Telescope .. " " .. icons.misc.Carat .. " ",
 			selection_caret = icons.common.Arrow .. " ",
 			entry_prefix = icons.misc.Carat .. " ",
@@ -132,7 +144,6 @@ function M.setup()
 
 	telescope.load_extension("fzf")
 	telescope.load_extension("live_grep_args")
-	-- telescope.load_extension('bookmarks')
 	telescope.load_extension("changes")
 	telescope.load_extension("xray23")
 	telescope.load_extension("file_browser")
@@ -145,6 +156,7 @@ function M.setup()
 	telescope.load_extension("tailiscope")
 	telescope.load_extension("undo")
 	telescope.load_extension("angular")
+	telescope.load_extension("noice")
 end
 
 return M

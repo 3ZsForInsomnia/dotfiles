@@ -1,6 +1,10 @@
 function getBoard() {
-  boards=("0 Inbox" "1 Job" "2 Projects" "3 Music" "4 Chores" "5 Health" "6 Reading" "7 Recurring")
-  echo "${boards[$(($1 + 1))]}"
+  if [[ -z "$1" ]]; then
+    echo "To Do list"
+  else
+    boards=("0 Inbox" "1 Job" "2 Projects" "3 Music" "4 Chores" "5 Health" "6 Reading" "7 Recurring")
+    echo "${boards[$(($1 + 1))]}"
+  fi
 }
 
 function getList() {
@@ -87,8 +91,13 @@ function tgu() {
 # $1 = board
 # $2 = list
 function tget() {
-  board=$(getBoard "$1")
-  list=$(getList "$2")
+  if [[ -z "$2" ]]; then
+    board=$(getBoard)
+    list=$(getList "$1")
+  else
+    board=$(getBoard "$1")
+    list=$(getList "$2")
+  fi
 
   trello show-cards -b "$board" -l "$list"
 }

@@ -18,18 +18,17 @@
 # d -> diff
 
 ### Status
-alias cst='c && gst' # Clear and get status
+alias cst='c && gst'    # Clear and get status
 alias gstuno='gst -uno' # much faster for large commit histories but doesn't show untracked
 
 alias currBranch='git rev-parse --abbrev-ref HEAD PC'
 
 ### Committing
-alias gibid='g commit -a --amend -C head'		
+alias gibid='g commit -a --amend -C head'
 alias gce='g commit --allow-empty'
 alias gc='g commit -v -m'
 gac() {
-  if [ -z "$2" ]
-  then
+  if [ -z "$2" ]; then
     location="."
   else
     location=$2
@@ -39,8 +38,7 @@ gac() {
   $(gc $1)
 }
 gacp() {
-  if [ -z "$2" ]
-  then
+  if [ -z "$2" ]; then
     location="."
   else
     location=$2
@@ -58,8 +56,7 @@ gcbcp() { # Checkout new branch, commit and push
   $(ggp)
 }
 gab() { # Add and checkout new branch
-  if [ -z "$2" ]
-  then
+  if [ -z "$2" ]; then
     location="."
   else
     location=$2
@@ -113,23 +110,20 @@ alias gpt='git push --tags'
 
 ### Stashing
 function gstas() { # Stash with name if available, otherwise just stash
-  if [ -z "$1" ]
-  then
-      $(g stash -u)
+  if [ -z "$1" ]; then
+    $(g stash -u)
   else
-      $(g stash push -u -m "$1")
+    $(g stash push -u -m "$1")
   fi
 }
 alias gsta='gstas'
 alias gstapu='gsta && gup'
 alias gstapua='gstapu && gstaa'
 # git stash apply with name if present, or apply stash by number if input is number (for gstala)
-function gstaa() { 
-  if [ -z "$1" ]
-  then
+function gstaa() {
+  if [ -z "$1" ]; then
     $(git stash apply)
-  elif [ "$1" = <-> ]
-  then
+  elif [ "$1" = <- >]; then
     git stash pop stash@{$1}
   else
     git stash apply $(git stash list | grep "$1" | cut -d: -f1 | head -n 1)
@@ -138,8 +132,7 @@ function gstaa() {
 # List stashes in Peco, and apply the selected stash if any is chosen
 function gstala() {
   a=$(gstl P)
-  if [ -n "$a" ]
-  then
+  if [ -n "$a" ]; then
     b=$(echo $a C -d: -f1 TR -dc '0-9')
     $(gstaa $b)
   fi
@@ -193,7 +186,7 @@ style() {
 #   eval 'gcb test/$1'
 # }
 gcoo() {
-  eval 'gco levine/$1'
+  eval 'gco zl-$1'
 }
 
 ### Revert and log
@@ -204,8 +197,8 @@ alias lg='glg --color=always L'
 
 ### Misc
 alias localGitIgnore='v ~/.gitignore_global'
-alias gpause='git add . && git cm "<back>" --no-verify'		
-alias gback='git reset HEAD~1'		
+alias gpause='git add . && git cm "<back>" --no-verify'
+alias gback='git reset HEAD~1'
 
 ### Conventional Commits
 # alias gcz='git cz'
@@ -257,7 +250,7 @@ gistr() {
 }
 
 setupGit() {
-  git config --global alias.ctags '!.git/hooks/ctags';
+  git config --global alias.ctags '!.git/hooks/ctags'
   git config --global init.templatedir '~/.git_template'
 }
 
@@ -265,39 +258,45 @@ setupGit() {
 fcoc() {
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
-  commit=$(echo "$commits" | fzf --tac +s +m -e) &&
-  git checkout $(echo "$commit" | sed "s/ .*//")
+    commit=$(echo "$commits" | fzf --tac +s +m -e) &&
+    git checkout $(echo "$commit" | sed "s/ .*//")
 }
 # fbr - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
 fbr() {
   local branches branch
   branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
-  branch=$(echo "$branches" |
-           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+    branch=$(echo "$branches" |
+      fzf-tmux -d $((2 + $(wc -l <<<"$branches"))) +m) &&
+    git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 # fco_preview - checkout git branch/tag, with a preview showing the commits between the tag/branch and HEAD
 fco_preview() {
   local tags branches target
   branches=$(
     git --no-pager branch --all \
-      --format="%(if)%(HEAD)%(then)%(else)%(if:equals=HEAD)%(refname:strip=3)%(then)%(else)%1B[0;34;1mbranch%09%1B[m%(refname:short)%(end)%(end)" \
-    | sed '/^$/d') || return
+      --format="%(if)%(HEAD)%(then)%(else)%(if:equals=HEAD)%(refname:strip=3)%(then)%(else)%1B[0;34;1mbranch%09%1B[m%(refname:short)%(end)%(end)" |
+      sed '/^$/d'
+  ) || return
   tags=$(
-    git --no-pager tag | awk '{print "\x1b[35;1mtag\x1b[m\t" $1}') || return
+    git --no-pager tag | awk '{print "\x1b[35;1mtag\x1b[m\t" $1}'
+  ) || return
   target=$(
-    (echo "$branches"; echo "$tags") |
-    fzf --no-hscroll --no-multi -n 2 \
-        --ansi --preview="git --no-pager log -150 --pretty=format:%s '..{2}'") || return
-  git checkout $(awk '{print $2}' <<<"$target" )
+    (
+      echo "$branches"
+      echo "$tags"
+    ) |
+      fzf --no-hscroll --no-multi -n 2 \
+        --ansi --preview="git --no-pager log -150 --pretty=format:%s '..{2}'"
+  ) || return
+  git checkout $(awk '{print $2}' <<<"$target")
 }
 # fcoc_preview - checkout git commit with previews
 fcoc_preview() {
   local commit
-  commit=$( glNoGraph |
+  commit=$(glNoGraph |
     fzf --no-sort --reverse --tiebreak=index --no-multi \
-        --ansi --preview="$_viewGitLogLine" ) &&
-  git checkout $(echo "$commit" | sed "s/ .*//")
+      --ansi --preview="$_viewGitLogLine") &&
+    git checkout $(echo "$commit" | sed "s/ .*//")
 }
 # fstash - easier way to deal with stashes
 # type fstash to get a list of your stashes
@@ -308,10 +307,10 @@ fstash() {
   local out q k sha
   while out=$(
     git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
-    fzf --ansi --no-sort --query="$q" --print-query \
-        --expect=ctrl-d,ctrl-b);
-  do
-    mapfile -t out <<< "$out"
+      fzf --ansi --no-sort --query="$q" --print-query \
+        --expect=ctrl-d,ctrl-b
+  ); do
+    mapfile -t out <<<"$out"
     q="${out[0]}"
     k="${out[1]}"
     sha="${out[-1]}"
@@ -321,7 +320,7 @@ fstash() {
       git diff $sha
     elif [[ "$k" == 'ctrl-b' ]]; then
       git stash branch "stash-$sha" $sha
-      break;
+      break
     else
       git stash show -p $sha
     fi

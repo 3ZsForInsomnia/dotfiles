@@ -49,6 +49,14 @@ function git_develop_branch() {
   echo develop
 }
 
+function git_local_branches() {
+  compadd $(git for-each-ref --format='%(refname:short)' refs/heads/)
+}
+function gcol() {
+  git checkout $1
+}
+compdef git_local_branches gcol
+
 #
 # Aliases
 # (sorted alphabetically)

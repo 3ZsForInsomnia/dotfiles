@@ -172,9 +172,6 @@ function M.setup()
 				{ "location", separator = { right = "" }, left_padding = 2 },
 			},
 		},
-		-- tabline = {
-		-- 	lualine_z = { { "filename", path = 1 } },
-		-- },
 		winbar = {
 			-- Starting with B due to nicer theming on B and C sections
 			lualine_b = { "diagnostics", { "diff", source = gitSignsForFile } },

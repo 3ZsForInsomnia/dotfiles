@@ -1504,7 +1504,6 @@ _git_bundle ()
 # - the last provided of "--guess" or "--no-guess" explicitly enable or
 #   disable completion of DWIM logic respectively.
 # - If checkout.guess is false, disable completion of DWIM logic.
-# - If the --no-track option is provided, take this as a hint to disable the
 #   DWIM completion logic
 # - If GIT_COMPLETION_CHECKOUT_NO_GUESS is set, disable the DWIM completion
 #   logic, as requested by the user.
