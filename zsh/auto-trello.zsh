@@ -22,10 +22,16 @@ function tadd() {
   trello add-card -b "$board" -l "$list" "$3" "$4"
 }
 
+# $1 = What to follow up on
+# $2 = Description/body
+function tfu() {
+  tadd "0" "2" "Follow up on: $1" "$2"
+}
+
 # $1 = title
 # $2 = description
 function tqa() {
-  tadd "1" "2" "$1" "$2"
+  tadd "0" "2" "$1" "$2"
 }
 
 # $1 = card ID
@@ -107,3 +113,5 @@ function tget() {
 function tgetid() {
   tget "$1" "$2" | fzf | cut -d ' ' -f 2
 }
+
+function 

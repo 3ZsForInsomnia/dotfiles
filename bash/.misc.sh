@@ -5,14 +5,14 @@ alias wttrpng="curl 'wttr.in/$MY_LOCATION.png?u' > ~/Downloads/wttr.png && open 
 
 alias fuckitup='~/fuckitup.js'
 function fup() {
-    result=$(fuckitup -f "$@");
-    echo $result PC;
-    echo $result;
+  result=$(fuckitup -f "$@")
+  echo $result PC
+  echo $result
 }
 function fupc() {
-    result=$(fuckitup -c "$@");
-    echo $result PC;
-    echo $result;
+  result=$(fuckitup -c "$@")
+  echo $result PC
+  echo $result
 }
 
 alias po="pomojs --log ~/.pomo.log --tmux"
@@ -34,4 +34,3 @@ alias http-server='$HOME/.npm/_npx/e5196fa6dc3cecbc/node_modules/.bin/http-serve
 alias task='node ~/tasks.js'
 
 alias img='wezterm imgcat '
-alias ms='mailsync'

@@ -3,11 +3,11 @@ source ~/.js-ts.sh
 source ~/.git-stuff.sh
 source ~/.python.sh
 source ~/.searching.sh
-# source ~/.work-utils.sh
 source ~/.misc.sh
 source ~/.db.sh
 source ~/.dates.sh
 source ~/.config/mutt/base.sh
+source ~/work.sh
 
 alias src='j src'
 alias utils='j utils'
@@ -38,8 +38,11 @@ alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.
 alias keepAwake='cd /Applications; ./delay-screensaver.command'
 
 alias rss='newsboat;'
-alias mail='neomutt'
+alias ms='mailsync; notmuch new; neomutt; mailsync &'
 alias cal='gcalcli'
+function loginToGcalCli() {
+  gcalcli --client-id="$GCALCLI_CLIENT_ID" --client-secret="$1" agenda
+}
 # . "$HOME/.cargo/env"
 
 export TZ='America/New_York'

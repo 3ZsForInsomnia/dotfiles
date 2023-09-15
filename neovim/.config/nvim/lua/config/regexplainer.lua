@@ -3,10 +3,10 @@ local M = {}
 function M.setup()
 	require("regexplainer").setup({
 		-- 'narrative'
-		mode = "narrative", -- TODO: 'ascii', 'graphical'
+		mode = "graphical", -- TODO: 'ascii', 'graphical'
 
 		-- automatically show the explainer when the cursor enters a regexp
-		auto = true,
+		auto = false,
 
 		-- filetypes (i.e. extensions) in which to run the autocommand
 		filetypes = {

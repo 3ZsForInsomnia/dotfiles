@@ -17,6 +17,29 @@ local n = function(command)
 	return "<cmd>Neogit " .. command .. "<cr>"
 end
 
+local p = function(object, command, args)
+	if args then
+		return "<cmd>Octo " .. object .. " " .. command .. " " .. args .. "<cr>"
+	else
+		return "<cmd>Octo " .. object .. " " .. command .. " " .. "<cr>"
+	end
+end
+local pr = function(command, args)
+	return p("pr", command, args)
+end
+local re = function(command, args)
+	return p("repo", command, args)
+end
+local th = function(command, args)
+	return p("thread", command, args)
+end
+local rv = function(command, args)
+	return p("review", command, args)
+end
+local c = function(command, args)
+	return p("comment", command, args)
+end
+
 local M = {}
 
 M.setup = function(bufnr)
@@ -154,6 +177,58 @@ M.setup = function(bufnr)
 				t = { n("stash"), "Stash" },
 				b = { n("branch"), "Branch" },
 				p = { n("cherry_pick"), "Cherry pick" },
+			},
+			p = {
+				name = "PR's with Octo",
+				a = {
+					name = "Assign",
+					r = { ":Octo reviewer add x", "Assign reviewer" },
+					a = { ":Octo assignee add x", "Assign user" },
+					u = { ":Octo assignee remove x", "Unassign user" },
+				},
+				p = {
+					name = "PR's",
+					l = {
+						name = "List...",
+						["<cr>"] = { pr("list"), "PRs" },
+						f = { ":Octo pr list ", "PRs with a filter" },
+						d = { pr("changes"), "PR hunks" },
+						i = { pr("diff"), "Full PR diff" },
+						c = { pr("commits"), "Commits" },
+					},
+					c = { pr("create"), "Create PR from current branch" },
+					o = { pr("checkout"), "Checkout PR" },
+					q = { pr("close"), "Close the current PR" },
+					r = { pr("ready"), "Show full PR diff" },
+					g = { pr("checks"), "Show PR checks status" },
+					b = { pr("browser"), "Show full PR diff" },
+					u = { pr("url"), "Show full PR diff" },
+				},
+				c = {
+					name = "Comments",
+					a = { c("add"), "Add a comment" },
+					d = { c("delete"), "Delete comment" },
+				},
+				t = {
+					name = "Threads",
+					r = { th("resolve"), "Resolve thread" },
+					u = { th("unresolve"), "Unresolve thread" },
+				},
+				v = {
+					name = "Review",
+					n = { rv("start"), "Start a new review" },
+					s = { rv("submit"), "Submit review" },
+					e = { rv("resume"), "Edit a review" },
+					d = { rv("discard"), "Discard review" },
+					c = { rv("comments"), "View pending comments" },
+					m = { rv("commit"), "Review a specific commit" },
+					q = { rv("close"), "Close the review window/return to the PR" },
+				},
+				r = {
+					name = "Repo",
+					l = { re("list"), "List repos I work on" },
+					o = { re("browser"), "Open repo in browser" },
+				},
 			},
 		},
 		gx = "Diffview delete conflict",

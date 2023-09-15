@@ -20,7 +20,7 @@ if [ "$1" == 'on' ]; then
   block=$(default "$5" "socialMedia")
 
   shortcuts run "dnd on"
-  curl $ZAPIER_WEBHOOK -G \
+  curl "$ZAPIER_WEBHOOK" -G \
     --data-urlencode "message=$status" \
     --data-urlencode "emoji=:$emoji:" \
     --data-urlencode "time='in $time minutes'"

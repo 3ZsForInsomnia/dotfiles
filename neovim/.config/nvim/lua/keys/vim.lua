@@ -58,6 +58,7 @@ wk.register({
 		},
 		ts = { ":ts ", "Go to tag by name" },
 		["dm!"] = { "<cmd>delmarks!<cr>", "Delete all marks" },
+		["dm"] = { ":delmarks ", "Delete some mark" },
 		[","] = { "<cmd>nohlsearch<cr>", "Stop highlighting search results" },
 	},
 	["<C-"] = {

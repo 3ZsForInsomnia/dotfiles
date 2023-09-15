@@ -10,9 +10,13 @@ set use_threads=threads sort=last-date sort_aux=date
 unset envelope_from_address
 set use_envelope_from
 
-macro index,pager y "<enter-command>unset resolve<enter><enter-command>unset trash<enter><clear-flag>N<enter-command>set resolve<enter><delete-message><enter>"
-
 # Contacts management - goobook syncs with gmail
 set query_command="goobook query %s"
 bind editor <Tab> complete-query
 macro index,pager a "<pipe-message>goobook add<return>" "add the sender address to Google contacts"
+
+# Want to clear search with a keyboard shortcut/go back to viewing all
+# Want to search all emails, not just the current mailbox
+# Create zapier webhook calling script to create trello card for certain tags (starred, others?)
+set nm_default_uri="notmuch:///Users/zachary/.local/share/mail/comrade.topanga@gmail.com"
+set sendmail="/Users/zachary/.local/share/mail/comrade.topanga@gmail.com/Sent"

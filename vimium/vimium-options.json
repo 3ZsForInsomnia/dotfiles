@@ -1,5 +1,5 @@
 {
-  "settingsVersion": "1.67.2",
+  "settingsVersion": "1.67.7",
   "exclusionRules": [
     {
       "pattern": "https?://mail.google.com/*",
@@ -29,7 +29,7 @@
   "filterLinkHints": false,
   "waitForEnterForFilteredHints": true,
   "hideHud": false,
-  "keyMappings": "# Insert your preferred key mappings here.\n\nmap ח scrollDown\nmap ל scrollUp\nmap ג scrollFullPageDown\nmap ו scrollFullPageUp\nmap עע scrollToTop\nmap ר reload\nmap טט copyCurrentUrl\nmap טכ LinkHints.activateModeToCopyLinkUrl\nmap פ openCopiedUrlInCurrentTab\nmap ן enterInsertMode\nmap ה enterVisualMode\nmap כ LinkHints.activateMode\nmap עכ nextFrame\nmap עF mainFrame\nmap ם Vomnibar.activate\nmap נ Vomnibar.activateBookmarks\nmap . enterFindMode\nmap מ performFind\nmap עא nextTab\nmap עT previousTab\nmap ע0 firstTab\nmap ע$ lastTab\nmap א createTab\nmap טא duplicateTab\nmap ס removeTab\nmap <a-פ> togglePinTab\nmap ען focusInput\nmap צ Marks.activateCreateMode\nmap \\ Marks.activateGotoMode\nmap <a-צ> toggleMuteTab\nmap עק Vomnibar.activateEditUrl\nmap עE Vomnibar.activateEditUrlInNewTab",
+  "keyMappings": "# Insert your preferred key mappings here.\n\nmap ח scrollDown\nmap ל scrollUp\nmap ג scrollFullPageDown\nmap ו scrollFullPageUp\nmap עע scrollToTop\nmap ר reload\nmap טט copyCurrentUrl\nmap טכ LinkHints.activateModeToCopyLinkUrl\nmap פ openCopiedUrlInCurrentTab\nmap ן enterInsertMode\nmap ה enterVisualMode\nmap כ LinkHints.activateMode\nmap עכ nextFrame\nmap עF mainFrame\nmap ם Vomnibar.activate\nmap נ Vomnibar.activateBookmarks\nmap . enterFindMode\nmap מ performFind\nmap עא nextTab\nmap עT previousTab\nmap ע0 firstTab\nmap ע$ lastTab\nmap א createTab\nmap טא duplicateTab\nmap ס removeTab\nmap <a-פ> togglePinTab\nmap ען focusInput\nmap צ Marks.activateCreateMode\nmap \\ Marks.activateGotoMode\nmap <a-צ> toggleMuteTab\nmap עק Vomnibar.activateEditUrl\nmap עE Vomnibar.activateEditUrlInNewTab\n\nunmap [[\nunmap ]]",
   "linkHintCharacters": "sadfjklewcmpgh",
   "linkHintNumbers": "0123456789",
   "newTabUrl": "about:newtab",

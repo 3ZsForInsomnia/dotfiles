@@ -14,7 +14,6 @@ source ~/.bash_profile
 source ~/.utils.sh
 source ~/.nvim-tmux-etc.sh
 source ~/.java.sh
-source ~/work.sh
 
 alias ..='cd ../'
 alias ...='..; ..;'

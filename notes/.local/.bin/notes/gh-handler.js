@@ -44,7 +44,10 @@ const getLastActivity = (reviews, comments, commits) => {
     const commitDate = new Date(lastCommit.committedDate);
 
     return [reviewDate, commitDate].sort()[1];
-  } else return new Date(lastCommit.committedDate);
+  } else {
+    const lastCommit = commits.sort(sortCommits)[commits.length - 1];
+    return new Date(lastCommit.committedDate);
+  }
 };
 
 const createPrEntry = ({
@@ -61,8 +64,10 @@ const createPrEntry = ({
   isDraft,
   approved,
 }) =>
-  `- [${truncateString(title)}](${url}) by ${author.login}\n\t- State: ${ghMarkers[state]
-  } - Review/CI Status: ${ghMarkers[mergeStateStatus]}${isDraft ? ` - Draft ghMarkers[draft] - ` : ""
+  `- [${truncateString(title)}](${url}) by ${author.login}\n\t- State: ${
+    ghMarkers[state]
+  } - Review/CI Status: ${ghMarkers[mergeStateStatus]}${
+    isDraft ? ` - Draft ghMarkers[draft] - ` : ""
   } - Mergeable: ${ghMarkers[mergeable]} - Approved: ${approved}
 \t- Last touched: ${getLastActivity(
     reviews,
@@ -71,7 +76,8 @@ const createPrEntry = ({
   ).toDateString()} | Open for ${dateDiff(
     new Date(createdAt),
     new Date()
-  )} days${hasItems(commits) ? ` | Commits: ${commits.length}` : ""}${hasItems(comments) ? ` | Comments: ${comments.length}` : ""
+  )} days${hasItems(commits) ? ` | Commits: ${commits.length}` : ""}${
+    hasItems(comments) ? ` | Comments: ${comments.length}` : ""
   }${hasItems(reviews) ? ` | Reviews: ${reviews.length}` : ""}\n`;
 
 const getMyPrs = (repo) =>
@@ -95,7 +101,13 @@ export const handleGhPrs = () => {
 
   const prs = [...myPrs, ...assignedPrs].map((pr) => ({
     ...pr,
-    approved: pr.reviews.sort(sortReviews)[pr.reviews.length - 1].state === "APPROVED" ? "" : "",
+    approved:
+      pr.reviews.length > 0
+        ? pr.reviews.sort(sortReviews)[pr.reviews.length - 1].state ===
+          "APPROVED"
+          ? ""
+          : ""
+        : "",
   }));
   prs.length === 0
     ? replaceListUnderHeading("Current PR's", "- No PRs!")
