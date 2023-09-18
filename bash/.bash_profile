@@ -38,7 +38,8 @@ alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.
 alias keepAwake='cd /Applications; ./delay-screensaver.command'
 
 alias rss='newsboat;'
-alias ms='mailsync; notmuch new; neomutt; mailsync &'
+alias mutt='neomutt'
+alias ms='mailsync; notmuch new; mutt; mailsync &'
 alias cal='gcalcli'
 function loginToGcalCli() {
   gcalcli --client-id="$GCALCLI_CLIENT_ID" --client-secret="$1" agenda

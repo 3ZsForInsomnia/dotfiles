@@ -3,7 +3,7 @@ let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd ~/code/fe
+cd ~/code/dotfiles
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
@@ -13,25 +13,15 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 ~/code/fe/jest.preset.js
-badd +3 libs/shared/src/lib/core/services/csv-json-validator/csv-json-validate.service.spec.ts
-badd +3 libs/shared/src/lib/core/services/validation/validation.service.spec.ts
-badd +1 ~/code/fe/libs/shared/src/lib/core/services/csv-json-validator/csv-json-validator.service.ts
-badd +2 ~/code/fe/libs/shared/src/lib/core/services/validation/validation.service.ts
-badd +22 ~/code/fe/libs/shared/src/lib/forms/interfaces/form-search.interface.ts
+badd +27 mail/.config/mutt/accounts/comrade.topanga@gmail.com.muttrc
+badd +23 mail/.config/mutt/accounts/zachary@ethic.com.muttrc
+badd +23 mail/.config/mutt/muttrc
 argglobal
 %argdel
-$argadd .
-edit ~/code/fe/libs/shared/src/lib/core/services/validation/validation.service.ts
-wincmd t
-let s:save_winminheight = &winminheight
-let s:save_winminwidth = &winminwidth
-set winminheight=0
-set winheight=1
-set winminwidth=0
-set winwidth=1
+$argadd ~/code/dotfiles
+edit mail/.config/mutt/muttrc
 argglobal
-balt ~/code/fe/libs/shared/src/lib/forms/interfaces/form-search.interface.ts
+balt mail/.config/mutt/accounts/zachary@ethic.com.muttrc
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -40,18 +30,13 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-16
-normal! zo
-70
-normal! zo
-71
-normal! zo
-let s:l = 2 - ((1 * winheight(0) + 9) / 18)
+let s:l = 23 - ((22 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 2
-normal! 02|
+keepjumps 23
+normal! 0161|
+lcd ~/code
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -59,8 +44,6 @@ endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20
 let &shortmess = s:shortmess_save
-let &winminheight = s:save_winminheight
-let &winminwidth = s:save_winminwidth
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)
