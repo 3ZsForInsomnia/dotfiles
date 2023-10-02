@@ -617,6 +617,13 @@ return packer.startup(function(use)
 		end,
 	})
 	use({
+		"rest-nvim/rest.nvim",
+		cmd = { "RestNvim", "RestNvimLast", "RestNvimPreview" },
+		config = function()
+			require("config.rest").setup()
+		end,
+	})
+	use({
 		"epwalsh/obsidian.nvim",
 		event = "BufReadPost",
 		cmd = {

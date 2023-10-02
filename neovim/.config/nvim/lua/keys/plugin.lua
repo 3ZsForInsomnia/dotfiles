@@ -49,6 +49,13 @@ wk.register({
 		},
 		v = { "<cmd>Vista!!<cr>", "Toggle Vista" },
 		t = { "<cmd>VimTrello<cr>", "Open Trello" },
+		h = {
+			name = "Rest Nvim",
+			r = { "<plug>RestNvim<cr>", "Run request in buffer" },
+			p = { "<plug>RestNvimPreview<cr>", "Preview url for request in buffer" },
+			l = { "<plug>RestNvimLast<cr>", "Run previous http request" },
+			n = { "<cmd>enew<cr><cmd>setfiletype http<cr>", "Create a new http request buffer" },
+		},
 		g = {
 			"<cmd>Neogen<cr>",
 			"Generate docstring for whatever is under cursor",

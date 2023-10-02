@@ -16,6 +16,6 @@ bind editor <Tab> complete-query
 macro index,pager a "<pipe-message>goobook add<return>" "add the sender address to Google contacts"
 
 set nm_default_uri="notmuch:///Users/zachary/.local/share/mail/comrade.topanga@gmail.com"
-set sendmail="/Users/zachary/.local/share/mail/comrade.topanga@gmail.com/Sent"
+# set sendmail="/Users/zachary/.local/share/mail/comrade.topanga@gmail.com/Sent"
 
 macro index,pager y "<enter-command>unset resolve<enter><enter-command>unset trash<enter><clear-flag>N<enter-command>set resolve<enter><delete-message><enter>"

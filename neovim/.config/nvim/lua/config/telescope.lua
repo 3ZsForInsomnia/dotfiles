@@ -17,7 +17,6 @@ function M.setup()
 		["<M-s>"] = actions.select_all,
 		["<C-z>"] = actions.center,
 		["<C-w>"] = actions.which_key,
-		["<C-u>"] = false,
 		["<C-f>"] = actions.preview_scrolling_up,
 		["<C-b>"] = actions.preview_scrolling_down,
 		["<M-f>"] = actions.results_scrolling_up,

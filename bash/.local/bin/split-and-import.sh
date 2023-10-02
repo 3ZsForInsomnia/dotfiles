@@ -1,15 +1,13 @@
 # $1 = path to ics file to split
-# $2 = calendar to import to using gcalcli
+# $2 = calendar in zip to use
 # $3 = optional output path
+# $4 = calendar to import to using gcalcli
+
+base=$(basename -s '.zip' "$1")
+unzip -o "$1" -d "$base"
 
 if [[ -z "$3" ]]; then
-  split-ics.py "$1" 1000
-  dir=$(basename -s '.ics' $1)
+  split-ics.py "./$base/$2.ics" 900
 else
-  split-ics.py "$1" 1000 "$3"
-  dir=$3
+  split-ics.py "./$base/$2.ics" 900 "$3"
 fi
-
-for file in ./$dir/*.ics; do
-  gcalcli --nocache --calendar "$2" import "$file"
-done

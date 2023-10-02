@@ -73,7 +73,7 @@ def write_new_files(output_location, chunks):
         os.makedirs(output_location)
 
     for i, chunk in enumerate(chunks):
-        filename = output_location + str(i) + ".ics"
+        filename = output_location + os.sep + str(i) + ".ics"
         file = open(filename, "w")
         file.write(chunk)
 
@@ -88,8 +88,10 @@ if input is None or max_size is None:
 if len(sys.argv) == 4:
     output = sys.argv[3]
 else:
-    output = "." + os.path.dirname(input) + os.sep
+    output = os.path.dirname(input) + os.sep
     output = output + os.path.splitext(os.path.basename(input))[0] + os.sep
+
+print("output", output)
 
 file = open(input, "r")
 data = file.read()

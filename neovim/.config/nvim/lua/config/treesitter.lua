@@ -23,6 +23,7 @@ function M.setup()
 			"typescript",
 			"vim",
 			"yaml",
+			"http",
 		},
 		sync_install = true,
 		auto_install = true,

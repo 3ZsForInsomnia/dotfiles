@@ -15,7 +15,7 @@ function M.setup()
 		"lua_ls",
 		"marksman",
 		"sqlls",
-		"tailwindcss",
+		-- "tailwindcss",
 		"tsserver",
 		"vimls",
 		"pyright",
@@ -217,7 +217,9 @@ function M.setup()
 	-- Use an on_attach function to only map the following keys
 	-- after the language server attaches to the current buffer
 	local on_attach = function(client, bufnr)
-		navic.attach(client, bufnr)
+		if client.server_capabilities.documentSymbolProvider then
+			navic.attach(client, bufnr)
+		end
 		-- Enable completion triggered by <c-x><c-o>
 		vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 

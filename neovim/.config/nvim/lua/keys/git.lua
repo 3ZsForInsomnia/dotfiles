@@ -176,7 +176,11 @@ M.setup = function(bufnr)
 				l = { n("log"), "Log" },
 				t = { n("stash"), "Stash" },
 				b = { n("branch"), "Branch" },
-				p = { n("cherry_pick"), "Cherry pick" },
+				a = { n("cherry_pick"), "Cherry pick" },
+				f = { n("fetch"), "fetch" },
+				d = { n("diff"), "diff" },
+				p = { n("pull"), "Pull" },
+				u = { n("push"), "push" },
 			},
 			p = {
 				name = "PR's with Octo",

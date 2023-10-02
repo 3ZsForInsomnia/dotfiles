@@ -8,6 +8,7 @@ source ~/.db.sh
 source ~/.dates.sh
 source ~/.config/mutt/base.sh
 source ~/work.sh
+source ~/.hrvst.sh
 
 alias src='j src'
 alias utils='j utils'
@@ -19,6 +20,7 @@ alias plat='j plat'
 alias sur='j sur'
 alias kit='j kit'
 alias shared='j shared'
+alias notes='j notes'
 
 alias twerk='node ~/src/logging-cli/index.js'
 alias mightTwerk='twerk -p'
