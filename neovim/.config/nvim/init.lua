@@ -7,13 +7,15 @@ g.loaded_netrw = 1
 g.loaded_netrwPlugin = 1
 g.notagrelative = true
 
+o.spellfile = "/home/zach/.config/nvim/spell/.utf-8.add"
+o.backupdir = "/home/zach/.local/state/nvim/backup//"
+o.shadafile = "/home/zach/vim-sessions/main.shada"
+
 o.spell = true
 o.spelllang = "en_us"
 o.spelloptions = "camel"
-o.spellfile = "/Users/zachary/.config/nvim/spell/.utf-8.add"
 o.swapfile = false
 o.backup = true
-o.backupdir = "/Users/zachary/.local/state/nvim/backup//"
 o.undofile = true
 o.lazyredraw = false
 o.mouse = ""
@@ -23,7 +25,6 @@ o.exrc = true
 -- Ensures other vimrc files cannot write/do more than o.variables and whatnot
 o.secure = true
 o.shada = "!,'100,<50,s10,h"
-o.shadafile = "/Users/zachary/vim-sessions/main.shada"
 
 o.timeoutlen = 500
 o.timeout = true

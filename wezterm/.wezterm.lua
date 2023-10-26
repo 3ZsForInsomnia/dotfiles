@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
+-- local wslconfig = require("wsl-domain")
 require("on")
 
 return {
@@ -12,7 +13,7 @@ return {
 	use_fancy_tab_bar = true,
 	tab_bar_at_bottom = true,
 	status_update_interval = 1000,
-  window_decorations = "RESIZE",
+	window_decorations = "RESIZE",
 	window_frame = {
 		font_size = 14,
 		active_titlebar_bg = "#000",
@@ -34,4 +35,5 @@ return {
 		saturation = 0.6,
 		brightness = 0.4,
 	},
+	-- wsl_domains = wslconfig.config,
 }

@@ -7,7 +7,7 @@ source ~/.misc.sh
 source ~/.db.sh
 source ~/.dates.sh
 source ~/.config/mutt/base.sh
-source ~/work.sh
+# source ~/work.sh
 source ~/.hrvst.sh
 
 alias src='j src'

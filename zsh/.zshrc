@@ -1,7 +1,7 @@
 source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 source ~/.path-modifiers.sh
 source ~/.p10k.zsh
-source ~/custom-completions.zsh
+# source ~/custom-completions.zsh
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 HISTFILE=~/.zsh_history
@@ -20,7 +20,7 @@ source $HOME/zshmarks/zshmarks.plugin.zsh
 source $HOME/omz-git-completions.zsh
 source $HOME/zsh-you-should-use/you-should-use.plugin.zsh
 source $HOME/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $HOME/auto-trello.zsh
+# source $HOME/auto-trello.zsh
 
 zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
 fpath=(~/zsh-completions/src ~/.zsh/ $fpath)
