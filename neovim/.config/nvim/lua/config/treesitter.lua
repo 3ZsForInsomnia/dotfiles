@@ -117,8 +117,8 @@ function M.setup()
 		},
 		rainbow = {
 			enable = true,
-			query = "rainbow-parens",
-			strategy = require("ts-rainbow").strategy.global,
+			query = "rainbow-delimiters",
+			strategy = require("rainbow-delimiters").strategy.global,
 			-- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
 			extended_mode = true,
 			max_file_lines = nil,

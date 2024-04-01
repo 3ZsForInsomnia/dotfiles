@@ -104,3 +104,5 @@ alias http='npx http-server'
 alias noSlack='node ~/site-block.js email'
 alias noFood='node ~/site-block.js seamless'
 alias noChat='node ~/site-block.js socialMedia'
+
+alias shadadd='npx shadcn-ui@latest add '

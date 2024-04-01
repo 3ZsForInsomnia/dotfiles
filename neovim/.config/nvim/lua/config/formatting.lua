@@ -1,11 +1,19 @@
 local M = {}
 
-local f = function(filetype)
-	return require("formatter.filetypes." .. filetype)
-end
-
-local pe = function(filetype)
-	return { f(filetype).prettierd, f(filetype).eslint_d }
+local eslint_d_caching = function()
+	local util = require("formatter.util")
+	return {
+		exe = "eslint_d",
+		args = {
+			"--stdin",
+			"--stdin-filename",
+			util.escape_path(util.get_current_buffer_file_path()),
+			"--fix-to-stdout",
+			"--cache",
+		},
+		stdin = true,
+		try_node_modules = true,
+	}
 end
 
 M.setup = function()
@@ -14,21 +22,33 @@ M.setup = function()
 		log_level = vim.log.levels.WARN,
 		filetype = {
 			lua = { require("formatter.filetypes.lua").stylua },
-			css = { pe("css") },
-			scss = { pe("css") },
-			graphql = { f("graphql").prettierd },
-			html = { f("html").prettierd },
-			json = { f("json").prettierd },
-			markdown = { f("markdown").prettierd },
-			yaml = { f("yaml").prettierd },
-			sh = { f("sh").shfmt },
-			sql = { f("sql").pgformat },
-			java = { f("java").clangformat },
-			javascript = { pe("javascript") },
-			javascriptreact = { pe("javascriptreact") },
-			typescript = { pe("typescript") },
-			typescriptreact = { pe("typescriptreact") },
-			python = { f("python").black, f("python").isort },
+			css = { require("formatter.filetypes.css").prettierd, require("formatter.filetypes.css").stylelint },
+			-- scss = { require("formatter.filetypes.scss").prettierd, require("formatter.filetypes.scss").stylelint },
+			graphql = { require("formatter.filetypes.graphql").prettierd },
+			html = { require("formatter.filetypes.html").prettierd },
+			json = { require("formatter.filetypes.json").prettierd },
+			markdown = { require("formatter.filetypes.markdown").prettierd },
+			yaml = { require("formatter.filetypes.yaml").prettierd },
+			sh = { require("formatter.filetypes.sh").shfmt },
+			sql = { require("formatter.filetypes.sql").sqlformat },
+			java = { require("formatter.filetypes.java").google_java_format },
+			javascript = {
+				require("formatter.filetypes.javascript").prettierd,
+				eslint_d_caching,
+			},
+			javascriptreact = {
+				require("formatter.filetypes.javascript").prettierd,
+				eslint_d_caching,
+			},
+			typescript = {
+				require("formatter.filetypes.typescript").prettierd,
+				eslint_d_caching,
+			},
+			typescriptreact = {
+				require("formatter.filetypes.typescript").prettierd,
+				eslint_d_caching,
+			},
+			python = { require("formatter.filetypes.python").black, require("formatter.filetypes.python").isort },
 		},
 	})
 end

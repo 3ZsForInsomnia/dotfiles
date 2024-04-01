@@ -41,3 +41,11 @@ function runThenReturn() {
   eval $1
   cd $pwd
 }
+
+function default() {
+  if [[ -z "$1" ]]; then
+    echo "$2"
+  else
+    echo "$1"
+  fi
+}

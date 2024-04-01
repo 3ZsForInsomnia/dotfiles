@@ -6,10 +6,10 @@ function M.setup()
 		dir = "~/code/notes",
 		open_notes_in = "current",
 		finder = "telescope.nvim",
-		completion = {
-			nvim_cmp = true,
-			prepend_note_id = true,
-		},
+		-- completion = {
+		-- 	nvim_cmp = true,
+		-- 	prepend_note_id = true,
+		-- },
 		note_id_func = function(title)
 			return title
 		end,

@@ -189,7 +189,7 @@ return packer.startup(function(use)
 			require("config.hlargs").setup()
 		end,
 	})
-	use("HiPhish/nvim-ts-rainbow2")
+	use("HiPhish/rainbow-delimiters.nvim")
 	use("windwp/nvim-ts-autotag")
 	use("theHamsta/nvim-treesitter-pairs")
 	use({
@@ -197,6 +197,23 @@ return packer.startup(function(use)
 		event = "BufReadPost",
 		config = function()
 			require("config.regexplainer").setup()
+		end,
+	})
+	use({
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("copilot").setup({})
+		end,
+	})
+	use({
+		"CopilotC-Nvim/CopilotChat.nvim",
+		after = { "copilot.lua" },
+		cmd = "CopilotChat",
+		event = "InsertEnter",
+		config = function()
+			require("CopilotChat").setup()
 		end,
 	})
 
@@ -208,7 +225,7 @@ return packer.startup(function(use)
 	--
 	use({
 		"mhartington/formatter.nvim",
-		event = "BufReadPost",
+		-- event = "BufReadPost",
 		config = function()
 			require("config.formatting").setup()
 		end,
@@ -318,6 +335,13 @@ return packer.startup(function(use)
 			{ "quangnguyen30192/cmp-nvim-tags", after = "nvim-cmp" },
 			{ "dcampos/cmp-emmet-vim", after = "nvim-cmp" },
 			{
+				"zbirenbaum/copilot-cmp",
+				after = "nvim-cmp",
+				config = function()
+					require("copilot_cmp").setup()
+				end,
+			},
+			{
 				"petertriho/cmp-git",
 				after = "nvim-cmp",
 				config = function()
@@ -420,8 +444,11 @@ return packer.startup(function(use)
 			require("neotest").setup({
 				adapters = {
 					require("neotest-jest")({
-						jestCommand = "npm test --",
-						jestConfigFile = "custom.jest.config.ts",
+						jestCommand = "npm run test",
+						jestConfigFile = "jest.config.ts",
+						discovery = {
+							enabled = false,
+						},
 						env = { CI = true },
 						cwd = function(path)
 							return vim.fn.getcwd()

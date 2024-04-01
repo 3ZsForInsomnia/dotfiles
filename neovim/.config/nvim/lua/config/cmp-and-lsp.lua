@@ -38,10 +38,11 @@ function M.setup()
 			end,
 		},
 		sources = {
-			{ name = "nvim_lsp_signature_help" },
-			{ name = "nvim_lsp_document_symbol" },
+			-- { name = "nvim_lsp_signature_help" },
+			-- { name = "nvim_lsp_document_symbol" },
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
+			{ name = "copilot", group_index = 2 },
 			{ name = "emmet_vim" },
 			{ name = "ctags" },
 			{ name = "path" },

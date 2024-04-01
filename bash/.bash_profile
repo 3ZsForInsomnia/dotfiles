@@ -7,37 +7,16 @@ source ~/.misc.sh
 source ~/.db.sh
 source ~/.dates.sh
 source ~/.config/mutt/base.sh
-# source ~/work.sh
+source ~/.work-utils.sh
 source ~/.hrvst.sh
+source ~/.env
+source ~/.slack.sh
 
 alias src='j src'
-alias utils='j utils'
 alias dots='j dots'
 alias shots='j shots'
-
-alias fe='j fe'
-alias plat='j plat'
-alias sur='j sur'
-alias kit='j kit'
 alias shared='j shared'
 alias notes='j notes'
-
-alias twerk='node ~/src/logging-cli/index.js'
-alias mightTwerk='twerk -p'
-alias mightTwerkCore='twerk -c -p'
-alias fullDayTwerk='echo "Main:"; mightTwerk; echo "Core:"; mightTwerkCore;'
-alias willTwerk='twerk -s'
-alias willTwerkToday='twerk -s -t'
-alias emptyTheMightTwerk='twerk -x'
-alias killTwerkHistory='twerk -xxx'
-alias didTwerk='twerk -d'
-
-alias trackedTime='node ~/src/logging-cli/harvest/client.js'
-alias food='node ~/src/logging-cli/cal-score.js'
-alias shareTodaysTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js -t); echo $value PC; echo $value'
-alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js); echo $value PC; echo $value'
-
-alias keepAwake='cd /Applications; ./delay-screensaver.command'
 
 alias rss='newsboat;'
 alias mutt='neomutt'
@@ -46,7 +25,6 @@ alias cal='gcalcli'
 function loginToGcalCli() {
   gcalcli --client-id="$GCALCLI_CLIENT_ID" --client-secret="$1" agenda
 }
-# . "$HOME/.cargo/env"
 
 export TZ='America/New_York'
 export CRON_LOG="$HOME/.local/state/cron/cron.log"
@@ -76,3 +54,18 @@ function selfControlBlock() {
 alias scos="selfControlBlock"
 
 alias lux="node ~/luxafor.js"
+
+alias twerk='node ~/src/logging-cli/index.js'
+alias mightTwerk='twerk -p'
+alias mightTwerkCore='twerk -c -p'
+alias fullDayTwerk='echo "Main:"; mightTwerk; echo "Core:"; mightTwerkCore;'
+alias willTwerk='twerk -s'
+alias willTwerkToday='twerk -s -t'
+alias emptyTheMightTwerk='twerk -x'
+alias killTwerkHistory='twerk -xxx'
+alias didTwerk='twerk -d'
+
+alias trackedTime='node ~/src/logging-cli/harvest/client.js'
+alias food='node ~/src/logging-cli/cal-score.js'
+alias shareTodaysTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js -t); echo $value PC; echo $value'
+alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js); echo $value PC; echo $value'
