@@ -1,52 +1,52 @@
 isMacLinuxOrWin() {
-  unameExists = $(command -v uname)
+  unameExists=$(command -v uname)
   if [ -z "$unameExists" ]; then
-    return "windows"
+    echo "windows"
   fi
-  output = $(uname -s)
+  output=$(uname -s)
   if [ "$output" == "Darwin" ]; then
-    return "mac";
-  elif [ "$(expr substr $output 1 5)" == "Linux" ]; then
-    return "linux";
+    echo "mac"
+  elif [ "$(expr substr "$output" 1 5)" == "Linux" ]; then
+    echo "linux"
   fi
 }
 
-system=$(isMacLinuxOrWin);
+system=$(isMacLinuxOrWin)
 export INSTALLING_ON=$system
 
-if [ "$system" == 'mac']; then
-  brew update && brew upgrade;
+if [ "$system" == 'mac' ]; then
+  brew update && brew upgrade
   if ! [ -x "$(command -v git)" ]; then
-    brew install git;
+    brew install git
   fi
   if ! [ -x "$(command -v wget)" ]; then
-    brew install wget;
+    brew install wget
   fi
   if ! [ -x "$(command -v curl)" ]; then
-    brew install curl;
+    brew install curl
   fi
-  brew install stow;
+  brew install stow
 elif [ "$system" == 'linux' ]; then
-  sudo apt update && sudo apt upgrade;
+  sudo apt update && sudo apt upgrade
   if ! [ -x "$(command -v git)" ]; then
-    sudo apt install git;
+    sudo apt install git
   fi
   if ! [ -x "$(command -v wget)" ]; then
-    sudo apt install wget;
+    sudo apt install wget
   fi
   if ! [ -x "$(command -v curl)" ]; then
-    sudo apt install curl;
+    sudo apt install curl
   fi
-  sudo apt install stow;
+  sudo apt install stow
 fi
 
-cd ~;
-mkdir code;
-cd code;
-git clone --recurse-submodules https://github.com/3ZsForInsomnia/dotfiles;
-source ./dotfiles/bash/.bashrc;
-unstowAll;
-cd ~;
+cd ~
+mkdir code
+cd code
+git clone --recurse-submodules https://github.com/3ZsForInsomnia/dotfiles
+source ./dotfiles/bash/.bashrc
+unstowAll
+cd ~
 
 source ~/.startup/utils.sh
 source ~/.startup/helpers.sh
@@ -55,7 +55,7 @@ source ~/.startup/unique-items.sh
 source ~/.startup/package-managers.sh
 source ~/.startup/save-managed-packages.sh
 
-installAllCoreItems;
+installAllCoreItems
 
 # Setup RSA key
 # Log into lastpass CLI
@@ -65,9 +65,9 @@ git config --global user.email "Zach@ZJLevine.dev"
 
 # These must be run manually as they depend on git/dotfiles/lastpass
 installRest() {
-  installApps;
-  installUniqueItems;
-  installAllPackagersAndLibraries;
+  installApps
+  installUniqueItems
+  installAllPackagersAndLibraries
 }
 
 # Log into: Chrome, Lastpass in Chrome, Tidal

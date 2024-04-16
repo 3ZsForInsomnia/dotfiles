@@ -1,11 +1,11 @@
 installApps() {
-  while read in; do
-    name = $($in C -f 1)
-    url = $($in C -f 2)
-    logBeforeInstalling "Apps: $name" $url
+  while read -r in; do
+    name=$($in C -f 1)
+    url=$($in C -f 2)
+    logBeforeInstalling "Apps: $name" "$url"
     installApp name url
-    logAfterInstalling "Apps: $name" $url
-  done < ~/.startup/package-lists/unmanaged-apps.txt
+    logAfterInstalling "Apps: $name" "$url"
+  done <~/.startup/package-lists/unmanaged-apps.txt
 }
 
 installBrew() {
@@ -18,31 +18,31 @@ installAptGet() {
 
 installNpm() {
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-  nvm install node;
+  nvm install node
 
   installItemsForManager "npm install -g " ~/.startup/package-lists/npm-requirements.txt
 }
 
 installLua() {
   if [ "$INSTALLING_ON" == 'linux' ]; then
-    sudo apt install build-essential libreadline-dev unzip;
+    sudo apt install build-essential libreadline-dev unzip
   elif [ "$INSTALLING_ON" == 'mac' ]; then
-    brew install luarocks;
+    brew install luarocks
   fi
-    
-  curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz;
-  tar -zxf lua-5.3.5.tar.gz;
-  cd lua-5.3.5;
-  make linux test;
-  sudo make install;
 
-  wget https://luarocks.org/releases/luarocks-3.8.0.tar.gz;
-  tar zxpf luarocks-3.8.0.tar.gz;
-  cd luarocks-3.8.0;
+  curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz
+  tar -zxf lua-5.3.5.tar.gz
+  cd lua-5.3.5
+  make linux test
+  sudo make install
 
-  ./configure --lua-version=5.1 --versioned-rocks-dir;
-  make build;
-  sudo make install;
+  wget https://luarocks.org/releases/luarocks-3.8.0.tar.gz
+  tar zxpf luarocks-3.8.0.tar.gz
+  cd luarocks-3.8.0
+
+  ./configure --lua-version=5.1 --versioned-rocks-dir
+  make build
+  sudo make install
 
   ./configure --lua-version=5.3 --versioned-rocks-dir
   make build
@@ -77,7 +77,7 @@ installPip2() {
 installPip3() {
   # All systems I use should come with python3 by default
   if ! [ -x "$(command -v pip3)" ]; then
-    sudo apt install python3-pip;
+    sudo apt install python3-pip
   fi
 
   installItemsForManager "pip3 install " ~/.startup/package-lists/pip3-requirements.txt
@@ -89,16 +89,16 @@ installGems() {
 
 installAllPackagersAndLibraries() {
   if [ "$INSTALLING_ON" == 'linux' ]; then
-    installAptGet;
+    installAptGet
   elif [ "$INSTALLING_ON" == 'mac' ]; then
-    installBrew;
+    installBrew
   fi
 
-  installGems;
-  installCargo;
-  installNpm;
-  installPip2;
-  installPip3;
+  installGems
+  installCargo
+  installNpm
+  installPip2
+  installPip3
   # Lua must come after Rust/Cargo due to Stylua
-  installLua;
+  installLua
 }

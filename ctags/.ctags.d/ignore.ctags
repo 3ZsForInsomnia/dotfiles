@@ -23,3 +23,4 @@
 --exclude=.next-env.d.ts
 --exclude=*.mjs
 --exclude=.gitignore
+--exclude=coverage/lcov-report

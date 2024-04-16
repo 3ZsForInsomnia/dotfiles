@@ -13,18 +13,16 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 term://~/code/hedgineer/hedgineer-platform//2179507:/usr/bin/zsh
-badd +15 src/components/Datagrid/DefaultCells/TimelineCell.tsx
-badd +1 term://~/code/hedgineer/hedgineer-platform//2975115:/usr/bin/zsh
+badd +72 src/app/research/catalyst-tracker/page.tsx
+badd +41 ~/code/hedgineer/hedgineer-platform/src/app/research/catalyst-tracker/filtering.ts
+badd +109 term://~/code/hedgineer/hedgineer-platform//1065365:/usr/bin/zsh
+badd +133 term://~/code/hedgineer/hedgineer-platform//1161964:/usr/bin/zsh
 argglobal
 %argdel
-$argadd ~/code/hedgineer/hedgineer-platform
+$argadd .
+edit ~/code/hedgineer/hedgineer-platform/src/app/research/catalyst-tracker/filtering.ts
 argglobal
-if bufexists(fnamemodify("term://~/code/hedgineer/hedgineer-platform//2975115:/usr/bin/zsh", ":p")) | buffer term://~/code/hedgineer/hedgineer-platform//2975115:/usr/bin/zsh | else | edit term://~/code/hedgineer/hedgineer-platform//2975115:/usr/bin/zsh | endif
-if &buftype ==# 'terminal'
-  silent file term://~/code/hedgineer/hedgineer-platform//2975115:/usr/bin/zsh
-endif
-balt src/components/Datagrid/DefaultCells/TimelineCell.tsx
+balt src/app/research/catalyst-tracker/page.tsx
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -33,12 +31,12 @@ setlocal fdl=6
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 1 - ((0 * winheight(0) + 16) / 33)
+let s:l = 41 - ((31 * winheight(0) + 16) / 32)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 1
-normal! 067|
+keepjumps 41
+normal! 011|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

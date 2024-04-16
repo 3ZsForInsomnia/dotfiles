@@ -1,5 +1,5 @@
 installNeovim() {
-  if [ "$INSTALLING_ON" == 'mac']; then
+  if [ "$INSTALLING_ON" == 'mac' ]; then
     installNewSystem --HEAD neovim
   elif [ "$INSTALLING_ON" == 'linux' ]; then
     sudo add-apt-repository ppa:neovim-ppa/unstable

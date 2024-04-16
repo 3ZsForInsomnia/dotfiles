@@ -61,6 +61,7 @@ return packer.startup(function(use)
 		config = function()
 			require("notify").setup({
 				max_width = 120,
+				timeout = 1500,
 			})
 		end,
 	})
