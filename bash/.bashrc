@@ -28,7 +28,7 @@ alias q='exit'
 if [[ "$MY_SYSTEM" == "mac" ]]; then
   alias cat='bat'
 elif [[ "$MY_SYSTEM" == "linux" ]]; then
-  alias cat='batcat'
+  alias cat='bat'
 fi
 alias lua='lua-5.1'
 
@@ -61,3 +61,4 @@ function default() {
     echo "$1"
   fi
 }
+. "$HOME/.cargo/env"

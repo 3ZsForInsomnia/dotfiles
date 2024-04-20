@@ -290,14 +290,15 @@ return packer.startup(function(use)
 			require("config.easypick").setup()
 		end,
 	})
-	use({
-		"mrjones2014/dash.nvim",
-		cmd = { "Dash", "DashWord" },
-		run = "make install",
-		config = function()
-			require("config.dash").setup()
-		end,
-	})
+	use("sunaku/vim-dasht")
+	-- use({
+	-- 	"mrjones2014/dash.nvim",
+	-- 	cmd = { "Dash", "DashWord" },
+	-- 	run = "make install",
+	-- 	config = function()
+	-- 		require("config.dash").setup()
+	-- 	end,
+	-- })
 
 	--
 	--

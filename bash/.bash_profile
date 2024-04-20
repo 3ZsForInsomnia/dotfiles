@@ -69,3 +69,6 @@ alias trackedTime='node ~/src/logging-cli/harvest/client.js'
 alias food='node ~/src/logging-cli/cal-score.js'
 alias shareTodaysTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js -t); echo $value PC; echo $value'
 alias shareTomorrowsTwerk='value=$(node ~/src/logging-cli/share-todays-twerkout.js); echo $value PC; echo $value'
+. "$HOME/.cargo/env"
+
+alias bright='brightnessctl s '

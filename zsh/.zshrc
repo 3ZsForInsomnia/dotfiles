@@ -2,7 +2,8 @@ source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 source ~/.path-modifiers.sh
 source ~/.p10k.zsh
 # source ~/custom-completions.zsh
-source ~/powerlevel10k/powerlevel10k.zsh-theme
+# source ~/powerlevel10k/powerlevel10k.zsh-theme
+source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 HISTFILE=~/.zsh_history
 HISTSIZE=100000
@@ -19,7 +20,7 @@ source $HOME/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/zshmarks/zshmarks.plugin.zsh
 source $HOME/omz-git-completions.zsh
 source $HOME/zsh-you-should-use/you-should-use.plugin.zsh
-source $HOME/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source $HOME/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # source $HOME/auto-trello.zsh
 
 zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
@@ -79,6 +80,7 @@ add-zsh-hook preexec pre_validation
 
 zstyle ':completion:*' menu select
 zmodload zsh/complist
+
 # use the vi navigation keys in menu completion
 # bindkey '^j' expand-or-complete 
 # bindkey -M menuselect '^h' vi-backward-char
@@ -94,8 +96,8 @@ function git_main_branch() {
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH="/opt/homebrew/bin:$PATH:$HOME/bin"
-export BROWSER=open
+# export PATH="/opt/homebrew/bin:$PATH:$HOME/bin"
+# export BROWSER=open
 
 NPM_PACKAGES="${XDG_DATA_HOME}/.npm-packages"
 export PATH="$PATH:$NPM_PACKAGES/bin"
@@ -107,4 +109,9 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 GPG_TTY=$(tty)
 export GPG_TTY
 
+autoload -Uz compinit
+compinit
+
 export CMAKE_INSTALL_PREFIX=/usr/local/bin/
+# source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/zach/code/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

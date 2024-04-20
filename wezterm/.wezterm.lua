@@ -5,8 +5,8 @@ require("on")
 
 return {
 	font = wezterm.font("FiraCode Nerd Font Mono"),
-	font_size = 20,
-	command_palette_font_size = 20,
+	font_size = 14,
+	command_palette_font_size = 16,
 	underline_position = -3,
 	underline_thickness = 2,
 	switch_to_last_active_tab_when_closing_tab = true,

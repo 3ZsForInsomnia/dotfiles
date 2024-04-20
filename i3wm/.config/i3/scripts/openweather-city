@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+source ~/.bash_profile
+
+APIKEY="$WEATHER_API_KEY"
+CITY_ID="$OPENWEATHER_CITY_ID"
+URL="http://api.openweathermap.org/data/2.5/weather?id=${CITY_ID}&units=imperial&APPID=${APIKEY}"
+
+WEATHER_RESPONSE=$(timeout --signal=1 2s curl -s "${URL}") ||  exit 1;
+
+WEATHER_CONDITION=$(echo $WEATHER_RESPONSE | jq '.weather[0].main' | sed 's/"//g')
+WEATHER_TEMP=$(echo $WEATHER_RESPONSE | jq '.main.temp' | cut -f1 -d".")
+WIND_SPEED=$(echo "$WEATHER_RESPONSE" | jq '.wind.speed')
+
+WIND_SPEED=$(awk "BEGIN {print 60*60*$WIND_SPEED/1000*0.621371}" | cut -f1 -d".")
+
+case $WEATHER_CONDITION in
+  'Clouds')
+    WEATHER_ICON=""
+    ;;
+  'Rain')
+    WEATHER_ICON=""
+    ;;
+  'Snow')
+    WEATHER_ICON=""
+    ;;
+  *)
+    WEATHER_ICON=""
+    ;;
+esac
+
+echo "${WEATHER_ICON}  ${WEATHER_TEMP}°F: ${WIND_SPEED} mph"

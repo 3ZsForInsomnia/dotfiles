@@ -5,7 +5,7 @@ alias fzo='o "$(fzf)"'
 
 alias alg='alias P'
 
-alias ls='exa -lahUFm --icons --git'
+alias ls='exa -lahUm -F --icons --git'
 alias lsg='ls G'
 alias lsd='exa -lahUFmD --icons -I ".git"' 
 function lsrFunc() {
@@ -74,4 +74,8 @@ fkill() {
 
 flp() {
   lpass show -c --password $(lpass ls  | fzf | awk '{print $(NF)}' | sed 's/\]//g')
+}
+
+fzeal() {
+  zeal-cli "$1" | fzf --height=50% --preview='zeal-cli --lynx-dump=true "$1" {}' | xargs -d '\n' zeal-cli "$1"
 }
