@@ -155,12 +155,12 @@ return packer.startup(function(use)
 			})
 		end,
 	})
-	use({
-		"smjonas/inc-rename.nvim",
-		config = function()
-			require("inc_rename").setup()
-		end,
-	})
+	-- use({
+	-- 	"smjonas/inc-rename.nvim",
+	-- 	config = function()
+	-- 		require("inc_rename").setup()
+	-- 	end,
+	-- })
 
 	--
 	--

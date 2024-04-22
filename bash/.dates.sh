@@ -5,8 +5,24 @@ convertsecs() {
   printf "%02d:%02d:%02d\n" $h $m $s
 }
 
+alias cal='gcalcli'
+function loginToGcalCli() {
+  gcalcli --client-id="$GCALCLI_CLIENT_ID" --client-secret="$GCAL_CLIENT_SECRET" agenda
+}
+
+function getTomorrow() {
+  system=$(isMacLinuxOrWin)
+  if [[ ${system} == 'linux' ]]; then
+    echo $(date -d "Tomorrow")
+  elif [[ ${system} == 'mac' ]]; then
+    echo 'mac fuck'
+    echo $(date -v+d1 -v0H)
+  fi
+}
+
 function nextEvent() {
-  data=$(gcalcli --nocolor agenda --no-military --nostarted --nodeclined --details length --details location "$(date)" "$(date -v+1d -v0H)" | head -2 | tail -1)
+  tomorrow=$(getTomorrow)
+  data=$(gcalcli --nocolor agenda --no-military --nostarted --nodeclined --details length --details location "$(date)" "$tomorrow" | head -2 | tail -1)
   a=$(echo "$data" | cut -f 2-5 -d " " | xargs)
   time="$(date +%Y) $a"
   event=$(echo "$data" | cut -f 6- -d " " | xargs)

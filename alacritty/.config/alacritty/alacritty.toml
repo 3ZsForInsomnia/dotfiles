@@ -1,0 +1,17 @@
+[font]
+size = 14
+
+[font.normal]
+family = "FiraCode Nerd Font Mono"
+style = "Regular"
+
+[window]
+decorations = "None"
+dynamic_title = true
+
+[scrolling]
+history = 100000
+multiplier = 5
+
+[selection]
+save_to_clipboard = true

@@ -12,8 +12,6 @@ export EDITOR="$VISUAL"
 source ~/.dash-g-aliases.sh
 source ~/.bash_profile
 source ~/.utils.sh
-source ~/.nvim-tmux-etc.sh
-source ~/.java.sh
 
 alias ..='cd ../'
 alias ...='..; ..;'
@@ -40,7 +38,8 @@ alias bashrc='v ~/code/dotfiles/.bashrc'
 alias bashpro='v ~/code/dotfiles/.bash_profile'
 alias vimrc='v ~/code/dotfiles/neovim/.config/nvim/init.lua'
 alias zshrc='v ~/code/dotfiles/zsh/.zshrc'
-alias wezrc='v ~/code/dotfiles/wezterm/.wezterm.lua'
+alias alarc='v ~/code/dotfiles/alacritty/.config/alacritty/alacritty.toml'
+# alias wezrc='v ~/code/dotfiles/wezterm/.wezterm.lua'
 
 alias rebash='source ~/.bashrc'
 alias repro='source ~/.bash_profile'
@@ -61,4 +60,3 @@ function default() {
     echo "$1"
   fi
 }
-. "$HOME/.cargo/env"

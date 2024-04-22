@@ -1,0 +1,26 @@
+[
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 1,
+                "origin_hash": "748e31550c24fc009038438dc4fce338"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "Caps_Lock",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 58,
+                "origin_hash": "748e31550c24fc009038438dc4fce338"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "Escape",
+        "mapping_type": "key_macro"
+    }
+]

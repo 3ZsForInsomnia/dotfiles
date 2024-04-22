@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 -- local wslconfig = require("wsl-domain")
-require("on")
+-- local on = require("on")
 
 return {
 	font = wezterm.font("FiraCode Nerd Font Mono"),
@@ -10,12 +10,12 @@ return {
 	underline_position = -3,
 	underline_thickness = 2,
 	switch_to_last_active_tab_when_closing_tab = true,
-	use_fancy_tab_bar = true,
+	use_fancy_tab_bar = false,
 	tab_bar_at_bottom = true,
 	status_update_interval = 1000,
 	window_decorations = "RESIZE",
 	window_frame = {
-		font_size = 14,
+		font_size = 10,
 		active_titlebar_bg = "#000",
 		inactive_titlebar_bg = "#666",
 	},

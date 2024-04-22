@@ -1,0 +1,8 @@
+[Unit]
+Description=redshiftconf
+
+[Service]
+ExecStart=/usr/bin/redshiftconf
+
+[Install]
+WantedBy=default.target

@@ -21,7 +21,7 @@
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango: FiraCode Nerd Font Medium 20
+font pango: FiraCode Nerd Font Medium 0
 
 # set the mod key to the winkey:
 set $mod Mod4
@@ -46,7 +46,7 @@ workspace_layout default
 ##############################
 
 #border indicator on windows:
-new_window pixel 1
+# new_window pixel 0
 
 # thin borders
 hide_edge_borders both
@@ -56,13 +56,13 @@ gaps inner 0
 gaps outer 0
 
 # show window title bars (not officially supported with i3gaps)
-#default_border normal
+default_border pixel 0
 
 # window title alignment
 #title_align center
 
 # Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
+# floating_modifier $mod
 
 # switch/iterate between workspaces
 bindsym $mod+Tab workspace next
@@ -170,7 +170,8 @@ bindcode $mod+Shift+90 	 move container to workspace  $ws10
 ######################################
 
 # start a terminal
-bindsym $mod+Return exec --no-startup-id wezterm-gui
+# bindsym $mod+Return exec --no-startup-id wezterm-gui
+bindsym $mod+Return exec --no-startup-id alacritty
 
 # kill focused window
 bindsym $mod+q kill
@@ -200,7 +201,8 @@ bindsym F1 exec --no-startup-id ~/.config/i3/scripts/keyhint-2
 #bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight +10 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
 #bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -10 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
 # Backlight setting using dunst osc
-
+# bindsym XF86KbdBrightnessUp exec light -s sysfs/leds/mmc0::kbd\_backlight -A 5
+# bindsym XF86KbdBrightnessDown exec light -s sysfs/leds/mmc0::kbd\_backlight -U 5
 
 # change focus
 bindsym $mod+j focus left
@@ -237,7 +239,7 @@ bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
-bindsym $mod+g layout tabbed
+bindsym $mod+g layout toggle tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
@@ -284,7 +286,7 @@ bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 # bindsym $mod+p exec --no-startup-id /usr/local/bin/switch-audio-port
 
 ## App shortcuts
-bindsym $mod+w exec --no-startup-id /usr/bin/google-chrome-stable
+# bindsym $mod+w exec --no-startup-id /usr/bin/google-chrome-stable
 # bindsym $mod+n exec --no-startup-id /usr/bin/thunar
 # bindsym Print exec --no-startup-id scrot ~/%Y-%m-%d-%T-screenshot.png && notify-send "Screenshot saved to ~/$(date +"%Y-%m-%d-%T")-screenshot.png"
 
@@ -299,9 +301,9 @@ bindsym $mod+w exec --no-startup-id /usr/bin/google-chrome-stable
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "1:"
 set $ws2 "2:"
-set $ws3 "3:"
-set $ws4 "4:"
-set $ws5 "5:"
+set $ws3 "3:"
+set $ws4 "4:"
+set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
@@ -318,11 +320,13 @@ set $ws10 "10"
 #workspace $ws5 output HDMI-0
 
 # bind program to workspace and focus to them on startup:
-# assign [class="Xfce4-terminal"] $ws1
-# assign [class="(?i)firefox"] $ws2
-# assign [class="Thunar"] $ws3
-# assign [class="thunderbird"] $ws4
-# assign [class="TelegramDesktop"] $ws5
+assign [class="google-chrome-stable"] $ws1
+assign [class="wezterm"] $ws2
+assign [class="alacritty"] $ws2
+assign [class="discord"] $ws3
+assign [class="slack"] $ws3
+assign [class="obsidian"] $ws4
+assign [class="sunsana.AppImage"] $ws4
 
 # automatic set focus new window if it opens on another workspace than the current:
 # for_window [class=Xfce4-terminal] focus
@@ -381,10 +385,9 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # num lock activated
 #exec --no-startup-id numlockx on
 
-# configure multiple keyboard layouts and hotkey to switch (Alt+CAPSLOCK in this example)
+# configure multiple keyboard layouts and hotkey to switch (Alt+Shift in this example)
 exec --no-startup-id setxkbmap -layout us,il-heb
 exec setxkbmap -layout us,il -option grp:alt_shift_toggle
-# exec "setxkbmap -option 'grp:alt_shift_toggle' -layout us,il-heb -variant ,qwerty"
 
 # start conky:
 #exec_always --no-startup-id conky
@@ -398,7 +401,7 @@ exec --no-startup-id ~/.screenlayout/monitor.sh
 exec --no-startup-id sleep 1 && feh --bg-fill /usr/share/endeavouros/backgrounds/endeavouros-wallpaper.png
 
 # set powersavings for display:
-exec --no-startup-id xset s 480 dpms 600 600 600
+exec --no-startup-id xset s 600 dpms 720 900 900
 
 # disable power saving (for example if using xscreensaver)
 #exec --no-startup-id xset -dpms
@@ -428,16 +431,15 @@ exec --no-startup-id /usr/bin/dunst --config ~/.config/dunst/dunstrc
 #exec_always --no-startup-id autotiling
 
 # Autostart apps as you like
-exec --no-startup-id i3-msg 'workspace $ws1; exec google-chrome-stable; workspace $ws1'
-exec --no-startup-id i3-msg 'workspace $ws2; exec wezterm; workspace $ws1'
-exec --no-startup-id i3-msg 'workspace $ws3; exec google-chrome-stable; workspace $ws1'
-exec --no-startup-id i3-msg 'workspace $ws4; exec slack; workspace $ws1'
-exec --no-startup-id i3-msg 'workspace $ws4; exec discord; workspace $ws1'
-exec --no-startup-id i3-msg 'workspace $ws5; exec obsidian; workspace $ws1'
-exec --no-startup-id i3-msg 'workspace $ws5; exec ~/AppImages/sunsama.AppImage'; workspace $ws1'
-exec copyq
-exec redshiftconf
 exec source mine/bin/activate
+exec --no-startup-id input-remapper-control --command autoload
+exec --no-startup-id copyq
+exec --no-startup-id obsidian
+exec --no-startup-id ~/AppImages/sunsama.AppImage
+exec --no-startup-id google-chrome-stable
+exec --no-startup-id slack
+exec --no-startup-id alacritty msg create-window --title="Dots" --class="Dots" --working-directory="~/code/dotfiles/"
+# exec --no-startup-id wezterm
 
 ###############
 # system tray #
@@ -525,10 +527,10 @@ bar {
         # When strip_workspace_numbers is set to yes,
         # any workspace that has a name of the form
         # “[n][:][NAME]” will display only the name.
-        # strip_workspace_numbers yes
+        strip_workspace_numbers yes
         strip_workspace_name no
 
-		    colors {
+	    colors {
           separator          $purple
           background         $darkgrey
           statusline         $white

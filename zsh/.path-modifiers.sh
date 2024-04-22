@@ -21,7 +21,7 @@ export PATH=/usr/local/bin:$PATH
 export PATH=$PATH:/opt/apache-maven/bin
 export GOPATH=~/src/go/
 
-export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;;"
+export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;~/.config;"
 
 # Required for opening browser in WSL
 # export BROWSER=wslview

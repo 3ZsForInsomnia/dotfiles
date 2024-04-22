@@ -4,10 +4,10 @@ show-read-feeds no
 always-display-description yes
 keep-articles-days 7
 
-# confirm-mark-feed-read no
+confirm-mark-feed-read no
 
-browser "open -g -a 'Google Chrome' %u"
-# browser "xdg-open '%u'" # Used for...linux?
+# browser "open -g -a 'Google Chrome' %u"
+browser "xdg-open '%u'"
 # browser "open %u" # Used for WSL
 
 # unbind keys

@@ -27,6 +27,7 @@ killProcess() {
 alias kp='killProcess'
 
 alias lc='wc -l'
+
 # $1=file extension
 lineCountForFolder() {
   if [ -z $1 ]; then
@@ -47,5 +48,18 @@ function default() {
     echo "$2"
   else
     echo "$1"
+  fi
+}
+
+isMacLinuxOrWin() {
+  unameExists=$(command -v uname)
+  if [[ -z "$unameExists" ]]; then
+    echo "windows"
+  fi
+  output=$(uname -s)
+  if [[ ${output} == "Darwin" ]]; then
+    echo "mac"
+  elif [[ ${output} == "Linux" ]]; then
+    echo "linux"
   fi
 }
