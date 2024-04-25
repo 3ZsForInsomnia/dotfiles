@@ -301,8 +301,8 @@ bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "1:"
 set $ws2 "2:"
-set $ws3 "3:"
-set $ws4 "4:"
+set $ws3 "3:"
+set $ws4 "4:"
 set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
@@ -323,10 +323,10 @@ set $ws10 "10"
 assign [class="google-chrome-stable"] $ws1
 assign [class="wezterm"] $ws2
 assign [class="alacritty"] $ws2
-assign [class="discord"] $ws3
-assign [class="slack"] $ws3
-assign [class="obsidian"] $ws4
-assign [class="sunsana.AppImage"] $ws4
+assign [class="obsidian"] $ws3
+assign [class="sunsana.AppImage"] $ws3
+assign [class="discord"] $ws4
+assign [class="slack"] $ws4
 
 # automatic set focus new window if it opens on another workspace than the current:
 # for_window [class=Xfce4-terminal] focus
@@ -385,9 +385,8 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # num lock activated
 #exec --no-startup-id numlockx on
 
-# configure multiple keyboard layouts and hotkey to switch (Alt+Shift in this example)
-exec --no-startup-id setxkbmap -layout us,il-heb
-exec setxkbmap -layout us,il -option grp:alt_shift_toggle
+# configure multiple keyboard layouts
+exec_always "setxkbmap -model pc104 -layout us,il -variant altgr-intl,, -option grp:rctrl_rshift_toggle"
 
 # start conky:
 #exec_always --no-startup-id conky
@@ -438,8 +437,8 @@ exec --no-startup-id obsidian
 exec --no-startup-id ~/AppImages/sunsama.AppImage
 exec --no-startup-id google-chrome-stable
 exec --no-startup-id slack
-exec --no-startup-id alacritty msg create-window --title="Dots" --class="Dots" --working-directory="~/code/dotfiles/"
-# exec --no-startup-id wezterm
+exec --no-startup-id discord
+exec --no-startup-id alacritty msg create-window --title="Dots" --class="Dots" --working-directory="/home/zach/code/dotfiles/"
 
 ###############
 # system tray #
@@ -619,3 +618,5 @@ bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection c
 
 ## Open calculator
 bindsym $mod+c exec --no-startup-id kcalc
+
+bindsym $mod+m exec "DISPLAY=:0 /usr/bin/find-cursor -c orange -f"

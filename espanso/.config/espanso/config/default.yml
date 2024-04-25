@@ -45,3 +45,4 @@ auto_restart: true
 # filter_exec: iterm
 # enable: false
 
+show_notifications: false

@@ -55,7 +55,3 @@ alias lux="node ~/luxafor.js"
 alias bright='brightnessctl s '
 
 alias alacreate='alacritty msg create-window '
-
-alias afe='alacreate --title="FE" class="FE"'
-alias abe='alacreate --title="BE" class="BE"'
-alias adots='alacreate --title="Dots" class="Dots"'

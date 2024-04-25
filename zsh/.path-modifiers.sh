@@ -32,3 +32,7 @@ export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.
 
 # Dasht config
 export DASHT_DOCSETS_DIR=~/.local/share/Zeal/Zeal/docsets/
+
+export SOURCE_CODE=/home/zach/code
+
+export PATH=~/.npm-global/bin:$PATH

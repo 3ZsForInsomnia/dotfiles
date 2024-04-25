@@ -2,15 +2,19 @@ alias -g P='| peco'
 alias -g F='| fzf'
 alias -g L='| less'
 alias -g G='| rg -i '
-alias -g C='| cut'
-alias -g J='| jq'
-alias -g W='> wtf.txt'
+alias -g SO='| sort'
+
 alias -g H='| head'
 alias -g T='| tail'
+
+alias -g W='| wc -l'
+
+alias -g J='| jq'
+alias -g C='| cut'
 alias -g TR='| tr'
-alias -g S='| sed'
-alias -g SO='| sort'
+
 alias -g X='| xargs'
+alias -g S='| sed'
 alias -g A='| awk'
 alias -g K='| awky'
 awky() {
@@ -24,3 +28,6 @@ elif [ "$MY_SYSTEM" = "mac" ]; then
   alias -g PC='| pbcopy'
   alias -g PP='| pbpaste'
 fi
+
+alias -g V='| nvim '
+alias -g O='> wtf.txt'
