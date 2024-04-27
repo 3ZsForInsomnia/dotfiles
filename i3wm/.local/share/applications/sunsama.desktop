@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Sunsama
+Comment=Sunsama, daily and weekly task manager
+Path=~/AppImages
+Exec=./sunsama.AppImage
+Icon=sunsama
+Terminal=false
