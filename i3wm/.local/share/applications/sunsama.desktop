@@ -2,7 +2,7 @@
 Type=Application
 Name=Sunsama
 Comment=Sunsama, daily and weekly task manager
-Path=~/AppImages
+Path=/home/zach/AppImages
 Exec=./sunsama.AppImage
-Icon=sunsama
+Icon=/home/zach/.icons/sunsama.jpeg
 Terminal=false
