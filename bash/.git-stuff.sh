@@ -44,7 +44,7 @@ gacp() {
     location=$2
   fi
 
-  $(gac $1 $location)
+  $(gac "$1" "$location")
   $(ggp)
 }
 gcbc() { # Checkout new branch and commit

@@ -1,17 +1,25 @@
-alias wttr="curl 'wttr.in/$MY_LOCATION?u'"
-alias wttr1="curl 'wttr.in/$MY_LOCATION?1'"
-alias wttr3="curl 'wttr.in/$MY_LOCATION?format=3&u'"
-alias wttrpng="curl 'wttr.in/$MY_LOCATION.png?u' > ~/Downloads/wttr.png && open ~/Downloads/wttr.png"
+function wttr() {
+  curl "wttr.in/$MY_LOCATION?u"
+}
+function wttr1() {
+  curl "wttr.in/$MY_LOCATION?1"
+}
+function wttr3() {
+  curl "wttr.in/$MY_LOCATION?3&u"
+}
+function wttrpng() {
+  curl "wttr.in/$MY_LOCATION.png?u" >"$HOME/Downloads/wttr.png" && open "$HOME/Downloads/wttr.png"
+}
 
 function fup() {
   result=$(fuckitup -f "$@")
-  echo $result PC
-  echo $result
+  echo "$result" PC
+  echo "$result"
 }
 function fupc() {
   result=$(fuckitup -c "$@")
-  echo $result PC
-  echo $result
+  echo "$result" PC
+  echo "$result"
 }
 
 alias po="pomojs --log ~/.pomo.log --tmux"

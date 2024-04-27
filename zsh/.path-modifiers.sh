@@ -1,38 +1,57 @@
-# PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
-
-export PATH=/usr/bin:$PATH
-
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_STATE_HOME=$HOME/.local/state
+export XDG_DATA_DIRS="$HOME/.local/data:$XDG_DATA_DIRS"
+export NPM_PACKAGES="$HOME/.npm-global"
+export XDG_CODE_HOME=$HOME/code
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="/usr/bin/python3:$PYENV_ROOT/bin:$HOME/.local/bin:$PATH"
-# export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 
-# export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
-# export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
-export PATH=$PATH:$HOME/.npm/bin
+ubin="/usr/bin"
+uloc="/usr/local"
+ulobin="/usr/local/bin"
+hloc="$HOME/.local"
+hlobin="$hloc/bin"
+hbin="$hloc/bin"
 
-# export VOLTA_HOME="$HOME/.volta"
-# export PATH="$VOLTA_HOME/bin:$PATH"
+######################
+# Path modifiers     #
+######################
 
-# . "$HOME/.cargo/cargo"
+py3=$ubin/python3
+pybin=$PYENV_ROOT/bin
+nbin=$NPM_PACKAGES/bin
+maven=/opt/apache-maven/bin
 
-export PATH=/usr/local/bin:$PATH
-# export JAVA_HOME=$(/usr/libexec/java_home)
+export PATH="$ubin:$ulobin:$hlobin:$hbin:$py3:$pybin:$nbin:$maven:$PATH"
 
-export PATH=$PATH:/opt/apache-maven/bin
-export GOPATH=~/src/go/
+######################
+# Global variables   #
+######################
 
-export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;~/.config;"
+export NODE_PATH="$NODE_PATH:$NPM_PACKAGES/lib/node_modules"
+
+export CMAKE_INSTALL_PREFIX=$ulobin
+
+export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;$XDG_CONFIG_HOME;"
+
+# Dasht config
+export DASHT_DOCSETS_DIR=$hloc/share/Zeal/Zeal/docsets/
+
+export GOPATH=$XDG_CODE_HOME/go/
+
+######################
+# OS specific items  #
+######################
+
+# PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
 
 # Required for opening browser in WSL
 # export BROWSER=wslview
 
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Dasht config
-export DASHT_DOCSETS_DIR=~/.local/share/Zeal/Zeal/docsets/
-
-export SOURCE_CODE=/home/zach/code
-
-export PATH=~/.npm-global/bin:$PATH
+# This appears unused - site this is from:
+#   https://github.com/sindresorhus/guides/blob/main/npm-global-without-sudo.md
+# Originally needed this on WSL/MacOS, but on Arch it appears irrelevant?
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+# export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"

@@ -113,5 +113,3 @@ function tget() {
 function tgetid() {
   tget "$1" "$2" | fzf | cut -d ' ' -f 2
 }
-
-function 
