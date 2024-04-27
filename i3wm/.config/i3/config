@@ -55,3 +55,5 @@ include ~/.config/i3/theming.conf
 include ~/.config/i3/workspaces.conf
 include ~/.config/i3/workspace-layouts.conf
 include ~/.config/i3/workspace-motions.conf
+
+exec setxkbmap -option caps:swapescape

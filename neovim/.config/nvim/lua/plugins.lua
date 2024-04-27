@@ -129,7 +129,7 @@ return packer.startup(function(use)
 	})
 	use({
 		"folke/trouble.nvim",
-		cmd = "TroubleToggle",
+		-- cmd = "TroubleToggle", -- Decided to eagerly load this
 		config = function()
 			require("trouble").setup({
 				height = 20,
@@ -254,10 +254,7 @@ return packer.startup(function(use)
 	--
 	use({
 		"nvim-telescope/telescope.nvim",
-		cmd = "Telescope",
-		module = "telescope",
-		keys = { "<leader>f" },
-		tag = "0.1.2",
+		tag = "0.1.6",
 		config = function()
 			require("config.telescope").setup()
 		end,
@@ -274,7 +271,7 @@ return packer.startup(function(use)
 				run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
 			},
 			"3ZsForInsomnia/telescope-angular",
-			-- { "dhruvmanila/telescope-bookmarks.nvim", opt = true },
+			{ "dhruvmanila/telescope-bookmarks.nvim", opt = true },
 			"debugloop/telescope-undo.nvim",
 			"LinArcX/telescope-scriptnames.nvim",
 			"crispgm/telescope-heading.nvim",
@@ -291,6 +288,17 @@ return packer.startup(function(use)
 		end,
 	})
 	use("sunaku/vim-dasht")
+	use({
+		"luckasRanarison/nvim-devdocs",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		config = function()
+			require("config.devdocs").setup()
+		end,
+	})
 	-- use({
 	-- 	"mrjones2014/dash.nvim",
 	-- 	cmd = { "Dash", "DashWord" },

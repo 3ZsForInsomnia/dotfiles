@@ -2,8 +2,7 @@ local M = {}
 
 function M.setup()
 	local opts = {
-		-- dir = "/mnt/c/Users/comra/code/notes",
-		dir = "~/code/notes",
+		dir = "~/Documents/notes",
 		open_notes_in = "current",
 		finder = "telescope.nvim",
 		-- completion = {

@@ -3,12 +3,12 @@ local M = {}
 function M.setup()
 	local telescope = require("telescope")
 	local actions = require("telescope.actions")
-	-- local trouble = require("trouble.providers.telescope")
+	local trouble = require("trouble.providers.telescope")
 	local lga_actions = require("telescope-live-grep-args.actions")
 	local icons = require("icons")
 
 	local shortcuts = {
-		-- ["<M-t>"] = trouble.open_with_trouble,
+		["<M-t>"] = trouble.open_with_trouble,
 		["<M-q>"] = actions.send_to_qflist + actions.open_qflist,
 		["<M-a>"] = actions.add_to_qflist + actions.open_qflist,
 		["<C-s>"] = actions.add_selection,
@@ -117,7 +117,6 @@ function M.setup()
 				override_generic_sorter = true, -- override the generic sorter
 				override_file_sorter = true, -- override the file sorter
 				case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-				-- the default case_mode is "smart_case"
 			},
 			bookmarks = {
 				selected_browser = "chrome",
