@@ -13,7 +13,8 @@ o.shadafile = "/home/zach/vim-sessions/main.shada"
 
 o.spell = true
 o.spelllang = "en_us"
-o.spelloptions = "camel"
+o.spelloptions = "camel,noplainbuffer"
+o.syntax = "on"
 o.swapfile = false
 o.backup = true
 o.undofile = true

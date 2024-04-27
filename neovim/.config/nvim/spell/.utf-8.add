@@ -1,4 +1,3 @@
-ADPR
 configs
 #ua
 treesitter
@@ -23,9 +22,6 @@ utils
 b/!
 Open/!
 changes/!
-iverson
-#/!
-#/!
 use/!
 test/!
 lua/!
@@ -112,3 +108,7 @@ edit
 tooltip
 workstream
 frontend
+Workstream
+datagrid
+longterm
+selectables

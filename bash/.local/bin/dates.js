@@ -31,7 +31,8 @@ const getCurrTime = (date) => {
   else if (now > timesMap["morn"]) return "morn";
   else return "beg";
 };
-const past = (d) => new Date(d).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0);
+const past = (d) =>
+  new Date(d).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0);
 
 const whenNoArgsArePresent = ({ f, t, n, e, s }) => !f && !t && !n;
 const whenOnlyACountIsgiven = ({ f, t, n }) => !!n && !f && !t;

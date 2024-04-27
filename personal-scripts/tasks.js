@@ -36,7 +36,7 @@ const fn = (data) => {
 
   execSync(`dnd on "Currently working on: ${status}" ${time}`);
   execSync(
-    `sleep ${dndDuration}; terminal-notifier -title "DND turning off" -message "${status}" -sound default`
+    `sleep ${dndDuration}; terminal-notifier -title "DND turning off" -message "${status}" -sound default`,
   );
   execSync(`dnd off`);
 };
@@ -52,6 +52,6 @@ if (useDnd) getMyTickets(fn);
 else
   nfzf(cards, (choice) =>
     trelloFn(
-      choice.selected.value === "custom" ? args[0] : choice.selected.value
-    )
+      choice.selected.value === "custom" ? args[0] : choice.selected.value,
+    ),
   );
