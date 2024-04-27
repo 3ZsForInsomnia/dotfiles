@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { device } = require("luxafor-api");
 
 try {
