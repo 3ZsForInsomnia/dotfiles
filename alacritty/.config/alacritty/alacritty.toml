@@ -15,3 +15,24 @@ multiplier = 5
 
 [selection]
 save_to_clipboard = true
+
+[keyboard]
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "b"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "f"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollHalfPageUp"
+key = "u"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollHalfPageDown"
+key = "d"
+mods = "Control"

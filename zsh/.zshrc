@@ -1,5 +1,8 @@
 source "$HOME/.source-things.zsh"
 
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
+
 HISTFILE=~/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000

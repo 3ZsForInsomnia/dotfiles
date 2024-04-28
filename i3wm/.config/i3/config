@@ -43,6 +43,9 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+# Putting this first to ensure apps are specified for workspaces before autostart runs
+include ~/.config/i3/workspaces.conf
+
 include ~/.config/i3/autostart.conf
 include ~/.config/i3/displays.conf
 include ~/.config/i3/keybinds.conf
@@ -52,7 +55,6 @@ include ~/.config/i3/rofi.conf
 include ~/.config/i3/screenshots.conf
 include ~/.config/i3/stuff-i-dont-use.conf
 include ~/.config/i3/theming.conf
-include ~/.config/i3/workspaces.conf
 include ~/.config/i3/workspace-layouts.conf
 include ~/.config/i3/workspace-motions.conf
 
