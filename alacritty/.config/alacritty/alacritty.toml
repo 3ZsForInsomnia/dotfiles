@@ -20,19 +20,19 @@ save_to_clipboard = true
 [[keyboard.bindings]]
 action = "ScrollPageUp"
 key = "b"
-mods = "Control"
+mods = "Control|Shift"
 
 [[keyboard.bindings]]
 action = "ScrollPageDown"
 key = "f"
-mods = "Control"
+mods = "Control|Shift"
 
 [[keyboard.bindings]]
 action = "ScrollHalfPageUp"
 key = "u"
-mods = "Control"
+mods = "Control|Shift"
 
 [[keyboard.bindings]]
 action = "ScrollHalfPageDown"
 key = "d"
-mods = "Control"
+mods = "Control|Shift"
