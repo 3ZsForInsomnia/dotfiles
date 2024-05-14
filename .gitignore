@@ -9,3 +9,5 @@ node_modules
 rss/.newsboat/cache.db
 shada
 vim-sessions
+linear-client/config
+tags
