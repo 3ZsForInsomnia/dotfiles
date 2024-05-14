@@ -40,28 +40,29 @@ elif [ "$system" == 'linux' ]; then
   sudo apt install stow
 fi
 
-cd ~
+cd "$HOME"
 mkdir code
 cd code
 git clone --recurse-submodules https://github.com/3ZsForInsomnia/dotfiles
 source ./dotfiles/bash/.bashrc
 unstowAll
-cd ~
+cd "$HOME"
 
-source ~/.startup/utils.sh
-source ~/.startup/helpers.sh
-source ~/.startup/core-items.sh
-source ~/.startup/unique-items.sh
-source ~/.startup/package-managers.sh
-source ~/.startup/save-managed-packages.sh
+source "$HOME/.startup/utils.sh"
+source "$HOME/.startup/helpers.sh"
+source "$HOME/.startup/core-items.sh"
+source "$HOME/.startup/unique-items.sh"
+source "$HOME/.startup/package-managers.sh"
+source "$HOME/.startup/save-managed-packages.sh"
 
 installAllCoreItems
 
 # Setup RSA key
 # Log into lastpass CLI
-git config --global core.excludesfile ~/.gitignore_global
+git config --global core.excludesfile "$HOME/.gitignore_global"
 git config --global user.name "Zachary Levine"
 git config --global user.email "Zach@ZJLevine.dev"
+git config --global init.templatedir '$HOME/.git_template'
 
 # These must be run manually as they depend on git/dotfiles/lastpass
 installRest() {

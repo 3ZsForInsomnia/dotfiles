@@ -1,3 +1,4 @@
+exec_always setxkbmap -option caps:swapescape
 # This file is a modified version based on default i3-config-wizard config
 # source is available here:
 # https://raw.githubusercontent.com/endeavouros-team/endeavouros-i3wm-setup/main/etc/skel/.config/i3/config
@@ -57,5 +58,3 @@ include ~/.config/i3/stuff-i-dont-use.conf
 include ~/.config/i3/theming.conf
 include ~/.config/i3/workspace-layouts.conf
 include ~/.config/i3/workspace-motions.conf
-
-exec setxkbmap -option caps:swapescape

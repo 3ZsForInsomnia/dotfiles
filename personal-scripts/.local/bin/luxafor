@@ -1,16 +1,45 @@
-#!/usr/bin/env node
+#!/usr/bin/env bash
 
-const { device } = require("luxafor-api");
+# $1: color
+# $2: device (optional)
 
-try {
-  const luxafor = device();
+if [[ -z $2 ]]; then
+  devices=(`command ls /sys/class/leds/ | grep -i luxafor | sed 's@^[^0-9]*\([0-9]\+\).*@\1@'`)
+  deviceNumber=$(echo $devices | awk '{print $1;}')
+  device="luxafor$deviceNumber"
+elif [[ -v 2 ]]; then
+  device="luxafor$2"
+fi
 
-  const [color, ...args] = process.argv.slice(2);
+devicePath="/sys/class/leds/$device"
 
-  if (!luxafor) throw new Error("Flag not found");
+if [[ -v 1 ]]; then
+  if [[ $1 == "off" ]]; then
+    red=0
+    green=0
+    blue=0
+  elif [[ $1 == "red" ]]; then
+    red=255
+    green=0
+    blue=0
+  elif [[ $1 == "green" ]]; then
+    red=0
+    green=255
+    blue=0
+  elif [[ $1 == "blue" ]]; then
+    red=0
+    green=0
+    blue=255
+  elif [[ $1 == "yellow" ]]; then
+    red=255
+    green=255
+    blue=0
+  fi
+fi
 
-  if (color === "off") luxafor.off();
-  else if (color) luxafor.color(color);
-} catch (e) {
-  console.warn("There was an issue using luxafor - is it attached?");
-}
+for num in 1 2 3 4 5; do
+  led="led$num"
+  echo $red > $devicePath:red:$led/brightness
+  echo $green > $devicePath:green:$led/brightness
+  echo $blue > $devicePath:blue:$led/brightness
+done

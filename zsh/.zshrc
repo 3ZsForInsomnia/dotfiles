@@ -1,4 +1,14 @@
-source "$HOME/.source-things.zsh"
+source () {
+    [[ ! "$1.zwc" -nt $1 ]] || zcompile $1
+    builtin source $@
+}
+
+. () {
+    [[ ! "$1.zwc" -nt $1 ]] || zcompile $1
+    builtin . $@
+}
+
+source "$HOME/.zsh/.source-things.zsh"
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
@@ -11,22 +21,13 @@ setopt auto_cd
 setopt correct_all
 setopt append_history
 
-zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
-fpath=(~/zsh-completions/src ~/.zsh/ $fpath)
-
-# ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
-# ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
-# ZVM_VI_HIGHLIGHT_FOREGROUND=#000000
-# ZVM_VI_HIGHLIGHT_BACKGROUND=#fe9a4a
-
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-GPG_TTY=$(tty)
-export GPG_TTY
-
 autoload -Uz compinit
-compinit
+for dump in ~/.zcompdump(N.mh+24); do
+    compinit
+done
 
 # Must be sourced after everything else
 source "$HOME/code/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
