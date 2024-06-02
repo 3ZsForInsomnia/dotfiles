@@ -2,12 +2,12 @@
 # $2 - emoji - defaults to tomato
 # $3 - time - defaults to 25 minutes
 function setSlack() {
-  status=$(default "$1" "Busy")
+  statusMessage=$(default "$1" "Busy")
   emoji=$(default "$2" "tomato")
   time=$(default "$3" "25")
 
   curl "$SLACK_ZAP_WEBHOOK" -G \
-    --data-urlencode "message=$status" \
+    --data-urlencode "message=$statusMessage" \
     --data-urlencode "emoji=:$emoji:" \
     --data-urlencode "time='in $time minutes'"
 }

@@ -2,11 +2,19 @@ alias j='jump'
 alias b='bookmark'
 alias shm='showmarks'
 
-alias o='open'
+function o() {
+  if [[ $1 == "www."* ]]; then
+    str="https://$1"
+  else
+    str=$1
+  fi
+  $(open "$str")
+}
+
 if [[ "$MY_SYSTEM" == "mac" ]]; then
-  alias open='command open'
+  alias open="command open"
 elif [[ "$MY_SYSTEM" == "linux" ]]; then
-  alias open='xdg-open'
+  alias open="xdg-open"
 fi
 
 alias makeExecutable='chmod +x'

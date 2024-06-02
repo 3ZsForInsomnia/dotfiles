@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "$HOME/.slack.sh"
+
 function default() {
   if [[ -z "$1" ]]; then
     echo "$2"
@@ -14,30 +16,19 @@ function default() {
 # $4 = emoji
 # $5 = what sites to block, none, socialMedia, all, misc
 if [ "$1" == 'on' ]; then
-  status=$(default "$2" "Busy")
+  statusMessage=$(default "$2" "Busy")
   time=$(default "$3" "26")
   emoji=$(default "$4" "tomato")
-  block=$(default "$5" "socialMedia")
 
-  shortcuts run "dnd on"
-  setSlack "$status" "$emoji" "$time"
-  node ~/luxafor.js "red"
-
-  # d="--enddate $(date -v+"$time"M "+%Y-%m-%d %H:%M:%S")"
-  # l="--blocklist $SELFCONTROL_BLOCKLISTS$block.selfcontrol"
-  d="$(date -v+"$time"M "+%Y-%m-%d %H:%M:%S")"
-  l="$SELFCONTROL_BLOCKLISTS$block.selfcontrol"
-  me=$(whoami)
-  id="--uid $(id -u "$me")"
-  /Applications/SelfControl.app/Contents/MacOS/org.eyebeam.SelfControl "$id" --install "$l" "$d"
-  # /Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli "$id" start "$l" "$d"
+  dunstctl set-paused true
+  setSlack "$statusMessage" "$emoji" "$time"
+  luxafor "red"
 elif [ "$1" == 'off' ]; then
   message=$(default "$2" "Available")
-  color=$(default "$3" "tomato")
 
-  shortcuts run "dnd off"
+  dunstctl set-paused false
   setSlackToAvailable "$message"
-  node ~/luxafor.js "$color"
+  luxafor "green"
 else
   echo "Your command (\"$1\") was unrecognized! The options currently supported are \"on\" and \"off\""
 fi

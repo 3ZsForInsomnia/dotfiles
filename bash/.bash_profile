@@ -48,7 +48,7 @@ export CRON_LOG="$HOME/.local/state/cron/cron.log"
 # }
 # alias scos="selfControlBlock"
 
-alias lux="node ~/luxafor.js"
+alias lux="luxafor"
 
 . "$HOME/.cargo/env"
 

@@ -7,9 +7,9 @@ source "$HOME/.zsh/.path-modifiers.zsh"
 source "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$HOME/.zsh/zshmarks/zshmarks.plugin.zsh"
 source "$HOME/.zsh/.omz-git-completions.zsh"
-source "$HOME/.zsh/zsh-you-should-use/you-should-use.plugin.zsh"
+# source "$HOME/.zsh/zsh-you-should-use/you-should-use.plugin.zsh"
 
-source "$HOME/.zsh/.reveal-alias.zsh"
+# source "$HOME/.zsh/.reveal-alias.zsh"
 source "$HOME/.zsh/.cli-tools.zsh"
 
 zstyle ':completion:*:*:git:*' script ~/.zsh/.git-completion.bash

@@ -33,7 +33,7 @@ export NODE_PATH="$NODE_PATH:$NPM_PACKAGES/lib/node_modules"
 
 export CMAKE_INSTALL_PREFIX=$ulobin
 
-export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;$XDG_CONFIG_HOME;"
+export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;"
 
 # Dasht config
 export DASHT_DOCSETS_DIR=$hloc/share/Zeal/Zeal/docsets/

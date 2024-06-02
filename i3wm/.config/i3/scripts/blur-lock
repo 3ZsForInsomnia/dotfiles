@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+i3lock \
+  --nofork \
+  --show-failed-attempts \
+  --ignore-empty-password \
+  --image='/home/zach/.config/i3/lock-screen.png' --tiling

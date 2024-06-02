@@ -4,7 +4,7 @@
 # $2: device (optional)
 
 if [[ -z $2 ]]; then
-  devices=(`command ls /sys/class/leds/ | grep -i luxafor | sed 's@^[^0-9]*\([0-9]\+\).*@\1@'`)
+  devices=($(command ls /sys/class/leds/ | grep -i luxafor | sed 's@^[^0-9]*\([0-9]\+\).*@\1@'))
   deviceNumber=$(echo $devices | awk '{print $1;}')
   device="luxafor$deviceNumber"
 elif [[ -v 2 ]]; then
@@ -39,7 +39,7 @@ fi
 
 for num in 1 2 3 4 5; do
   led="led$num"
-  echo $red > $devicePath:red:$led/brightness
-  echo $green > $devicePath:green:$led/brightness
-  echo $blue > $devicePath:blue:$led/brightness
+  echo $red | sudo /usr/bin/tee "$devicePath:red:$led/brightness"
+  echo $green | sudo /usr/bin/tee "$devicePath:green:$led/brightness"
+  echo $blue | sudo /usr/bin/tee "$devicePath:blue:$led/brightness"
 done

@@ -34,19 +34,19 @@ M.setup = function()
 			java = { require("formatter.filetypes.java").google_java_format },
 			javascript = {
 				require("formatter.filetypes.javascript").prettierd,
-				eslint_d_caching,
+				require("formatter.filetypes.javascript").eslint_d,
 			},
 			javascriptreact = {
 				require("formatter.filetypes.javascript").prettierd,
-				eslint_d_caching,
+				require("formatter.filetypes.javascript").eslint_d,
 			},
 			typescript = {
 				require("formatter.filetypes.typescript").prettierd,
-				eslint_d_caching,
+				require("formatter.filetypes.javascript").eslint_d,
 			},
 			typescriptreact = {
 				require("formatter.filetypes.typescript").prettierd,
-				eslint_d_caching,
+				require("formatter.filetypes.javascript").eslint_d,
 			},
 			python = { require("formatter.filetypes.python").black, require("formatter.filetypes.python").isort },
 		},
