@@ -45,9 +45,9 @@ alias lc='wc -l'
 # $1=file extension
 lineCountForFolder() {
   if [ -z $1 ]; then
-    find . -name '*.*' | xargs wc -l
+    fd --glob '*.*' | xargs wc -l
   else
-    find . -name "*.${1}" | xargs wc -l
+    fd --glob "*.${1}" | xargs wc -l
   fi
 }
 
