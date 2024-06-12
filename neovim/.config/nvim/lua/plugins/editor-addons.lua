@@ -1,8 +1,8 @@
 return {
   { "numToStr/Comment.nvim", config = true },
-  { "liuchengxu/vista.vim",  event = "VeryLazy", },
+  { "liuchengxu/vista.vim",  event = "VeryLazy" },
   { "mbbill/undotree" },
-  { "folke/twilight.nvim",   config = true,      event = "VeryLazy", },
+  { "folke/twilight.nvim",   config = true,     event = "VeryLazy" },
   {
     "lewis6991/hover.nvim",
     config = function()
@@ -26,11 +26,13 @@ return {
 
       vim.keymap.set("n", "K", require("hover").hover, { desc = "hover.nvim" })
       vim.keymap.set("n", "gK", require("hover").hover_select, { desc = "hover.nvim (select)" })
-      vim.keymap.set("n", "<C-p>", function() require("hover").hover_switch("previous") end,
-        { desc = "hover.nvim (previous source)" })
-      vim.keymap.set("n", "<C-n>", function() require("hover").hover_switch("next") end,
-        { desc = "hover.nvim (next source)" })
-    end
+      vim.keymap.set("n", "<C-p>", function()
+        require("hover").hover_switch("previous")
+      end, { desc = "hover.nvim (previous source)" })
+      vim.keymap.set("n", "<C-n>", function()
+        require("hover").hover_switch("next")
+      end, { desc = "hover.nvim (next source)" })
+    end,
   },
   { "tpope/vim-dadbod",             event = "VeryLazy" },
   { "kristijanhusak/vim-dadbod-ui", event = "VeryLazy" },
@@ -38,7 +40,7 @@ return {
     "m4xshen/hardtime.nvim",
     event = "VeryLazy",
     opts = {
-      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree" },
+      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree", "noice" },
       max_count = 4,
       restricted_keys = {
         ["w"] = { "n", "x" },
@@ -57,7 +59,7 @@ return {
           end,
           length = 2,
         },
-      }
-    }
-  }
+      },
+    },
+  },
 }

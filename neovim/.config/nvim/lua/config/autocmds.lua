@@ -45,9 +45,10 @@ a.nvim_create_autocmd("ModeChanged", {
   end,
 })
 
+ag("__formatter__", { clear = true })
 au("BufWritePost", {
-  pattern = "*",
-  command = "FormatWrite",
+  group = "__formatter__",
+  command = ":FormatWrite",
 })
 
 au("BufWritePost", {

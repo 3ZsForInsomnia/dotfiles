@@ -41,8 +41,8 @@ return {
         "tailwindcss-language-server",
         "typescript-language-server",
         "vim-language-server",
-      }
-    }
+      },
+    },
   },
   {
     "aznhe21/actions-preview.nvim",
@@ -53,72 +53,71 @@ return {
   {
     "nvim-treesitter/nvim-treesitter-context",
     config = function()
-      require 'treesitter-context'.setup {
+      require("treesitter-context").setup({
         enable = true,
         patterns = {
           default = {
-            'class',
-            'function',
-            'method',
-            'for',
-            'while',
-            'if',
-            'switch',
-            'case',
-            'interface',
-            'struct',
-            'enum',
+            "class",
+            "function",
+            "method",
+            "for",
+            "while",
+            "if",
+            "switch",
+            "case",
+            "interface",
+            "struct",
+            "enum",
           },
           tex = {
-            'chapter',
-            'section',
-            'subsection',
-            'subsubsection',
+            "chapter",
+            "section",
+            "subsection",
+            "subsubsection",
           },
           haskell = {
-            'adt'
+            "adt",
           },
           rust = {
-            'impl_item',
-
+            "impl_item",
           },
           terraform = {
-            'block',
-            'object_elem',
-            'attribute',
+            "block",
+            "object_elem",
+            "attribute",
           },
           scala = {
-            'object_definition',
+            "object_definition",
           },
           vhdl = {
-            'process_statement',
-            'architecture_body',
-            'entity_declaration',
+            "process_statement",
+            "architecture_body",
+            "entity_declaration",
           },
           markdown = {
-            'section',
+            "section",
           },
           elixir = {
-            'anonymous_function',
-            'arguments',
-            'block',
-            'do_block',
-            'list',
-            'map',
-            'tuple',
-            'quoted_content',
+            "anonymous_function",
+            "arguments",
+            "block",
+            "do_block",
+            "list",
+            "map",
+            "tuple",
+            "quoted_content",
           },
           json = {
-            'pair',
+            "pair",
           },
           typescript = {
-            'export_statement',
+            "export_statement",
           },
           yaml = {
-            'block_mapping_pair',
+            "block_mapping_pair",
           },
         },
-      }
+      })
     end,
   },
   { "nvim-treesitter/nvim-treesitter-textobjects" },
@@ -127,6 +126,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     config = function()
       require("nvim-treesitter.configs").setup({
+        modules = {},
         ensure_installed = {
           "awk",
           "bash",
@@ -150,6 +150,7 @@ return {
           "vim",
           "yaml",
         },
+        ignore_install = {},
         sync_install = true,
         auto_install = true,
         highlight = {
@@ -267,6 +268,6 @@ return {
           },
         },
       })
-    end
-  }
+    end,
+  },
 }

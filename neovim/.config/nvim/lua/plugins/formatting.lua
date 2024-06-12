@@ -2,12 +2,15 @@ return {
   {
     "mhartington/formatter.nvim",
     config = function()
-      return {
+      require("formatter").setup({
         logging = true,
-        log_level = vim.log.levels.WARN,
+        log_level = vim.log.levels.DEBUG,
         filetype = {
           lua = { require("formatter.filetypes.lua").stylua },
-          css = { require("formatter.filetypes.css").prettierd, require("formatter.filetypes.css").stylelint },
+          css = {
+            require("formatter.filetypes.css").prettierd,
+            require("formatter.filetypes.css").stylelint,
+          },
           graphql = { require("formatter.filetypes.graphql").prettierd },
           html = { require("formatter.filetypes.html").prettierd },
           json = { require("formatter.filetypes.json").prettierd },
@@ -34,10 +37,10 @@ return {
           },
           python = {
             require("formatter.filetypes.python").black,
-            require("formatter.filetypes.python").isort
+            require("formatter.filetypes.python").isort,
           },
         },
-      }
-    end
+      })
+    end,
   },
 }
