@@ -22,9 +22,11 @@ local lspServers = {
   "yamlls",
 }
 
-local red = "MoonflyRed"
-local green = "MoonflyGreen"
-local blue = "MoonflyBlue"
+local mocha = require("catppuccin.palettes").get_palette("mocha")
+
+local red = mocha.red
+local green = mocha.green
+local blue = mocha.blue
 
 local visited = {
   hl_group = blue,
@@ -44,7 +46,7 @@ local luasnipSetupOptions = function(types)
     ext_opts = {
       [types.choiceNode] = {
         active = {
-          virt_text = { { "●", "MoonflyOrange" } },
+          virt_text = { { "●", mocha.yellow } },
           hl_group = red,
         },
         visited = visited,
@@ -52,7 +54,7 @@ local luasnipSetupOptions = function(types)
       },
       [types.insertNode] = {
         active = {
-          virt_text = { { "●", "MoonflyBlue" } },
+          virt_text = { { "●", blue } },
           hl_group = red,
         },
         visited = visited,
@@ -63,6 +65,7 @@ local luasnipSetupOptions = function(types)
 end
 
 local cmpDependencies = {
+  "neovim/nvim-lspconfig",
   "hrsh7th/cmp-buffer",
   "hrsh7th/cmp-path",
   "hrsh7th/cmp-cmdline",
@@ -134,53 +137,10 @@ local cmpOpts = function(cmp, defaults)
       },
     },
     sorting = defaults.sorting,
-  }
-end
-
-local on_attach = function(_, bufnr)
-  local wk = require("which-key")
-  local bufopts = { noremap = true, silent = true, buffer = bufnr }
-  local l = vim.lsp
-  local b = l.buf
-
-  wk.register({
-    ["<leader>l"] = {
-      name = "LSP",
-      a = { "<cmd>CodeActionMenu<cr>", "Perform code actions" },
-      D = { b.declaration, "Declaration" },
-      d = { b.definition, "Definition" },
-      i = { b.implementation, "Implementation" },
-      r = { b.references, "References" },
-      n = { b.rename, "Rename tag under cursor" },
-      t = { b.type_definition, "Type definition" },
-      f = {
-        "<cmd>Format<cr>",
-        "Format",
-      },
-      l = {
-        name = "Code lens",
-        g = { "<cmd>lua vim.lsp.codelens.get(0)<cr>", "Get lenses" },
-        f = { "<cmd>lua vim.lsp.codelens.refresh()<cr>", "Refresh" },
-        r = { "<cmd>lua vim.lsp.codelens.run()", "Run" },
-        c = {
-          "<cmd>lua vim.lsp.codelens.clear(nil, 0)",
-          "Clear lenses in buffer",
-        },
-      },
-      w = {
-        name = "LSP Workspaces",
-        a = { b.add_workspace_folder, "Add folder" },
-        r = { b.remove_workspace_folder, "Remove folder" },
-        l = {
-          function()
-            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-          end,
-          "List folder",
-        },
-      },
+    window = {
+      documentation = cmp.config.window.bordered(),
     },
-    ["<C-k>"] = { b.signature_help, "Show signature" },
-  }, bufopts)
+  }
 end
 
 return {
@@ -261,18 +221,20 @@ return {
       })
 
       cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline({
-          c = function()
-            if cmp.visible() then
-              cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-            else
-              cmp.complete()
-            end
-          end,
-        }),
-        sources = cmp.config.sources({ { name = "path" } }, {
-          { name = "cmdline", option = { ignore_cmds = { "Man", "!" } } },
-        }),
+        mapping = cmp.mapping.preset.cmdline(),
+        -- mapping = cmp.mapping.preset.cmdline({
+        --   c = function()
+        --     if cmp.visible() then
+        --       cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+        --     else
+        --       cmp.complete()
+        --     end
+        --   end,
+        -- }),
+        sources = cmp.config.sources(
+          { { name = "path" } },
+          { { name = "cmdline", option = { ignore_cmds = { "Man", "!" } } } }
+        ),
       })
 
       cmp.setup(opts)
@@ -289,7 +251,7 @@ return {
       for _, server in ipairs(lspServers) do
         local lsp = require("lspconfig")[server]
         if lsp and lsp.capabilities then
-          lsp.setup({ on_attach = on_attach, capabilities = capabilities })
+          lsp.setup({ capabilities = capabilities })
         end
       end
     end,

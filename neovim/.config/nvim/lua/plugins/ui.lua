@@ -224,10 +224,10 @@ return {
   },
   {
     "brenoprata10/nvim-highlight-colors",
+    config = true,
     opts = {
       render = "background",
-      enable_named_colors = true,
       enable_tailwind = true,
-    }
-  }
+    },
+  },
 }

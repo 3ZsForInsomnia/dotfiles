@@ -17,18 +17,15 @@ o.fillchars = {
   diff = "/",
   eob = "󰑀",
 }
-o.signcolumn = "yes:3"
+o.signcolumn = "yes:4"
 o.numberwidth = 5
 o.foldcolumn = "5"
 o.foldlevelstart = 7
 o.statuscolumn = "%C%s  %{v:relnum?v:relnum:v:lnum} "
 
-o.showmode = false
 o.softtabstop = 2
 o.showbreak = "↳ "
-o.completeopt = "menu,noinsert,menuone,noselect,preview"
 g.notagrelative = true
-o.mouse = ""
 
 o.backup = true
 o.backupdir = "/home/zach/.local/state/nvim/backup//"
@@ -48,7 +45,7 @@ o.exrc = true
 o.secure = true
 
 o.timeout = true
-o.timeoutlen = 500
+o.timeoutlen = 300
 o.updatetime = 75
 
 -- require("keys")
@@ -135,3 +132,11 @@ g.mkdp_preview_options = {
 }
 g.mkdp_port = "7777"
 g.mkdp_page_title = "「${name}」"
+
+-- Overrides of LazyVim options
+o.clipboard = ""
+o.completeopt = "menu,noinsert,menuone,noselect,preview"
+o.mouse = ""
+
+g.lazyvim_picker = "telescope"
+g.autoformat = false

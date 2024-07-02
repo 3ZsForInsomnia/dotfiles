@@ -1,0 +1,10 @@
+--no-heading
+--with-filename
+--line-number
+--column
+--smart-case
+--hidden
+--glob=!lazy-lock.json
+--glob=!node_modules
+--glob=!lazyvim.json
+--glob=!LICENSE

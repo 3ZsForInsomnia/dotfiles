@@ -1,3 +1,9 @@
+local k_cmd = require("helpers").k_cmd
+local l = "<leader>"
+local s = l .. "s"
+local ll = l .. "ll"
+local a = 'lua require("ts-node-action").'
+
 return {
   {
     "chentoast/marks.nvim",
@@ -9,33 +15,34 @@ return {
       refresh_interval = 250,
       sign_priority = { lower = 10, upper = 15, builtin = 8, bookmark = 20 },
       excluded_filetypes = {},
+      -- Bookmark as confusing/with a question
       bookmark_0 = {
-        sign = "",
+        sign = "",
         annotate = true,
       },
-      -- Bookmark as flagged/normal path of investigation
+      -- Bookmark as flagged/important
       bookmark_9 = {
         sign = "⚑",
         annotate = true,
       },
-      -- Bookmark as confusing/with a question
-      bookmark_8 = {
-        sign = "",
-        annotate = true,
-      },
       -- Bookmark as wrong
-      bookmark_7 = {
+      bookmark_8 = {
         sign = "",
         annotate = true,
       },
-      -- Bookmark as home (where I'm currently working)
-      bookmark_6 = {
-        sign = "ﳐ",
+      -- Bookmark as known good
+      bookmark_7 = {
+        sign = "",
         annotate = true,
       },
       -- Bookmark as info (useful but not wrong/good/home)
-      bookmark_5 = {
+      bookmark_6 = {
         sign = "",
+        annotate = true,
+      },
+      -- Bookmark as home (where I'm currently working)
+      bookmark_5 = {
+        sign = "",
         annotate = true,
       },
       mappings = {
@@ -58,10 +65,27 @@ return {
     "ckolkey/ts-node-action",
     dependencies = { "nvim-treesitter" },
     opts = {},
+    keys = {
+      k_cmd({
+        key = ll .. "a",
+        action = a .. "node_action()",
+        desc = "Node action",
+      }),
+      k_cmd({
+        key = ll .. "d",
+        action = a .. "debug()",
+        desc = "Debug node",
+      }),
+      k_cmd({
+        key = ll .. "l",
+        action = a .. "available_actions()",
+        desc = "List available actions",
+      }),
+    },
   },
   { "andymass/vim-matchup" },
   { "winston0410/range-highlight.nvim", opts = {} },
-  { "godlygeek/tabular",                event = "VeryLazy" },
+  { "godlygeek/tabular", event = "VeryLazy" },
   {
     "matbme/JABS.nvim",
     event = "VeryLazy",
@@ -163,7 +187,7 @@ return {
       require("neoscroll.config").set_mappings(t)
     end,
   },
-  { "kylechui/nvim-surround" },
+  { "kylechui/nvim-surround", config = true },
   {
     "olimorris/persisted.nvim",
     lazy = false,
@@ -173,9 +197,10 @@ return {
       silent = false,
       use_git_branch = true,
       default_branch = "main",
-      autosave = true,
+      -- Preferring to save and load manually since I keep switching branches recklessly
+      autosave = false,
       should_autosave = nil,
-      autoload = false,
+      autoload = true,
       on_autoload_no_session = nil,
       follow_cwd = true,
       allowed_dirs = nil,
@@ -194,6 +219,28 @@ return {
           selected = " ",
         },
       },
+    },
+    keys = {
+      k_cmd({
+        key = s .. "s",
+        action = "SessionSave",
+        desc = "Save session",
+      }),
+      k_cmd({
+        key = s .. "l",
+        action = "SessionLoad",
+        desc = "Load session",
+      }),
+      k_cmd({
+        key = s .. "d",
+        action = "SessionDelete",
+        desc = "Delete session",
+      }),
+      k_cmd({
+        key = s .. "l",
+        action = "SessionLoadLast",
+        desc = "Session load last",
+      }),
     },
   },
 }

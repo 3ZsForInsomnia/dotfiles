@@ -30,7 +30,6 @@ return {
         "marksman",
         "nginx-language-server",
         "nxls",
-        "prettierd",
         "pyright",
         "shellcheck",
         "shfmt",

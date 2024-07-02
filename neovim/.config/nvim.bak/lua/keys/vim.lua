@@ -4,7 +4,7 @@ _G.logThis = function(str)
 	local ft = vim.bo.filetype
 	str = string.gsub(str, "%s+", "")
 
-	if ft == "javascript" or ft == "typescript" then
+	if ft == "javascript" or ft == "typescript" or ft == "javascriptreact" or ft == "typescriptreact" then
 		return 'console.log("' .. str .. '", ' .. str .. ");"
 	elseif ft == "lua" then
 		return 'print("' .. str .. '", vim.inspect(' .. str .. "))"

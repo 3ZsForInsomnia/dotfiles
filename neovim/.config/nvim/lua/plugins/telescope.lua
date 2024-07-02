@@ -1,29 +1,72 @@
+local keybind = require("helpers")
+local cmd = keybind.k_cmd
+
+local t = function(command)
+  return "Telescope " .. command
+end
+
+local f = "<leader>f"
+
 local createShortcuts = function()
   local actions = require("telescope.actions")
   local open_with_trouble = require("trouble.sources.telescope").open
+  local lg_actions = require("telescope-live-grep-args.actions")
+
+  local function quote_prompt(prompt_bufnr)
+    lg_actions.quote_prompt()(prompt_bufnr)
+  end
+  local function quote_prompt_glob(prompt_bufnr)
+    lg_actions.quote_prompt({ postfix = " --glob '*'" })(prompt_bufnr)
+  end
+  local function quote_prompt_iglob(prompt_bufnr)
+    lg_actions.quote_prompt({ postfix = " --iglob '*'" })(prompt_bufnr)
+  end
+  local function find_by_type(prompt_bufnr)
+    lg_actions.quote_prompt({ postfix = " -t" })(prompt_bufnr)
+  end
 
   return {
+    -- Search window mappings
     ["<M-t>"] = open_with_trouble,
-    ["<M-q>"] = actions.send_to_qflist + actions.open_qflist,
-    ["<M-a>"] = actions.add_to_qflist + actions.open_qflist,
-    ["<C-s>"] = actions.add_selection,
-    ["<C-r>"] = actions.remove_selection,
-    ["<M-d>"] = actions.drop_all,
-    ["<M-s>"] = actions.select_all,
-    ["<C-z>"] = actions.center,
-    ["<C-w>"] = actions.which_key,
-    ["<C-f>"] = actions.preview_scrolling_up,
-    ["<C-b>"] = actions.preview_scrolling_down,
+    ["<M-q>s"] = actions.send_to_qflist + actions.open_qflist,
+    ["<M-q>a"] = actions.add_to_qflist + actions.open_qflist,
+    ["<M-a>"] = actions.add_selection,
+    ["<M-r>"] = actions.remove_selection,
+    ["<M-s>a"] = actions.select_all,
+    ["<M-s>d"] = actions.drop_all,
     ["<M-f>"] = actions.results_scrolling_up,
     ["<M-b>"] = actions.results_scrolling_down,
+
+    -- Preview window mappings
+    ["<M-z>"] = actions.center,
+    ["<M-w>"] = actions.which_key,
+    ["<M-u>"] = actions.preview_scrolling_up,
+    ["<M-d>"] = actions.preview_scrolling_down,
+
+    -- Search input mappings
+    ["<C-k>"] = quote_prompt,
+    ["<C-g>"] = quote_prompt_glob,
+    ["<C-i>"] = quote_prompt_iglob,
+    ["<C-t>"] = find_by_type,
+    ["<C-space>"] = actions.to_fuzzy_refine,
   }
 end
 
 local createOpts = function()
-  local lga_actions = require("telescope-live-grep-args.actions")
+  local actions = require("telescope.actions")
   local icons = require("lazyvim.config").icons
 
   local shortcuts = createShortcuts()
+
+  local function quote_prompt(prompt_bufnr)
+    require("telescope-live-grep-args.actions").quote_prompt()(prompt_bufnr)
+  end
+  local function quote_prompt_glob()
+    require("telescope-live-grep-args.actions").quote_prompt({ postfix = " --glob " })()
+  end
+  local function quote_prompt_iglob()
+    require("telescope-live-grep-args.actions").quote_prompt({ postfix = " --iglob " })()
+  end
 
   return {
     pickers = {
@@ -107,7 +150,6 @@ local createOpts = function()
       },
       vimgrep_arguments = {
         "rg",
-        "--color=never",
         "--no-heading",
         "--with-filename",
         "--line-number",
@@ -118,10 +160,10 @@ local createOpts = function()
     },
     extensions = {
       fzf = {
-        fuzzy = true,                   -- false will only do exact matching
+        fuzzy = true, -- false will only do exact matching
         override_generic_sorter = true, -- override the generic sorter
-        override_file_sorter = true,    -- override the file sorter
-        case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
+        override_file_sorter = true, -- override the file sorter
+        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
       },
       bookmarks = {
         selected_browser = "chrome",
@@ -141,8 +183,16 @@ local createOpts = function()
         auto_quoting = true,
         mappings = {
           i = {
-            ["<C-k>"] = lga_actions.quote_prompt(),
-            ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+            ["<C-k>"] = quote_prompt,
+            ["<C-i>"] = quote_prompt_glob,
+            ["<C-I>"] = quote_prompt_iglob,
+            ["<C-space>"] = actions.to_fuzzy_refine,
+          },
+          n = {
+            ["<C-k>"] = quote_prompt,
+            ["<C-i>"] = quote_prompt_glob,
+            ["<C-I>"] = quote_prompt_iglob,
+            ["<C-space>"] = actions.to_fuzzy_refine,
           },
         },
       },
@@ -159,7 +209,6 @@ local loadExtensions = function(load_extension)
   load_extension("scriptnames")
   load_extension("heading")
   load_extension("frecency")
-  load_extension("http")
   load_extension("tailiscope")
   load_extension("undo")
   load_extension("angular")
@@ -174,16 +223,15 @@ return {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
     dependencies = {
-      "nvim-telescope/telescope-live-grep-args.nvim",
+      { "nvim-telescope/telescope-live-grep-args.nvim", version = "^1.0.0" },
       "nvim-telescope/telescope-frecency.nvim",
       "benfowler/telescope-luasnip.nvim",
-      "barrett-ruth/telescope-http.nvim",
       "danielvolchek/tailiscope.nvim",
       "LinArcX/telescope-changes.nvim",
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake"
-            .. "--build build --config Release && cmake --install build --prefix build",
+          .. "--build build --config Release && cmake --install build --prefix build",
       },
       "3ZsForInsomnia/telescope-angular",
       "dhruvmanila/telescope-bookmarks.nvim",
@@ -200,8 +248,266 @@ return {
       local opts = createOpts()
 
       telescope.setup(opts)
-
       loadExtensions(telescope.load_extension)
+    end,
+    keys = function()
+      return {
+        cmd({
+          key = f .. "s",
+          action = "lua require('telescope-live-grep-args.shortcuts').grep_word_under_cursor()",
+          desc = "Grep word under cursor",
+        }),
+        cmd({
+          key = f .. "j",
+          action = "lua require('telescope').extensions.live_grep_args.live_grep_args()",
+          desc = "Live grep",
+        }),
+        cmd({
+          key = f .. "v",
+          action = "lua require('telescope-live-grep-args.shortcuts').grep_visual_selection()",
+          desc = "Live grep of visual selection",
+          mode = "v",
+        }),
+        cmd({
+          key = f .. "f",
+          action = t("find_files"),
+          desc = "Files",
+        }),
+        cmd({
+          key = f .. "h",
+          action = t("search_history"),
+          desc = "Search history",
+        }),
+        cmd({
+          key = f .. "r",
+          action = t("resume"),
+          desc = "Resume previous search",
+        }),
+
+        --
+        -- Changes, loc and qf lists
+        --
+        cmd({
+          key = f .. "cc",
+          action = t("changes"),
+          desc = "Changes",
+        }),
+        cmd({
+          key = f .. "cu",
+          action = t("undo"),
+          desc = "Undo tree",
+        }),
+        cmd({
+          key = f .. "cf",
+          action = t("quickfix"),
+          desc = "Quickfix",
+        }),
+        cmd({
+          key = f .. "ch",
+          action = t("quickfixhistory"),
+          desc = "Quickfix history",
+        }),
+        cmd({
+          key = f .. "cj",
+          action = t("jumplist"),
+          desc = "Jumplist",
+        }),
+        cmd({
+          key = f .. "cl",
+          action = t("loclist"),
+          desc = "Location list",
+        }),
+
+        --
+        -- Buffers, tags and marks
+        --
+        cmd({
+          key = f .. "bm",
+          action = t("marks"),
+          desc = "Marks",
+        }),
+        cmd({
+          key = f .. "bb",
+          action = t("buffers"),
+          desc = "Buffers",
+        }),
+        cmd({
+          key = f .. "fr",
+          action = t("registers"),
+          desc = "Registers",
+        }),
+        cmd({
+          key = f .. "ft",
+          action = t("tags"),
+          desc = "Tags",
+        }),
+
+        --
+        -- Git
+        --
+        cmd({
+          key = f .. "gs",
+          action = t("git_status"),
+          desc = "Status",
+        }),
+        cmd({
+          key = f .. "gc",
+          action = t("git_commits"),
+          desc = "Commits",
+        }),
+        cmd({
+          key = f .. "gb",
+          action = t("git_branches"),
+          desc = "Branches",
+        }),
+        cmd({
+          key = f .. "gh",
+          action = "Easypick changed_files",
+          desc = "Changed files",
+        }),
+        cmd({
+          key = f .. "gt",
+          action = t("git_stash"),
+          desc = "Stashes",
+        }),
+        cmd({
+          key = f .. "gu",
+          action = t("git_bcommits"),
+          desc = "Commits in buffer",
+        }),
+        cmd({
+          key = f .. "gf",
+          action = t("git_files"),
+          desc = "Files",
+        }),
+
+        --
+        -- Documentation
+        --
+        cmd({
+          key = f .. "dd",
+          action = "Devdocs open",
+          desc = "Devdocs",
+        }),
+        cmd({
+          key = f .. "ds",
+          action = t("luasnip"),
+          desc = "Snippets",
+        }),
+        cmd({
+          key = f .. "de",
+          action = t("http list"),
+          desc = "HTTP",
+        }),
+        cmd({
+          key = f .. "dt",
+          action = t("tailiscope"),
+          desc = "Tailiscope",
+        }),
+        cmd({
+          key = f .. "dm",
+          action = t("man_pages"),
+          desc = "Man pages",
+        }),
+        cmd({
+          key = f .. "dh",
+          action = t("help_tags"),
+          desc = "Help tags",
+        }),
+        cmd({
+          key = f .. "db",
+          action = t("bookmarks"),
+          desc = "Chrome Bookmarks",
+        }),
+        cmd({
+          key = f .. "dk",
+          action = t("keymaps"),
+          desc = "Keymaps",
+        }),
+
+        --
+        -- LSP
+        --
+        cmd({
+          key = f .. "lr",
+          action = t("lsp_references"),
+          desc = "References",
+        }),
+        cmd({
+          key = f .. "li",
+          action = t("lsp_incoming_calls"),
+          desc = "Incoming calls",
+        }),
+        cmd({
+          key = f .. "lo",
+          action = t("lsp_outgoing_calls"),
+          desc = "Outgoing calls",
+        }),
+        cmd({
+          key = f .. "ls",
+          action = t("lsp_document_symbols"),
+          desc = "Document symbols",
+        }),
+        cmd({
+          key = f .. "lt",
+          action = t("lsp_workspace_symbols"),
+          desc = "Workspace symbols",
+        }),
+        cmd({
+          key = f .. "ld",
+          action = t("lsp_definitions"),
+          desc = "Definitions",
+        }),
+        cmd({
+          key = f .. "lm",
+          action = t("lsp_implentations"),
+          desc = "Implementations",
+        }),
+        cmd({
+          key = f .. "lt",
+          action = t("lsp_type_definitions"),
+          desc = "Type definitions",
+        }),
+        -- k({
+        --   key = f .. "lD",
+        --   action = 'lua require("trouble.providers.telescope").open_with_trouble()',
+        --   desc = "Show diagnostics",
+        -- }),
+
+        --
+        -- Misc
+        --
+        cmd({
+          key = f .. "mn",
+          action = t("scriptnames"),
+          desc = "Scriptnames",
+        }),
+        cmd({
+          key = f .. "mh",
+          action = t("heading"),
+          desc = "Headings",
+        }),
+        cmd({
+          key = f .. "ma",
+          action = t("angular"),
+          desc = "Angular modules",
+        }),
+        cmd({
+          key = f .. "mc",
+          action = "TodoTelescope",
+          desc = "Todo",
+        }),
+        cmd({
+          key = f .. "my",
+          action = "Easypick clipboard",
+          desc = "Clipboard",
+        }),
+        cmd({
+          key = f .. "ms",
+          action = t("persisted"),
+          desc = "Sessions",
+        }),
+      }
     end,
   },
 }

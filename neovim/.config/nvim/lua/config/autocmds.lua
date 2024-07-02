@@ -60,7 +60,7 @@ au("BufWritePost", {
 
 au({ "BufWinEnter", "WinEnter" }, {
   pattern = "term://*",
-  command = "setlocal filetype=zsh",
+  command = "setlocal filetype=terminal",
 })
 ag("term_open_insert", {})
 au({ "TermOpen" }, {
