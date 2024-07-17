@@ -16,13 +16,6 @@ return {
         lua = { "luacheck" },
         json = { "jsonlint" },
         python = { "flake8" },
-        -- yaml = { "yamllint", sp },
-        -- css = { "stylelint", sp },
-        -- scss = { "stylelint", sp },
-        -- markdown = { "markdownlint", sp },
-        -- lua = { "luacheck", sp },
-        -- json = { "jsonlint", sp },
-        -- python = { "flake8", sp },
       }
     end,
   },

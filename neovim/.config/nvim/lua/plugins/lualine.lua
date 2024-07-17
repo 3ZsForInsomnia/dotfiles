@@ -31,57 +31,54 @@ function custom_fname:update_status()
   return data
 end
 
+local gitSignsForFile = function()
+  local gitsigns = vim.b.gitsigns_status_dict
+  if gitsigns then
+    return {
+      added = gitsigns.added,
+      modified = gitsigns.changed,
+      removed = gitsigns.removed,
+    }
+  end
+end
+
 -- Git module for getting git info per file and project as I like
 local M = {}
 
+M.handle = nil
 M.timer = vim.loop.new_timer()
-
 M.statusValues = { fileCount = 0, addCount = 0, delCount = 0, untracked = 0 }
 
-local isInRepo = function()
-  local handle = io.popen([[
+M.isInRepo = function()
+  M.handle = io.popen([[
     if GPATH=`git rev-parse --show-toplevel --quiet 2>/dev/null`; then
       echo "repo: $GPATH"
     fi
   ]])
-  local repo = handle:read("*a")
-  handle:close()
+
+  local repo = M.handle:read("*a")
   return string.len(repo) > 0
 end
 
-local handleIfInRepoOrNot = function(func)
-  if isInRepo() then
-    return func()
-  else
-    return "N/A"
-  end
-end
+M.isInsideARepo = M.isInRepo()
 
 M.gitStatus = {
-  added = function()
-    return handleIfInRepoOrNot(function()
-      return icons.kind.File .. " " .. M.statusValues.fileCount
-    end)
+  filesTouched = function()
+    return icons.kinds.File .. " " .. M.statusValues.fileCount
   end,
   modified = function()
-    return handleIfInRepoOrNot(function()
-      return icons.git.Add .. M.statusValues.addCount
-    end)
+    return icons.git.added .. M.statusValues.addCount
   end,
   removed = function()
-    return handleIfInRepoOrNot(function()
-      return icons.git.Remove .. M.statusValues.delCount
-    end)
+    return icons.git.removed .. M.statusValues.delCount
   end,
   untracked = function()
-    return handleIfInRepoOrNot(function()
-      return icons.kind.Module .. " " .. M.statusValues.untracked
-    end)
+    return icons.kind.Module .. " " .. M.statusValues.untracked
   end,
 }
 
 M.gitStatusForRepo = function()
-  if not isInRepo() then
+  if not M.isInsideARepo then
     M.statusValues = {
       fileCount = "N/A",
       addCount = "N/A",
@@ -92,15 +89,15 @@ M.gitStatusForRepo = function()
     return
   end
 
-  local handle = io.popen("git diff --shortstat")
-  local statusText = handle:read("*a")
-
-  handle = io.popen("git ls-files --others --exclude-standard | wc -l")
-  local untracked = handle:read("*a")
+  M.handle = io.popen("git diff --shortstat")
+  local statusText = M.handle:read("*a")
 
   local fileCount = string.match(statusText, "(%d+) file") or "0"
   local addCount = string.match(statusText, "(%d+) inser") or "0"
   local delCount = string.match(statusText, "(%d+) del") or "0"
+
+  M.handle = io.popen("git ls-files --others --exclude-standard | wc -l")
+  local untracked = M.handle:read("*a")
   untracked = string.gsub(untracked, "%s+", "")
 
   M.statusValues = {
@@ -109,13 +106,16 @@ M.gitStatusForRepo = function()
     delCount = delCount,
     untracked = untracked,
   }
-  handle:close()
+
+  M.handle:close()
 end
 
 return {
   {
     "nvim-lualine/lualine.nvim",
     config = function()
+      M.gitStatusForRepo()
+
       require("lualine").setup({
         options = {
           theme = "catppuccin",
@@ -126,7 +126,7 @@ return {
           ignore_focus = {},
           always_divide_middle = true,
           globalstatus = true,
-          refresh = { statusline = 1000, tabline = 1000, winbar = 1000 },
+          refresh = { statusline = 2500, tabline = 2500, winbar = 2500 },
         },
         sections = {
           lualine_a = { { "mode", separator = { left = "" } } },
@@ -137,7 +137,7 @@ return {
               color = { fg = "#74b2ff" },
               separator = "",
             },
-            { M.gitStatus.added, color = { fg = "#e3c78a" }, separator = "" },
+            { M.gitStatus.filesTouched, color = { fg = "#e3c78a" }, separator = "" },
             { M.gitStatus.modified, color = { fg = "#36c692" }, separator = "" },
             { M.gitStatus.removed, color = { fg = "#ff5454" } },
             {
@@ -153,11 +153,6 @@ return {
           },
           lualine_c = { custom_fname },
           lualine_x = {
-            {
-              require("noice").api.statusline.mode.get,
-              cond = require("noice").api.statusline.mode.has,
-              color = { fg = "#ff9e64" },
-            },
             "filetype",
           },
           lualine_y = { "progress" },
@@ -174,9 +169,16 @@ return {
             navic_opts = nil,
           },
         },
+        tabline = {
+          lualine_a = { { "buffers", hide_filename_extension = true, mode = 2 } },
+        },
         inactive_winbar = {},
-        extensions = { "nvim-tree", "quickfix", "nvim-dap-ui" },
+        extensions = { "neo-tree", "quickfix", "nvim-dap-ui" },
       })
+
+      M.timer:start(2500, 2500, function()
+        M.gitStatusForRepo()
+      end)
     end,
   },
 }

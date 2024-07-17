@@ -15,12 +15,12 @@ return {
     opts = {},
     keys = {
       k_cmd({
-        key = copilot,
+        key = copilot .. "c",
         action = "CopilotChat",
         desc = "Copilot Chat",
       }),
       k_cmd({
-        key = copilot .. "rv",
+        key = copilot .. "v",
         action = "CopilotChatReview",
         desc = "Copilot Review",
       }),
@@ -31,7 +31,7 @@ return {
       --   mode = "v",
       -- }),
       k_cmd({
-        key = copilot .. "rf",
+        key = copilot .. "r",
         action = "CopilotChatRefactor",
         desc = "Copilot Refactor",
       }),
@@ -99,13 +99,12 @@ return {
   {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
-    config = function()
-      require("chatgpt").setup({
-        openai_params = {
-          model = "gpt-4o-2024-05-13",
-        },
-      })
-    end,
+    opts = {
+      openai_params = {
+        model = "gpt-4o-2024-05-13",
+      },
+    },
+    config = true,
     dependencies = {
       "MunifTanjim/nui.nvim",
       "nvim-lua/plenary.nvim",
@@ -114,15 +113,15 @@ return {
     },
     keys = {
       k_cmd({
-        key = chatgpt,
+        key = chatgpt .. "c",
         action = "ChatGPT",
         desc = "Chat with GPT",
       }),
-      k_cmd({
-        key = chatgpt .. "r",
-        action = "ChatGPTRun",
-        desc = "ChatGPT run actions",
-      }),
+      -- k_cmd({
+      --   key = chatgpt .. "r",
+      --   action = "ChatGPTRun",
+      --   desc = "ChatGPT run actions",
+      -- }),
       k_cmd({
         key = chatgpt .. "rx",
         action = "ChatGPTRun explain_code",
@@ -136,7 +135,7 @@ return {
       k_cmd({
         key = chatgpt .. "ra",
         action = "ChatGPTRun code_readability_analysis",
-        desc = "ChatGPTRun coe readability analysis",
+        desc = "ChatGPTRun code readability analysis",
       }),
       k_cmd({
         key = chatgpt .. "ro",

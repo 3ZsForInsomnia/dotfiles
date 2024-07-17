@@ -20,10 +20,8 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
--- TODO:Add evernote bullet points/symbols
-
 local tabs = function(count)
-  return string.rep('\t', count)
+  return string.rep("\t", count)
 end
 
 local ul_helper
@@ -33,21 +31,21 @@ ul_helper = function(a1, b1, c1, count)
       t({ "", "" }),
       sn(nil, {
         t(tabs(count) .. "<li>"),
-        i(1, 'list item'),
-        t({ '</li>', '' }),
-        d(2, ul_helper, {}, { user_args = { count } })
+        i(1, "list item"),
+        t({ "</li>", "" }),
+        d(2, ul_helper, {}, { user_args = { count } }),
       }),
       sn(nil, {
         t({ tabs(count) .. "<li>", tabs(count + 1) .. "<ul>", tabs(count + 2) .. "<li>" }),
-        i(1, 'list item'),
-        t({ '</li>', '' }),
+        i(1, "list item"),
+        t({ "</li>", "" }),
         d(2, ul_helper, {}, { user_args = { count + 2 } }),
-        t({ tabs(count + 1) .. '</ul>', tabs(count) .. '</li>', '' }),
+        t({ tabs(count + 1) .. "</ul>", tabs(count) .. "</li>", "" }),
         -- This dynamicNode returns you to the previous nesting level
-        d(3, ul_helper, {}, { user_args = { count } })
+        d(3, ul_helper, {}, { user_args = { count } }),
       }),
     }),
-  });
+  })
 end
 
 local getOlType = function(nestingLevel)
@@ -72,12 +70,16 @@ ol_helper = function(a1, b1, c1, args)
       t({ "", "" }),
       sn(nil, {
         t(tabs(indentationLevel) .. "<li>"),
-        i(1, 'list item'),
-        t({ '</li>', '' }),
-        d(2, ol_helper, {}, { user_args = { {
-          indentationLevel = indentationLevel,
-          nextNestingLevel = args.nextNestingLevel,
-        } } })
+        i(1, "list item"),
+        t({ "</li>", "" }),
+        d(2, ol_helper, {}, {
+          user_args = {
+            {
+              indentationLevel = indentationLevel,
+              nextNestingLevel = args.nextNestingLevel,
+            },
+          },
+        }),
       }),
       sn(nil, {
         t({
@@ -85,21 +87,29 @@ ol_helper = function(a1, b1, c1, args)
           tabs(indentationLevel + 1) .. "<ol " .. getOlType(nextNestingLevel) .. ">",
           tabs(indentationLevel + 2) .. "<li>",
         }),
-        i(1, 'list item'),
-        t({ '</li>', '' }),
-        d(2, ol_helper, {}, { user_args = { {
-          indentationLevel = indentationLevel + 2,
-          nextNestingLevel = args.nextNestingLevel + 1,
-        } } }),
-        t({ tabs(indentationLevel + 1) .. '</ol>', tabs(indentationLevel) .. '</li>', '' }),
+        i(1, "list item"),
+        t({ "</li>", "" }),
+        d(2, ol_helper, {}, {
+          user_args = {
+            {
+              indentationLevel = indentationLevel + 2,
+              nextNestingLevel = args.nextNestingLevel + 1,
+            },
+          },
+        }),
+        t({ tabs(indentationLevel + 1) .. "</ol>", tabs(indentationLevel) .. "</li>", "" }),
         -- This dynamicNode returns you to the previous nesting level
-        d(3, ol_helper, {}, { user_args = { {
-          indentationLevel = indentationLevel,
-          nextNestingLevel = args.nextNestingLevel,
-        } } })
+        d(3, ol_helper, {}, {
+          user_args = {
+            {
+              indentationLevel = indentationLevel,
+              nextNestingLevel = args.nextNestingLevel,
+            },
+          },
+        }),
       }),
     }),
-  });
+  })
 end
 
 return {
@@ -109,11 +119,11 @@ return {
     dscr = "Unorderd list that autocreates new li tags with correct indentation and ordering levels",
     priority = 500,
   }, {
-    t({ '<ul>', '\t<li>' }),
+    t({ "<ul>", "\t<li>" }),
     i(1, "list item"),
-    t({ '</li>', '' }),
+    t({ "</li>", "" }),
     d(2, ul_helper, {}, { user_args = { 1 } }),
-    t({ '</ul>', '' }),
+    t({ "</ul>", "" }),
     i(0),
   }),
   s({
@@ -122,14 +132,32 @@ return {
     dscr = "Ordered list that autocreates new li tags with correct indentation and ordering levels",
     priority = 500,
   }, {
-    t({ '<ol type="1">', '\t<li>' }),
+    t({ '<ol type="1">', "\t<li>" }),
     i(1, "list item"),
-    t({ '</li>', '' }),
+    t({ "</li>", "" }),
     d(2, ol_helper, {}, { user_args = { {
       indentationLevel = 1,
       nextNestingLevel = 2,
     } } }),
-    t({ '</ol>', '' }),
+    t({ "</ol>", "" }),
     i(0),
+  }),
+  s({
+    trig = "cn",
+    name = "className",
+    dscr = "className",
+  }, {
+    t({ 'className="' }),
+    i(0, "classes"),
+    t({ '"' }),
+  }),
+  s({
+    trig = "ocl",
+    name = "onClick",
+    dscr = "onClick",
+  }, {
+    t({ "onClick={() => " }),
+    i(0, "func"),
+    t({ "}" }),
   }),
 }

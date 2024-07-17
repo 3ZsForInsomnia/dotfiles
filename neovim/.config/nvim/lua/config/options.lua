@@ -140,3 +140,9 @@ o.mouse = ""
 
 g.lazyvim_picker = "telescope"
 g.autoformat = false
+
+vim.filetype.add({
+  extension = {
+    ["http"] = "http",
+  },
+})

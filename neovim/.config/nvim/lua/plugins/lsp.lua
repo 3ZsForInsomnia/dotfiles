@@ -1,7 +1,27 @@
+local cmd = require("helpers").k_cmd
+
+local l = "<leader>l"
+local f = function()
+  return "lua vim.diagnostic."
+end
+
 return {
+  {
+    "neovim/nvim-lspconfig",
+    opts = function()
+      local keys = require("lazyvim.plugins.lsp.keymaps").get()
+      -- disable a keymap
+      keys[#keys + 1] = { "<leader>ca", false }
+      keys[#keys + 1] = { "<leader>cA", false }
+    end,
+  },
   {
     "folke/trouble.nvim",
     opts = { use_diagnostic_signs = true },
+    keys = {
+      { "<leader>cs", false },
+      { "<leader>cS", false },
+    },
   },
   {
     "williamboman/mason.nvim",
@@ -42,82 +62,89 @@ return {
         "vim-language-server",
       },
     },
+    keys = {
+      { "<leader>cm", false },
+    },
   },
   {
     "aznhe21/actions-preview.nvim",
-    config = function()
-      vim.keymap.set({ "v", "n" }, "gf", require("actions-preview").code_actions)
-    end,
+    config = true,
+    keys = {
+      cmd({
+        key = l .. "a",
+        action = "lua require('actions-preview').code_actions()",
+        desc = "Get code actions",
+      }),
+    },
   },
   {
     "nvim-treesitter/nvim-treesitter-context",
-    config = function()
-      require("treesitter-context").setup({
-        enable = true,
-        patterns = {
-          default = {
-            "class",
-            "function",
-            "method",
-            "for",
-            "while",
-            "if",
-            "switch",
-            "case",
-            "interface",
-            "struct",
-            "enum",
-          },
-          tex = {
-            "chapter",
-            "section",
-            "subsection",
-            "subsubsection",
-          },
-          haskell = {
-            "adt",
-          },
-          rust = {
-            "impl_item",
-          },
-          terraform = {
-            "block",
-            "object_elem",
-            "attribute",
-          },
-          scala = {
-            "object_definition",
-          },
-          vhdl = {
-            "process_statement",
-            "architecture_body",
-            "entity_declaration",
-          },
-          markdown = {
-            "section",
-          },
-          elixir = {
-            "anonymous_function",
-            "arguments",
-            "block",
-            "do_block",
-            "list",
-            "map",
-            "tuple",
-            "quoted_content",
-          },
-          json = {
-            "pair",
-          },
-          typescript = {
-            "export_statement",
-          },
-          yaml = {
-            "block_mapping_pair",
-          },
+    opts = {
+      enable = true,
+      patterns = {
+        default = {
+          "class",
+          "function",
+          "method",
+          "for",
+          "while",
+          "if",
+          "switch",
+          "case",
+          "interface",
+          "struct",
+          "enum",
         },
-      })
-    end,
+        tex = {
+          "chapter",
+          "section",
+          "subsection",
+          "subsubsection",
+        },
+        haskell = {
+          "adt",
+        },
+        rust = {
+          "impl_item",
+        },
+        terraform = {
+          "block",
+          "object_elem",
+          "attribute",
+        },
+        scala = {
+          "object_definition",
+        },
+        vhdl = {
+          "process_statement",
+          "architecture_body",
+          "entity_declaration",
+        },
+        markdown = {
+          "section",
+        },
+        elixir = {
+          "anonymous_function",
+          "arguments",
+          "block",
+          "do_block",
+          "list",
+          "map",
+          "tuple",
+          "quoted_content",
+        },
+        json = {
+          "pair",
+        },
+        typescript = {
+          "export_statement",
+        },
+        yaml = {
+          "block_mapping_pair",
+        },
+      },
+    },
+    config = true,
   },
   { "nvim-treesitter/nvim-treesitter-textobjects" },
   { "RRethy/nvim-treesitter-textsubjects" },
@@ -155,7 +182,7 @@ return {
         highlight = {
           enable = true, -- false will disable the whole extension
           additional_vim_regex_highlighting = { "markdown" },
-          disable = {},  -- list of language that will be disabled
+          disable = {}, -- list of language that will be disabled
         },
         textsubjects = {
           enable = true,
@@ -268,5 +295,12 @@ return {
         },
       })
     end,
+    keys = {
+      cmd({
+        key = l .. "e",
+        action = f() .. "open_float()",
+        desc = "Open floating diagnostics window ",
+      }),
+    },
   },
 }

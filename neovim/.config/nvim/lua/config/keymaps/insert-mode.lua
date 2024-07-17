@@ -1,13 +1,6 @@
 local k = require("helpers").k
 
 k({
-  key = "<C-l>",
-  action = '<esc>vaw"qyo<c-r>=luaeval(\'logThis(vim.fn.getreg("q"))\')<cr><up>',
-  desc = "Insta-log anything while in insert mode",
-  mode = "i",
-})
-
-k({
   key = "<C-c>",
   action = "<esc>`^",
   desc = "Escape and keep location",

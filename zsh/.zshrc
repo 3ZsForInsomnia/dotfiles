@@ -18,6 +18,7 @@ HISTSIZE=100000
 SAVEHIST=100000
 
 setopt auto_cd
+CORRECT_IGNORE_FILE='.*'
 setopt correct_all
 setopt append_history
 
@@ -31,3 +32,11 @@ done
 
 # Must be sourced after everything else
 source "$HOME/code/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# pnpm
+export PNPM_HOME="/home/zach/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

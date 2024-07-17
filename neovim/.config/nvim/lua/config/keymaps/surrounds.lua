@@ -13,19 +13,3 @@ k({ key = l .. "[", action = s("[", "]"), desc = "Surround with square brackets"
 k({ key = l .. "{", action = s("{", "}"), desc = "Surround with curly braces" })
 k({ key = l .. "<", action = s("<", ">"), desc = "Surround with tags" })
 k({ key = l .. "$", action = s("${", "}"), desc = "Surround with ${}" })
-
-local wk = require("which-key")
-
-wk.register({
-  s = {
-    name = "Surround (custom)",
-    ['"'] = "Surround with '\"'",
-    ["'"] = "Surround with '",
-    ["`"] = "Surround with `",
-    ["("] = "Surround with ()",
-    ["{"] = "Surround with {}",
-    ["["] = "Surround with []",
-    ["<"] = "Surround with <>",
-    ["$"] = "Surround with ${}",
-  },
-}, { prefix = "<leader>" })

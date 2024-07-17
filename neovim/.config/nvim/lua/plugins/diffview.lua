@@ -1,3 +1,12 @@
+local d = "<leader>gd"
+local h = require("helpers")
+local cmd = h.k_cmd
+local k = h.k
+
+local f = function(command)
+  return "Diffview" .. command
+end
+
 return {
   "sindrets/diffview.nvim",
   event = "VeryLazy",
@@ -45,12 +54,12 @@ return {
         },
       },
       file_panel = {
-        listing_style = "tree",            -- One of 'list' or 'tree'
-        tree_options = {                   -- Only applies when listing_style is 'tree'
-          flatten_dirs = true,             -- Flatten dirs that only contain one single dir
+        listing_style = "tree", -- One of 'list' or 'tree'
+        tree_options = { -- Only applies when listing_style is 'tree'
+          flatten_dirs = true, -- Flatten dirs that only contain one single dir
           folder_statuses = "only_folded", -- One of 'never', 'only_folded' or 'always'.
         },
-        win_config = {                     -- See ':h diffview-config-win_config'
+        win_config = { -- See ':h diffview-config-win_config'
           position = "left",
           width = 35,
           win_opts = {},
@@ -80,27 +89,28 @@ return {
         DiffviewOpen = { "--imply-local" },
         DiffviewFileHistory = {},
       },
-      hooks = {},                 -- See ':h diffview-config-hooks'
+      hooks = {}, -- See ':h diffview-config-hooks'
       keymaps = {
         disable_defaults = false, -- Disable the default keymaps
         view = {
           -- The `view` bindings are active in the diff buffers, only when the current
           -- tabpage is a Diffview.
-          ["<tab>"] = actions.select_next_entry,              -- Open the diff for the next file
-          ["<s-tab>"] = actions.select_prev_entry,            -- Open the diff for the previous file
-          ["gf"] = actions.goto_file,                         -- Open the file in a new split in the previous tabpage
-          ["<C-w><C-f>"] = actions.goto_file_split,           -- Open the file in a new split
-          ["<C-w>gf"] = actions.goto_file_tab,                -- Open the file in a new tabpage
-          ["<leader>e"] = actions.focus_files,                -- Bring focus to the file panel
-          ["<leader>b"] = actions.toggle_files,               -- Toggle the file panel.
-          ["g<C-x>"] = actions.cycle_layout,                  -- Cycle through available layouts.
-          ["[x"] = actions.prev_conflict,                     -- In the merge_tool: jump to the previous conflict
-          ["]x"] = actions.next_conflict,                     -- In the merge_tool: jump to the next conflict
-          ["<leader>co"] = actions.conflict_choose("ours"),   -- Choose the OURS version of a conflict
+          -- TODO: Make gc the prefix for diffview mapppings
+          ["<tab>"] = actions.select_next_entry, -- Open the diff for the next file
+          ["<s-tab>"] = actions.select_prev_entry, -- Open the diff for the previous file
+          ["gf"] = actions.goto_file, -- Open the file in a new split in the previous tabpage
+          ["<C-w><C-f>"] = actions.goto_file_split, -- Open the file in a new split
+          ["<C-w>gf"] = actions.goto_file_tab, -- Open the file in a new tabpage
+          ["<leader>e"] = actions.focus_files, -- Bring focus to the file panel
+          ["<leader>b"] = actions.toggle_files, -- Toggle the file panel.
+          ["g<C-x>"] = actions.cycle_layout, -- Cycle through available layouts.
+          ["[x"] = actions.prev_conflict, -- In the merge_tool: jump to the previous conflict
+          ["]x"] = actions.next_conflict, -- In the merge_tool: jump to the next conflict
+          ["<leader>co"] = actions.conflict_choose("ours"), -- Choose the OURS version of a conflict
           ["<leader>ct"] = actions.conflict_choose("theirs"), -- Choose the THEIRS version of a conflict
-          ["<leader>cb"] = actions.conflict_choose("base"),   -- Choose the BASE version of a conflict
-          ["<leader>ca"] = actions.conflict_choose("all"),    -- Choose all the versions of a conflict
-          ["dx"] = actions.conflict_choose("none"),           -- Delete the conflict region
+          ["<leader>cb"] = actions.conflict_choose("base"), -- Choose the BASE version of a conflict
+          ["<leader>ca"] = actions.conflict_choose("all"), -- Choose all the versions of a conflict
+          ["dx"] = actions.conflict_choose("none"), -- Delete the conflict region
           {
             "n",
             "<leader>cO",
@@ -141,13 +151,13 @@ return {
         diff3 = {
           -- Mappings in 3-way diff layouts
           {
-            { "n",                                                            "x" },
+            { "n", "x" },
             "2do",
             actions.diffget("ours"),
             { desc = "Obtain the diff hunk from the OURS version of the file" },
           },
           {
-            { "n",                                                              "x" },
+            { "n", "x" },
             "3do",
             actions.diffget("theirs"),
             { desc = "Obtain the diff hunk from the THEIRS version of the file" },
@@ -157,19 +167,19 @@ return {
         diff4 = {
           -- Mappings in 4-way diff layouts
           {
-            { "n",                                                            "x" },
+            { "n", "x" },
             "1do",
             actions.diffget("base"),
             { desc = "Obtain the diff hunk from the BASE version of the file" },
           },
           {
-            { "n",                                                            "x" },
+            { "n", "x" },
             "2do",
             actions.diffget("ours"),
             { desc = "Obtain the diff hunk from the OURS version of the file" },
           },
           {
-            { "n",                                                              "x" },
+            { "n", "x" },
             "3do",
             actions.diffget("theirs"),
             { desc = "Obtain the diff hunk from the THEIRS version of the file" },
@@ -231,7 +241,7 @@ return {
             actions.toggle_stage_entry,
             { desc = "Stage / unstage the selected entry" },
           },
-          { "n", "S", actions.stage_all,   { desc = "Stage all entries" } },
+          { "n", "S", actions.stage_all, { desc = "Stage all entries" } },
           { "n", "U", actions.unstage_all, { desc = "Unstage all entries" } },
           {
             "n",
@@ -245,14 +255,14 @@ return {
             actions.open_commit_log,
             { desc = "Open the commit log panel" },
           },
-          { "n", "zo",    actions.open_fold,          { desc = "Expand fold" } },
-          { "n", "h",     actions.close_fold,         { desc = "Collapse fold" } },
-          { "n", "zc",    actions.close_fold,         { desc = "Collapse fold" } },
-          { "n", "za",    actions.toggle_fold,        { desc = "Toggle fold" } },
-          { "n", "zR",    actions.open_all_folds,     { desc = "Expand all folds" } },
-          { "n", "zM",    actions.close_all_folds,    { desc = "Collapse all folds" } },
+          { "n", "zo", actions.open_fold, { desc = "Expand fold" } },
+          { "n", "h", actions.close_fold, { desc = "Collapse fold" } },
+          { "n", "zc", actions.close_fold, { desc = "Collapse fold" } },
+          { "n", "za", actions.toggle_fold, { desc = "Toggle fold" } },
+          { "n", "zR", actions.open_all_folds, { desc = "Expand all folds" } },
+          { "n", "zM", actions.close_all_folds, { desc = "Collapse all folds" } },
           { "n", "<c-b>", actions.scroll_view(-0.25), { desc = "Scroll the view up" } },
-          { "n", "<c-f>", actions.scroll_view(0.25),  { desc = "Scroll the view down" } },
+          { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Scroll the view down" } },
           {
             "n",
             "<tab>",
@@ -308,14 +318,14 @@ return {
             { desc = "Bring focus to the file panel" },
           },
           { "n", "<leader>b", actions.toggle_files, { desc = "Toggle the file panel" } },
-          { "n", "g<C-x>",    actions.cycle_layout, { desc = "Cycle available layouts" } },
+          { "n", "g<C-x>", actions.cycle_layout, { desc = "Cycle available layouts" } },
           {
             "n",
             "[x",
             actions.prev_conflict,
             { desc = "Go to the previous conflict" },
           },
-          { "n", "]x", actions.next_conflict,      { desc = "Go to the next conflict" } },
+          { "n", "]x", actions.next_conflict, { desc = "Go to the next conflict" } },
           { "n", "g?", actions.help("file_panel"), { desc = "Open the help panel" } },
           {
             "n",
@@ -349,7 +359,7 @@ return {
           },
         },
         file_history_panel = {
-          { "n", "g!", actions.options,         { desc = "Open the option panel" } },
+          { "n", "g!", actions.options, { desc = "Open the option panel" } },
           {
             "n",
             "<C-A-d>",
@@ -362,8 +372,8 @@ return {
             actions.copy_hash,
             { desc = "Copy the commit hash of the entry under the cursor" },
           },
-          { "n", "L",  actions.open_commit_log, { desc = "Show commit details" } },
-          { "n", "zR", actions.open_all_folds,  { desc = "Expand all folds" } },
+          { "n", "L", actions.open_commit_log, { desc = "Show commit details" } },
+          { "n", "zR", actions.open_all_folds, { desc = "Expand all folds" } },
           { "n", "zM", actions.close_all_folds, { desc = "Collapse all folds" } },
           {
             "n",
@@ -408,7 +418,7 @@ return {
             { desc = "Open the diff for the selected entry." },
           },
           { "n", "<c-b>", actions.scroll_view(-0.25), { desc = "Scroll the view up" } },
-          { "n", "<c-f>", actions.scroll_view(0.25),  { desc = "Scroll the view down" } },
+          { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Scroll the view down" } },
           {
             "n",
             "<tab>",
@@ -445,20 +455,52 @@ return {
             actions.focus_files,
             { desc = "Bring focus to the file panel" },
           },
-          { "n", "<leader>b", actions.toggle_files,               { desc = "Toggle the file panel" } },
-          { "n", "g<C-x>",    actions.cycle_layout,               { desc = "Cycle available layouts" } },
-          { "n", "g?",        actions.help("file_history_panel"), { desc = "Open the help panel" } },
+          { "n", "<leader>b", actions.toggle_files, { desc = "Toggle the file panel" } },
+          { "n", "g<C-x>", actions.cycle_layout, { desc = "Cycle available layouts" } },
+          { "n", "g?", actions.help("file_history_panel"), { desc = "Open the help panel" } },
         },
         option_panel = {
-          { "n", "<tab>", actions.select_entry,         { desc = "Change the current option" } },
-          { "n", "q",     actions.close,                { desc = "Close the panel" } },
-          { "n", "g?",    actions.help("option_panel"), { desc = "Open the help panel" } },
+          { "n", "<tab>", actions.select_entry, { desc = "Change the current option" } },
+          { "n", "q", actions.close, { desc = "Close the panel" } },
+          { "n", "g?", actions.help("option_panel"), { desc = "Open the help panel" } },
         },
         help_panel = {
-          { "n", "q",     actions.close, { desc = "Close help menu" } },
+          { "n", "q", actions.close, { desc = "Close help menu" } },
           { "n", "<esc>", actions.close, { desc = "Close help menu" } },
         },
       },
     })
   end,
+  keys = {
+    cmd({
+      key = d .. "o",
+      action = f("Open"),
+      desc = "Open diffview",
+    }),
+    cmd({
+      key = d .. "c",
+      action = f("Close"),
+      desc = "Close diffview",
+    }),
+    cmd({
+      key = d .. "m",
+      action = f("Open origin/main"),
+      desc = "Open diffview against origin/main",
+    }),
+    k({
+      key = d .. "b",
+      action = ":DiffviewOpen origin/",
+      desc = "Open diffview against origin/{branch}",
+    }),
+    k({
+      key = d .. "h",
+      action = ":DiffviewOpen HEAD~n",
+      desc = "Open diffview against HEAD~n",
+    }),
+    cmd({
+      key = d .. "p",
+      action = f("Open origin/HEAD...HEAD"),
+      desc = "Open diffview against base",
+    }),
+  },
 }

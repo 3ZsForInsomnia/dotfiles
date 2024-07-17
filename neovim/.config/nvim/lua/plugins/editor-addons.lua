@@ -1,10 +1,44 @@
+local cmd = require("helpers").k_cmd
+local k = require("helpers").k
+local db = "<leader>db"
+local dba = function(command)
+  return "DBUI " .. command
+end
+
 return {
-  { "numToStr/Comment.nvim", config = true },
-  { "liuchengxu/vista.vim",  event = "VeryLazy" },
-  { "mbbill/undotree" },
-  { "folke/twilight.nvim",   config = true,     event = "VeryLazy" },
+  {
+    "numToStr/Comment.nvim",
+    config = true,
+  },
+  {
+    "liuchengxu/vista.vim",
+    event = "VeryLazy",
+    keys = {
+      cmd({
+        key = "<leader>uv",
+        action = "Vista!!",
+        desc = "Toggle Vista",
+      }),
+    },
+  },
+  {
+    "mbbill/undotree",
+    event = "VeryLazy",
+    keys = {
+      cmd({
+        key = "<leader>uu",
+        action = "UndotreeToggle",
+        desc = "Toggle UndoTree",
+      }),
+    },
+  },
+  {
+    "folke/twilight.nvim",
+    event = "VeryLazy",
+  },
   {
     "lewis6991/hover.nvim",
+    event = "VeryLazy",
     config = function()
       require("hover").setup({
         init = function()
@@ -12,9 +46,13 @@ return {
           require("hover.providers.gh")
           require("hover.providers.gh_user")
           require("hover.providers.jira")
+          require("hover.providers.dictionary")
+          require("hover.providers.dap")
+          require("hover.providers.fold_preview")
+          require("hover.providers.diagnostic")
+          require("hover.providers.man")
 
           -- Custom providers
-          -- clickupProvider()
           -- trelloProvider()
         end,
 
@@ -22,25 +60,28 @@ return {
           border = "single",
           width = 50,
         },
+        preview_window = true,
+        title = true,
       })
-
-      vim.keymap.set("n", "K", require("hover").hover, { desc = "hover.nvim" })
-      vim.keymap.set("n", "gK", require("hover").hover_select, { desc = "hover.nvim (select)" })
-      vim.keymap.set("n", "<C-p>", function()
-        require("hover").hover_switch("previous")
-      end, { desc = "hover.nvim (previous source)" })
-      vim.keymap.set("n", "<C-n>", function()
-        require("hover").hover_switch("next")
-      end, { desc = "hover.nvim (next source)" })
     end,
+    keys = {
+      cmd({
+        key = "<M-d>",
+        action = "lua require('hover').hover()",
+        desc = "Hover",
+      }),
+      cmd({
+        key = "<M-f>",
+        action = "lua require('hover').hover_select()",
+        desc = "Hover select",
+      }),
+    },
   },
-  { "tpope/vim-dadbod",             event = "VeryLazy" },
-  { "kristijanhusak/vim-dadbod-ui", event = "VeryLazy" },
   {
     "m4xshen/hardtime.nvim",
     event = "VeryLazy",
     opts = {
-      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree", "noice" },
+      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree", "noice", "trouble" },
       max_count = 4,
       restricted_keys = {
         ["w"] = { "n", "x" },
@@ -62,4 +103,38 @@ return {
       },
     },
   },
+  { "tpope/vim-dadbod", event = "VeryLazy" },
+  {
+    "kristijanhusak/vim-dadbod-ui",
+    event = "VeryLazy",
+    keys = {
+      cmd({
+        key = db .. "t",
+        action = dba("Toggle"),
+        desc = "Toggle DBUI",
+      }),
+      cmd({
+        key = db .. "f",
+        action = dba("FindBuffer"),
+        desc = "Find buffer",
+      }),
+      cmd({
+        key = db .. "r",
+        action = dba("RenameBuffer"),
+        desc = "Rename buffer",
+      }),
+      cmd({
+        key = db .. "l",
+        action = dba("LastQueryInfo"),
+        desc = "Last query info",
+      }),
+    },
+  },
+  {
+    "yoshio15/vim-trello",
+    config = function()
+      require("config.trello")
+    end,
+  },
 }
+-- compromise

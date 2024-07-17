@@ -78,7 +78,7 @@ return {
               { error = true },
               { warning = true },
               { event = "msg_show", kind = { "" } },
-              { event = "lsp",      kind = "message" },
+              { event = "lsp", kind = "message" },
             },
           },
           filter_opts = { count = 1 },
@@ -191,6 +191,13 @@ return {
       status = {},
       format = {},
     },
+    keys = {
+      { "<leader>sna", false },
+      { "<leader>snd", false },
+      { "<leader>snh", false },
+      { "<leader>snl", false },
+      { "<leader>snt", false },
+    },
   },
   {
     "stevearc/dressing.nvim",
@@ -224,7 +231,6 @@ return {
   },
   {
     "brenoprata10/nvim-highlight-colors",
-    config = true,
     opts = {
       render = "background",
       enable_tailwind = true,

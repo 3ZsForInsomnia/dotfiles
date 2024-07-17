@@ -1,3 +1,5 @@
+local cmd = require("helpers").k_cmd
+
 return {
   { "zdcthomas/yop.nvim" },
   { "winston0410/cmd-parser.nvim" },
@@ -7,58 +9,74 @@ return {
       snippet_engine = "luasnip",
     },
   },
-  -- {
-  --   "vhyrro/luarocks.nvim",
-  --   priority = 1000,
-  --   config = true,
-  --   opts = {
-  --     rocks = { "lua-curl", "nvim-nio", "mimetypes", "xml2lua" },
-  --   },
-  -- },
-  -- {
-  --   "rest-nvim/rest.nvim",
-  --   ft = "http",
-  --   dependencies = { "luarocks.nvim" },
-  --   config = function()
-  --     require("rest-nvim").setup()
-  --   end,
-  -- },
   {
-    "niuiic/code-shot.nvim",
-    event = "VeryLazy",
-    dependencies = "niuiic/core.nvim",
+    "vhyrro/luarocks.nvim",
+    priority = 1000,
+    config = true,
     opts = {
-      output = function()
-        local v = vim
-        local sep = package.config:sub(1, 1)
-        local basepath = "~" .. sep .. "Documents" .. sep .. "screenshots" .. sep .. "code" .. sep
-        local folder = string.match(v.fn.getcwd(), "[^" .. sep .. "]+$") .. sep
-        local path = basepath .. folder
-
-        local isok, errstr, errcode = os.rename(path, path)
-        if isok == nil then
-          os.execute("mkdir " .. path)
-        end
-
-        local extension = ".png"
-
-        local now = os.date("%Y-%m-%d_%X")
-        local core = require("core")
-        local buf_name = core.file.name(v.api.nvim_buf_get_name(0))
-        local filename = now .. "_" .. buf_name .. extension
-
-        return path .. filename
-      end,
-      -- select_area: {s_start: {row: number, col: number}, s_end: {row: number, col: number}} | nil
-      options = function(select_area)
-        if not select_area then
-          return {}
-        end
-        return {
-          "--line-offset",
-          select_area.s_start.row,
-        }
-      end,
+      rocks = { "lua-curl", "nvim-nio", "mimetypes", "xml2lua" },
+    },
+  },
+  {
+    "mistweaverco/kulala.nvim",
+    config = function()
+      -- Setup is required, even if you don't pass any options
+      require("kulala").setup({
+        -- default_view, body or headers
+        default_view = "body",
+        -- dev, test, prod, can be anything
+        -- see: https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-8.0#environment-files
+        default_env = "dev",
+        -- enable/disable debug mode
+        debug = false,
+        -- default formatters for different content types
+        formatters = {
+          json = { "jq", "." },
+          xml = { "xmllint", "--format", "-" },
+          html = { "xmllint", "--format", "--html", "-" },
+        },
+        icons = {
+          inlay = {
+            loading = "⏳",
+            done = "✅ ",
+          },
+          lualine = "🐼",
+        },
+        -- additional cURL options
+        -- e.g. { "--insecure", "-A", "Mozilla/5.0" }
+        additional_curl_options = {},
+      })
+    end,
+    keys = {
+      cmd({
+        key = "<leader>zr",
+        action = "lua require('kulala').run()",
+        desc = "Send a request",
+      }),
+      cmd({
+        key = "[r",
+        action = "lua require('kulala').jump_prev()",
+        desc = "Jump to previous request",
+      }),
+      cmd({
+        key = "]r",
+        action = "lua require('kulala').jump_next()",
+        desc = "Jump to next request",
+      }),
+    },
+  },
+  {
+    "mistricky/codesnap.nvim",
+    build = "make build_generator",
+    opts = {
+      save_path = "/home/zach/Pictures/Screenshots/code",
+      has_breadcrumbs = true,
+      bg_theme = "bamboo",
+    },
+    -- TODO: Update these
+    keys = {
+      { "<leader>zsc", "<cmd>CodeSnap<cr>", mode = "x", desc = "Save selected code snapshot into clipboard" },
+      { "<leader>zss", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
     },
   },
 }

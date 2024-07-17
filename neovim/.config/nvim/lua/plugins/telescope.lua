@@ -332,12 +332,12 @@ return {
           desc = "Buffers",
         }),
         cmd({
-          key = f .. "fr",
+          key = f .. "br",
           action = t("registers"),
           desc = "Registers",
         }),
         cmd({
-          key = f .. "ft",
+          key = f .. "bt",
           action = t("tags"),
           desc = "Tags",
         }),

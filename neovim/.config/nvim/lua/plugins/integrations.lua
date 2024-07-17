@@ -7,7 +7,7 @@ return {
   {
     "epwalsh/obsidian.nvim",
     event = "VeryLazy",
-    config = function()
+    config = function(_, opts)
       vim.keymap.set("n", "gf", function()
         if require("obsidian").util.cursor_on_markdown_link() then
           return "<cmd>ObsidianFollowLink<CR>"
@@ -15,14 +15,19 @@ return {
           return "gf"
         end
       end, { noremap = false, expr = true })
+
+      require("obsidian").setup(opts)
     end,
     opts = {
       dir = "~/Documents/notes",
+      workspaces = { {
+        name = "notes",
+        path = "/home/zach/Documents/notes",
+      } },
       open_notes_in = "current",
       finder = "telescope.nvim",
       completion = {
         nvim_cmp = true,
-        prepend_note_id = true,
       },
       note_id_func = function(title)
         return title
@@ -33,6 +38,9 @@ return {
         date_format = "%Y-%m-%d",
         time_format = "%H:%M",
       },
+      attachments = {
+        img_folder = "9 - Resources/98 - Attachments",
+      },
       follow_url_func = function(url)
         -- vim.fn.jobstart({ "cmd.exe /C start", url }) -- Linux in WSL
         -- vim.fn.jobstart({ "open", url }) -- Mac OS
@@ -40,9 +48,13 @@ return {
       end,
       open_app_foreground = true,
       daily_notes = {
-        folder = "",
-        date_format = "%Y-%m-%d",
+        folder = "[9 - Resources/94 - Old activity notes]/YYYY/YYYY-[Q]Q/YYYY-MM-MMM",
+        date_format = "YYYY-MM-DD-dddd",
+        template = "9 - Resources/90 - Templates/Daily Note",
       },
+      wiki_link_func = function(opts)
+        return require("obsidian.util").wiki_link_id_prefix(opts)
+      end,
     },
     keys = {
       cmd({
