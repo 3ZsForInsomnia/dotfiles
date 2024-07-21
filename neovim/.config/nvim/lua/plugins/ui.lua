@@ -187,6 +187,13 @@ return {
           view = "popup",
           filter = { event = "msg_show", min_length = 280 },
         },
+        {
+          filter = {
+            event = "notify",
+            find = "Request textDocument/inlayHint failed",
+          },
+          opts = { skip = true },
+        },
       },
       status = {},
       format = {},

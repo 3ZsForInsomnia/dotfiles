@@ -1,156 +1,121 @@
 local wk = require("which-key")
 
-wk.register({
-  ["<leader>"] = {
-    name = "Leader",
-    a = {
-      name = "AI tools",
-      c = {
-        name = "Copilot",
-      },
-      g = {
-        name = "GPT",
-        r = {
-          name = "Run action...",
-        },
-      },
-    },
-    b = {
-      name = "Buffers",
-      h = {
-        name = "Horizontal splits",
-      },
-      v = {
-        name = "New vertical split",
-      },
-    },
-    c = {
-      name = "Code (LSP)",
-      l = {
-        name = "Code lens",
-      },
-      w = {
-        name = "Workspaces",
-      },
-    },
-    d = {
-      name = "Debug & Dbs",
-    },
-    e = {
-      name = "Explorer (Neotree)",
-    },
-    f = {
-      name = "Telescope",
-      b = {
-        name = "Buffers, marks, registers and tags",
-      },
-      c = {
-        name = "Changes, quick and location lists",
-      },
-      d = {
-        name = "Docs and snippets",
-      },
-      g = {
-        name = "Git",
-      },
-      l = {
-        name = "LSP",
-      },
-      m = {
-        name = "Misc",
-      },
-    },
-    g = {
-      name = "Git",
-      d = {
-        name = "Diffview",
-      },
-      h = {
-        name = "Gitsigns",
-      },
-      n = {
-        name = "Neogit",
-      },
-    },
-    l = {
-      name = "Location list",
-    },
-    o = {
-      name = "Obsidian",
-    },
-    q = {
-      name = "Quickfix list",
-    },
-    r = {
-      name = "Refactoring",
-    },
-    s = {
-      name = "Sessions and Custom Surrounds",
-      ['"'] = "Surround with '\"'",
-      ["'"] = "Surround with '",
-      ["`"] = "Surround with `",
-      ["("] = "Surround with ()",
-      ["{"] = "Surround with {}",
-      ["["] = "Surround with []",
-      ["<"] = "Surround with <>",
-      ["$"] = "Surround with ${}",
-      w = {
-        name = "Swap params",
-      },
-    },
-    t = {
-      name = "Testing",
-    },
-    u = {
-      name = "UI toggles",
-    },
-    x = {
-      name = "Trouble Diagnostics",
-    },
-    z = {
-      name = "Misc",
-      c = {
-        name = "Colortils",
-      },
-      e = {
-        name = "Emmet",
-      },
-    },
-  },
-  m = {
-    name = "Marks",
-    ["0"] = "Investigating",
-    ["9"] = "Flagged/important",
-    ["8"] = "Bad",
-    ["7"] = "Good",
-    ["6"] = "Info",
-    ["5"] = "Home",
-  },
-  ["["] = {
-    name = "Previous...",
-    b = "Buffer",
-    h = "Hunk",
-    ["0"] = "Investigation bookmark",
-    ["9"] = "Flagged/important bookmark",
-    ["8"] = "Bad bookmark",
-    ["7"] = "Good bookmark",
-    ["6"] = "Info bookmark",
-    ["5"] = "Home bookmark",
-  },
-  ["]"] = {
-    name = "Next...",
-    b = "Buffer",
-    h = "Hunk",
-    ["0"] = "Investigation bookmark",
-    ["9"] = "Flagged/important bookmark",
-    ["8"] = "Bad bookmark",
-    ["7"] = "Good bookmark",
-    ["6"] = "Info bookmark",
-    ["5"] = "Home bookmark",
-  },
-  ["<C-"] = {
-    ["w>o"] = "Fullscreen current buffer if in buffer split",
-    ["w>c"] = "Close split",
-    ["k>"] = "Show signature",
-  },
+wk.add({
+  --
+  -- <Leader>a
+  --
+  { "<leader>a", group = "AI Tools" },
+  { "<leader>ac", group = "Copilot" },
+  { "<leader>ag", group = "GPT" },
+  { "<leader>agr", group = "Run action..." },
+
+  --
+  -- <Leader>b
+  --
+  { "<leader>b", group = "Buffers" },
+  { "<leader>bh", group = "Horizontal splits" },
+  { "<leader>bv", group = "New vertical split" },
+
+  --
+  -- <Leader>c
+  --
+  { "<leader>c", group = "Code (LSP)" },
+  { "<leader>cl", group = "Code lens" },
+  { "<leader>cw", group = "Workspaces" },
+
+  { "<leader>d", group = "Debug & Dbs" },
+  { "<leader>e", group = "Explorer (Neotree)" },
+
+  --
+  -- <Leader>f Telescope
+  --
+  { "<leader>f", group = "Telescope" },
+  { "<leader>fb", group = "Buffers, marks, registers and tags" },
+  { "<leader>fc", group = "Changes, quick and location lists" },
+  { "<leader>fd", group = "Docs and snippets" },
+  { "<leader>fg", group = "Git" },
+  { "<leader>fl", group = "LSP" },
+  { "<leader>fm", group = "Misc" },
+
+  --
+  -- <Leader>g
+  --
+  { "<leader>g", group = "Git" },
+  { "<leader>gd", group = "Diffview" },
+  { "<leader>gh", group = "Gitsigns" },
+  { "<leader>gn", group = "Neogit" },
+
+  { "<leader>l", group = "Location list" },
+  { "<leader>o", group = "Obsidian" },
+  { "<leader>q", group = "Quickfix list" },
+  { "<leader>r", group = "Refactoring" },
+
+  --
+  -- <Leader>s
+  --
+  { "<leader>s", group = "Sessions and Custom Surrounds" },
+  { "<leader>sw", group = "Swap params" },
+
+  --
+  -- <Leader>s Surrounds
+  --
+  { '<leader>s"', desc = "Surround with '\"'" },
+  { "<leader>s'", desc = "Surround with '" },
+  { "<leader>s`", desc = "Surround with `" },
+  { "<leader>s(", desc = "Surround with ()" },
+  { "<leader>s{", desc = "Surround with {}" },
+  { "<leader>s[", desc = "Surround with []" },
+  { "<leader>s<", desc = "Surround with <>" },
+  { "<leader>s$", desc = "Surround with ${}" },
+
+  { "<leader>t", group = "Testing" },
+  { "<leader>u", group = "UI toggles" },
+  { "<leader>x", group = "Trouble Diagnostics" },
+  { "<leader>z", group = "Misc" },
+  { "<leader>zc", group = "Colortils" },
+  { "<leader>ze", group = "Emmet" },
+
+  --
+  -- Marks (m)
+  --
+  { "m", group = "Marks" },
+  { "<leader>m0", desc = "Investigating" },
+  { "<leader>m9", desc = "Flagged/important" },
+  { "<leader>m8", desc = "Bad" },
+  { "<leader>m7", desc = "Good" },
+  { "<leader>m6", desc = "Info" },
+  { "<leader>m5", desc = "Home" },
+
+  --
+  -- Previous ([)
+  --
+  { "<leader>[", group = "Previous..." },
+  { "<leader>[b", desc = "Buffer" },
+  { "<leader>[h", desc = "Hunk" },
+  { "<leader>[0", desc = "Investigation bookmark" },
+  { "<leader>[9", desc = "Flagged/important bookmark" },
+  { "<leader>[8", desc = "Bad bookmark" },
+  { "<leader>[7", desc = "Good bookmark" },
+  { "<leader>[6", desc = "Info bookmark" },
+  { "<leader>[5", desc = "Home bookmark" },
+
+  --
+  -- Next (])
+  --
+  { "<leader>]", group = "Next..." },
+  { "<leader>]b", desc = "Buffer" },
+  { "<leader>]h", desc = "Hunk" },
+  { "<leader>]0", desc = "Investigation bookmark" },
+  { "<leader>]9", desc = "Flagged/important bookmark" },
+  { "<leader>]8", desc = "Bad bookmark" },
+  { "<leader>]7", desc = "Good bookmark" },
+  { "<leader>]6", desc = "Info bookmark" },
+  { "<leader>]5", desc = "Home bookmark" },
+
+  --
+  -- Ctrl
+  --
+  { "<C-w>o", desc = "Fullscreen current buffer if in buffer split" },
+  { "<C-w>c", desc = "Close split" },
+  { "<C-k>", desc = "Show signature" },
 })
