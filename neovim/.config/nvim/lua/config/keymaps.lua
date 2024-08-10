@@ -29,19 +29,22 @@ d("n", "<leader><TAB>d")
 d("n", "<leader><TAB>f")
 d("n", "<leader><tab>l")
 d("n", "<leader><TAB>o")
--- d("n", "<leader>w-")
--- d("n", "<leader>w|")
--- d("n", "<leader>wd")
--- d("n", "<leader>wm")
--- d("n", "<leader>ww")
-d("n", "<leader>uw")
-d("n", "<leader>us")
-d("n", "<leader>ur")
-d("n", "<leader>uT")
-d("n", "<leader>ut")
+d("n", "<leader>ub")
+d("n", "<leader>uc")
+d("n", "<leader>ud")
 d("n", "<leader>uf")
 d("n", "<leader>uF")
-d("n", "<leader>ub")
+-- d("n", "<leader>ug")
+d("n", "<leader>uh")
+d("n", "<leader>ui")
+d("n", "<leader>uI")
+d("n", "<leader>ul")
+d("n", "<leader>uL")
+d("n", "<leader>ur")
+d("n", "<leader>us")
+d("n", "<leader>ut")
+d("n", "<leader>uT")
+d("n", "<leader>uw")
 
 --
 -- Misc keymaps
@@ -51,22 +54,6 @@ local k = helpers.k
 local k_cmd = helpers.k_cmd
 
 local l = "<leader>"
-
-k_cmd({
-  key = l .. "ua",
-  action = "TSBufToggle highlight",
-  desc = "Toggle Treesitter Highlight",
-})
-k_cmd({
-  key = l .. "ub",
-  action = "TSBufToggle context",
-  desc = "Toggle Treesitter Context",
-})
-k_cmd({
-  key = "<leader>ut",
-  action = "Twilight",
-  desc = "Toggle Twilight",
-})
 
 k_cmd({ key = l .. ",", action = "nohlsearch", desc = "Clear search highlights" })
 k_cmd({ key = l .. "zz", action = "w", desc = "Save file" })
@@ -93,6 +80,19 @@ end, { desc = "Hover previous" })
 vim.keymap.set("n", "<M-f>", function()
   require("hover").hover_switch("next")
 end, { desc = "Hover previous" })
+
+k_cmd({ key = l .. "zu", action = "Lazy update", desc = "Lazy update" })
+
+k_cmd({
+  key = "[b",
+  action = "bprev",
+  desc = "Previous buffer",
+})
+k_cmd({
+  key = "]b",
+  action = "bnext",
+  desc = "Next buffer",
+})
 
 require("config.keymaps.maps")
 require("config.whichkey-map")

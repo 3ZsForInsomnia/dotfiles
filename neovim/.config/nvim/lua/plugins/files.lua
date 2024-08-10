@@ -35,6 +35,7 @@ return {
       window = {
         width = 55,
         mappings = {
+          ["<cr>"] = "open",
           ["l"] = "open",
           ["h"] = "close_node",
           ["<space>"] = "none",

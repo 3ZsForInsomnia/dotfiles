@@ -22,18 +22,14 @@ local lspServers = {
   "yamlls",
 }
 
-local mocha = require("catppuccin.palettes").get_palette("mocha")
+-- local mocha = require("catppuccin.palettes").get_palette("mocha")
 
-local red = mocha.red
-local green = mocha.green
-local blue = mocha.blue
-
-local visited = {
-  hl_group = blue,
-}
-local unvisited = {
-  hl_group = green,
-}
+-- local visited = {
+--   -- hl_group = mocha.blue,
+-- }
+-- local unvisited = {
+--   -- hl_group = mocha.green,
+-- }
 
 local js = "javascript"
 local html = "html"
@@ -43,24 +39,24 @@ local luasnipSetupOptions = function(types)
   return {
     history = true,
     delete_check_events = "TextChanged",
-    ext_opts = {
-      [types.choiceNode] = {
-        active = {
-          virt_text = { { "●", mocha.yellow } },
-          hl_group = red,
-        },
-        visited = visited,
-        unvisited = unvisited,
-      },
-      [types.insertNode] = {
-        active = {
-          virt_text = { { "●", blue } },
-          hl_group = red,
-        },
-        visited = visited,
-        unvisited = unvisited,
-      },
-    },
+    -- ext_opts = {
+    -- [types.choiceNode] = {
+    --   active = {
+    --     virt_text = { { "●", mocha.yellow } },
+    --     hl_group = mocha.red,
+    --   },
+    --   visited = visited,
+    --   unvisited = unvisited,
+    -- },
+    -- [types.insertNode] = {
+    --   active = {
+    --     virt_text = { { "●", mocha.blue } },
+    --     hl_group = mocha.red,
+    --   },
+    --   visited = visited,
+    --   unvisited = unvisited,
+    -- },
+    -- },
   }
 end
 
@@ -109,18 +105,18 @@ local cmpOpts = function(cmp, defaults)
     }),
     auto_brackets = {},
     sources = cmp.config.sources({
-      { name = "copilot" },
       { name = "luasnip" },
-      { name = "nvim_tags" },
       { name = "treesitter" },
       { name = "nvim_lsp" },
       { name = "nvim_lsp_signature" },
       { name = "nvim_lsp_document_symbol" },
+      { name = "emmet" },
+      { name = "copilot" },
       { name = "buffer" },
       { name = "path" },
       { name = "nvim_lua" },
       { name = "vim-dadbod-completion" },
-      { name = "emmet" },
+      { name = "nvim_tags" },
     }),
     formatting = {
       format = function(_, item)
@@ -222,15 +218,6 @@ return {
 
       cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline(),
-        -- mapping = cmp.mapping.preset.cmdline({
-        --   c = function()
-        --     if cmp.visible() then
-        --       cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-        --     else
-        --       cmp.complete()
-        --     end
-        --   end,
-        -- }),
         sources = cmp.config.sources(
           { { name = "path" } },
           { { name = "cmdline", option = { ignore_cmds = { "Man", "!" } } } }

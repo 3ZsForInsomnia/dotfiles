@@ -1,3 +1,6 @@
+local cmd = require("helpers").k_cmd
+local l = "<leader>go"
+
 return {
   {
     "pwntester/octo.nvim",
@@ -155,5 +158,6 @@ return {
         },
       },
     },
+    keys = {},
   },
 }

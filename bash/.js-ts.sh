@@ -52,7 +52,12 @@ alias nrno='nr nodemon:yalc'
 alias nstory='nr storybook'
 alias nrsass='n rebuild node-sass --force'
 
-alias e='ember'
+alias pn='pnpm'
+alias pnd='pn dev'
+alias pni='pn i'
+alias pnc="pn changeset"
+alias pncc="git add .; git commit -m \"Changeset\""
+alias pnt='pn test'
 
 # alias ngc='ng g c'
 alias ngc='nx g c'

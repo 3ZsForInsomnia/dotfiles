@@ -40,3 +40,5 @@ alias http-server='$HOME/.npm/_npx/e5196fa6dc3cecbc/node_modules/.bin/http-serve
 alias task='node ~/tasks.js'
 
 alias img='wezterm imgcat '
+
+alias lzd="lazydocker"

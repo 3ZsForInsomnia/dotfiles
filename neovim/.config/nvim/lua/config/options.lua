@@ -48,6 +48,8 @@ o.timeout = true
 o.timeoutlen = 300
 o.updatetime = 75
 
+o.wrap = true
+
 -- require("keys")
 -- require("save-restore-session")
 c([[ packadd cfilter ]])

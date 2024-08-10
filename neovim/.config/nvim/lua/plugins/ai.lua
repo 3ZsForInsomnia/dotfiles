@@ -7,6 +7,7 @@ local copilot = ai .. "c"
 return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",
+    event = "VeryLazy",
     branch = "canary",
     dependencies = {
       { "zbirenbaum/copilot.lua" },

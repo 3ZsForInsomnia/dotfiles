@@ -18,7 +18,7 @@ HISTSIZE=100000
 SAVEHIST=100000
 
 setopt auto_cd
-CORRECT_IGNORE_FILE='.*'
+CORRECT_IGNORE_FILE='.*|test'
 setopt correct_all
 setopt append_history
 

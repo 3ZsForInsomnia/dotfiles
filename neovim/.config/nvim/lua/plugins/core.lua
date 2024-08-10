@@ -13,9 +13,6 @@ return {
       },
       -- stylua: ignore
       icons = {
-        misc = {
-          dots = "󰇘",
-        },
         ft = {
           octo = "",
         },
@@ -147,16 +144,17 @@ return {
           Table = " ",
           Calendar = " ",
           SeparatorSquare = "█",
-          SeparatorLStart = "█",
-          -- SeparatorLStart = "",
+          -- SeparatorLStart = "█",
+          SeparatorLStart = "",
           SeparatorLEndAngle = "",
-          -- SeparatorLEnd = "",
+          SeparatorLEnd = "",
           SeparatorRStartAngle = "",
-          -- SeparatorRStart = "",
-          SeparatorREnd = "█",
-          -- SeparatorREnd = "",
+          SeparatorRStart = "",
+          -- SeparatorREnd = "█",
+          SeparatorREnd = "",
         },
         misc = {
+          dots = "󰇘",
           Robot = "ﮧ",
           Squirrel = "",
           Tag = "",

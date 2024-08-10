@@ -1,5 +1,4 @@
 local cmd = require("helpers").k_cmd
-local k = require("helpers").k
 local db = "<leader>db"
 local dba = function(command)
   return "DBUI " .. command
@@ -136,5 +135,41 @@ return {
       require("config.trello")
     end,
   },
+  {
+    "OXY2DEV/markview.nvim",
+    ft = "markdown",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      local presets = require("markview.presets")
+      return {
+        headings = presets.headings.decorated_labels,
+        tables = presets.tables.border_single_corners,
+      }
+    end,
+  },
+  {
+    "luckasRanarison/tailwind-tools.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      {
+        document_color = {
+          enabled = true,
+          kind = "inline",
+          inline_symbol = "󰝤 ",
+          debounce = 200,
+        },
+        conceal = {
+          enabled = true,
+          min_length = 1,
+          symbol = "󱏿",
+          highlight = {
+            fg = "#38BDF8",
+          },
+        },
+      },
+    },
+  },
 }
--- compromise

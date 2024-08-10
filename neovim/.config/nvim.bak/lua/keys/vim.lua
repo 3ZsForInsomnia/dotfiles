@@ -175,7 +175,7 @@ wk.register({
 			"<Plug>luasnip-prev-choice",
 			"Cycle to prev luasnip choicenode option",
 		},
-		["e>"] = {
+		["y>"] = {
 			"<Plug>luasnip-expand-snippet",
 			"Luasnip expand snippet under cursor",
 		},

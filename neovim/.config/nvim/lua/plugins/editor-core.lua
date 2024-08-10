@@ -1,6 +1,6 @@
 local k_cmd = require("helpers").k_cmd
 local l = "<leader>"
-local s = l .. "s"
+local z = l .. "zs"
 local ll = l .. "ll"
 local a = 'lua require("ts-node-action").'
 
@@ -86,44 +86,44 @@ return {
   { "andymass/vim-matchup" },
   { "winston0410/range-highlight.nvim", opts = {} },
   { "godlygeek/tabular", event = "VeryLazy" },
-  {
-    "karb94/neoscroll.nvim",
-    config = function()
-      require("neoscroll").setup({
-        mappings = {
-          "<C-u>",
-          "<C-d>",
-          "<C-b>",
-          "<C-f>",
-          "<C-y>",
-          "<C-e>",
-          "zt",
-          "zz",
-          "zb",
-        },
-        hide_cursor = false,
-        stop_eof = true,
-        respect_scrolloff = false,
-        cursor_scrolls_alone = true,
-        easing_function = "cubic",
-        pre_hook = nil,
-        post_hook = nil,
-      })
-
-      local t = {}
-      t["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "100" } }
-      t["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "100" } }
-      t["<C-b>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "150" } }
-      t["<C-f>"] = { "scroll", { "vim.api.nvim_win_get_height(0)", "true", "150" } }
-      t["<C-y>"] = { "scroll", { "-0.10", "false", "50" } }
-      t["<C-e>"] = { "scroll", { "0.10", "false", "50" } }
-      t["zt"] = { "zt", { "100" } }
-      t["zz"] = { "zz", { "100" } }
-      t["zb"] = { "zb", { "100" } }
-
-      require("neoscroll.config").set_mappings(t)
-    end,
-  },
+  -- {
+  --   "karb94/neoscroll.nvim",
+  --   config = function()
+  --     require("neoscroll").setup({
+  --       mappings = {
+  --         "<C-u>",
+  --         "<C-d>",
+  --         "<C-b>",
+  --         "<C-f>",
+  --         "<C-y>",
+  --         "<C-e>",
+  --         "zt",
+  --         "zz",
+  --         "zb",
+  --       },
+  --       hide_cursor = false,
+  --       stop_eof = true,
+  --       respect_scrolloff = false,
+  --       cursor_scrolls_alone = true,
+  --       easing_function = "cubic",
+  --       pre_hook = nil,
+  --       post_hook = nil,
+  --     })
+  --
+  --     local t = {}
+  --     t["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "100" } }
+  --     t["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "100" } }
+  --     t["<C-b>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "150" } }
+  --     t["<C-f>"] = { "scroll", { "vim.api.nvim_win_get_height(0)", "true", "150" } }
+  --     t["<C-y>"] = { "scroll", { "-0.10", "false", "50" } }
+  --     t["<C-e>"] = { "scroll", { "0.10", "false", "50" } }
+  --     t["zt"] = { "zt", { "100" } }
+  --     t["zz"] = { "zz", { "100" } }
+  --     t["zb"] = { "zb", { "100" } }
+  --
+  --     require("neoscroll.config").set_mappings(t)
+  --   end,
+  -- },
   { "kylechui/nvim-surround", config = true },
   {
     "olimorris/persisted.nvim",
@@ -159,22 +159,22 @@ return {
     },
     keys = {
       k_cmd({
-        key = s .. "s",
+        key = z .. "s",
         action = "SessionSave",
         desc = "Save session",
       }),
       k_cmd({
-        key = s .. "l",
+        key = z .. "l",
         action = "SessionLoad",
         desc = "Load session",
       }),
       k_cmd({
-        key = s .. "d",
+        key = z .. "d",
         action = "SessionDelete",
         desc = "Delete session",
       }),
       k_cmd({
-        key = s .. "l",
+        key = z .. "a",
         action = "SessionLoadLast",
         desc = "Session load last",
       }),

@@ -70,6 +70,7 @@ wk.add({
 
   { "<leader>t", group = "Testing" },
   { "<leader>u", group = "UI toggles" },
+  { "<leader>ut", group = "Neovim Feature Toggles" },
   { "<leader>x", group = "Trouble Diagnostics" },
   { "<leader>z", group = "Misc" },
   { "<leader>zc", group = "Colortils" },

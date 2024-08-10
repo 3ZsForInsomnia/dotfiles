@@ -13,7 +13,7 @@ k_cmd({ key = l .. "i", action = c("implementation"), desc = "Implementation" })
 k_cmd({ key = l .. "r", action = c("references"), desc = "References" })
 k_cmd({ key = l .. "n", action = c("rename"), desc = "Rename tag under cursor" })
 k_cmd({ key = l .. "t", action = c("type_definition"), desc = "Type Def" })
-k_cmd({ key = l .. "f", action = ":FormatWrite", desc = "Format" })
+k_cmd({ key = l .. "f", action = "FormatWrite", desc = "Format" })
 -- k_cmd({ key = "K", action = c("signature_help"), desc = "Show signature" })
 
 local w = l .. "w"

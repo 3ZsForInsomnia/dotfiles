@@ -12,7 +12,7 @@ return {
         yaml = { "yamllint" },
         css = { "stylelint" },
         scss = { "stylelint" },
-        markdown = { "markdownlint" },
+        -- markdown = { "markdownlint" },
         lua = { "luacheck" },
         json = { "jsonlint" },
         python = { "flake8" },

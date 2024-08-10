@@ -3,6 +3,19 @@ local cmd = keys.k_cmd
 local k = keys.k
 local o = "<leader>o"
 
+local daily_notes_folder = function()
+  local parent_folder = "9 - Resources/94 - Old activity notes"
+  local year = os.date("%Y")
+  local quarter = "Q" .. math.ceil(tonumber(os.date("%m")) / 3)
+  local month = os.date("%m")
+  local month_name = os.date("%b")
+
+  local quarterString = year .. "-" .. quarter
+  local monthString = year .. "-" .. month .. "-" .. month_name
+
+  return parent_folder .. "/" .. year .. "/" .. quarterString .. "/" .. monthString .. "/"
+end
+
 return {
   {
     "epwalsh/obsidian.nvim",
@@ -48,9 +61,9 @@ return {
       end,
       open_app_foreground = true,
       daily_notes = {
-        folder = "[9 - Resources/94 - Old activity notes]/YYYY/YYYY-[Q]Q/YYYY-MM-MMM",
-        date_format = "YYYY-MM-DD-dddd",
-        template = "9 - Resources/90 - Templates/Daily Note",
+        folder = daily_notes_folder(),
+        date_format = "%Y-%m-%d-%A",
+        template = "Daily Note.md",
       },
       wiki_link_func = function(opts)
         return require("obsidian.util").wiki_link_id_prefix(opts)
@@ -91,11 +104,6 @@ return {
         key = o .. "o",
         action = "ObsidianOpen",
         desc = "Open note in buffer in Obsidian app",
-      }),
-      cmd({
-        key = o .. "s",
-        action = "ObsidianSearch",
-        desc = "Search notes",
       }),
       k({
         key = o .. "e",

@@ -10,9 +10,23 @@ return {
     "neovim/nvim-lspconfig",
     opts = function()
       local keys = require("lazyvim.plugins.lsp.keymaps").get()
-      -- disable a keymap
       keys[#keys + 1] = { "<leader>ca", false }
       keys[#keys + 1] = { "<leader>cA", false }
+      keys[#keys + 1] = { "<leader>cr", false }
+      keys[#keys + 1] = { "<leader>ub", false }
+      keys[#keys + 1] = { "<leader>ud", false }
+      keys[#keys + 1] = { "<leader>uf", false }
+      keys[#keys + 1] = { "<leader>uF", false }
+      keys[#keys + 1] = { "<leader>ug", false }
+      keys[#keys + 1] = { "<leader>uh", false }
+      keys[#keys + 1] = { "<leader>uH", false }
+      keys[#keys + 1] = { "<leader>ui", false }
+      keys[#keys + 1] = { "<leader>uI", false }
+      keys[#keys + 1] = { "<leader>ul", false }
+      keys[#keys + 1] = { "<leader>uL", false }
+      keys[#keys + 1] = { "<leader>us", false }
+      keys[#keys + 1] = { "<leader>ut", false }
+      keys[#keys + 1] = { "<leader>uT", false }
     end,
   },
   {
@@ -151,6 +165,9 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     config = function()
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+      parser_config.markdown.used_by = "octo"
+
       require("nvim-treesitter.configs").setup({
         modules = {},
         ensure_installed = {

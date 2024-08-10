@@ -1,5 +1,6 @@
 local keybind = require("helpers")
 local cmd = keybind.k_cmd
+local k = keybind.k
 
 local t = function(command)
   return "Telescope " .. command
@@ -209,7 +210,6 @@ local loadExtensions = function(load_extension)
   load_extension("scriptnames")
   load_extension("heading")
   load_extension("frecency")
-  load_extension("tailiscope")
   load_extension("undo")
   load_extension("angular")
   load_extension("noice")
@@ -226,7 +226,6 @@ return {
       { "nvim-telescope/telescope-live-grep-args.nvim", version = "^1.0.0" },
       "nvim-telescope/telescope-frecency.nvim",
       "benfowler/telescope-luasnip.nvim",
-      "danielvolchek/tailiscope.nvim",
       "LinArcX/telescope-changes.nvim",
       {
         "nvim-telescope/telescope-fzf-native.nvim",
@@ -282,6 +281,15 @@ return {
           key = f .. "r",
           action = t("resume"),
           desc = "Resume previous search",
+        }),
+
+        --
+        -- Obsidian
+        --
+        cmd({
+          key = f .. "o",
+          action = "ObsidianSearch",
+          desc = "Search notes",
         }),
 
         --
@@ -386,8 +394,23 @@ return {
         --
         cmd({
           key = f .. "dd",
-          action = "Devdocs open",
+          action = "DevdocsOpen",
           desc = "Devdocs",
+        }),
+        cmd({
+          key = f .. "dt",
+          action = "DevdocsOpen tailwindcss",
+          desc = "Tailwind",
+        }),
+        cmd({
+          key = f .. "dd",
+          action = "DevdocsOpen date_fns",
+          desc = "Date fns",
+        }),
+        k({
+          key = f .. "do",
+          action = "DevdocsOpen ",
+          desc = "Devdocs - open selection",
         }),
         cmd({
           key = f .. "ds",
@@ -398,11 +421,6 @@ return {
           key = f .. "de",
           action = t("http list"),
           desc = "HTTP",
-        }),
-        cmd({
-          key = f .. "dt",
-          action = t("tailiscope"),
-          desc = "Tailiscope",
         }),
         cmd({
           key = f .. "dm",

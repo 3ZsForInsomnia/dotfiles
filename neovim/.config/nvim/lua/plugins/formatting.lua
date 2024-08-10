@@ -14,7 +14,7 @@ return {
           graphql = { require("formatter.filetypes.graphql").prettierd },
           html = { require("formatter.filetypes.html").prettierd },
           json = { require("formatter.filetypes.json").prettierd },
-          markdown = { require("formatter.filetypes.markdown").prettierd },
+          -- markdown = { require("formatter.filetypes.markdown").prettierd },
           yaml = { require("formatter.filetypes.yaml").prettierd },
           sh = { require("formatter.filetypes.sh").shfmt },
           sql = { require("formatter.filetypes.sql").sqlformat },
