@@ -22,6 +22,10 @@ local conds_expand = require("luasnip.extras.conditions.expand")
 
 local strings = require("snippets.utils.strings")
 
+local function get_today_date()
+  return os.date("%Y-%m-%d %A")
+end
+
 return {
   s({
     trig = "url",
@@ -66,5 +70,8 @@ return {
     }, {}),
     t({ "]", "> " }),
     i(2, "Text"),
+  }),
+  s("today", {
+    t(get_today_date()),
   }),
 }

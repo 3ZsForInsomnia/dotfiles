@@ -22,14 +22,17 @@ local lspServers = {
   "yamlls",
 }
 
--- local mocha = require("catppuccin.palettes").get_palette("mocha")
+local red = "ErrorMsg"
+local green = "SpellRare"
+local blue = "Folded"
+local yellow = "SpellCap"
 
--- local visited = {
---   -- hl_group = mocha.blue,
--- }
--- local unvisited = {
---   -- hl_group = mocha.green,
--- }
+local visited = {
+  hl_group = blue,
+}
+local unvisited = {
+  hl_group = green,
+}
 
 local js = "javascript"
 local html = "html"
@@ -39,24 +42,24 @@ local luasnipSetupOptions = function(types)
   return {
     history = true,
     delete_check_events = "TextChanged",
-    -- ext_opts = {
-    -- [types.choiceNode] = {
-    --   active = {
-    --     virt_text = { { "●", mocha.yellow } },
-    --     hl_group = mocha.red,
-    --   },
-    --   visited = visited,
-    --   unvisited = unvisited,
-    -- },
-    -- [types.insertNode] = {
-    --   active = {
-    --     virt_text = { { "●", mocha.blue } },
-    --     hl_group = mocha.red,
-    --   },
-    --   visited = visited,
-    --   unvisited = unvisited,
-    -- },
-    -- },
+    ext_opts = {
+      [types.choiceNode] = {
+        active = {
+          virt_text = { { "●", yellow } },
+          hl_group = red,
+        },
+        visited = visited,
+        unvisited = unvisited,
+      },
+      [types.insertNode] = {
+        active = {
+          virt_text = { { "●", blue } },
+          hl_group = red,
+        },
+        visited = visited,
+        unvisited = unvisited,
+      },
+    },
   }
 end
 

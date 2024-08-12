@@ -76,6 +76,8 @@ gacbcp() { # Add, checkout new branch, commit, push
 }
 
 ### Pulling/Updating
+alias garbc="git add . && git rebase --continue"
+
 function grbh() {
   $(git rebase --interactive HEAD~"$1")
 }
