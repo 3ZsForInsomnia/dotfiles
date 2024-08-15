@@ -58,6 +58,8 @@ alias pni='pn i'
 alias pnc="pn changeset"
 alias pncc="git add .; git commit -m \"Changeset\""
 alias pnt='pn test'
+alias pnl='pn lint'
+alias pny='pn type-check'
 
 # alias ngc='ng g c'
 alias ngc='nx g c'
