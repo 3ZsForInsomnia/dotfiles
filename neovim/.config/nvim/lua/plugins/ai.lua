@@ -1,8 +1,10 @@
 local k_cmd = require("helpers").k_cmd
+local k = require("helpers").k
 
 local ai = "<leader>a"
 local chatgpt = ai .. "g"
-local copilot = ai .. "c"
+local copilot = ai .. "p"
+local claude = ai .. "c"
 
 return {
   {
@@ -25,34 +27,23 @@ return {
         action = "CopilotChatReview",
         desc = "Copilot Review",
       }),
-      -- k_cmd({
-      --   key = copilot .. "rv",
-      --   action = "CopilotChatReview",
-      --   desc = "Copilot Review",
-      --   mode = "v",
-      -- }),
       k_cmd({
-        key = copilot .. "r",
-        action = "CopilotChatRefactor",
-        desc = "Copilot Refactor",
+        key = copilot .. "v",
+        action = "CopilotChatReview",
+        mode = "v",
+        desc = "Copilot Review",
       }),
-      -- k_cmd({
-      --   key = copilot .. "rf",
-      --   action = "CopilotChatRefactor",
-      --   desc = "Copilot Refactor",
-      --   mode = "v",
-      -- }),
       k_cmd({
         key = copilot .. "e",
         action = "CopilotChatExplain",
         desc = "Copilot Explain",
       }),
-      -- k_cmd({
-      --   key = copilot .. "e",
-      --   action = "CopilotChatExplain",
-      --   desc = "Copilot Explain",
-      --   mode = "v",
-      -- }),
+      k_cmd({
+        key = copilot .. "e",
+        action = "CopilotChatExplain",
+        desc = "Copilot Explain",
+        mode = "v",
+      }),
       k_cmd({
         key = copilot .. "b",
         action = "CopilotChatBetterNamings",
@@ -63,16 +54,11 @@ return {
         action = "CopilotChatTests",
         desc = "Copilot Tests",
       }),
-      -- k_cmd({
-      --   key = copilot .. "t",
-      --   action = "CopilotChatTests",
-      --   desc = "Copilot Tests",
-      --   mode = "v",
-      -- }),
       k_cmd({
-        key = copilot .. "i",
-        action = "CopilotChatInline",
-        desc = "Copilot Inline Chat",
+        key = copilot .. "t",
+        action = "CopilotChatTests",
+        desc = "Copilot Tests",
+        mode = "v",
       }),
       k_cmd({
         key = copilot .. "g",
@@ -81,6 +67,11 @@ return {
       }),
       k_cmd({
         key = copilot .. "f",
+        action = "CopilotChatFix",
+        desc = "Copilot Fix",
+      }),
+      k_cmd({
+        key = copilot .. "l",
         action = "CopilotChatFixDiagnostic",
         desc = "Copilot Fix Diagnostic",
       }),
@@ -89,12 +80,23 @@ return {
         action = "CopilotChatDocs",
         desc = "Copilot Docs",
       }),
-      -- k_cmd({
-      --   key = copilot .. "d",
-      --   action = "CopilotChatDocs",
-      --   desc = "Copilot Docs",
-      --   mode = "v",
-      -- }),
+      k_cmd({
+        key = copilot .. "d",
+        action = "CopilotChatDocs",
+        desc = "Copilot Docs",
+        mode = "v",
+      }),
+      k_cmd({
+        key = copilot .. "o",
+        action = "CopilotChatOptimize",
+        desc = "Copilot Optimize",
+      }),
+      k_cmd({
+        key = copilot .. "o",
+        action = "CopilotChatOptimize",
+        mode = "v",
+        desc = "Copilot Optimize",
+      }),
     },
   },
   {
@@ -154,6 +156,25 @@ return {
         key = chatgpt .. "e",
         action = "ChatGPTEditWithInstructions",
         desc = "ChatGPT edit with instructions",
+      }),
+    },
+  },
+  {
+    "pasky/claude.vim",
+    event = "VeryLazy",
+    keys = {
+      { "<leader>cc", false },
+      { "<leader>ci", mode = { "n", "v" }, false },
+      k_cmd({
+        key = claude .. "c",
+        action = "ClaudeChat",
+        desc = "Claude Chat",
+      }),
+      k({
+        key = claude .. "i",
+        action = ":ClaudeImplement ",
+        mode = "v",
+        desc = "Claude Implement",
       }),
     },
   },

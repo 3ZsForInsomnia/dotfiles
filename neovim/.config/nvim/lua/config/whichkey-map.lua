@@ -5,9 +5,10 @@ wk.add({
   -- <Leader>a
   --
   { "<leader>a", group = "AI Tools" },
-  { "<leader>ac", group = "Copilot" },
+  { "<leader>ac", group = "Claude" },
   { "<leader>ag", group = "GPT" },
   { "<leader>agr", group = "Run action..." },
+  { "<leader>ap", group = "Copilot" },
 
   --
   -- <Leader>b

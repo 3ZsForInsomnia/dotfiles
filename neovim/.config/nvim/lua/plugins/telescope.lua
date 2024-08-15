@@ -209,7 +209,7 @@ local loadExtensions = function(load_extension)
   load_extension("luasnip")
   load_extension("scriptnames")
   load_extension("heading")
-  load_extension("frecency")
+  -- load_extension("frecency")
   load_extension("undo")
   load_extension("angular")
   load_extension("noice")
@@ -224,7 +224,7 @@ return {
     tag = "0.1.8",
     dependencies = {
       { "nvim-telescope/telescope-live-grep-args.nvim", version = "^1.0.0" },
-      "nvim-telescope/telescope-frecency.nvim",
+      -- "nvim-telescope/telescope-frecency.nvim",
       "benfowler/telescope-luasnip.nvim",
       "LinArcX/telescope-changes.nvim",
       {

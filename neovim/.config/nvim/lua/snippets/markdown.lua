@@ -72,6 +72,8 @@ return {
     i(2, "Text"),
   }),
   s("today", {
-    t(get_today_date()),
+    t(function()
+      return get_today_date()
+    end),
   }),
 }

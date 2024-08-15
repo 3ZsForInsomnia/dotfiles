@@ -14,10 +14,10 @@ source ~/.env
 # source ~/.hrvst.sh
 
 alias src='j src'
-alias dots='j dots'
+alias dots='j dots && v'
 alias shots='j shots'
 alias shared='j shared'
-alias notes='j notes'
+alias notes='j notes && v'
 
 alias rss='newsboat;'
 # alias mutt='neomutt'
