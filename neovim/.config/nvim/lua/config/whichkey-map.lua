@@ -47,7 +47,7 @@ wk.add({
   { "<leader>gn", group = "Neogit" },
 
   { "<leader>l", group = "Location list" },
-  { "<leader>o", group = "Obsidian" },
+  { "<leader>n", group = "Obsidian" },
   { "<leader>q", group = "Quickfix list" },
   { "<leader>r", group = "Refactoring" },
 
@@ -81,6 +81,7 @@ wk.add({
   -- Marks (m)
   --
   { "m", group = "Marks" },
+  { "<leader>m", group = "Marks" },
   { "<leader>m0", desc = "Investigating" },
   { "<leader>m9", desc = "Flagged/important" },
   { "<leader>m8", desc = "Bad" },

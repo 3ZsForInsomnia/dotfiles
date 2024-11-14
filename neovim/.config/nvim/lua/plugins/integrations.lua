@@ -1,7 +1,7 @@
 local keys = require("helpers")
 local cmd = keys.k_cmd
 local k = keys.k
-local o = "<leader>o"
+local o = "<leader>n"
 
 local daily_notes_folder = function()
   local parent_folder = "9 - Resources/94 - Old activity notes"
