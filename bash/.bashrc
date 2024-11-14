@@ -1,17 +1,4 @@
-if [[ $(uname) == "Darwin" ]]; then
-  export MY_SYSTEM="mac"
-elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
-  export MY_SYSTEM="linux"
-fi
-
-export FZF_DEFAULT_COMMAND='fd -H --type f'
-export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border --bind "ctrl-d:preview-down" --bind "ctrl-u:preview-up"'
-export VISUAL=nvim
-export EDITOR="$VISUAL"
-
-source ~/.dash-g-aliases.sh
 source ~/.bash_profile
-source ~/.utils.sh
 
 alias ..='cd ../'
 alias ...='..; ..;'

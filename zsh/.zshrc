@@ -8,10 +8,10 @@ source () {
     builtin . $@
 }
 
-source "$HOME/.zsh/.source-things.zsh"
-
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
+bindkey "^[[1;3C" forward-word
+bindkey "^[[1;3D" backward-word
 
 HISTFILE=~/.zsh_history
 HISTSIZE=100000
@@ -30,13 +30,16 @@ for dump in ~/.zcompdump(N.mh+24); do
     compinit
 done
 
-# Must be sourced after everything else
-source "$HOME/code/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# # pnpm
+# export PNPM_HOME="/home/zach/.local/share/pnpm"
+# case ":$PATH:" in
+#   *":$PNPM_HOME:"*) ;;
+#   *) export PATH="$PNPM_HOME:$PATH" ;;
+# esac
+# # pnpm end
 
-# pnpm
-export PNPM_HOME="/home/zach/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
+source "$HOME/.zsh/.source-things.zsh"
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

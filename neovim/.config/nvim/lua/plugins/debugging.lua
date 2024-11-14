@@ -1,10 +1,11 @@
 return {
-  { "theHamsta/nvim-dap-virtual-text",   event = "VeryLazy" },
-  { "rcarriga/nvim-dap-ui",              event = "VeryLazy" },
-  { "mfussenegger/nvim-dap-python",      event = "VeryLazy" },
+  { "theHamsta/nvim-dap-virtual-text", event = "VeryLazy" },
+  { "rcarriga/nvim-dap-ui", event = "VeryLazy" },
+  { "mfussenegger/nvim-dap-python", event = "VeryLazy" },
   { "nvim-telescope/telescope-dap.nvim", event = "VeryLazy" },
-  { "mxsdev/nvim-dap-vscode-js",         event = "VeryLazy" },
-  { "rcarriga/cmp-dap",                  event = "VeryLazy" },
+  { "mxsdev/nvim-dap-vscode-js", event = "VeryLazy" },
+  { "leoluz/nvim-dap-go", event = "VeryLazy" },
+  { "rcarriga/cmp-dap", event = "VeryLazy" },
   {
     "microsoft/vscode-js-debug",
     run = "npm install --legacy-peer-deps && npm run compile",
@@ -20,6 +21,7 @@ return {
       "nvim-telescope/telescope-dap.nvim",
       "mxsdev/nvim-dap-vscode-js",
       "rcarriga/cmp-dap",
-    }
+      "leoluz/nvim-dap-go",
+    },
   },
 }

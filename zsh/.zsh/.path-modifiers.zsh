@@ -1,3 +1,10 @@
+export FZF_DEFAULT_COMMAND='fd -H --type f'
+export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border --bind "ctrl-d:preview-down" --bind "ctrl-u:preview-up"'
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+export TZ='America/New_York'
+export CRON_LOG="$HOME/.local/state/cron/cron.log"
+
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_DATA_HOME=$HOME/.local/share
@@ -44,10 +51,17 @@ export GOPATH=$XDG_CODE_HOME/go/
 # OS specific items  #
 ######################
 
-# PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
 
-# Required for opening browser in WSL
-# export BROWSER=wslview
+if [[ $(uname) == "Darwin" ]]; then
+  export MY_SYSTEM="mac"
+  PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
+elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+  export MY_SYSTEM="linux"
+else
+  export MY_SYSTEM="windows"
+  # Required for opening browser in WSL
+  export BROWSER=wslview
+fi
 
 # This appears unused - site this is from:
 #   https://github.com/sindresorhus/guides/blob/main/npm-global-without-sudo.md

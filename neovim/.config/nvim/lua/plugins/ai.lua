@@ -15,7 +15,7 @@ return {
       { "zbirenbaum/copilot.lua" },
       { "nvim-lua/plenary.nvim" },
     },
-    opts = {},
+    -- opts = {},
     keys = {
       k_cmd({
         key = copilot .. "c",

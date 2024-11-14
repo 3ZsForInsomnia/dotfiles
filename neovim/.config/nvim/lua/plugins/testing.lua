@@ -1,28 +1,57 @@
 local v = vim
 
+local l = "<leader>t"
+
+local js_config = {
+  jestCommand = "npm run test --",
+  jestConfigFile = "jest.config.ts",
+  env = { CI = true },
+  cwd = function(path)
+    return vim.fn.getcwd()
+  end,
+  --   discovery = {
+  --     enabled = false,
+  --   },
+}
+
+local py_config = {}
+
+local go_config = {
+  go_test_args = {
+    "-v",
+    -- "-race",
+    "-count=1",
+    "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
+  },
+}
+
 return {
+  {
+    "andythigpen/nvim-coverage",
+    rocks = { "lua-xmlreader" },
+    requires = "nvim-lua/plenary.nvim",
+    config = function()
+      require("coverage").setup()
+    end,
+  },
   {
     "nvim-neotest/neotest",
     dependencies = {
       "nvim-neotest/nvim-nio",
-      -- "nvim-neotest/neotest-jest",
-      -- "nvim-neotest/neotest-python",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+
+      "nvim-neotest/neotest-jest",
+      "nvim-neotest/neotest-python",
+      "fredrikaverpil/neotest-golang",
     },
     opts = {
+      opts = { adapters = { "neotest-plenary" } },
       adapters = {
-        require("neotest-python"),
-        -- require("neotest-jest"),
-        --   ({
-        --   jestCommand = "npm run test",
-        --   jestConfigFile = "jest.config.ts",
-        --   discovery = {
-        --     enabled = false,
-        --   },
-        --   env = { CI = true },
-        --   cwd = function(path)
-        --     return v.fn.getcwd()
-        --   end,
-        -- }),
+        ["neotest-golang"] = go_config,
+        ["neotest-jest"] = js_config,
+        ["neotest-python"] = py_config,
       },
       status = { virtual_text = true },
       output = { open_on_run = true },
@@ -111,76 +140,113 @@ return {
       require("neotest").setup(opts)
     end,
     keys = {
-      { "<leader>t", "", desc = "+test" },
+      { l, "", desc = "+test" },
       {
-        "<leader>tt",
+        l .. "t",
         function()
           require("neotest").run.run(v.fn.expand("%"))
         end,
         desc = "Run File",
       },
       {
-        "<leader>tT",
+        l .. "T",
         function()
           require("neotest").run.run(v.uv.cwd())
         end,
         desc = "Run All Test Files",
       },
       {
-        "<leader>tr",
+        l .. "r",
         function()
           require("neotest").run.run()
         end,
         desc = "Run Nearest",
       },
       {
-        "<leader>tl",
+        l .. "l",
         function()
           require("neotest").run.run_last()
         end,
         desc = "Run Last",
       },
       {
-        "<leader>ts",
+        l .. "s",
         function()
           require("neotest").summary.toggle()
         end,
         desc = "Toggle Summary",
       },
       {
-        "<leader>to",
+        l .. "o",
         function()
           require("neotest").output.open({ enter = true, auto_close = true })
         end,
         desc = "Show Output",
       },
       {
-        "<leader>tO",
+        l .. "O",
         function()
           require("neotest").output_panel.toggle()
         end,
         desc = "Toggle Output Panel",
       },
       {
-        "<leader>tS",
+        l .. "S",
         function()
           require("neotest").run.stop()
         end,
         desc = "Stop",
       },
       {
-        "<leader>tw",
+        l .. "w",
         function()
           require("neotest").watch.toggle(v.fn.expand("%"))
         end,
         desc = "Toggle Watch",
       },
       {
-        "<leader>tj",
+        l .. "j",
         function()
           require("neotest").run.run({ jestCommand = "jest --watch" })
         end,
         desc = "Run Jest Watch",
+      },
+      {
+        l .. "c",
+        function()
+          require("coverage").load(true)
+        end,
+        desc = "Show coverage",
+      },
+      {
+        l .. "Cl",
+        function()
+          require("coverage").load(false)
+        end,
+        desc = "Load coverage",
+      },
+      {
+        l .. "Ch",
+        function()
+          require("coverage").hide()
+        end,
+        desc = "Hide coverage",
+      },
+      {
+        l .. "Ct",
+        function()
+          require("coverage").load(false)
+          require("coverage").toggle()
+        end,
+        desc = "Toggle coverage",
+      },
+      {
+        l .. "Cs",
+        function()
+          require("coverage").load(false)
+          require("coverage").summary()
+        end,
+        desc = "Show coverage summary",
       },
     },
   },

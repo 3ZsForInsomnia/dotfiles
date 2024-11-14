@@ -8,8 +8,10 @@ source ~/.misc.sh
 source ~/.db.sh
 source ~/.dates.sh
 source ~/.slack.sh
+source ~/.utils.sh
 source ~/.work-utils.sh
 source ~/.env
+source ~/.dash-g-aliases.sh
 # source ~/.config/mutt/base.sh
 # source ~/.hrvst.sh
 
@@ -22,9 +24,6 @@ alias notes='j notes && v'
 alias rss='newsboat;'
 # alias mutt='neomutt'
 # alias ms='mailsync; notmuch new; mutt; mailsync &'
-
-export TZ='America/New_York'
-export CRON_LOG="$HOME/.local/state/cron/cron.log"
 
 # alias scon="/Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli --uid $(id -u $(whoami))"
 # alias scon="/Applications/SelfControl.app/Contents/MacOS/org.eyebeam.SelfControl $(id -u $(whoami)) --install"

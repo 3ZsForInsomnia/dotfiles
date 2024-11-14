@@ -33,19 +33,16 @@ set $mediumgrey		#8b8b8b
 set $yellowbrown	#e1b700
 
 # Workspaces
-set $ws1 "1:"
-set $ws2 "2:"
-set $ws3 "3:"
-set $ws4 "4:"
+set $ws1 "1:󰠮"
+set $ws2 "2:"
+set $ws3 "3:"
+set $ws4 "4"
 set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
-
-# Putting this first to ensure apps are specified for workspaces before autostart runs
-include ~/.config/i3/workspaces.conf
+set $ws9 "9:"
+set $ws10 "10:󰔲"
 
 include ~/.config/i3/autostart.conf
 include ~/.config/i3/displays.conf
@@ -58,3 +55,4 @@ include ~/.config/i3/stuff-i-dont-use.conf
 include ~/.config/i3/theming.conf
 include ~/.config/i3/workspace-layouts.conf
 include ~/.config/i3/workspace-motions.conf
+include ~/.config/i3/workspaces.conf

@@ -1,15 +1,17 @@
 {
   "extras": [
-    "lazyvim.plugins.extras.test.core",
     "lazyvim.plugins.extras.coding.luasnip",
     "lazyvim.plugins.extras.coding.mini-surround",
     "lazyvim.plugins.extras.dap.nlua",
+    "lazyvim.plugins.extras.editor.overseer",
     "lazyvim.plugins.extras.lang.json",
-    "lazyvim.plugins.extras.util.mini-hipatterns"
+    "lazyvim.plugins.extras.test.core",
+    "lazyvim.plugins.extras.util.mini-hipatterns",
+    "lazyvim.plugins.extras.util.rest"
   ],
   "news": {
-    "NEWS.md": "6520",
-    "doc/news.txt": "7796"
+    "NEWS.md": "7107",
+    "doc/news.txt": "13806"
   },
-  "version": 6
+  "version": 7
 }

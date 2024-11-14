@@ -1,5 +1,8 @@
 local w = vim.wo
 local s = vim.schedule
+local cmd = require("helpers").k_cmd
+
+local h = "<leader>gh"
 
 local function map(mode, l, r, opts)
   opts = opts or {}
@@ -27,3 +30,14 @@ map({ "n", "v" }, "[h", function()
   end)
   return "<Ignore>"
 end, { expr = true })
+
+cmd({
+  key = h .. "q",
+  action = "Gitsigns setqflist all",
+  desc = "Send all hunks in all files to qf list",
+})
+cmd({
+  key = h .. "l",
+  action = "require('gitsigns').setloclist(0, 0)",
+  desc = "Send all hunks in current buffer to location list",
+})

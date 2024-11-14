@@ -1,4 +1,5 @@
 local cmd = require("helpers").k_cmd
+local s = require("snacks").toggle
 
 local l = "<leader>u"
 local t = "<leader>ut"
@@ -6,28 +7,24 @@ local t = "<leader>ut"
 --
 -- Neovim Feature Toggles
 --
-LazyVim.toggle.map(t .. "a", LazyVim.toggle.treesitter)
-LazyVim.toggle.map(t .. "b", LazyVim.toggle("background", { values = { "light", "dark" }, name = "Background" }))
-LazyVim.toggle.map(
-  t .. "c",
-  LazyVim.toggle("conceallevel", { values = { 0, vim.o.conceallevel > 0 and vim.o.conceallevel or 2 } })
-)
-LazyVim.toggle.map(t .. "d", LazyVim.toggle.diagnostics)
-LazyVim.toggle.map(t .. "f", LazyVim.toggle.format())
-LazyVim.toggle.map(t .. "F", LazyVim.toggle.format(true))
-LazyVim.toggle.map(t .. "g", {
-  name = "Indention Guides",
+s.option("treesitter"):map(t .. "a")
+s.option("background", { on = "dark", off = "light" }):map(t .. "b")
+s.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map(t .. "c")
+s.diagnostics():map(t .. "d")
+s.option("format"):map(t .. "f")
+s.new({
+  name = "Indentation Guides",
   get = function()
     return require("ibl.config").get_config(0).enabled
   end,
   set = function(state)
-    require("ibl").setup_buffer(0, { enabled = state })
+    require("ibl").set_buffer_config(0, { enabled = state })
   end,
-})
-LazyVim.toggle.map(t .. "h", LazyVim.toggle.inlay_hints)
-LazyVim.toggle.map(t .. "l", LazyVim.toggle.number)
-LazyVim.toggle.map(t .. "L", LazyVim.toggle("relativenumber", { name = "Relative Number" }))
-LazyVim.toggle.map(t .. "p", {
+}):map(t .. "g")
+s.inlay_hints():map(t .. "h")
+s.line_number():map(t .. "l")
+s.option("relativenumber", { name = "Relative Number" }):map(t .. "L")
+s({
   name = "Mini Pairs",
   get = function()
     return not vim.g.minipairs_disable
@@ -35,13 +32,12 @@ LazyVim.toggle.map(t .. "p", {
   set = function(state)
     vim.g.minipairs_disable = not state
   end,
-})
-LazyVim.toggle.map(t .. "s", LazyVim.toggle("spell", { name = "Spelling" }))
-LazyVim.toggle.map(t .. "w", LazyVim.toggle("wrap", { name = "Wrap" }))
+}):map(t .. "l")
+s.option("spell", { name = "Spelling" }):map(t .. "s")
+s.option("wrap", { name = "Wrap" }):map(t .. "w")
 
 local tsc = require("treesitter-context")
-
-LazyVim.toggle.map(t .. "t", {
+s({
   name = "Treesitter Context",
   get = tsc.enabled,
   set = function(state)
@@ -51,7 +47,7 @@ LazyVim.toggle.map(t .. "t", {
       tsc.disable()
     end
   end,
-})
+}):map(t .. "t")
 
 --
 -- UI Toggles
@@ -65,4 +61,17 @@ cmd({
   key = l .. "t",
   action = "Twilight",
   desc = "Toggle Twilight",
+})
+
+local h = "<leader>gh"
+
+cmd({
+  key = h .. "t",
+  action = "Gitsigns toggle_current_line_blame",
+  desc = "Toggle blame line in virutal text on cursor line",
+})
+cmd({
+  key = h .. "d",
+  action = "Gitsigns toggle_deleted",
+  desc = "Show deleted lines",
 })

@@ -174,7 +174,7 @@ return {
       local ls = require("luasnip")
       local types = require("luasnip.util.types")
 
-      require("luasnip.loaders.from_lua").lazy_load({ paths = { "~/.config/nvim/lua/snippets/" } })
+      require("luasnip.loaders.from_lua").lazy_load({ paths = { "~/.config/nvim/lua/plugins/snippets/" } })
 
       ls.filetype_extend("typescript", { js })
       ls.filetype_extend("javascriptreact", { js, html })

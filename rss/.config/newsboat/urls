@@ -28,6 +28,7 @@ http://feeds2.feedburner.com/leaverou "Misc Frontend"
 https://devblogs.microsoft.com/typescript/feed/
 http://blogs.msdn.com/b/typescript/rss.aspx "Programming"
 https://effectivetypescript.com/atom.xml
+https://cprss.s3.amazonaws.com/nodeweekly.com.xml
 
 https://devblogs.microsoft.com/python/feed/
 https://realpython.com/atom.xml

@@ -146,7 +146,6 @@ return {
       local presets = require("markview.presets")
       return {
         headings = presets.headings.decorated_labels,
-        tables = presets.tables.border_single_corners,
       }
     end,
   },

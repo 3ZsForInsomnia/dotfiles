@@ -39,6 +39,9 @@ return {
   },
   {
     "williamboman/mason.nvim",
+    cmd = "Mason",
+    build = ":MasonUpdate",
+    opts_extend = { "ensure_installed" },
     opts = {
       ensure_installed = {
         "angular-language-server",
@@ -64,6 +67,7 @@ return {
         "marksman",
         "nginx-language-server",
         "nxls",
+        "prettier",
         "pyright",
         "shellcheck",
         "shfmt",
@@ -91,76 +95,6 @@ return {
       }),
     },
   },
-  {
-    "nvim-treesitter/nvim-treesitter-context",
-    opts = {
-      enable = true,
-      patterns = {
-        default = {
-          "class",
-          "function",
-          "method",
-          "for",
-          "while",
-          "if",
-          "switch",
-          "case",
-          "interface",
-          "struct",
-          "enum",
-        },
-        tex = {
-          "chapter",
-          "section",
-          "subsection",
-          "subsubsection",
-        },
-        haskell = {
-          "adt",
-        },
-        rust = {
-          "impl_item",
-        },
-        terraform = {
-          "block",
-          "object_elem",
-          "attribute",
-        },
-        scala = {
-          "object_definition",
-        },
-        vhdl = {
-          "process_statement",
-          "architecture_body",
-          "entity_declaration",
-        },
-        markdown = {
-          "section",
-        },
-        elixir = {
-          "anonymous_function",
-          "arguments",
-          "block",
-          "do_block",
-          "list",
-          "map",
-          "tuple",
-          "quoted_content",
-        },
-        json = {
-          "pair",
-        },
-        typescript = {
-          "export_statement",
-        },
-        yaml = {
-          "block_mapping_pair",
-        },
-      },
-    },
-    config = true,
-  },
-  { "nvim-treesitter/nvim-treesitter-textobjects" },
   { "RRethy/nvim-treesitter-textsubjects" },
   {
     "nvim-treesitter/nvim-treesitter",

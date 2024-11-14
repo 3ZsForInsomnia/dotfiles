@@ -3,7 +3,6 @@ local n = function(command)
   return "Neogit " .. command
 end
 local g = "<leader>gn"
-local h = "<leader>gh"
 
 return {
   { "ruanyl/vim-gh-line", event = "VeryLazy" },
@@ -141,111 +140,11 @@ return {
     },
   },
   {
-    "lewis6991/gitsigns.nvim",
-    event = "VeryLazy",
-    config = true,
-    keys = {
-      -- Visual mode stage/reset
-      cmd({
-        mode = "v",
-        key = h .. "s",
-        action = "Gitsigns stage_hunk",
-        desc = "Stage current hunk",
-      }),
-      cmd({
-        mode = "v",
-        key = h .. "r",
-        action = "Gitsigns reset_hunk",
-        desc = "Reset current hunk",
-      }),
-
-      --
-      -- Staging
-      --
-      cmd({
-        key = h .. "s",
-        action = "Gitsigns stage_hunk",
-        desc = "Stage current hunk",
-      }),
-      cmd({
-        key = h .. "r",
-        action = "Gitsigns reset_hunk",
-        desc = "Reset current hunk",
-      }),
-      cmd({
-        key = h .. "u",
-        action = "Gitsigns undo_stage_hunk",
-        desc = "Undo stage current hunk",
-      }),
-      cmd({
-        key = h .. "S",
-        action = "Gitsigns stage_buffer",
-        desc = "Stage buffer",
-      }),
-      cmd({
-        key = h .. "R",
-        action = "Gitsigns reset_buffer",
-        desc = "Reset buffer",
-      }),
-      cmd({
-        key = h .. "U",
-        action = "Gitsigns reset_buffer_index",
-        desc = "Reset buffer index",
-      }),
-
-      --
-      -- Blame
-      --
-      cmd({
-        key = h .. "b",
-        action = "Gitsigns blame_line",
-        desc = "Blame current line",
-      }),
-
-      --
-      -- Toggling
-      --
-      cmd({
-        key = h .. "t",
-        action = "Gitsigns toggle_current_line_blame",
-        desc = "Toggle blame line in virutal text on cursor line",
-      }),
-      cmd({
-        key = h .. "d",
-        action = "Gitsigns toggle_deleted",
-        desc = "Show deleted lines",
-      }),
-
-      --
-      -- Diff against
-      --
-      cmd({
-        key = h .. "i",
-        action = "Gitsigns diffthis",
-        desc = "Diff against HEAD in current buffer",
-      }),
-
-      --
-      -- QF and loc list
-      --
-      cmd({
-        key = h .. "q",
-        action = "Gitsigns setqflist all",
-        desc = "Send all hunks in all files to qf list",
-      }),
-      cmd({
-        key = h .. "l",
-        action = "require('gitsigns').setloclist(0, 0)",
-        desc = "Send all hunks in current buffer to location list",
-      }),
-    },
-  },
-  {
     "petertriho/cmp-git",
     dependencies = { "hrsh7th/nvim-cmp" },
     opts = {},
-    init = function()
-      table.insert(require("cmp").get_config().sources, { name = "git" })
-    end,
+    -- init = function()
+    --   table.insert(require("cmp").get_config().sources, { name = "git" })
+    -- end,
   },
 }
