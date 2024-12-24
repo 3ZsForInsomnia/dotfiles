@@ -32,11 +32,13 @@ return {
       require("obsidian").setup(opts)
     end,
     opts = {
-      dir = "~/Documents/notes",
-      workspaces = { {
-        name = "notes",
-        path = "/home/zach/Documents/notes",
-      } },
+      dir = "~/Documents/sync",
+      workspaces = {
+        {
+          name = "notes",
+          path = "/Users/zacharylevine/Documents/sync",
+        },
+      },
       open_notes_in = "current",
       finder = "telescope.nvim",
       completion = {

@@ -28,6 +28,12 @@ wk.add({
   { "<leader>e", group = "Explorer (Neotree)" },
 
   --
+  -- <Leader>d
+  --
+  { "<leader>d", group = "Debugging" },
+  { "<leader>D", group = "Databases" },
+
+  --
   -- <Leader>f Telescope
   --
   { "<leader>f", group = "Telescope" },
@@ -81,39 +87,38 @@ wk.add({
   -- Marks (m)
   --
   { "m", group = "Marks" },
-  { "<leader>m", group = "Marks" },
-  { "<leader>m0", desc = "Investigating" },
-  { "<leader>m9", desc = "Flagged/important" },
-  { "<leader>m8", desc = "Bad" },
-  { "<leader>m7", desc = "Good" },
-  { "<leader>m6", desc = "Info" },
-  { "<leader>m5", desc = "Home" },
+  { "m0", desc = "Investigating" },
+  { "m9", desc = "Flagged/important" },
+  { "m8", desc = "Bad" },
+  { "m7", desc = "Good" },
+  { "m6", desc = "Info" },
+  { "m5", desc = "Home" },
 
   --
   -- Previous ([)
   --
-  { "<leader>[", group = "Previous..." },
-  { "<leader>[b", desc = "Buffer" },
-  { "<leader>[h", desc = "Hunk" },
-  { "<leader>[0", desc = "Investigation bookmark" },
-  { "<leader>[9", desc = "Flagged/important bookmark" },
-  { "<leader>[8", desc = "Bad bookmark" },
-  { "<leader>[7", desc = "Good bookmark" },
-  { "<leader>[6", desc = "Info bookmark" },
-  { "<leader>[5", desc = "Home bookmark" },
+  { "[", group = "Previous..." },
+  { "[b", desc = "Buffer" },
+  { "[h", desc = "Hunk" },
+  { "[0", desc = "Investigation bookmark" },
+  { "[9", desc = "Flagged/important bookmark" },
+  { "[8", desc = "Bad bookmark" },
+  { "[7", desc = "Good bookmark" },
+  { "[6", desc = "Info bookmark" },
+  { "[5", desc = "Home bookmark" },
 
   --
   -- Next (])
   --
-  { "<leader>]", group = "Next..." },
-  { "<leader>]b", desc = "Buffer" },
-  { "<leader>]h", desc = "Hunk" },
-  { "<leader>]0", desc = "Investigation bookmark" },
-  { "<leader>]9", desc = "Flagged/important bookmark" },
-  { "<leader>]8", desc = "Bad bookmark" },
-  { "<leader>]7", desc = "Good bookmark" },
-  { "<leader>]6", desc = "Info bookmark" },
-  { "<leader>]5", desc = "Home bookmark" },
+  { "]", group = "Next..." },
+  { "]b", desc = "Buffer" },
+  { "]h", desc = "Hunk" },
+  { "]0", desc = "Investigation bookmark" },
+  { "]9", desc = "Flagged/important bookmark" },
+  { "]8", desc = "Bad bookmark" },
+  { "]7", desc = "Good bookmark" },
+  { "]6", desc = "Info bookmark" },
+  { "]5", desc = "Home bookmark" },
 
   --
   -- Ctrl

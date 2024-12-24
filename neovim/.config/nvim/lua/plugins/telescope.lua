@@ -17,10 +17,10 @@ local createShortcuts = function()
     lg_actions.quote_prompt()(prompt_bufnr)
   end
   local function quote_prompt_glob(prompt_bufnr)
-    lg_actions.quote_prompt({ postfix = " --glob '*'" })(prompt_bufnr)
+    lg_actions.quote_prompt({ postfix = " --glob '**//**'" })(prompt_bufnr)
   end
   local function quote_prompt_iglob(prompt_bufnr)
-    lg_actions.quote_prompt({ postfix = " --iglob '*'" })(prompt_bufnr)
+    lg_actions.quote_prompt({ postfix = " --glob !**//**" })(prompt_bufnr)
   end
   local function find_by_type(prompt_bufnr)
     lg_actions.quote_prompt({ postfix = " -t" })(prompt_bufnr)
@@ -66,7 +66,7 @@ local createOpts = function()
     require("telescope-live-grep-args.actions").quote_prompt({ postfix = " --glob " })()
   end
   local function quote_prompt_iglob()
-    require("telescope-live-grep-args.actions").quote_prompt({ postfix = " --iglob " })()
+    require("telescope-live-grep-args.actions").quote_prompt({ postfix = " --glob " })()
   end
 
   return {

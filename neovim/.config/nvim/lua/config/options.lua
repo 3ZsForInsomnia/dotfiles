@@ -28,13 +28,16 @@ o.showbreak = "↳ "
 g.notagrelative = true
 
 o.backup = true
-o.backupdir = "/home/zach/.local/state/nvim/backup//"
+-- o.backupdir = "/home/zach/.local/state/nvim/backup//"
+o.backupdir = "/Users/zacharylevine/.local/state/nvim/backup//"
 o.shada = "!,'100,<50,s10,h"
-o.shadafile = "/home/zach/vim-sessions/main.shada"
+-- o.shadafile = "/home/zach/vim-sessions/main.shada"
+o.shadafile = "/Users/zacharylevine/.local/state/nvim/vim-sessions/main.shada"
 
 o.spell = true
 o.spelllang = "en_us"
-o.spellfile = "/home/zach/.config/nvim/spell/.utf-8.add"
+-- o.spellfile = "/home/zach/.config/nvim/spell/.utf-8.add"
+o.spellfile = "/Users/zacharylevine/.config/nvim/spell/.utf-8.add"
 o.spelloptions = "camel,noplainbuffer"
 
 o.swapfile = false

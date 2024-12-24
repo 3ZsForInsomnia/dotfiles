@@ -7,4 +7,5 @@ return {
   { "folke/persistence.nvim", enabled = false },
   { "echasnovski/mini.diff", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
+  -- { "saghen/blink.cmp", enabled = false },
 }

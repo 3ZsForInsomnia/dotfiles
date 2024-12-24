@@ -80,7 +80,7 @@ return {
     "m4xshen/hardtime.nvim",
     event = "VeryLazy",
     opts = {
-      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree", "noice", "trouble" },
+      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree", "noice", "trouble", "dbui" },
       max_count = 4,
       restricted_keys = {
         ["w"] = { "n", "x" },
@@ -106,6 +106,12 @@ return {
   {
     "kristijanhusak/vim-dadbod-ui",
     event = "VeryLazy",
+    config = function()
+      vim.cmd([[
+        let g:db_ui_use_nvim_notify = 1
+        let g:db_ui_use_nerd_fonts = 1
+      ]])
+    end,
     keys = {
       cmd({
         key = db .. "t",

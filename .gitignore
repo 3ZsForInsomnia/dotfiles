@@ -2,7 +2,7 @@
 resurrect
 .git/
 trello.*
-bash/*work*
+*work*
 .env
 packer_compiled
 node_modules
@@ -11,3 +11,6 @@ shada
 vim-sessions
 linear-client/config
 tags
+
+i3wm/.local/share/nvim
+caddy

@@ -47,3 +47,4 @@ function default() {
     echo "$1"
   fi
 }
+. "$HOME/.cargo/env"

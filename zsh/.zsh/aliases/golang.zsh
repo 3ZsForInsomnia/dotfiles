@@ -1,0 +1,2 @@
+alias gob="go build"
+

@@ -171,7 +171,7 @@ gcob() {
   eval 'gcb $1'
 }
 feat() {
-  eval 'gcb feature/$1'
+  eval 'gcb feat/$1'
 }
 fix() {
   eval 'gcb fix/$1'

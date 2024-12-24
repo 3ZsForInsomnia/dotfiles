@@ -42,7 +42,7 @@ d("n", "<leader>ul")
 d("n", "<leader>uL")
 d("n", "<leader>ur")
 d("n", "<leader>us")
-d("n", "<leader>ut")
+-- d("n", "<leader>ut")
 d("n", "<leader>uT")
 d("n", "<leader>uw")
 

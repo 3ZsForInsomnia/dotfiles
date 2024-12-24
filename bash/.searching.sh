@@ -5,7 +5,7 @@ alias fzo='o "$(fzf)"'
 
 alias alg='alias P'
 
-alias ls='exa -lahUm -F --icons --git'
+alias ls='eza -lahUm -F --icons --git'
 alias lsg='ls G'
 alias lsd='exa -lahUFmD --icons -I ".git"' 
 function lsrFunc() {

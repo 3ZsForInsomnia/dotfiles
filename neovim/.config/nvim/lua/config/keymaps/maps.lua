@@ -1,3 +1,5 @@
+require("config.keymaps.debugging")
+require("config.keymaps.databases")
 require("config.keymaps.git")
 require("config.keymaps.insert-mode")
 require("config.keymaps.log-stuff")

@@ -13,7 +13,7 @@ return {
     "mistricky/codesnap.nvim",
     build = "make build_generator",
     opts = {
-      save_path = "/home/zach/Pictures/Screenshots/code",
+      save_path = "/home/zach/Pictures/screenshots/code",
       has_breadcrumbs = true,
       bg_theme = "bamboo",
     },
