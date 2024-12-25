@@ -6,6 +6,12 @@ local a = 'lua require("ts-node-action").'
 
 return {
   {
+    "folke/which-key.nvim",
+    opts = {
+      preset = "classic",
+    },
+  },
+  {
     "chentoast/marks.nvim",
     opts = {
       default_mappings = true,
