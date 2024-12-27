@@ -1,3 +1,6 @@
+alias groot="git rev-parse --show-toplevel"
+alias goToGroot=$(groot)
+
 ### Convention
 # g -> git
 # st -> status

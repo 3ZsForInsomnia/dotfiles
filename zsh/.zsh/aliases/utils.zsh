@@ -8,7 +8,9 @@ function o() {
   else
     str=$1
   fi
-  $(open "$str")
+
+  command="open $str"
+  eval "$command"
 }
 
 if [[ "$MY_SYSTEM" == "mac" ]]; then
@@ -32,11 +34,14 @@ getPort() {
 }
 killPort() {
   str=$(getPort $1 A '{print $2}')
-  $(kill $str)
+  echo "$str"
+
+  command="kill $str"
+  eval "$command"
 }
 killProcess() {
   process=$(ps P C -d " " -f 1)
-  kill -9 $process
+  kill -9 "$process"
 }
 alias kp='killProcess'
 
@@ -44,7 +49,7 @@ alias lc='wc -l'
 
 # $1=file extension
 lineCountForFolder() {
-  if [ -z $1 ]; then
+  if [ -z "$1" ]; then
     fd --glob '*.*' | xargs wc -l
   else
     fd --glob "*.${1}" | xargs wc -l
@@ -53,8 +58,8 @@ lineCountForFolder() {
 
 function runThenReturn() {
   pwd=$(pwd)
-  eval $1
-  cd $pwd
+  eval "$1"
+  cd "$pwd"
 }
 
 function default() {

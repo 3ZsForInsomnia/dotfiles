@@ -37,22 +37,10 @@ for dump in ~/.zcompdump(N.mh+24); do
     compinit
 done
 
-# # pnpm
-# export PNPM_HOME="/home/zach/.local/share/pnpm"
-# case ":$PATH:" in
-#   *":$PNPM_HOME:"*) ;;
-#   *) export PATH="$PNPM_HOME:$PATH" ;;
-# esac
-# # pnpm end
-
 source "$HOME/.zsh/.source-things.zsh"
+
+. "$HOME/.cargo/env"
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# To customize prompt, run `p10k configure` or edit ~/.zsh/.p10k.zsh.
-[[ ! -f ~/.zsh/.p10k.zsh ]] || source ~/.zsh/.p10k.zsh
-
-# To customize prompt, run `p10k configure` or edit ~/src/dotfiles/zsh/.zsh/.p10k.zsh.
-[[ ! -f ~/src/dotfiles/zsh/.zsh/.p10k.zsh ]] || source ~/src/dotfiles/zsh/.zsh/.p10k.zsh

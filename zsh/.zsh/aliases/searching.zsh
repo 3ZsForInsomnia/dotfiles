@@ -1,26 +1,27 @@
-alias fzz="fzf -m --ansi --preview 'bat --style=numbers --color=always --line-range :500 {}'"
-alias fzp="fzz PC"
-alias fzv="fzz --bind 'enter:become(nvim {+})'"
-alias fzo='o "$(fzf)"'
-
 alias alg='alias P'
 
 alias ls='eza -lahUm -F --icons --git'
 alias lsg='ls G'
-alias lsd='exa -lahUFmD --icons -I ".git"' 
+alias lsd='eza -lahUFmD --icons -I ".git"' 
+
 function lsrFunc() {
   if [ -z "$1" ]; then
-    exa -lahRTFUm --git -I ".git"--icons 
+    eza -lahRTFUm --git -I ".git"--icons 
   else
-    exa -lahRTFUm --git -I ".git"--icons -L $1
+    eza -lahRTFUm --git -I ".git"--icons -L $1
   fi
 }
 alias lsr='lsrFunc'
-alias lsrg='exa -lahRTFUm --git -I ".git"--icons G'
+alias lsrg='eza -lahRTFUm --git -I ".git"--icons G'
 
 alias grep='rg -i'
 alias find='fd -H'
 alias f='find'
+
+alias fzz="fzf -m --ansi --preview 'bat --style=numbers --color=always --line-range :500 {}'"
+alias fzp="fzz PC"
+alias fzv="fzz --bind 'enter:become(nvim {+})'"
+alias fzo='o "$(fzf)"'
 
 # ftags - search ctags with preview
 # only works if tags-file was generated with --excmd=number
@@ -74,8 +75,4 @@ fkill() {
 
 flp() {
   lpass show -c --password $(lpass ls  | fzf | awk '{print $(NF)}' | sed 's/\]//g')
-}
-
-fzeal() {
-  zeal-cli "$1" | fzf --height=50% --preview='zeal-cli --lynx-dump=true "$1" {}' | xargs -d '\n' zeal-cli "$1"
 }

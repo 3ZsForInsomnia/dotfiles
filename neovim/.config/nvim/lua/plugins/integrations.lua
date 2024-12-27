@@ -36,7 +36,7 @@ return {
       workspaces = {
         {
           name = "notes",
-          path = "/Users/zacharylevine/Documents/sync",
+          path = vim.fn.expand("$HOME") .. "/Documents/sync",
         },
       },
       open_notes_in = "current",

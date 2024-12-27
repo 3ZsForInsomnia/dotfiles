@@ -11,7 +11,7 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_DATA_DIRS="$HOME/.local/data:$XDG_DATA_DIRS"
 export NPM_PACKAGES="$HOME/.npm-global"
-export XDG_CODE_HOME=$HOME/code
+export XDG_CODE_HOME=$HOME/src
 export PYENV_ROOT="$HOME/.pyenv"
 
 ubin="/usr/bin"
@@ -29,8 +29,10 @@ py3=$ubin/python3
 pybin=$PYENV_ROOT/bin
 nbin=$NPM_PACKAGES/bin
 maven=/opt/apache-maven/bin
+nvim=$HOME/neovim/bin
+psql=/opt/homebrew/opt/postgresql@12/bin
 
-export PATH="$ubin:$ulobin:$hlobin:$hbin:$py3:$pybin:$nbin:$maven:$PATH"
+export PATH="$ubin:$ulobin:$hlobin:$hbin:$py3:$pybin:$nbin:$maven:$nvim:$psql:$PATH"
 
 ######################
 # Global variables   #
@@ -50,7 +52,6 @@ export GOPATH=$XDG_CODE_HOME/go/
 ######################
 # OS specific items  #
 ######################
-
 
 if [[ $(uname) == "Darwin" ]]; then
   export MY_SYSTEM="mac"

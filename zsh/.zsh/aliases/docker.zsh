@@ -1,7 +1,9 @@
-alias dps="docker ps -a"
+alias d="docker"
 
-alias dc="docker compose"
+alias dps="d ps -a"
 
-alias dl="docker logs -f"
+alias dc="d compose"
 
-alias dinto="docker exec -it"
+alias dl="d logs -f"
+
+alias dinto="d exec -it"
