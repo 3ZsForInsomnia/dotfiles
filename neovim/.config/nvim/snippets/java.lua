@@ -20,34 +20,34 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
-local strings = require('snippets.utils.strings')
+local strings = require("neovim.config.nvim.lua.utils.strings")
 
 return {
   s({
-    trig = '@v',
-    name = '@Valid'
+    trig = "@v",
+    name = "@Valid",
   }, {
-    t('@Valid'),
+    t("@Valid"),
   }),
   s({
-    trig = '@n',
-    name = '@NotNull'
+    trig = "@n",
+    name = "@NotNull",
   }, {
-    t('@NotNull'),
+    t("@NotNull"),
   }),
   s({
-    trig = '@sm',
-    name = '@Size(min/max = val)'
+    trig = "@sm",
+    name = "@Size(min/max = val)",
   }, {
-    t('@Size('),
-    c(1, { t('min'), t('max') }),
-    t(' = '),
-    i(2, 'val'),
-    t(')'),
+    t("@Size("),
+    c(1, { t("min"), t("max") }),
+    t(" = "),
+    i(2, "val"),
+    t(")"),
   }),
   s({
-    trig = '@s',
-    name = 'Property Serializer'
+    trig = "@s",
+    name = "Property Serializer",
   }, {
     t("@JsonSerialize(using = "),
     c(1, {
@@ -56,48 +56,59 @@ return {
       t("EnumSerializer"),
       t("ToStringSerializer"),
     }),
-    t( ".class)")
+    t(".class)"),
   }),
   s({
-    trig = 'pgsw',
-    name = 'Getter/Setter/With',
-    dsrc = 'Create a prop with getter, setter and with functions for a param',
+    trig = "pgsw",
+    name = "Getter/Setter/With",
+    dsrc = "Create a prop with getter, setter and with functions for a param",
   }, {
-    i(4, 'Decorators?'),
-    t({'', ''}),
-    t('@JsonProperty("'), f(function(args) return strings.camelToSnake(args[1][1]) end, { 1 }), t({ '")', '' }),
-    t('private '),
+    i(4, "Decorators?"),
+    t({ "", "" }),
+    t('@JsonProperty("'),
+    f(function(args)
+      return strings.camelToSnake(args[1][1])
+    end, { 1 }),
+    t({ '")', "" }),
+    t("private "),
     i(2, "type"),
-    t(' '),
+    t(" "),
     i(1, "propName"),
-    t({ ';', '', '' }),
+    t({ ";", "", "" }),
     d(3, function(args, snip)
       local propName = args[1][1]
       local type = args[2][1]
 
       local nodes = {}
 
-      table.insert(nodes,
-        t({ "public " .. type .. " get" .. strings.capitalizeFirstChar(propName) .. "() {", "" })
-      )
+      table.insert(nodes, t({ "public " .. type .. " get" .. strings.capitalizeFirstChar(propName) .. "() {", "" }))
       table.insert(nodes, t({ "\treturn " .. propName .. ";", "" }))
       table.insert(nodes, t({ "}", "", "" }))
 
-      table.insert(nodes,
+      table.insert(
+        nodes,
         t({
-          "public void set" ..
-              strings.capitalizeFirstChar(propName) ..
-              "(" .. type .. " " .. propName .. ") {", ""
+          "public void set" .. strings.capitalizeFirstChar(propName) .. "(" .. type .. " " .. propName .. ") {",
+          "",
         })
       )
       table.insert(nodes, t({ "\tthis." .. propName .. " = " .. propName .. ";", "" }))
       table.insert(nodes, t({ "}", "", "" }))
 
-      table.insert(nodes,
-        t({ "public " ..
-            vim.split(snip.env.TM_FILENAME, '.', { plain = true })[1] ..
-            " with" .. strings.capitalizeFirstChar(propName) ..
-            "(" .. type .. " " .. propName .. ") {", "" })
+      table.insert(
+        nodes,
+        t({
+          "public "
+            .. vim.split(snip.env.TM_FILENAME, ".", { plain = true })[1]
+            .. " with"
+            .. strings.capitalizeFirstChar(propName)
+            .. "("
+            .. type
+            .. " "
+            .. propName
+            .. ") {",
+          "",
+        })
       )
       table.insert(nodes, t({ "\tthis." .. propName .. " = " .. propName .. ";", "" }))
       table.insert(nodes, t({ "\treturn this;", "" }))
@@ -107,24 +118,24 @@ return {
     end, { 1, 2 }),
   }),
   s({
-    trig = 'tsh',
-    name = 'toString helper',
+    trig = "tsh",
+    name = "toString helper",
   }, {
-    t({ '', '.add("' }),
-    i(1, 'propName'),
+    t({ "", '.add("' }),
+    i(1, "propName"),
     t('", '),
     rep(1),
-    t({ ')', '' }),
+    t({ ")", "" }),
   }),
   s({
-    trig = 'obeq',
-    name = 'Object equality'
+    trig = "obeq",
+    name = "Object equality",
   }, {
-    t('&& '),
+    t("&& "),
     c(1, {
-      sn(nil, { i(1, 'prop'), t(' == that.'), rep(1), t('') }),
-      sn(nil, { t('Object.equals('), i(1, 'prop'), t(', that.'), rep(1), t( ')') }),
+      sn(nil, { i(1, "prop"), t(" == that."), rep(1), t("") }),
+      sn(nil, { t("Object.equals("), i(1, "prop"), t(", that."), rep(1), t(")") }),
     }),
-    t({ '', '' }),
+    t({ "", "" }),
   }),
 }

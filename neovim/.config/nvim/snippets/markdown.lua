@@ -20,7 +20,7 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
-local strings = require("snippets.utils.strings")
+local strings = require("neovim.config.nvim.lua.utils.strings")
 
 local function get_today_date()
   return os.date("%Y-%m-%d %A")

@@ -20,7 +20,13 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
-local strings = require("snippets.utils.strings")
+getStringPart = function(args, _, user_args1, user_args2)
+  local delimiter = user_args1 or "."
+  local text = args[1][1] or ""
+  local split = vim.split(text, delimiter, { plain = true })
+  local partNumber = user_args2 or #split
+  return split[partNumber]
+end
 
 return {
   s({
@@ -52,7 +58,7 @@ return {
     dsrc = "Create local var for last item in require path",
   }, {
     t("local "),
-    f(strings.getStringPart, 1),
+    f(getStringPart, 1),
     t(' = require("'),
     i(1, "module"),
     t('")'),

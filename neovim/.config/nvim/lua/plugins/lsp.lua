@@ -49,7 +49,6 @@ return {
         "black",
         "css-lsp",
         "cspell",
-        "diff",
         "dockerfile-language-server",
         "emmet-language-server",
         "eslint_d",

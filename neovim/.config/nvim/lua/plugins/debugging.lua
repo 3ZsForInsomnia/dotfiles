@@ -5,7 +5,7 @@ return {
   { "nvim-telescope/telescope-dap.nvim", event = "VeryLazy" },
   { "mxsdev/nvim-dap-vscode-js", event = "VeryLazy" },
   { "leoluz/nvim-dap-go", event = "VeryLazy" },
-  { "rcarriga/cmp-dap", event = "VeryLazy" },
+  -- { "rcarriga/cmp-dap", event = "VeryLazy" },
   {
     "microsoft/vscode-js-debug",
     run = "npm install --legacy-peer-deps && npm run compile",
@@ -20,7 +20,7 @@ return {
       "mfussenegger/nvim-dap-python",
       "nvim-telescope/telescope-dap.nvim",
       "mxsdev/nvim-dap-vscode-js",
-      "rcarriga/cmp-dap",
+      -- "rcarriga/cmp-dap",
       "leoluz/nvim-dap-go",
     },
   },

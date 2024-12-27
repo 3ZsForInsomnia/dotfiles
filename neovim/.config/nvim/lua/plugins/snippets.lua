@@ -1,26 +1,5 @@
-local lspServers = {
-  "gopls",
-  "pyright",
-  "cssls",
-  "html",
-  "jsonls",
-  "bashls",
-  "dockerls",
-  "sumneko_lua",
-  "vimls",
-  "graphql",
-  "angularls",
-  "clangd",
-  "cmake",
-  "sqlls",
-  "jdtls",
-  "sqlls",
-  "stylelint_lsp",
-  "tailwindcss",
-  "terraformls",
-  "vimls",
-  "yamlls",
-}
+local v = vim
+local g = v.g
 
 local red = "ErrorMsg"
 local green = "SpellRare"
@@ -33,10 +12,6 @@ local visited = {
 local unvisited = {
   hl_group = green,
 }
-
-local js = "javascript"
-local html = "html"
-local ts = "typescript"
 
 local luasnipSetupOptions = function(types)
   return {
@@ -63,187 +38,248 @@ local luasnipSetupOptions = function(types)
   }
 end
 
-local cmpDependencies = {
-  "neovim/nvim-lspconfig",
-  "hrsh7th/cmp-buffer",
-  "hrsh7th/cmp-path",
-  "hrsh7th/cmp-cmdline",
-  "hrsh7th/cmp-nvim-lua",
-  "hrsh7th/cmp-nvim-lsp",
-  "hrsh7th/cmp-nvim-lsp-signature-help",
-  "hrsh7th/cmp-nvim-lsp-document-symbol",
-  "kristijanhusak/vim-dadbod-completion",
-  "ray-x/cmp-treesitter",
-  "quangnguyen30192/cmp-nvim-tags",
-  "dcampos/cmp-emmet-vim",
-  {
-    "zbirenbaum/copilot-cmp",
-    config = true,
-  },
-}
-
-local cmpOpts = function(cmp, defaults)
-  return {
-    snippet = {
-      expand = function(args)
-        require("luasnip").lsp_expand(args.body)
-      end,
-    },
-    completion = {
-      completeopt = "menu,menuone,noinsert",
-    },
-    mapping = cmp.mapping.preset.insert({
-      ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-      ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-      ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-      ["<C-f>"] = cmp.mapping.scroll_docs(4),
-      ["<C-Space>"] = cmp.mapping.complete(),
-      ["<C-e>"] = cmp.mapping.abort(),
-      ["<TAB>"] = LazyVim.cmp.confirm(),
-      ["<S-CR>"] = LazyVim.cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace }),
-      ["<C-CR>"] = function(fallback)
-        cmp.abort()
-        fallback()
-      end,
-    }),
-    auto_brackets = {},
-    sources = cmp.config.sources({
-      { name = "luasnip" },
-      { name = "treesitter" },
-      { name = "nvim_lsp" },
-      { name = "nvim_lsp_signature" },
-      { name = "nvim_lsp_document_symbol" },
-      { name = "emmet" },
-      { name = "copilot" },
-      { name = "buffer" },
-      { name = "path" },
-      { name = "nvim_lua" },
-      { name = "vim-dadbod-completion" },
-      { name = "nvim_tags" },
-    }),
-    formatting = {
-      format = function(_, item)
-        local icons = require("lazyvim.config").icons.kinds
-        if icons[item.kind] then
-          item.kind = icons[item.kind] .. item.kind
-        end
-        return item
-      end,
-    },
-    experimental = {
-      ghost_text = {
-        hl_group = "CmpGhostText",
-      },
-    },
-    sorting = defaults.sorting,
-    window = {
-      documentation = cmp.config.window.bordered(),
-    },
-  }
-end
+local js = "javascript"
+local html = "html"
+local ts = "typescript"
 
 return {
   {
-    "L3MON4D3/LuaSnip",
-    build = (not LazyVim.is_win())
-        and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
-      or nil,
+    "saghen/blink.cmp",
+    version = not g.lazyvim_blink_main and "*",
+    build = g.lazyvim_blink_main and "cargo build --release",
+    opts_extend = {
+      "sources.completion.enabled_providers",
+      "sources.compat",
+      "sources.default",
+    },
     dependencies = {
+      "giuxtaposition/blink-cmp-copilot",
+      { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
       {
-        "rafamadriz/friendly-snippets",
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = (not LazyVim.is_win())
+            and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
+          or nil,
+        dependencies = {
+          {
+            "rafamadriz/friendly-snippets",
+            config = function()
+              require("luasnip.loaders.from_vscode").lazy_load()
+            end,
+          },
+        },
         config = function()
-          require("luasnip.loaders.from_vscode").lazy_load()
+          local ls = require("luasnip")
+          local types = require("luasnip.util.types")
+
+          require("luasnip.loaders.from_lua").load({ paths = { "~/.config/nvim/snippets" } })
+
+          ls.filetype_extend("typescript", { js })
+          ls.filetype_extend("javascriptreact", { js, html })
+          ls.filetype_extend("typescriptreact", { ts, js, html })
+
+          require("luasnip").config.setup(luasnipSetupOptions(types))
         end,
       },
       {
-        "nvim-cmp",
-        dependencies = {
-          "saadparwaiz1/cmp_luasnip",
-        },
-        opts = function(_, opts)
-          opts.snippet = {
-            expand = function(args)
-              require("luasnip").lsp_expand(args.body)
-            end,
-          }
-          table.insert(opts.sources, { name = "luasnip", group_index = 0 })
-        end,
+        "saghen/blink.compat",
+        optional = true, -- make optional so it's only enabled if any extras need it
+        opts = {},
+        version = not g.lazyvim_blink_main and "*",
       },
     },
-    config = function()
-      local ls = require("luasnip")
-      local types = require("luasnip.util.types")
-
-      require("luasnip.loaders.from_lua").lazy_load({ paths = { "~/.config/nvim/lua/plugins/snippets/" } })
-
-      ls.filetype_extend("typescript", { js })
-      ls.filetype_extend("javascriptreact", { js, html })
-      ls.filetype_extend("typescriptreact", { ts, js, html })
-
-      require("luasnip").config.setup(luasnipSetupOptions(types))
-    end,
-  },
-  {
-    "hrsh7th/nvim-cmp",
-    version = false,
     event = "InsertEnter",
-    dependencies = cmpDependencies,
-    opts = function()
-      vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
-      local cmp = require("cmp")
-      local defaults = require("cmp.config.default")()
 
-      return cmpOpts(cmp, defaults)
-    end,
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      snippets = {
+        expand = function(snippet)
+          require("luasnip").lsp_expand(snippet)
+        end,
+        active = function(filter)
+          if filter and filter.direction then
+            return require("luasnip").jumpable(filter.direction)
+          end
+          return require("luasnip").in_snippet()
+        end,
+        jump = function(direction)
+          require("luasnip").jump(direction)
+        end,
+      },
+      appearance = {
+        -- sets the fallback highlight groups to nvim-cmp's highlight groups
+        -- useful for when your theme doesn't support blink.cmp
+        -- will be removed in a future release, assuming themes add support
+        use_nvim_cmp_as_default = false,
+        -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- adjusts spacing to ensure icons are aligned
+        nerd_font_variant = "mono",
+        kind_icons = {
+          Copilot = "",
+          Text = "󰉿",
+          Method = "󰊕",
+          Function = "󰊕",
+          Constructor = "󰒓",
+
+          Field = "󰜢",
+          Variable = "󰆦",
+          Property = "󰖷",
+
+          Class = "󱡠",
+          Interface = "󱡠",
+          Struct = "󱡠",
+          Module = "󰅩",
+
+          Unit = "󰪚",
+          Value = "󰦨",
+          Enum = "󰦨",
+          EnumMember = "󰦨",
+
+          Keyword = "󰻾",
+          Constant = "󰏿",
+
+          Snippet = "󱄽",
+          Color = "󰏘",
+          File = "󰈔",
+          Reference = "󰬲",
+          Folder = "󰉋",
+          Event = "󱐋",
+          Operator = "󰪚",
+          TypeParameter = "󰬛",
+        },
+      },
+      completion = {
+        accept = {
+          -- experimental auto-brackets support
+          auto_brackets = {
+            enabled = true,
+          },
+        },
+        menu = {
+          min_width = 30,
+          max_height = 20,
+          draw = {
+            padding = 2,
+            columns = {
+              { "label", "label_description", gap = 1 },
+              { "kind_icon", "kind" },
+            },
+          },
+        },
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 200,
+          window = {
+            min_width = 15,
+            max_height = 30,
+          },
+        },
+        ghost_text = {
+          enabled = g.ai_cmp,
+        },
+      },
+
+      -- experimental signature help support
+      signature = { enabled = true },
+
+      sources = {
+        -- adding any nvim-cmp sources here will enable them
+        -- with blink.compat
+        compat = {},
+        default = { "lsp", "luasnip", "path", "snippets", "buffer", "copilot", "dadbod" },
+        cmdline = {},
+        providers = {
+          dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+          copilot = {
+            name = "copilot",
+            module = "blink-cmp-copilot",
+            score_offset = 100,
+            async = true,
+            transform_items = function(_, items)
+              local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
+              local kind_idx = #CompletionItemKind + 1
+              CompletionItemKind[kind_idx] = "Copilot"
+              for _, item in ipairs(items) do
+                item.kind = kind_idx
+              end
+              return items
+            end,
+          },
+        },
+      },
+
+      keymap = {
+        preset = "super-tab",
+        ["<C-y>"] = { "select_and_accept" },
+      },
+    },
+    ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
     config = function(_, opts)
-      for _, source in ipairs(opts.sources) do
-        source.group_index = source.group_index or 1
-      end
+      -- opts.sources.providers.snippets.opts.search_paths
 
-      local parse = require("cmp.utils.snippet").parse
-      require("cmp.utils.snippet").parse = function(input)
-        local ok, ret = pcall(parse, input)
-        if ok then
-          return ret
-        end
-        return LazyVim.cmp.snippet_preview(input)
-      end
-
-      local cmp = require("cmp")
-
-      cmp.setup.cmdline({ "/", "?" }, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { { name = "nvim_lsp_document_symbol" } },
-          { { name = "buffer" } },
-        }),
-      })
-
-      cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources(
-          { { name = "path" } },
-          { { name = "cmdline", option = { ignore_cmds = { "Man", "!" } } } }
-        ),
-      })
-
-      cmp.setup(opts)
-      cmp.event:on("confirm_done", function(event)
-        if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
-          LazyVim.cmp.auto_brackets(event.entry)
-        end
-      end)
-      cmp.event:on("menu_opened", function(event)
-        LazyVim.cmp.add_missing_snippet_docs(event.window)
-      end)
-
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      for _, server in ipairs(lspServers) do
-        local lsp = require("lspconfig")[server]
-        if lsp and lsp.capabilities then
-          lsp.setup({ capabilities = capabilities })
+      -- setup compat sources
+      local enabled = opts.sources.default
+      for _, source in ipairs(opts.sources.compat or {}) do
+        opts.sources.providers[source] = v.tbl_deep_extend(
+          "force",
+          { name = source, module = "blink.compat.source" },
+          opts.sources.providers[source] or {}
+        )
+        if type(enabled) == "table" and not v.tbl_contains(enabled, source) then
+          table.insert(enabled, source)
         end
       end
+
+      -- add ai_accept to <Tab> key
+      if not opts.keymap["<Tab>"] then
+        if opts.keymap.preset == "super-tab" then -- super-tab
+          opts.keymap["<Tab>"] = {
+            require("blink.cmp.keymap.presets")["super-tab"]["<Tab>"][1],
+            LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
+            "fallback",
+          }
+        else -- other presets
+          opts.keymap["<Tab>"] = {
+            LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
+            "fallback",
+          }
+        end
+      end
+
+      -- Unset custom prop to pass blink.cmp validation
+      opts.sources.compat = nil
+
+      -- check if we need to override symbol kinds
+      for _, provider in pairs(opts.sources.providers or {}) do
+        ---@cast provider blink.cmp.SourceProviderConfig|{kind?:string}
+        if provider.kind then
+          local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
+          local kind_idx = #CompletionItemKind + 1
+
+          CompletionItemKind[kind_idx] = provider.kind
+          ---@diagnostic disable-next-line: no-unknown
+          CompletionItemKind[provider.kind] = kind_idx
+
+          ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[]): blink.cmp.CompletionItem[]
+          local transform_items = provider.transform_items
+          ---@param ctx blink.cmp.Context
+          ---@param items blink.cmp.CompletionItem[]
+          provider.transform_items = function(ctx, items)
+            items = transform_items and transform_items(ctx, items) or items
+            for _, item in ipairs(items) do
+              item.kind = kind_idx or item.kind
+            end
+            return items
+          end
+
+          -- Unset custom prop to pass blink.cmp validation
+          provider.kind = nil
+        end
+      end
+
+      require("blink.cmp").setup(opts)
     end,
   },
 }

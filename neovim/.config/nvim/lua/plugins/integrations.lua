@@ -41,9 +41,9 @@ return {
       },
       open_notes_in = "current",
       finder = "telescope.nvim",
-      completion = {
-        nvim_cmp = true,
-      },
+      -- completion = {
+      --   nvim_cmp = true,
+      -- },
       note_id_func = function(title)
         return title
       end,
