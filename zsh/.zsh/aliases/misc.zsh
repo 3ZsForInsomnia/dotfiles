@@ -4,7 +4,9 @@ alias q='exit'
 alias ..='cd ../'
 alias ...='..; ..;'
 alias ....='..; ..; ..;'
+alias .....='..; ..; ..; ..;'
 alias ~='cd ~'
+
 alias sudo='sudo '
 alias addcreds='ssh-add -K'
 
@@ -19,20 +21,17 @@ elif [[ "$MY_SYSTEM" == "linux" ]]; then
 fi
 
 alias src='j src'
-alias dots='j dots && v'
+alias dots='j dots; renameTab "dots"; v'
 alias shots='j shots'
 alias shared='j shared'
-alias notes='j notes && v'
+alias notes='j notes; renameTab "notes"; v'
 
-alias bashrc='v ~/code/dotfiles/.bashrc'
-alias bashpro='v ~/code/dotfiles/.bash_profile'
-alias vimrc='v ~/code/dotfiles/neovim/.config/nvim/init.lua'
-alias zshrc='v ~/code/dotfiles/zsh/.zshrc'
-alias alarc='v ~/code/dotfiles/alacritty/.config/alacritty/alacritty.toml'
-# alias wezrc='v ~/code/dotfiles/wezterm/.wezterm.lua'
+alias zshrc="v $HOME/src/dotfiles/zsh/.zshrc"
+alias allZsh="v $HOME/src/dotfiles/zsh"
+# alias alarc="v $HOME/src/dotfiles/alacritty/.config/alacritty/alacritty.toml"
+alias wezrc="v $HOME/src/dotfiles/wezterm/.wezterm.lua"
+alias allWez="v $HOME/src/dotfiles/wezterm"
 
-alias rebash='source ~/.bashrc'
-alias repro='source ~/.bash_profile'
 alias rezsh='exec zsh'
 
 function wttr() {
@@ -70,19 +69,32 @@ alias lpas='lpa show --password'
 alias http='/opt/homebrew/bin/http' # This is httpie's script
 alias http-server='$HOME/.npm/_npx/e5196fa6dc3cecbc/node_modules/.bin/http-server'
 
-alias img='wezterm imgcat '
-
 alias lzd="lazydocker"
 
 alias rss='newsboat;'
 
 alias unstow='stow --target=$HOME'
 function unstowAll() {
-  cd "$HOME/code/dotfiles/"
+  cd "$HOME/src/dotfiles/"
 
-  for d in */; do
-    unstow "$d"
-  done
+  unstow alacritty;
+  unstow ctags;
+  unstow espanso;
+  unstow git;
+  unstow neovim;
+  unstow notes;
+  unstow personal-scripts;
+  unstow rss;
+  unstow wezterm;
+  unstow zsh;
+
+  if [[ "$MY_SYSTEM" == "mac" ]]; then
+    unstow macos;
+  elif [[ "$MY_SYSTEM" == "linux" ]]; then
+    unstow i3wm;
+  elif [[ "$MY_SYSTEM" == "windows" ]]; then
+    unstow windows;
+  fi
 }
 
 # alias mutt='neomutt'

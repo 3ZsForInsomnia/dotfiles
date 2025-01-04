@@ -1,6 +1,12 @@
+local cmd = require("helpers").k_cmd
+local d = "<leader>d"
+local dc = function(command)
+  return "DBUI " .. command
+end
+
 return {
   { "theHamsta/nvim-dap-virtual-text", event = "VeryLazy" },
-  { "rcarriga/nvim-dap-ui", event = "VeryLazy" },
+  { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }, event = "VeryLazy" },
   { "mfussenegger/nvim-dap-python", event = "VeryLazy" },
   { "nvim-telescope/telescope-dap.nvim", event = "VeryLazy" },
   { "mxsdev/nvim-dap-vscode-js", event = "VeryLazy" },

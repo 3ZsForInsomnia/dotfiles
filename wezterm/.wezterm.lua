@@ -5,7 +5,7 @@ local keybinds = require("keybinds")
 
 return {
 	font = wezterm.font("FiraCode Nerd Font Mono"),
-	font_size = 14,
+	font_size = 16,
 	command_palette_font_size = 16,
 	underline_position = -3,
 	underline_thickness = 2,

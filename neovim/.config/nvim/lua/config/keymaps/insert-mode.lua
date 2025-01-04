@@ -8,16 +8,16 @@ k({
 })
 
 k({
-  key = "<C-w>",
-  action = "<c-g>u<c-w>",
-  desc = "Delete word backwards",
+  key = "<C-a>",
+  action = "<C-o>b",
+  desc = "Move one word backwards",
   mode = "i",
 })
 
 k({
-  key = "<C-u>",
-  action = "<c-g>u<c-u>",
-  desc = "Delete to start of line",
+  key = "<C-;>",
+  action = "<C-o>w",
+  desc = "Move one word forwards",
   mode = "i",
 })
 

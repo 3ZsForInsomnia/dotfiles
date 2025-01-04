@@ -1,8 +1,4 @@
 local cmd = require("helpers").k_cmd
-local db = "<leader>db"
-local dba = function(command)
-  return "DBUI " .. command
-end
 
 return {
   {
@@ -30,10 +26,6 @@ return {
         desc = "Toggle UndoTree",
       }),
     },
-  },
-  {
-    "folke/twilight.nvim",
-    event = "VeryLazy",
   },
   {
     "lewis6991/hover.nvim",
@@ -100,39 +92,6 @@ return {
           length = 2,
         },
       },
-    },
-  },
-  { "tpope/vim-dadbod", event = "VeryLazy" },
-  {
-    "kristijanhusak/vim-dadbod-ui",
-    event = "VeryLazy",
-    config = function()
-      vim.cmd([[
-        let g:db_ui_use_nvim_notify = 1
-        let g:db_ui_use_nerd_fonts = 1
-      ]])
-    end,
-    keys = {
-      cmd({
-        key = db .. "t",
-        action = dba("Toggle"),
-        desc = "Toggle DBUI",
-      }),
-      cmd({
-        key = db .. "f",
-        action = dba("FindBuffer"),
-        desc = "Find buffer",
-      }),
-      cmd({
-        key = db .. "r",
-        action = dba("RenameBuffer"),
-        desc = "Rename buffer",
-      }),
-      cmd({
-        key = db .. "l",
-        action = dba("LastQueryInfo"),
-        desc = "Last query info",
-      }),
     },
   },
   {
