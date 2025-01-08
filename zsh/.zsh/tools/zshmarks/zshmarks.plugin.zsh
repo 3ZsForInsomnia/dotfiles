@@ -8,7 +8,7 @@
 # Set BOOKMARKS_FILE if it doesn't exist to the default.
 # Allows for a user-configured BOOKMARKS_FILE.
 if [[ -z $BOOKMARKS_FILE ]] ; then
-	export BOOKMARKS_FILE="$HOME/.bookmarks"
+	export BOOKMARKS_FILE="$XDG_DATA_HOME/bookmarks/.bookmarks"
 fi
 
 # Check if $BOOKMARKS_FILE is a symlink.
@@ -18,6 +18,7 @@ fi
 
 # Create bookmarks_file it if it doesn't exist
 if [[ ! -f $BOOKMARKS_FILE ]]; then
+  mkdir $XD_DATA_HOME/bookmarks
 	touch $BOOKMARKS_FILE
 fi
 

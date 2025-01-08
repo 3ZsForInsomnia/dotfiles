@@ -20,7 +20,6 @@ bindkey "^[[F" end-of-line
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 
-HISTFILE=~/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
 
@@ -32,15 +31,14 @@ setopt append_history
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-autoload -Uz compinit
-for dump in ~/.zcompdump(N.mh+24); do
-    compinit
-done
-
 source "$HOME/.zsh/.source-things.zsh"
 
-. "$HOME/.cargo/env"
+# Create the parent directory if it doesn't exist
+[[ -d $ZSH_COMPDUMP ]] || mkdir -p $ZSH_COMPDUMP
 
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+_comp_files=($ZSH_COMPDUMP/zcompdump(Nm-20))
+if (( $#_comp_files )); then
+    autoload -Uz compinit -C -d "$ZSH_COMPDUMP/.zcompdump-${ZSH_VERSION}"
+else
+    autoload -Uz compinit -d "$ZSH_COMPDUMP/.zcompdump-${ZSH_VERSION}"
+fi

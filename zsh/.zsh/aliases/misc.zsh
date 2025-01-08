@@ -14,12 +14,6 @@ alias c='clear'
 alias rmrf='rm -rf'
 alias cls='c; ls'
 
-if [[ "$MY_SYSTEM" == "mac" ]]; then
-  alias cat='bat'
-elif [[ "$MY_SYSTEM" == "linux" ]]; then
-  alias cat='bat'
-fi
-
 alias src='j src'
 alias dots='j dots; renameTab "dots"; v'
 alias shots='j shots'
@@ -59,19 +53,10 @@ function fupc() {
 }
 
 alias oreg='o https://regex101.com'
-alias gogh='bash -c "$(curl -sLo- https://git.io/vQgMr)"'
-alias ogogh='o http://mayccoll.github.io/Gogh/'
-
-alias lpa='lpass'
-alias lpas='lpa show --password'
 
 # Neccessary as http-server (npx library) asserts its alias as http, which httpie uses
 alias http='/opt/homebrew/bin/http' # This is httpie's script
 alias http-server='$HOME/.npm/_npx/e5196fa6dc3cecbc/node_modules/.bin/http-server'
-
-alias lzd="lazydocker"
-
-alias rss='newsboat;'
 
 alias unstow='stow --target=$HOME'
 function unstowAll() {
@@ -96,6 +81,8 @@ function unstowAll() {
     unstow windows;
   fi
 }
+
+# alias lcli="linear-client"
 
 # alias mutt='neomutt'
 # alias ms='mailsync; notmuch new; mutt; mailsync &'

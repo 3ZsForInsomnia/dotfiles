@@ -1,5 +1,7 @@
 alias groot="git rev-parse --show-toplevel"
-alias goToGroot=$(groot)
+goToGroot() {
+  $(groot)
+}
 
 ### Convention
 # g -> git
@@ -205,7 +207,7 @@ alias lgl='glog --color=always L'
 alias lg='glg --color=always L'
 
 ### Misc
-alias localGitIgnore='v ~/.gitignore_global'
+alias localGitIgnore='v ~/.config/git/.gitignore_global'
 alias gpause='git add . && git cm "<back>" --no-verify'
 alias gback='git reset HEAD~1'
 
@@ -247,20 +249,10 @@ function ggp() {
   fi
 }
 
-### Gists
-alias getGistID='gist --list | peco | cut -d "/" -f 4 | cut -d " " -f 1'
-gistu() {
-  gist_id=$(getGistID)
-  eval 'gist -u $gist_id $1'
-}
-gistr() {
-  gist_id=$(getGistID)
-  eval 'gist -r $gist_id | setclip'
-}
-
 setupGit() {
   git config --global alias.ctags '!.git/hooks/ctags'
-  git config --global init.templatedir '~/.git_template'
+  git config --global init.templatedir '~/.config/git/.git_template'
+  git config --global core.excludesfile '~/.config/git/.gitignore_global'
 }
 
 ### FZF-based git helpers

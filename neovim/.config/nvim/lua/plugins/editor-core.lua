@@ -9,6 +9,12 @@ return {
     "folke/which-key.nvim",
     opts = {
       preset = "classic",
+      win = {
+        height = {
+          min = 8,
+          max = 12,
+        },
+      },
     },
   },
   {

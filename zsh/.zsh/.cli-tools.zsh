@@ -1,1 +1,0 @@
-alias lcli="linear-client"

@@ -8,13 +8,11 @@ return {
   {
     "liuchengxu/vista.vim",
     event = "VeryLazy",
-    keys = {
-      cmd({
-        key = "<leader>uv",
-        action = "Vista!!",
-        desc = "Toggle Vista",
-      }),
-    },
+    config = function()
+      vim.cmd([[
+         let g:vista_default_executive = 'nvim_lsp'
+      ]])
+    end,
   },
   {
     "mbbill/undotree",
@@ -35,16 +33,13 @@ return {
         init = function()
           require("hover.providers.lsp")
           require("hover.providers.gh")
-          require("hover.providers.gh_user")
           require("hover.providers.jira")
           require("hover.providers.dictionary")
           require("hover.providers.dap")
           require("hover.providers.fold_preview")
           require("hover.providers.diagnostic")
           require("hover.providers.man")
-
-          -- Custom providers
-          -- trelloProvider()
+          require("hover.providers.gh_user")
         end,
 
         preview_opts = {
@@ -57,9 +52,19 @@ return {
     end,
     keys = {
       cmd({
-        key = "<M-d>",
+        key = "<C-k>",
         action = "lua require('hover').hover()",
         desc = "Hover",
+      }),
+      cmd({
+        key = "<C-h>",
+        action = "lua require('hover').hover_switch('next')",
+        desc = "Hover next",
+      }),
+      cmd({
+        key = "<C-l>",
+        action = "lua require('hover').hover_switch('previous')",
+        desc = "Hover prev",
       }),
       cmd({
         key = "<M-f>",
@@ -72,7 +77,7 @@ return {
     "m4xshen/hardtime.nvim",
     event = "VeryLazy",
     opts = {
-      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree", "noice", "trouble", "dbui" },
+      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree", "noice", "trouble", "dbui", "vista_kind" },
       max_count = 4,
       restricted_keys = {
         ["w"] = { "n", "x" },
