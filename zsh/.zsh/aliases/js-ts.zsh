@@ -1,8 +1,12 @@
 detectNpmOrYarn() {
-  if [[ -f $(groot)"/package-lock.json" ]]; then
-    echo "npm"
+  if git rev-parse --is-inside-work-tree &> /dev/null; then
+    if [[ -f $(groot)"/yarn.lock" ]]; then
+      echo "yarn"
+    else
+      echo "npm"
+    fi
   else
-    echo "yarn"
+    echo "npm"
   fi
 }
 
@@ -86,13 +90,25 @@ nrsto() {
 ni() {
   manager=$(detectNpmOrYarn);
   if [[ $manager == "npm" ]]; then
-    command="$manager install"
+    command="$manager install $1"
   else
-    command="$manager"
+    command="$manager $1"
   fi
 
   eval "$command"
 }
+
+niglobal() {
+  manager=$(detectNpmOrYarn);
+  if [[ $manager == "npm" ]]; then
+    command="$manager install -g $1"
+  else
+    command="$manager global add $1"
+  fi
+
+  eval "$command"
+}
+alias ng='niglobal'
 
 nin() {
   manager=$(detectNpmOrYarn);

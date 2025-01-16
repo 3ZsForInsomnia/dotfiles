@@ -55,7 +55,7 @@ fda() {
 # fzf bookmarks
 fbm() {
   local mark
-  mark=$(cat ~/.bookmarks 2> /dev/null | fzf +m) && jump "$mark"
+  mark=$(cat $XDG_DATA_HOME/bookmarks/.bookmarks 2> /dev/null | fzf +m) && jump "$mark"
 }
 
 # fkill - kill processes - list only the ones you can kill. Modified the earlier script.

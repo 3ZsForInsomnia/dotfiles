@@ -9,7 +9,7 @@ local js = { "ramda", "lodash-4", "node", "date_fns", "jest", "rxjs" }
 local react = merge({ "react", "react_router", "tailwindcss", "html" }, js)
 
 return {
-  { "sunaku/vim-dasht", event = "VeryLazy" },
+  -- { "sunaku/vim-dasht", event = "VeryLazy" },
   {
     "luckasRanarison/nvim-devdocs",
     event = "VeryLazy",

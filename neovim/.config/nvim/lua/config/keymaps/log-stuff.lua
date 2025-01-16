@@ -8,6 +8,8 @@ _G.logThis = function(str)
     return 'console.log("' .. str .. '", ' .. str .. ");"
   elseif ft == "lua" then
     return 'print("' .. str .. '", vim.inspect(' .. str .. "))"
+  elseif ft == "go" then
+    return 'fmt.Println("' .. str .. '", ' .. str .. ")"
   end
 
   return "echo $" .. str

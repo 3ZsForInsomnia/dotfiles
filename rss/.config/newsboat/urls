@@ -1,5 +1,11 @@
+################################################
+#### Xkcd/comics                            ####
+################################################
 http://xkcd.com/rss.xml "Humor"
 
+################################################
+#### Music                                  ####
+################################################
 http://www.metalhammer.co.uk/rss "Music"
 http://loudwire.com/feed/ "Music"
 http://www.blabbermouth.net/feed.rss "Music"
@@ -7,36 +13,68 @@ http://www.angrymetalguy.com/feed/ "Music"
 http://www.metalsucks.net/feed/rss/ "Music"
 http://feeds2.feedburner.com/metalinjection "Music"
 
+################################################
+#### CSS, Html, General Frontend            ####
+################################################
 https://css-tricks.com/feed/ "Misc Frontend"
 http://feeds.feedburner.com/JohnPapa "Misc Frontend"
 https://kentcdodds.com/blog/rss.xml "Misc Frontend"
 https://blog.nrwl.io/feed "Misc Frontend"
-https://blog.angular.io/feed "Angular"
-https://overreacted.io/rss.xml "React"
 http://rss1.smashingmagazine.com/feed/ "Design"
 http://feeds.feedburner.com/NirAndFar "Design"
 https://www.bennadel.com/rss "Web Development"
 http://feeds.feedburner.com/Bludice "Web Development"
-https://netbasal.com/feed "Angular"
-https://medium.com/feed/@vsavkin "Angular"
-http://facebook.github.io/react/feed.xml "React"
-http://feeds.feedburner.com/juristrumpflohner "Angular"
+http://feeds2.feedburner.com/leaverou "Misc Frontend"
 http://www.chriskrycho.com/feed.xml "Misc Frontend"
 https://coryrylan.com/feed.xml "Misc Frontend"
-http://feeds2.feedburner.com/leaverou "Misc Frontend"
 
+################################################
+#### Frontend Frameworks                    ####
+################################################
+https://blog.angular.io/feed "Angular"
+https://medium.com/feed/@vsavkin "Angular"
+https://netbasal.com/feed "Angular"
+http://feeds.feedburner.com/juristrumpflohner "Angular"
+https://overreacted.io/rss.xml "React"
+http://facebook.github.io/react/feed.xml "React"
+
+################################################
+#### Typescript                             ####
+################################################
 https://devblogs.microsoft.com/typescript/feed/
 http://blogs.msdn.com/b/typescript/rss.aspx "Programming"
 https://effectivetypescript.com/atom.xml
-https://cprss.s3.amazonaws.com/nodeweekly.com.xml
 
+################################################
+#### Node & JS                              ####
+################################################
+https://cprss.s3.amazonaws.com/nodeweekly.com.xml
+https://nodejs.org/en/feed/blog.xml
+https://javascriptweekly.com/
+https://nodesource.com/blog/rss
+
+################################################
+#### Python                                 ####
+################################################
 https://devblogs.microsoft.com/python/feed/
 https://realpython.com/atom.xml
 https://pbpython.com/feeds/all.atom.xml
 
+################################################
+#### Java                                   ####
+################################################
 https://feeds.feedblitz.com/baeldung "Programming"
 https://devblogs.microsoft.com/java/feed/
 
+################################################
+#### Golang                                 ####
+################################################
+https://go.dev/blog/feed.atom
+https://cprss.s3.amazonaws.com/golangweekly.com.xml
+
+################################################
+#### General Programming                    ####
+################################################
 https://this-week-in-neovim.org/rss "Programming"
 https://neovim.io/news.xml
 http://www.lua.org/news.rss "Programming"
@@ -44,12 +82,14 @@ https://medium.com/feed/@alpha2phi "Tech"
 https://phaazon.net/blog/feed "Tech"
 https://devblogs.microsoft.com/commandline/feed/
 https://itsfoss.com/rss/
-
 http://blog.cleancoder.com/atom.xml "Programming"
 http://feeds.feedburner.com/mariusschulz "Programming"
 http://thepracticaldev.com/feed "Programming"
 http://martinfowler.com/bliki/bliki.atom "Tech"
 
+################################################
+#### Misc Tech Blogs                        ####
+################################################
 http://artsy.github.io/feed "Server side"
 https://engineering.atspotify.com/feed/
 https://www.etsy.com/codeascraft/rss
@@ -59,7 +99,11 @@ https://engineering.fb.com/feed/
 https://github.blog/feed/
 https://github.blog/engineering.atom
 https://blog.developer.atlassian.com/feed/
+https://dropbox.tech/feed
 
+################################################
+#### Finance                                ####
+################################################
 https://abnormalreturns.com/feed/
 https://alephblog.com/feed/
 https://ritholtz.com/feed/
@@ -67,6 +111,9 @@ http://www.thereformedbroker.com/feed/ "Finance"
 http://awealthofcommonsense.com/feed/ "Finance"
 https://www.bloomberg.com/authors/ARbTQlRLRjE/matthew-s-levine.rss
 
+################################################
+#### Efficiency & Productivity Blogs        ####
+################################################
 https://fortelabs.com/blog/blog/feed/
 https://jamesclear.com/feed
 https://calnewport.com/blog/feed/
@@ -75,9 +122,14 @@ https://timeular.com/feed/
 https://www.eleanorkonik.com/blog/rss/
 https://nesslabs.com/blog/feed
 
+################################################
+#### Security                               ####
+################################################
 http://www.schneier.com/blog/index.rdf "Security"
 http://krebsonsecurity.com/feed/ "Security"
 http://feeds.feedburner.com/GoogleOnlineSecurityBlog "Security"
 
-https://hackernoon.com/feed
-https://dropbox.tech/feed
+################################################
+#### Misc Techy Things                      ####
+################################################
+# https://hackernoon.com/feed

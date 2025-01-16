@@ -140,14 +140,6 @@ function gstaa() {
     git stash apply $(git stash list | grep "$1" | cut -d: -f1 | head -n 1)
   fi
 }
-# List stashes in Peco, and apply the selected stash if any is chosen
-function gstala() {
-  a=$(gstl P)
-  if [ -n "$a" ]; then
-    b=$(echo $a C -d: -f1 TR -dc '0-9')
-    $(gstaa $b)
-  fi
-}
 stashThenRunAndApply() {
   $(gsta)
   eval $1
@@ -187,9 +179,9 @@ chore() {
 refactor() {
   eval 'gcb refactor/$1'
 }
-docs() {
-  eval 'gcb docs/$1'
-}
+# docs() {
+#   eval 'gcb docs/$1'
+# }
 style() {
   eval 'gcb style/$1'
 }

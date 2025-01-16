@@ -1,8 +1,7 @@
 local cmd = require("helpers").k_cmd
-local k = require("helpers").k
 local d = "<leader>D"
 local dc = function(command)
-  return "DBUI " .. command
+  return "DBUI" .. command
 end
 
 return {
@@ -24,6 +23,10 @@ return {
         key = d .. "o",
         action = dc(""),
         desc = "Open DBUI",
+      }),
+      cmd({
+        key = d .. "c",
+        action = dc("Close"),
       }),
       cmd({
         key = d .. "t",

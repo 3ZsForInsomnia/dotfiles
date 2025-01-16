@@ -17,10 +17,11 @@ return {
       auto_refresh = true,
       sort_branches = "-committerdate",
       disable_builtin_notifications = false,
-      use_telescope = false,
+      use_telescope = true,
       telescope_sorter = function()
         return require("telescope").extensions.fzf.native_fzf_sorter()
       end,
+      graph_style = "unicode",
       use_magit_keybindings = false,
       kind = "split",
       console_timeout = 2000,
@@ -78,11 +79,6 @@ return {
     },
     keys = {
       cmd({
-        key = g .. "s",
-        action = n("status"),
-        desc = "Status",
-      }),
-      cmd({
         key = g .. "c",
         action = n("commit"),
         desc = "Commit",
@@ -139,12 +135,4 @@ return {
       }),
     },
   },
-  -- {
-  --   "petertriho/cmp-git",
-  --   dependencies = { "hrsh7th/nvim-cmp" },
-  --   opts = {},
-  --   -- init = function()
-  --   --   table.insert(require("cmp").get_config().sources, { name = "git" })
-  --   -- end,
-  -- },
 }

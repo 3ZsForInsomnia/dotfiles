@@ -15,10 +15,13 @@ alias rmrf='rm -rf'
 alias cls='c; ls'
 
 alias src='j src'
-alias dots='j dots; renameTab "dots"; v'
+alias dots='j dots'
+alias dotsv='dots; renameTab "dots"; v'
 alias shots='j shots'
-alias shared='j shared'
-alias notes='j notes; renameTab "notes"; v'
+alias notes='j notes';
+alias notesv='notes; renameTab "notes"; v'
+alias work='j work; renameTab "work";'
+alias workv='work; v'
 
 alias zshrc="v $HOME/src/dotfiles/zsh/.zshrc"
 alias allZsh="v $HOME/src/dotfiles/zsh"

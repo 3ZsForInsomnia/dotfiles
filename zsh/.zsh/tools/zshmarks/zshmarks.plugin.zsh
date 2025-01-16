@@ -12,9 +12,9 @@ if [[ -z $BOOKMARKS_FILE ]] ; then
 fi
 
 # Check if $BOOKMARKS_FILE is a symlink.
-if [[ -L $BOOKMARKS_FILE ]]; then
-  BOOKMARKS_FILE=$(readlink $BOOKMARKS_FILE)
-fi
+# if [[ -L $BOOKMARKS_FILE ]]; then
+#   BOOKMARKS_FILE=$(readlink $BOOKMARKS_FILE)
+# fi
 
 # Create bookmarks_file it if it doesn't exist
 if [[ ! -f $BOOKMARKS_FILE ]]; then
@@ -28,7 +28,7 @@ _zshmarks_move_to_trash(){
     mkdir -p ~/.local/share/Trash/info ~/.local/share/Trash/files
     \mv "${BOOKMARKS_FILE}.bak" ~/.local/share/Trash/files/bookmarks-$label
     echo "[Trash Info]
-Path=/home/"$USER"/.bookmarks
+Path=$XDG_DATA_HOME/bookmarks/.bookmarks
 DeletionDate="`date +"%Y-%m-%dT%H:%M:%S"`"
 ">~/.local/share/Trash/info/bookmarks-$label.trashinfo
   elif [[ $(uname) = "Darwin" ]]; then

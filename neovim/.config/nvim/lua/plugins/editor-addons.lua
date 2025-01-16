@@ -2,6 +2,14 @@ local cmd = require("helpers").k_cmd
 
 return {
   {
+    "yoshio15/vim-trello",
+    event = "VeryLazy",
+    config = function()
+      vim.g.vimTrelloApiKey = os.getenv("TRELLO_API_KEY")
+      vim.g.vimTrelloToken = os.getenv("TRELLO_API_TOKEN")
+    end,
+  },
+  {
     "numToStr/Comment.nvim",
     config = true,
   },
@@ -77,7 +85,19 @@ return {
     "m4xshen/hardtime.nvim",
     event = "VeryLazy",
     opts = {
-      disabled_filetypes = { "netrw", "lazy", "mason", "neo-tree", "noice", "trouble", "dbui", "vista_kind" },
+      -- The "" filetype is for `nofile`, which is used by VimTrello
+      disabled_filetypes = {
+        "netrw",
+        "lazy",
+        "mason",
+        "neo-tree",
+        "noice",
+        "trouble",
+        "dbui",
+        "vista_kind",
+        "dbout",
+        "",
+      },
       max_count = 4,
       restricted_keys = {
         ["w"] = { "n", "x" },
@@ -98,12 +118,6 @@ return {
         },
       },
     },
-  },
-  {
-    "yoshio15/vim-trello",
-    config = function()
-      require("config.trello")
-    end,
   },
   {
     "OXY2DEV/markview.nvim",

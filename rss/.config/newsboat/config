@@ -6,9 +6,9 @@ keep-articles-days 7
 
 confirm-mark-feed-read no
 
-# browser "open -g -a 'Google Chrome' %u"
-browser "xdg-open '%u'"
-# browser "open %u" # Used for WSL
+browser "open -g -a 'Google Chrome' %u"     # Used for MacOS
+# browser "xdg-open '%u'"                   # Used for Linux
+# browser "open %u"                         # Used for WSL
 
 # unbind keys
 unbind-key ENTER

@@ -170,17 +170,17 @@ local createOpts = function()
         override_file_sorter = true, -- override the file sorter
         case_mode = "smart_case", -- or "ignore_case" or "respect_case"
       },
-      bookmarks = {
-        selected_browser = "chrome",
-        -- Either provide a shell command to open the URL
-        url_open_command = "open",
-        -- Show the full path to the bookmark instead of just the bookmark name
-        full_path = true,
-        -- Add a column which contains the tags for each bookmark for buku
-        buku_include_tags = false,
-        -- Provide debug messages
-        debug = false,
-      },
+      -- bookmarks = {
+      --   selected_browser = "chrome",
+      --   -- Either provide a shell command to open the URL
+      --   url_open_command = "open",
+      --   -- Show the full path to the bookmark instead of just the bookmark name
+      --   full_path = true,
+      --   -- Add a column which contains the tags for each bookmark for buku
+      --   buku_include_tags = false,
+      --   -- Provide debug messages
+      --   debug = false,
+      -- },
       heading = {
         treesitter = true,
       },
@@ -219,9 +219,17 @@ local loadExtensions = function(load_extension)
   load_extension("gpt")
   load_extension("conflicts")
   load_extension("persisted")
+  load_extension("bookmarks")
 end
 
 return {
+  {
+    "dhruvmanila/browser-bookmarks.nvim",
+    version = "*",
+    opts = {
+      selected_browser = "chrome",
+    },
+  },
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
@@ -235,7 +243,6 @@ return {
           .. "--build build --config Release && cmake --install build --prefix build",
       },
       "3ZsForInsomnia/telescope-angular",
-      "dhruvmanila/telescope-bookmarks.nvim",
       "debugloop/telescope-undo.nvim",
       "LinArcX/telescope-scriptnames.nvim",
       "crispgm/telescope-heading.nvim",
@@ -404,25 +411,12 @@ return {
           action = "DevdocsOpen tailwindcss",
           desc = "Tailwind",
         }),
-        cmd({
-          key = f .. "dd",
-          action = "DevdocsOpen date_fns",
-          desc = "Date fns",
-        }),
-        k({
-          key = f .. "do",
-          action = "DevdocsOpen ",
-          desc = "Devdocs - open selection",
-        }),
+        -- not sure why this didn't work with the `k` helper
+        vim.api.nvim_set_keymap("n", "<leader>fdo", ":DevdocsOpen ", { noremap = true, silent = true }),
         cmd({
           key = f .. "ds",
           action = t("luasnip"),
           desc = "Snippets",
-        }),
-        cmd({
-          key = f .. "de",
-          action = t("http list"),
-          desc = "HTTP",
         }),
         cmd({
           key = f .. "dm",

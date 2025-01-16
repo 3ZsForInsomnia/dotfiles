@@ -1,17 +1,14 @@
+# Basic files/directories
 .DS_Store
-resurrect
 .git/
-trello.*
-*work*
-.env
-packer_compiled
 node_modules
-rss/.newsboat/cache.db
-shada
-vim-sessions
-linear-client/config
 tags
 
+*work*
+.env
+
+# Miscellaneous stuff that shouldn't be committed
+resurrect
+rss/.newsboat/cache.db
 i3wm/.local/share/nvim
-caddy
-**/code/go
+linear-client/config

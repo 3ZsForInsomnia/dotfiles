@@ -58,7 +58,6 @@ brew "mysql", restart_service: true
 brew "neovim", args: ["HEAD"]
 brew "newsboat"
 brew "node"
-brew "peco"
 brew "postgresql@13", restart_service: true, link: true
 brew "pyenv"
 brew "pyenv-virtualenv"

@@ -9,15 +9,16 @@ function o() {
     str=$1
   fi
 
-  command="open $str"
+  open_command=""
+  if [[ "$MY_SYSTEM" == "mac" ]]; then
+    open_command="command open"
+  elif [[ "$MY_SYSTEM" == "linux" ]]; then
+    open_command="xdg-open"
+  fi
+
+  command="$open_command $str"
   eval "$command"
 }
-
-if [[ "$MY_SYSTEM" == "mac" ]]; then
-  alias open="command open"
-elif [[ "$MY_SYSTEM" == "linux" ]]; then
-  alias open="xdg-open"
-fi
 
 alias makeExecutable='chmod +x'
 alias seeMemory='free -m'
@@ -70,7 +71,7 @@ function default() {
   fi
 }
 
-isMacLinuxOrWin() {
+function isMacLinuxOrWin() {
   unameExists=$(command -v uname)
   if [[ -z "$unameExists" ]]; then
     echo "windows"
@@ -80,5 +81,49 @@ isMacLinuxOrWin() {
     echo "mac"
   elif [[ ${output} == "Linux" ]]; then
     echo "linux"
+  fi
+}
+
+# Returns 1 if the value is in the array, 0 otherwise
+# function is_arg_in_array() {
+#   # The argument to check
+#   local arg_to_check="$2"
+#   
+#   # Flag to check if the value is allowed
+#   local is_allowed=0
+#   
+#   # Loop through the allowed values
+#   for value in "${1[@]}"; do
+#     if [[ "$arg_to_check" == "$value" ]]; then
+#       is_allowed=1
+#       break
+#     fi
+#   done
+#   
+#   # Return based on whether the value is allowed
+#   if (( is_allowed )); then
+#     return 0  # Success
+#   else
+#     echo "Error: '$arg_to_check' is not an allowed value."
+#     echo "Allowed values are: ${1[@]}"
+#     return 1  # Failure
+#   fi
+# }
+
+# First arg: Message
+# Second arg: Optional title
+createNotification() {
+  if [[ "$MY_SYSTEM" == "mac" ]]; then
+    if [[ -z "$2" ]]; then
+      osascript -e "display notification \"$1\""
+    else
+      osascript -e "display notification \"$1\" with title \"$2\""
+    fi
+  elif [[ "$MY_SYSTEM" == "linux" ]]; then
+    if [[ -z "$2" ]]; then
+      notify-send "$1"
+    else
+      notify-send "$2" "$1"
+    fi
   fi
 }
