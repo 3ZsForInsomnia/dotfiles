@@ -10,7 +10,7 @@ brew_taps="espanso/espanso ankitpokhrel/jira-cli"
 brew_packages=("eza" "fzf" "fd" "ripgrep" "zsh-syntax-highlighting" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei")
 brew_packages_with_cask=("copyq" "witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass" "rectangle")
 
-npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest")
+npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh")
 
@@ -162,6 +162,7 @@ function unstowAll() {
 download_gist() {
   local gist_id=$1
   local destination_path=$2
+  local file_name=$3
 
   # Check if gh command is available
   if ! command -v gh &> /dev/null; then
@@ -176,7 +177,7 @@ download_gist() {
   fi
 
   # Fetch the gist contents using the gh CLI
-  if ! gist_content=$(gh gist view "$gist_id" --files | awk '/: /{print $2}'); then
+  if ! gist_content=$(gh gist view "$gist_id" --files | awk '/: /{print $3}'); then
     echo "Error: Failed to fetch gist. Please ensure the gist ID is correct."
     return 1
   fi
@@ -193,8 +194,8 @@ download_gist() {
 
 handle_all_gists() {
   local file_path="$1"
-  while IFS=' ' read -r arg1 arg2; do
-    download_gist "$arg1" "$arg2"
+  while IFS=' ' read -r arg1 arg2 arg3; do
+    download_gist "$arg1" "$arg2" "$arg3"
   done < "$file_path"
 }
 

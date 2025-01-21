@@ -84,32 +84,6 @@ function isMacLinuxOrWin() {
   fi
 }
 
-# Returns 1 if the value is in the array, 0 otherwise
-# function is_arg_in_array() {
-#   # The argument to check
-#   local arg_to_check="$2"
-#   
-#   # Flag to check if the value is allowed
-#   local is_allowed=0
-#   
-#   # Loop through the allowed values
-#   for value in "${1[@]}"; do
-#     if [[ "$arg_to_check" == "$value" ]]; then
-#       is_allowed=1
-#       break
-#     fi
-#   done
-#   
-#   # Return based on whether the value is allowed
-#   if (( is_allowed )); then
-#     return 0  # Success
-#   else
-#     echo "Error: '$arg_to_check' is not an allowed value."
-#     echo "Allowed values are: ${1[@]}"
-#     return 1  # Failure
-#   fi
-# }
-
 # First arg: Message
 # Second arg: Optional title
 createNotification() {

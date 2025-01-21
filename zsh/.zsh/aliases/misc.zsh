@@ -85,10 +85,21 @@ function unstowAll() {
   fi
 }
 
-# alias lcli="linear-client"
+updateInitScriptGist() {
+  gistId=""
+  if [[ "$MY_SYSTEM" == "mac" ]]; then
+    gistId="06976a1e2ae3f7f73814ec187e308d9a"
+  fi
 
-# alias mutt='neomutt'
-# alias ms='mailsync; notmuch new; mutt; mailsync &'
+  if [[ -z "$gistId" ]]; then
+    echo "No gistId found for system $MY_SYSTEM! Exiting."
+    exit 1;
+  fi
+
+  gh gist edit "$gistId" "$XDG_CODE_HOME"/dotfiles/startup/.startup-new/init-macos.zsh;
+}
+
+# alias lcli="linear-client"
 
 # alias scon="/Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli --uid $(id -u $(whoami))"
 # alias scon="/Applications/SelfControl.app/Contents/MacOS/org.eyebeam.SelfControl $(id -u $(whoami)) --install"

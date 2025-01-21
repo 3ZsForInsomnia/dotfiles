@@ -96,6 +96,7 @@ return {
         "dbui",
         "vista_kind",
         "dbout",
+        "chatgpt-input",
         "",
       },
       max_count = 4,

@@ -1,3 +1,11 @@
+local v = vim
+
+_G.git_status_to_messages = function()
+  local output = v.fn.system("git status")
+
+  v.notify(output, v.log.levels.INFO)
+end
+
 local cmd = require("helpers").k_cmd
 local n = function(command)
   return "Neogit " .. command
@@ -10,74 +18,26 @@ return {
     "NeogitOrg/neogit",
     event = "VeryLazy",
     opts = {
-      disable_signs = false,
-      disable_hint = false,
-      disable_context_highlighting = false,
-      disable_commit_confirmation = false,
-      auto_refresh = true,
-      sort_branches = "-committerdate",
-      disable_builtin_notifications = false,
-      use_telescope = true,
-      telescope_sorter = function()
-        return require("telescope").extensions.fzf.native_fzf_sorter()
-      end,
       graph_style = "unicode",
-      use_magit_keybindings = false,
-      kind = "split",
-      console_timeout = 2000,
-      auto_show_console = true,
-      remember_settings = true,
-      use_per_project_settings = true,
-      ignored_settings = {},
-      commit_popup = {
-        kind = "split",
+      process_spinner = true,
+      initial_branch_name = "feat(pod1-",
+      disable_line_numbers = false,
+      disable_relative_line_numbers = false,
+      commit_editor = {
+        staged_diff_split_kind = "auto",
       },
-      preview_buffer = {
-        kind = "split",
-      },
-      popup = {
-        kind = "split",
-      },
-      signs = {
-        section = { ">", "v" },
-        item = { ">", "v" },
-        hunk = { "", "" },
-      },
+      -- Each Integration is auto-detected through plugin presence, however, it can be disabled by setting to `false`
       integrations = {
+        telescope = true,
         diffview = true,
-      },
-      sections = {
-        untracked = {
-          folded = true,
-          hidden = false,
-        },
-        unstaged = {
-          folded = true,
-          hidden = false,
-        },
-        staged = {
-          folded = true,
-          hidden = false,
-        },
-        stashes = {
-          folded = true,
-          hidden = false,
-        },
-        unpulled = {
-          hidden = false,
-          folded = true,
-        },
-        unmerged = {
-          hidden = false,
-          folded = true,
-        },
-        recent = {
-          folded = true,
-          hidden = false,
-        },
       },
     },
     keys = {
+      cmd({
+        key = g .. "s",
+        action = "lua git_status_to_messages()",
+        desc = "Status",
+      }),
       cmd({
         key = g .. "c",
         action = n("commit"),

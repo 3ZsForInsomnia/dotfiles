@@ -6,6 +6,7 @@ tags
 
 *work*
 .env
+base.yml
 
 # Miscellaneous stuff that shouldn't be committed
 resurrect

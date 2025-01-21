@@ -1,133 +1,160 @@
 ################################################
 #### Xkcd/comics                            ####
 ################################################
-http://xkcd.com/rss.xml "Humor"
+"query:comics Articles:tags # \"comics\""
+http://xkcd.com/rss.xml comics
 
 ################################################
 #### Music                                  ####
 ################################################
-http://www.metalhammer.co.uk/rss "Music"
-http://loudwire.com/feed/ "Music"
-http://www.blabbermouth.net/feed.rss "Music"
-http://www.angrymetalguy.com/feed/ "Music"
-http://www.metalsucks.net/feed/rss/ "Music"
-http://feeds2.feedburner.com/metalinjection "Music"
+"query:music Articles:tags # \"music\""
+http://www.metalhammer.co.uk/rss music
+http://loudwire.com/feed/ music
+http://www.blabbermouth.net/feed.rss music
+http://www.angrymetalguy.com/feed/ music
+http://www.metalsucks.net/feed/rss/ music
+http://feeds2.feedburner.com/metalinjection music
 
+"query:tech Articles:tags # \"tech\""
 ################################################
 #### CSS, Html, General Frontend            ####
 ################################################
-https://css-tricks.com/feed/ "Misc Frontend"
-http://feeds.feedburner.com/JohnPapa "Misc Frontend"
-https://kentcdodds.com/blog/rss.xml "Misc Frontend"
-https://blog.nrwl.io/feed "Misc Frontend"
-http://rss1.smashingmagazine.com/feed/ "Design"
-http://feeds.feedburner.com/NirAndFar "Design"
-https://www.bennadel.com/rss "Web Development"
-http://feeds.feedburner.com/Bludice "Web Development"
-http://feeds2.feedburner.com/leaverou "Misc Frontend"
-http://www.chriskrycho.com/feed.xml "Misc Frontend"
-https://coryrylan.com/feed.xml "Misc Frontend"
+"query:frontend Articles:tags # \"frontend\""
+https://css-tricks.com/feed/ tech frontend
+http://feeds.feedburner.com/JohnPapa tech frontend
+https://kentcdodds.com/blog/rss.xml tech frontend
+https://blog.nrwl.io/feed tech frontend
+http://feeds2.feedburner.com/leaverou tech frontend
+http://www.chriskrycho.com/feed.xml tech frontend
+https://coryrylan.com/feed.xml tech frontend
+
+"query:design Articles:tags # \"design\""
+http://rss1.smashingmagazine.com/feed/ tech design
+http://feeds.feedburner.com/NirAndFar tech design
+
+"query:webdev Articles:tags # \"webdev\""
+https://www.bennadel.com/rss tech webdev
+http://feeds.feedburner.com/Bludice tech webdev
 
 ################################################
 #### Frontend Frameworks                    ####
 ################################################
-https://blog.angular.io/feed "Angular"
-https://medium.com/feed/@vsavkin "Angular"
-https://netbasal.com/feed "Angular"
-http://feeds.feedburner.com/juristrumpflohner "Angular"
-https://overreacted.io/rss.xml "React"
-http://facebook.github.io/react/feed.xml "React"
+"query:angular Articles:tags # \"angular\""
+https://blog.angular.io/feed tech angular
+https://medium.com/feed/@vsavkin tech angular
+https://netbasal.com/feed tech angular
+http://feeds.feedburner.com/juristrumpflohner tech angular
 
+"query:react Articles:tags # \"react\""
+https://overreacted.io/rss.xml tech react
+http://facebook.github.io/react/feed.xml tech react
+
+"query:langs Articles:tags # \"langs\""
 ################################################
 #### Typescript                             ####
 ################################################
-https://devblogs.microsoft.com/typescript/feed/
-http://blogs.msdn.com/b/typescript/rss.aspx "Programming"
-https://effectivetypescript.com/atom.xml
+"query:ts Articles:tags # \"ts\""
+https://devblogs.microsoft.com/typescript/feed/ tech langs ts
+http://blogs.msdn.com/b/typescript/rss.aspx tech langs ts
+https://effectivetypescript.com/atom.xml tech langs ts
 
 ################################################
 #### Node & JS                              ####
 ################################################
-https://cprss.s3.amazonaws.com/nodeweekly.com.xml
-https://nodejs.org/en/feed/blog.xml
-https://javascriptweekly.com/
-https://nodesource.com/blog/rss
+"query:node Articles:tags # \"node\""
+https://cprss.s3.amazonaws.com/nodeweekly.com.xml tech langs node
+https://nodejs.org/en/feed/blog.xml tech langs node
+https://javascriptweekly.com/ tech langs node
+https://nodesource.com/blog/rss tech langs node
 
 ################################################
 #### Python                                 ####
 ################################################
-https://devblogs.microsoft.com/python/feed/
-https://realpython.com/atom.xml
-https://pbpython.com/feeds/all.atom.xml
+"query:python Articles:tags # \"python\""
+https://devblogs.microsoft.com/python/feed/ tech langs python
+https://realpython.com/atom.xml tech langs python
+https://pbpython.com/feeds/all.atom.xml tech langs python
 
 ################################################
 #### Java                                   ####
 ################################################
-https://feeds.feedblitz.com/baeldung "Programming"
-https://devblogs.microsoft.com/java/feed/
+"query:java Articles:tags # \"java\""
+https://feeds.feedblitz.com/baeldung tech langs java
+https://devblogs.microsoft.com/java/feed/ tech langs java
 
 ################################################
 #### Golang                                 ####
 ################################################
-https://go.dev/blog/feed.atom
-https://cprss.s3.amazonaws.com/golangweekly.com.xml
+"query:golang Articles:tags # \"golang\""
+https://go.dev/blog/feed.atom tech langs golang
+https://cprss.s3.amazonaws.com/golangweekly.com.xml tech langs golang
+
+################################################
+#### Nvim & Lua                             ####
+################################################
+"query:nvim Articles:tags # \"nvim\""
+https://this-week-in-neovim.org/rss tech nvim
+https://neovim.io/news.xml tech nvim
+http://www.lua.org/news.rss tech nvim
+https://medium.com/feed/@alpha2phi tech nvim
+https://phaazon.net/blog/feed tech nvim
 
 ################################################
 #### General Programming                    ####
 ################################################
-https://this-week-in-neovim.org/rss "Programming"
-https://neovim.io/news.xml
-http://www.lua.org/news.rss "Programming"
-https://medium.com/feed/@alpha2phi "Tech"
-https://phaazon.net/blog/feed "Tech"
-https://devblogs.microsoft.com/commandline/feed/
-https://itsfoss.com/rss/
-http://blog.cleancoder.com/atom.xml "Programming"
-http://feeds.feedburner.com/mariusschulz "Programming"
-http://thepracticaldev.com/feed "Programming"
-http://martinfowler.com/bliki/bliki.atom "Tech"
+"query:general Articles:tags # \"general\""
+https://devblogs.microsoft.com/commandline/feed/ tech general
+https://itsfoss.com/rss/ tech general
+http://blog.cleancoder.com/atom.xml tech general
+http://feeds.feedburner.com/mariusschulz tech general
+http://thepracticaldev.com/feed tech general
+http://martinfowler.com/bliki/bliki.atom tech general
 
 ################################################
-#### Misc Tech Blogs                        ####
+#### Company Tech Blogs                     ####
 ################################################
-http://artsy.github.io/feed "Server side"
-https://engineering.atspotify.com/feed/
-https://www.etsy.com/codeascraft/rss
-https://medium.com/feed/airbnb-engineering
-https://netflixtechblog.com/feed
-https://engineering.fb.com/feed/
-https://github.blog/feed/
-https://github.blog/engineering.atom
-https://blog.developer.atlassian.com/feed/
-https://dropbox.tech/feed
+"query:company Articles:tags # \"company\""
+http://artsy.github.io/feed tech company
+https://engineering.atspotify.com/feed/ tech company
+https://www.etsy.com/codeascraft/rss tech company
+https://medium.com/feed/airbnb-engineering tech company
+https://netflixtechblog.com/feed tech company
+https://engineering.fb.com/feed/ tech company
+https://github.blog/feed/ tech company
+https://github.blog/engineering.atom tech company
+https://blog.developer.atlassian.com/feed/ tech company
+https://dropbox.tech/feed tech company
 
 ################################################
 #### Finance                                ####
 ################################################
-https://abnormalreturns.com/feed/
-https://alephblog.com/feed/
-https://ritholtz.com/feed/
-http://www.thereformedbroker.com/feed/ "Finance"
-http://awealthofcommonsense.com/feed/ "Finance"
-https://www.bloomberg.com/authors/ARbTQlRLRjE/matthew-s-levine.rss
+"query:finance Articles:tags # \"finance\""
+https://abnormalreturns.com/feed/ finance
+https://alephblog.com/feed/ finance
+https://ritholtz.com/feed/ finance
+http://www.thereformedbroker.com/feed/ finance
+http://awealthofcommonsense.com/feed/ finance
+https://www.bloomberg.com/authors/ARbTQlRLRjE/matthew-s-levine.rss finance
 
 ################################################
 #### Efficiency & Productivity Blogs        ####
 ################################################
-https://fortelabs.com/blog/blog/feed/
-https://jamesclear.com/feed
-https://calnewport.com/blog/feed/
-http://blog.trello.com/feed/
-https://timeular.com/feed/
-https://www.eleanorkonik.com/blog/rss/
-https://nesslabs.com/blog/feed
+"query:productivity Articles:tags # \"productivity\""
+https://fortelabs.com/blog/blog/feed/ productivity
+https://jamesclear.com/feed productivity
+https://calnewport.com/blog/feed/ productivity
+http://blog.trello.com/feed/ productivity
+https://timeular.com/feed/ productivity
+https://www.eleanorkonik.com/blog/rss/ productivity
+https://nesslabs.com/blog/feed productivity
 
 ################################################
 #### Security                               ####
 ################################################
-http://www.schneier.com/blog/index.rdf "Security"
-http://krebsonsecurity.com/feed/ "Security"
-http://feeds.feedburner.com/GoogleOnlineSecurityBlog "Security"
+"query:security Articles:tags # \"security\""
+http://www.schneier.com/blog/index.rdf tech security
+http://krebsonsecurity.com/feed/ tech security
+http://feeds.feedburner.com/GoogleOnlineSecurityBlog tech security
 
 ################################################
 #### Misc Techy Things                      ####

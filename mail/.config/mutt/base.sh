@@ -1,1 +1,0 @@
-export MAILSYNC_MUTE=1

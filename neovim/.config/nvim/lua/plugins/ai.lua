@@ -105,7 +105,7 @@ return {
     opts = {
       openai_params = {
         model = "gpt-4o-2024-05-13",
-        max_tokens = 1500,
+        max_tokens = 2400,
         temperature = 1,
       },
     },
