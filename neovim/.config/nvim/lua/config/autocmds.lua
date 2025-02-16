@@ -112,3 +112,51 @@ au("CursorHold", {
   pattern = "*",
   command = "call E()",
 })
+
+_G.extended_search_count = function()
+  if vim.v.hlsearch == 0 then
+    -- Clear existing extmarks if highlighting is off
+    local bufnr = a.nvim_get_current_buf()
+    local ns_id = a.nvim_create_namespace("search_status_virtual_text")
+    a.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
+    return
+  end
+
+  local shortmess_str = vim.o.shortmess
+
+  if not shortmess_str:find("S") then
+    return
+  end
+
+  local search_count_options = { maxcount = 100000, timeout = 500 }
+  local sinfo = vim.fn.searchcount(search_count_options)
+
+  local search_stat = sinfo.incomplete > 0 and "[?/?]"
+    or sinfo.total > 0 and ("[%s/%s]"):format(sinfo.current, sinfo.total)
+    or nil
+
+  if search_stat ~= nil then
+    local bufnr = a.nvim_get_current_buf()
+    local line = a.nvim_win_get_cursor(0)[1] - 1
+
+    local ns_id = a.nvim_create_namespace("search_status_virtual_text")
+    a.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
+
+    a.nvim_buf_set_extmark(bufnr, ns_id, line, -1, {
+      virt_text = { { search_stat, "Search" } },
+      virt_text_pos = "eol",
+    })
+  end
+end
+
+a.nvim_exec(
+  [[
+  augroup UpdateSearchCount
+    autocmd!
+    autocmd CmdlineEnter /,\? lua extended_search_count()
+    autocmd CmdlineLeave /,\? lua extended_search_count()
+    autocmd CursorMoved,CursorMovedI * lua extended_search_count()
+  augroup END
+]],
+  false
+)

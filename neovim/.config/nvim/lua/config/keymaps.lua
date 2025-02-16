@@ -14,13 +14,8 @@ d("n", "<leader>K")
 d("n", "<leader>fn")
 d("n", "<leader>fT")
 d("n", "<leader>ft")
--- d("n", "<leader>gB")
 d("n", "<leader>gb")
--- d("n", "<leader>gf")
--- d("n", "<leader>gG")
 d("n", "<leader>gg")
--- d("n", "<leader>gL")
--- d("n", "<leader>gl")
 d("n", "<leader>la")
 d("n", "<leader><TAB>[")
 d("n", "<leader><TAB>]")
@@ -39,7 +34,15 @@ local k_cmd = helpers.k_cmd
 
 local l = "<leader>"
 
-k_cmd({ key = l .. ",", action = "nohlsearch", desc = "Clear search highlights" })
+_G.clear_search_status_virtual_text = function()
+  vim.cmd("nohlsearch")
+
+  local bufnr = vim.api.nvim_get_current_buf()
+  local ns_id = vim.api.nvim_create_namespace("search_status_virtual_text")
+  vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
+end
+
+k_cmd({ key = l .. ",", action = "lua clear_search_status_virtual_text()", desc = "Clear search highlights" })
 k_cmd({ key = l .. "zz", action = "w", desc = "Save file" })
 
 k({ key = "<esc>", action = "<C-\\><C-n>", desc = "Escape but for terminal mode", mode = "t" })

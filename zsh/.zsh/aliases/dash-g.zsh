@@ -9,6 +9,7 @@ alias -g T='| tail'
 alias -g W='| wc -l'
 
 alias -g J='| jq'
+alias -g Z='| fx'
 alias -g C='| cut'
 alias -g TR='| tr'
 

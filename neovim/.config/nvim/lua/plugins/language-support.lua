@@ -26,7 +26,6 @@ return {
       }),
     },
   },
-  { "bennypowers/nvim-regexplainer", event = "VeryLazy" },
   { "vuki656/package-info.nvim", config = true, event = "VeryLazy" },
   {
     "max397574/colortils.nvim",

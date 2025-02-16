@@ -1,0 +1,37 @@
+[user]
+	name = Zachary Levine
+	email = zach@zjlevine.dev
+
+[core]
+	excludesfile = ~/.config/git/.gitignore_global
+	editor = nvim
+  pager = delta
+
+[alias]
+	ctags = !.git/hooks/ctags
+
+[init]
+	templatedir = ~/.config/git/.git_template
+
+[push]
+	autoSetupRemote = true
+
+[merge]
+  tool = nvim
+
+[mergetool "nvim"]
+  cmd = nvim -f -c "DiffviewOpen"
+
+[mergetool]
+  prompt = false
+
+[delta]
+	navigate = true
+  dark = true
+  side-by-side = true
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta "interactive"]
+	keep-plus-minus-markers = false

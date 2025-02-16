@@ -10,8 +10,7 @@ hbin="$hloc/bin"
 # Global variables   #
 ######################
 
-export FZF_DEFAULT_COMMAND='fd -H --type f'
-export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border --bind "ctrl-d:preview-down" --bind "ctrl-u:preview-up"'
+# export TERM="wezterm"
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 export TZ='America/New_York'
@@ -28,14 +27,25 @@ export XDG_CODE_HOME=$HOME/src
 
 export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompcache"
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python/history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
 export PGPASSFILE="$XDG_DATA_HOME/psql/.pgpass"
-export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export ZSH_CONFIG_DIR="$HOME/.zsh"
 export BOOKMARKS_FILE="$XDG_DATA_HOME/bookmarks/.bookmarks"
 
+export JARS="$XDG_CODE_HOME/java_jars"
+export SCHEMASPY_LOCATION="$JARS/schemaspy/schemaspy.jar"
+export POSTGRES_JDBC_LOCATION="$JARS/postgres/postgres.jar"
+
+export FZF_DEFAULT_COMMAND='fd -H --type f'
+export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border --bind "ctrl-d:preview-down" --bind "ctrl-u:preview-up"'
+
+export FX_THEME=6
+
 export WORK_PATH="$XDG_CODE_HOME/work"
+
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17/bin"
 
 export NPM_PACKAGES="$XDG_DATA_HOME/npm"
 export NPM_CONFIG_PREFIX="$NPM_PACKAGES"
@@ -81,7 +91,7 @@ go=$GOPATH/bin
 # Note that this assumes postgres is installed via homebrew! This must be updated for linux
 psql=/opt/homebrew/opt/postgresql@12/bin
 
-export PATH="$go:$wez:$cargo:$xdgbin:$ubin:$ulobin:$hlobin:$hbin:$py3:$pybin:$nbin:$maven:$nvim:$psql:$PATH"
+export PATH="$JAVA_HOME:$go:$wez:$cargo:$xdgbin:$ubin:$ulobin:$hlobin:$hbin:$py3:$pybin:$nbin:$maven:$nvim:$psql:$PATH"
 
 # Must happen after PATH is set
 eval "$(pyenv init --path)"
@@ -92,8 +102,10 @@ eval "$(pyenv init --path)"
 
 if [[ $(uname) == "Darwin" ]]; then
   export MY_SYSTEM="mac"
+  export BROWSER="google-chrome"
 elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
   export MY_SYSTEM="linux"
+  export BROWSER="google-chrome"
 else
   export MY_SYSTEM="windows"
   # Required for opening browser in WSL

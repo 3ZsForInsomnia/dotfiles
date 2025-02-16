@@ -50,6 +50,7 @@ alias lc='wc -l'
 
 # $1=file extension
 lineCountForFolder() {
+  echo "Consider using `tokei` instead (it should already be installed)"
   if [ -z "$1" ]; then
     fd --glob '*.*' | xargs wc -l
   else

@@ -7,8 +7,8 @@
 paths_to_check=("$HOME/.cache" "$HOME/.local/state" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.config" "$HOME/.local/bin" "$HOME/src" "$HOME/Downloads/slack" "$HOME/Downloads/postman" "$HOME/Pictures/screenshots" "$HOME/Documents/test data" "$HOME/Documents/sync" "$HOME/.local/state/psql" "$HOME/.cache/zsh" "$HOME/.local/state/zsh" "$HOME/.local/state/python" "$HOME/.local/share/psql" "$HOME/.local/state/less" "$HOME/.local/share/bookmarks" "$HOME/src/work" "$HOME/.local/share/npm" "$HOME/.local/share/pyenv")
 
 brew_taps="espanso/espanso ankitpokhrel/jira-cli"
-brew_packages=("eza" "fzf" "fd" "ripgrep" "zsh-syntax-highlighting" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei")
-brew_packages_with_cask=("copyq" "witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass" "rectangle")
+brew_packages=("eza" "fzf" "fd" "ripgrep" "zsh-syntax-highlighting" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei" "graphviz" "git-delta")
+brew_packages_with_cask=("copyq" "witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass-cli" "rectangle")
 
 npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen")
 
@@ -478,6 +478,14 @@ install_dependencies() {
   npm install -g "$npm_packages_to_install"
 
   echo "Step 2c: Finished installing global npm packages!"
+
+  echo "Step 2d: Download misc other dependencies..."
+
+  mkdir "$XDG_CODE_HOME/schemaspy"
+  curl -L https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-6.2.4.jar \
+    --output "$XDG_CODE_HOME"/schemaspy/schemaspy.jar
+
+  echo "Step 2d: Finished downloading misc other dependencies!"
 }
 
 generate_ssh_keys() {
@@ -649,8 +657,9 @@ print_manual_steps() {
   echo "Step 8c: Setup Obsidian sync"
   echo "Step 8d: Log into Chrome, make it default web browser"
 
-  other_apps="Slack, Postman, Lastpass, Tidal, Copilot in Neovim"
-  echo "Step 8e: Log into other apps: $other_apps"
+  other_apps=("Slack" "Postman" "Lastpass" "Lastpass Cli" "Tidal" "Copilot in Neovim")
+  echo "Log into each of these manually: "
+  echo_each_element "${other_apps[@]}"
 }
 
 print_macos_steps() {

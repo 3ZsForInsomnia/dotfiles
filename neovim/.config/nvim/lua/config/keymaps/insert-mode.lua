@@ -1,5 +1,25 @@
 local k = require("helpers").k
 
+--
+-- <C-w>: Delete one word backwards
+-- <C-u>: Delete to the beginning of the line
+-- <C-t>: Indent current line
+--
+
+k({
+  key = "<C-z>",
+  action = "<Cmd>lua require('telescope.builtin').spell_suggest()<CR>",
+  desc = "Spellcheck current or previous word",
+  mode = "i",
+})
+
+-- Just here because the other spellcheck thing is here
+k({
+  key = "z1",
+  action = "[s1z=",
+  desc = "Auto spellcheck previous mispelled word",
+})
+
 k({
   key = "<C-c>",
   action = "<esc>`^",
@@ -16,14 +36,14 @@ k({
 
 k({
   key = "<C-;>",
-  action = "<C-o>w",
+  action = "<C-o>e<C-o>l",
   desc = "Move one word forwards",
   mode = "i",
 })
 
 k({
   key = "<C-x>",
-  action = "<c-o>dw",
+  action = "<c-o>de",
   desc = "Delete word forwards",
   mode = "i",
 })

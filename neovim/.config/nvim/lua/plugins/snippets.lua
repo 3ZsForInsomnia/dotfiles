@@ -84,7 +84,7 @@ return {
       },
       {
         "saghen/blink.compat",
-        optional = true, -- make optional so it's only enabled if any extras need it
+        optional = true,
         opts = {},
         version = not g.lazyvim_blink_main and "*",
       },
@@ -96,26 +96,9 @@ return {
     opts = {
       snippets = {
         preset = "luasnip",
-        -- expand = function(snippet)
-        --   require("luasnip").lsp_expand(snippet)
-        -- end,
-        -- active = function(filter)
-        --   if filter and filter.direction then
-        --     return require("luasnip").jumpable(filter.direction)
-        --   end
-        --   return require("luasnip").in_snippet()
-        -- end,
-        -- jump = function(direction)
-        --   require("luasnip").jump(direction)
-        -- end,
       },
       appearance = {
-        -- sets the fallback highlight groups to nvim-cmp's highlight groups
-        -- useful for when your theme doesn't support blink.cmp
-        -- will be removed in a future release, assuming themes add support
-        use_nvim_cmp_as_default = false,
-        -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- adjusts spacing to ensure icons are aligned
+        use_nvim_cmp_as_default = true,
         nerd_font_variant = "mono",
         kind_icons = {
           Copilot = "",
@@ -153,7 +136,6 @@ return {
       },
       completion = {
         accept = {
-          -- experimental auto-brackets support
           auto_brackets = {
             enabled = true,
           },
@@ -181,13 +163,8 @@ return {
           enabled = g.ai_cmp,
         },
       },
-
-      -- experimental signature help support
       signature = { enabled = true },
-
       sources = {
-        -- adding any nvim-cmp sources here will enable them
-        -- with blink.compat
         compat = {},
         default = { "lsp", "snippets", "path", "snippets", "buffer", "copilot", "dadbod" },
         cmdline = {},
@@ -218,8 +195,6 @@ return {
     },
     ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
     config = function(_, opts)
-      -- opts.sources.providers.snippets.opts.search_paths
-
       -- setup compat sources
       local enabled = opts.sources.default
       for _, source in ipairs(opts.sources.compat or {}) do

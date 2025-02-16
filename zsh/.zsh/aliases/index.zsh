@@ -2,6 +2,7 @@ alias_path="$HOME/.zsh/aliases"
 
 source "$alias_path/dash-g.zsh"
 source "$alias_path/dates.zsh"
+source "$alias_path/db.zsh"
 source "$alias_path/docker.zsh"
 source "$alias_path/git.zsh"
 source "$alias_path/golang.zsh"

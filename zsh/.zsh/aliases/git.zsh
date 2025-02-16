@@ -194,7 +194,6 @@ gcoo() {
 
 ### Revert and log
 alias gundo='g revert'
-alias gpr='g pull-request'
 alias lgl='glog --color=always L'
 alias lg='glg --color=always L'
 
@@ -204,12 +203,11 @@ alias gpause='git add . && git cm "<back>" --no-verify'
 alias gback='git reset HEAD~1'
 
 ### Conventional Commits
-# alias gcz='git cz'
 # gczpr() {
 #   eval 'ga . && gcob $1 && git cz && ggp && gpr'
 # }
 
-# alias gacz='ga . && gcz'
+alias gacz='ga .; cz'
 # alias gaczp='gacz && ggp'
 
 # alias gaczpmr='gacz && gaczpmrPostCommit'

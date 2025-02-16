@@ -101,7 +101,7 @@ local function window_for_choiceNode(choiceNode)
   -- shows window at a beginning of choiceNode.
   local win = vim.api.nvim_open_win(buf, false, {
     relative = "win",
-    width = w,
+    width = w or 0,
     height = h,
     bufpos = choiceNode.mark:pos_begin_end(),
     style = "minimal",

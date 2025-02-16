@@ -9,13 +9,14 @@ return {
 	command_palette_font_size = 16,
 	underline_position = -3,
 	underline_thickness = 2,
+	hide_tab_bar_if_only_one_tab = true,
 	switch_to_last_active_tab_when_closing_tab = true,
 	use_fancy_tab_bar = false,
 	tab_bar_at_bottom = true,
 	status_update_interval = 1000,
 	window_decorations = "RESIZE",
 	window_frame = {
-		font_size = 10,
+		font_size = 12,
 		active_titlebar_bg = "#000",
 		inactive_titlebar_bg = "#666",
 	},
@@ -35,5 +36,6 @@ return {
 		saturation = 0.6,
 		brightness = 0.4,
 	},
+	bidi_enabled = true,
 	-- wsl_domains = wslconfig.config,
 }

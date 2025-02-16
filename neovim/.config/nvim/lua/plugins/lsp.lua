@@ -109,6 +109,7 @@ return {
           "bash",
           "css",
           "gitignore",
+          "go",
           "graphql",
           "html",
           "http",

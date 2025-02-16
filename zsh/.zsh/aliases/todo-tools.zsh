@@ -1,4 +1,4 @@
-alias jirame="jira issue list -a$(jira me)"
+alias jirame="jira issue list -a$(jira me) -s~Done -s~Canceled"
 
 alias jiraopen="jira issue list -sopen"
 

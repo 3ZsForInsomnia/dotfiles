@@ -14,19 +14,23 @@ return {
           min = 8,
           max = 12,
         },
+        padding = {
+          1,
+          1,
+        },
+      },
+      layout = {
+        width = {
+          max = 45,
+        },
       },
     },
   },
   {
     "chentoast/marks.nvim",
+    event = "VeryLazy",
     opts = {
-      default_mappings = true,
-      builtin_marks = { ".", "<", ">", "^" },
-      cyclic = true,
       force_write_shada = true,
-      refresh_interval = 250,
-      sign_priority = { lower = 10, upper = 15, builtin = 8, bookmark = 20 },
-      excluded_filetypes = {},
       -- Bookmark as confusing/with a question
       bookmark_0 = {
         sign = "",
@@ -70,6 +74,12 @@ return {
         prev_bookmark7 = "[7",
         prev_bookmark6 = "[6",
         prev_bookmark5 = "[5",
+        delete_bookmark0 = "dm0",
+        delete_bookmark9 = "dm9",
+        delete_bookmark8 = "dm8",
+        delete_bookmark7 = "dm7",
+        delete_bookmark6 = "dm6",
+        delete_bookmark5 = "dm5",
       },
     },
   },
@@ -162,5 +172,9 @@ return {
       { "<leader>st", false },
       { "<leader>sT", false },
     },
+  },
+  {
+    "OXY2DEV/helpview.nvim",
+    lazy = false,
   },
 }

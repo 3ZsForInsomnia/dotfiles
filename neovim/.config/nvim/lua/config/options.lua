@@ -11,6 +11,10 @@ local h = a.nvim_set_hl
 
 local home = v.fn.expand("$HOME") .. "/"
 
+c([[
+set shortmess +=S
+]])
+
 o.fillchars = {
   foldopen = "󰅀",
   foldclose = "󰅂",
@@ -30,33 +34,28 @@ o.showbreak = "↳ "
 g.notagrelative = true
 
 o.backup = true
--- o.backupdir = "/home/zach/.local/state/nvim/backup//"
 o.backupdir = home .. ".local/state/nvim/backup//"
 o.shada = "!,'100,<50,s10,h"
--- o.shadafile = "/home/zach/vim-sessions/main.shada"
 o.shadafile = home .. ".local/state/nvim/vim-sessions/main.shada"
 
 o.spell = true
 o.spelllang = "en_us"
--- o.spellfile = "/home/zach/.config/nvim/spell/.utf-8.add"
 o.spellfile = home .. ".config/nvim/spell/.utf-8.add"
 o.spelloptions = "camel,noplainbuffer"
 
 o.swapfile = false
 o.grepprg = "rg --vimgrep --no-heading"
--- Enables reading vimrc in folder where vim is opened
-o.exrc = true
--- Ensures other vimrc files cannot write/do more than o.variables and whatnot
-o.secure = true
+o.exrc = true -- Enables reading vimrc in folder where vim is opened
+o.secure = true -- Ensures other vimrc files cannot write/do more than o.variables and whatnot
 
 o.timeout = true
 o.timeoutlen = 300
 o.updatetime = 75
 
 o.wrap = true
+o.breakindent = true
+o.showbreak = "󱞩" .. string.rep(" ", 3) -- Make it so that long lines wrap smartly
 
--- require("keys")
--- require("save-restore-session")
 c([[ packadd cfilter ]])
 
 g.python3_host_prog = "/usr/bin/python3"

@@ -51,6 +51,9 @@ wk.add({
   { "<leader>gd", group = "Diffview" },
   { "<leader>gh", group = "Gitsigns" },
   { "<leader>gn", group = "Neogit" },
+  { "<leader>gp", group = "Octo PRs" },
+  { "<leader>gc", group = "Octo Comments, Threads, Reactions" },
+  { "<leader>gr", group = "Octo Reviews, Assignees" },
 
   { "<leader>l", group = "Location list" },
   { "<leader>n", group = "Obsidian" },
@@ -125,5 +128,4 @@ wk.add({
   --
   { "<C-w>o", desc = "Fullscreen current buffer if in buffer split" },
   { "<C-w>c", desc = "Close split" },
-  { "<C-k>", desc = "Show signature" },
 })

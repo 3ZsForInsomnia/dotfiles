@@ -7,6 +7,7 @@ return {
     opts = {
       bigfile = { enabled = true },
       dim = { enabled = true },
+      image = { enabled = true },
       indent = { enabled = true },
       input = { enabled = true },
       notifier = { enabled = true },
