@@ -12,7 +12,13 @@ return {
     event = "VeryLazy",
     branch = "canary",
     dependencies = {
-      { "zbirenbaum/copilot.lua" },
+      {
+        "zbirenbaum/copilot.lua",
+        opts = {
+          suggestion = { enabled = false },
+          panel = { enabled = false },
+        },
+      },
       { "nvim-lua/plenary.nvim" },
     },
     -- opts = {},

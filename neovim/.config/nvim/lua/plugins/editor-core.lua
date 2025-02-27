@@ -1,8 +1,11 @@
 local k_cmd = require("helpers").k_cmd
+local k = require("helpers").k
 local l = "<leader>"
 local z = l .. "zs"
 local ll = l .. "ll"
 local a = 'lua require("ts-node-action").'
+
+local bk = "<leader>bl"
 
 return {
   {
@@ -81,6 +84,33 @@ return {
         delete_bookmark6 = "dm6",
         delete_bookmark5 = "dm5",
       },
+    },
+    keys = {
+      k_cmd({
+        key = bk .. "a",
+        action = "MarksQFListAll",
+        desc = "List all marks everywhere",
+      }),
+      k_cmd({
+        key = bk .. "g",
+        action = "MarksQFListGlobal",
+        desc = "List all global marks",
+      }),
+      k_cmd({
+        key = bk .. "l",
+        action = "MarksQFListBuf",
+        desc = "List all local marks in loclist",
+      }),
+      k({
+        key = bk .. "G",
+        action = ":BookmarksQFList ",
+        desc = "List all bookmarks in group <x>",
+      }),
+      k_cmd({
+        key = bk .. "A",
+        action = "BookmarksQFListAll",
+        desc = "List all bookmarks in all groups",
+      }),
     },
   },
   {

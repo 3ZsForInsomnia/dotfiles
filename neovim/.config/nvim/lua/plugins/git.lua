@@ -53,20 +53,20 @@ return {
       },
     },
     keys = {
-      -- {
-      --   gn .. "a",
-      --   function()
-      --     git_add_all()
-      --   end,
-      --   desc = "Add all",
-      -- },
-      -- {
-      --   gn .. "s",
-      --   function()
-      --     git_status_to_messages()
-      --   end,
-      --   desk = "Status",
-      -- },
+      {
+        gn .. "a",
+        function()
+          git_add_all()
+        end,
+        desc = "Add all",
+      },
+      {
+        gn .. "s",
+        function()
+          git_status_to_messages()
+        end,
+        desc = "Status",
+      },
       cmd({
         key = gn .. "c",
         action = n("commit"),
@@ -143,7 +143,7 @@ return {
         desc = "Octo Search",
       }),
       cmd({
-        key = g .. "on",
+        key = g .. "o",
         action = o("notification list"),
         desc = "Notifications",
       }),

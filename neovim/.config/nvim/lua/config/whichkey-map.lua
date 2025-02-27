@@ -15,6 +15,7 @@ wk.add({
   --
   { "<leader>b", group = "Buffers" },
   { "<leader>bh", group = "Horizontal splits" },
+  { "<leader>bl", group = "Marks & Bookmarks" },
   { "<leader>bv", group = "New vertical split" },
 
   --

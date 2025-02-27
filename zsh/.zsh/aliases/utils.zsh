@@ -102,3 +102,37 @@ createNotification() {
     fi
   fi
 }
+
+function find_index {
+  local input="$1"
+  shift
+  local options=("$@")
+  
+  # Iterate over the options array to find the index of the input
+  for i in "${!options[@]}"; do
+    if [[ "${options[$i]}" == "$input" ]]; then
+      echo "$i"
+      return 0  # Success
+    fi
+  done
+
+  # If no match is found, return -1
+  echo "-1"
+  return 1  # Failure
+}
+
+function check_input {
+  local input="$1"
+  local -a options=("${(@P)2}") # Access array by name using parameter expansion
+
+  # Check if the input is in the options array
+  for option in "${options[@]}"; do
+    if [[ "$input" == "$option" ]]; then
+      return 0  # If input matches an option, return success
+    fi
+  done
+
+  # If no match is found, emit a message with allowed options
+  echo "The allowed set of options is: ${options[@]}"
+  return 1  # Return failure
+}

@@ -98,7 +98,7 @@ return {
         preset = "luasnip",
       },
       appearance = {
-        use_nvim_cmp_as_default = true,
+        use_nvim_cmp_as_default = false,
         nerd_font_variant = "mono",
         kind_icons = {
           Copilot = "",
@@ -166,8 +166,7 @@ return {
       signature = { enabled = true },
       sources = {
         compat = {},
-        default = { "lsp", "snippets", "path", "snippets", "buffer", "copilot", "dadbod" },
-        cmdline = {},
+        default = { "snippets", "copilot", "lsp", "path", "buffer", "dadbod" },
         providers = {
           dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
           copilot = {
@@ -187,7 +186,7 @@ return {
           },
         },
       },
-
+      cmdline = { enabled = false },
       keymap = {
         preset = "super-tab",
         ["<C-y>"] = { "select_and_accept" },

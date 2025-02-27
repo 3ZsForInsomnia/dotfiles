@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
 local mux = wezterm.mux
-local utils = require("utils")
+local utils = require("personal-scripts.local.bin.zsh-utils")
 
 local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 local SOLID_RIGHT_ARROW = utf8.char(0xe0b0)

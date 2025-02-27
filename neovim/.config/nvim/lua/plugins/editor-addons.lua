@@ -97,6 +97,8 @@ return {
         "vista_kind",
         "dbout",
         "chatgpt-input",
+        "copilot-chat",
+        "NeogitPopup",
         "",
       },
       max_count = 4,
