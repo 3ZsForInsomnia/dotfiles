@@ -23,7 +23,7 @@ return {
           step_into = "",
           step_out = "",
           step_over = "",
-          terminate = "",
+          terminate = "",
         },
       },
       element_mappings = {},

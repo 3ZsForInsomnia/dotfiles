@@ -76,3 +76,26 @@ fkill() {
 flp() {
   lpass show -c --password $(lpass ls  | fzf | awk '{print $(NF)}' | sed 's/\]//g')
 }
+
+function fkp {
+  local namespace=$1
+
+  # Get the list of pods
+  pods=$(get_pods_by_namespace "$namespace")
+
+  if [[ -z "$pods" ]]; then
+    echo "No pods found in the namespace '${namespace}'"
+    return 1
+  fi
+
+  # Use fzf to select a pod
+  selected_pod=$(echo "$pods" | fzf --height=40% --border --prompt="Select a pod: ")
+
+  if [[ -n "$selected_pod" ]]; then
+    echo "$selected_pod" | pbcopy
+    echo "$selected_pod"
+  else
+    echo "No pod selected."
+    return 1
+  fi
+}

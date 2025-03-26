@@ -1,37 +1,79 @@
-[user]
-	name = Zachary Levine
-	email = zach@zjlevine.dev
-
-[core]
-	excludesfile = ~/.config/git/.gitignore_global
-	editor = nvim
-  pager = delta
-
 [alias]
 	ctags = !.git/hooks/ctags
 
-[init]
-	templatedir = ~/.config/git/.git_template
+[branch]
+  sort = -committerdate
 
-[push]
-	autoSetupRemote = true
+[column]
+  ui = auto
 
-[merge]
-  tool = nvim
+[commit]
+  verbose = true
 
-[mergetool "nvim"]
-  cmd = nvim -f -c "DiffviewOpen"
-
-[mergetool]
-  prompt = false
+[core]
+	editor = nvim
+	excludesfile = ~/.config/git/.gitignore_global
+  fsmonitor = true
+  pager = delta
 
 [delta]
-	navigate = true
   dark = true
+	navigate = true
   side-by-side = true
+
+[delta "interactive"]
+	keep-plus-minus-markers = false
+
+[diff]
+  algorithm = histogram
+  colorMoved = plain
+  mnemonicPrefix = true
+  renames = true
+
+[fetch]
+  all = true
+  prune = true
+  pruneTags = true
+
+[help]
+  autocorrect = prompt
+
+[init]
+  defaultBranch = main
+	templatedir = ~/.config/git/.git_template
 
 [interactive]
   diffFilter = delta --color-only
 
-[delta "interactive"]
-	keep-plus-minus-markers = false
+[push]
+	autoSetupRemote = true
+  default = simple
+  followTags = true
+
+[merge]
+  tool = nvim
+
+[mergetool]
+  prompt = false
+
+[mergetool "nvim"]
+  cmd = nvim -f -c "DiffviewOpen"
+
+[pull]
+  rebase = true
+
+[rebase]
+  autoSquash = true
+  autoStash = true
+  updateRefs = true
+
+[rerere]
+  autoupdate = true
+  enabled = true
+
+[tag]
+  sort = version:refname
+
+[user]
+	email = zach@zjlevine.dev
+	name = Zachary Levine

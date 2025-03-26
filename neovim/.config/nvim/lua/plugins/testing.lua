@@ -73,6 +73,8 @@ return {
             -- Replace newline and tab characters with space for more compact diagnostics
             local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
             return message
+
+            -- return diagnostic.message
           end,
         },
       }, neotest_ns)

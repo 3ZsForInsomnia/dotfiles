@@ -2,19 +2,128 @@ local keys = require("helpers")
 local cmd = keys.k_cmd
 local k = keys.k
 local o = "<leader>n"
+local c = vim.cmd
 
-local daily_notes_folder = function()
-  local parent_folder = "9 - Resources/94 - Old activity notes"
-  local year = os.date("%Y")
-  local quarter = "Q" .. math.ceil(tonumber(os.date("%m")) / 3)
-  local month = os.date("%m")
-  local month_name = os.date("%b")
+-- This is the full format for the title of a daily note
+-- 9 - Resources/94 - Old activity notes/YYYY/YYYY-[Q]Q/YYYY-MMM/YYYY-[W]WW/YYYY-MMM-DD-dddd.md
 
-  local quarterString = year .. "-" .. quarter
-  local monthString = year .. "-" .. month .. "-" .. month_name
+local notesPath = vim.fn.expand("$HOME") .. "/Documents/sync"
+local baseFolder = "9 - Resources/94 - Old activity notes"
 
-  return parent_folder .. "/" .. year .. "/" .. quarterString .. "/" .. monthString .. "/"
+local escapeSpaces = function(path)
+  return path:gsub(" ", "\\ ")
 end
+
+local getNoteFunctions = {
+  Daily = _G.getCurrentDayNote,
+  Weekly = _G.getCurrentWeekNote,
+  Monthly = _G.getCurrentMonthNote,
+  Quarterly = _G.getCurrentQuarterNote,
+  Yearly = _G.getCurrentYearNote,
+}
+_G.getCurrentForNoteType = function(noteType)
+  return getNoteFunctions[noteType]()
+end
+
+local dateMap = {
+  Day = function()
+    return os.date("%A")
+  end,
+  Daily = function()
+    return os.date("%d")
+  end,
+  Weekly = function()
+    return os.date("%V")
+  end,
+  Monthly = function()
+    return os.date("%m")
+  end,
+  Quarterly = function()
+    return math.ceil(tonumber(os.date("%m")) / 3)
+  end,
+  Yearly = function()
+    return os.date("%Y")
+  end,
+}
+_G.datePiece = function(piece)
+  return dateMap[piece]()
+end
+
+_G.openNote = function(noteType)
+  local name = _G.getCurrentForNoteType(noteType)
+  local notePath = notesPath .. "/" .. name
+  local f = io.open(notePath, "r")
+
+  if f then
+    f:close()
+    c("e " .. notePath)
+    return
+  end
+
+  c("ObsidianNew " .. escapeSpaces(name))
+  c("ObsidianTemplate " .. noteType .. "Note.md")
+end
+
+-- 9 - Resources/94 - Old activity notes/YYYY
+local yearFolder = function()
+  return baseFolder .. "/" .. _G.datePiece("Yearly")
+end
+_G.getCurrentYearNote = function()
+  return yearFolder() .. "/" .. _G.datePiece("Yearly") .. ".md"
+end
+
+-- .../YYYY-[Q]Q
+local quarterFile = function()
+  return _G.datePiece("Yearly") .. "-Q" .. _G.datePiece("Quarterly")
+end
+local quarterFolder = function()
+  return yearFolder() .. "/" .. quarterFile()
+end
+_G.getCurrentQuarterNote = function()
+  return quarterFolder() .. "/" .. quarterFile() .. ".md"
+end
+
+-- .../YYYY-MMM
+local monthFile = function()
+  return _G.datePiece("Yearly") .. "-" .. _G.datePiece("Monthly")
+end
+local monthFolder = function()
+  return quarterFolder() .. "/" .. monthFile()
+end
+_G.getCurrentMonthNote = function()
+  return monthFolder() .. "/" .. monthFile() .. ".md"
+end
+
+-- .../YYYY-[W]WW
+local weekFile = function()
+  return _G.datePiece("Yearly") .. "-W" .. _G.datePiece("Weekly")
+end
+local weekFolder = function()
+  return monthFolder() .. "/" .. weekFile()
+end
+_G.getCurrentWeekNote = function()
+  return weekFolder() .. "/" .. weekFile() .. ".md"
+end
+
+-- .../YYYY-MMM-DD-dddd
+local dailyFile = function()
+  return _G.datePiece("Yearly")
+    .. "-"
+    .. _G.datePiece("Monthly")
+    .. "-"
+    .. _G.datePiece("Daily")
+    .. "-"
+    .. _G.datePiece("Day")
+end
+_G.getCurrentDayNote = function()
+  return weekFolder() .. "/" .. dailyFile() .. ".md"
+end
+
+local openYearly = "lua openNote('Yearly')"
+local openQuarterly = "lua openNote('Quarterly')"
+local openMonthly = "lua openNote('Monthly')"
+local openWeekly = "lua openNote('Weekly')"
+local openDaily = "lua openNote('Daily')"
 
 return {
   {
@@ -36,7 +145,7 @@ return {
       workspaces = {
         {
           name = "notes",
-          path = vim.fn.expand("$HOME") .. "/Documents/sync",
+          path = notesPath,
         },
       },
       open_notes_in = "current",
@@ -58,25 +167,15 @@ return {
       },
       follow_url_func = function(url)
         -- vim.fn.jobstart({ "cmd.exe /C start", url }) -- Linux in WSL
-        -- vim.fn.jobstart({ "open", url }) -- Mac OS
-        vim.fn.jobstart({ "xdg-open", url }) -- linux
+        vim.fn.jobstart({ "open", url }) -- Mac OS
+        -- vim.fn.jobstart({ "xdg-open", url }) -- linux
       end,
       open_app_foreground = true,
-      daily_notes = {
-        folder = daily_notes_folder(),
-        date_format = "%Y-%m-%d-%A",
-        template = "Daily Note.md",
-      },
       wiki_link_func = function(opts)
         return require("obsidian.util").wiki_link_id_prefix(opts)
       end,
     },
     keys = {
-      cmd({
-        key = o .. "t",
-        action = "ObsidianToday",
-        desc = "Today's note",
-      }),
       k({
         key = o .. "n",
         action = ":ObsidianNew ",
@@ -121,6 +220,36 @@ return {
         key = o .. "p",
         action = ":ObsidianPasteImg ",
         desc = "Paste image from clipboard with name",
+      }),
+      cmd({
+        key = o .. "T",
+        action = "ObsidianTOC",
+        desc = "Navigate table of contents",
+      }),
+      cmd({
+        key = o .. "t",
+        action = openDaily,
+        desc = "Open daily note",
+      }),
+      cmd({
+        key = o .. "w",
+        action = openWeekly,
+        desc = "Open weekly note",
+      }),
+      cmd({
+        key = o .. "d",
+        action = openMonthly,
+        desc = "Open monthly note",
+      }),
+      cmd({
+        key = o .. "q",
+        action = openQuarterly,
+        desc = "Open quarterly note",
+      }),
+      cmd({
+        key = o .. "y",
+        action = openYearly,
+        desc = "Open yearly note",
       }),
     },
   },

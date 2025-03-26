@@ -4,11 +4,7 @@ wk.add({
   --
   -- <Leader>a
   --
-  { "<leader>a", group = "AI Tools" },
-  { "<leader>ac", group = "Claude" },
-  { "<leader>ag", group = "GPT" },
-  { "<leader>agr", group = "Run action..." },
-  { "<leader>ap", group = "Copilot" },
+  { "<leader>a", group = "Github Copilot" },
 
   --
   -- <Leader>b
@@ -25,14 +21,16 @@ wk.add({
   { "<leader>cl", group = "Code lens" },
   { "<leader>cw", group = "Workspaces" },
 
-  { "<leader>d", group = "Debug & Dbs" },
-  { "<leader>e", group = "Explorer (Neotree)" },
-
   --
   -- <Leader>d
   --
   { "<leader>d", group = "Debugging" },
   { "<leader>D", group = "Databases" },
+
+  --
+  -- <Leader>e
+  --
+  { "<leader>e", group = "Explorer (Neotree)" },
 
   --
   -- <Leader>f Telescope
