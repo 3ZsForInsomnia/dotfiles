@@ -89,13 +89,29 @@ function fkp {
   fi
 
   # Use fzf to select a pod
-  selected_pod=$(echo "$pods" | fzf --height=40% --border --prompt="Select a pod: ")
+  selected_pod=$(echo "$pods" | fzp --height=40% --border --prompt="Select a pod: ")
 
   if [[ -n "$selected_pod" ]]; then
     echo "$selected_pod" | pbcopy
     echo "$selected_pod"
   else
     echo "No pod selected."
+    return 1
+  fi
+}
+
+function fkd {
+  local namespace=$1
+
+  deployments=$(getKDepls "$namespace")
+
+  selected_deployment=$(echo "$deployments" | fzp --height=40% --border --prompt="Select a deployment: ")
+
+  if [[ -n "$selected_deployment" ]]; then
+    echo "$selected_deployment" | pbcopy
+    echo "$selected_deployment"
+  else
+    echo "No deployment selected."
     return 1
   fi
 }

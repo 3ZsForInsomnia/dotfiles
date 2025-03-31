@@ -1,6 +1,7 @@
-git_protocol: ssh
-editor: nvim
-prompt: enabled
-pager: delta
 browser:
+editor: nvim
+git_protocol: ssh
+pager: delta
+prefer_editor_prompt: disabled
+prompt: enabled
 version: "1"

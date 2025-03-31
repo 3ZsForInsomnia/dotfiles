@@ -1,4 +1,4 @@
-alias_path="$HOME/.zsh/aliases"
+alias_path="$ZSH_CONFIG_DIR/aliases"
 
 source "$alias_path/dash-g.zsh"
 source "$alias_path/dates.zsh"

@@ -208,6 +208,8 @@ alias gback='git reset HEAD~1'
 # }
 
 alias gacz='ga .; cz'
+
+alias czr='cz --retry'
 # alias gaczp='gacz && ggp'
 
 # alias gaczpmr='gacz && gaczpmrPostCommit'

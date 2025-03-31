@@ -14,7 +14,7 @@ check_and_source() {
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # This needs to use $HOME since $ZSH_CONFIG_DIR is set in .path-modifiers.zsh
-source "$HOME/.zsh/.path-modifiers.zsh"
+source "$ZSH_CONFIG_DIR/.path-modifiers.zsh"
 check_and_source "$ZSH_CONFIG_DIR/.env"
 
 source "$HOME/src/powerlevel10k/powerlevel10k.zsh-theme"

@@ -31,7 +31,9 @@ setopt append_history
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-source "$HOME/.zsh/.source-things.zsh"
+export XDG_CODE_HOME=$HOME/src
+export ZSH_CONFIG_DIR="$XDG_CODE_HOME/zsh"
+source "$ZSH_CONFIG_DIR/.source-things.zsh"
 
 # Create the parent directory if it doesn't exist
 [[ -d $ZSH_COMPDUMP ]] || mkdir -p $ZSH_COMPDUMP

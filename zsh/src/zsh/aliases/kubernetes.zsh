@@ -71,3 +71,29 @@ view_kpod_log_latest() {
 
   k logs -n "$1" "$latest_pod"
 }
+
+getKDepls() {
+  local namespace=$1
+
+  k get deployments -n "$namespace"
+}
+
+delKDepl() {
+  local namespace=$1
+  local deployment=$2
+
+  k delete deployment "$deployment" -n "$namespace"
+}
+
+findAndDelKDepl() {
+  local namespace=$1
+
+  selected_deployment=$(fkd "$namespace")
+
+  if [[ -n "$selected_deployment" ]]; then
+    delKDepl "$namespace" "$selected_deployment"
+  else
+    echo "No deployment selected."
+    return 1
+  fi
+}

@@ -23,16 +23,22 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_BIN_HOME=$HOME/.local/bin
 export XDG_DATA_DIRS="$HOME/.local/data:$XDG_DATA_DIRS"
-export XDG_CODE_HOME=$HOME/src
+export XDG_RUNTIME_DIR="/tmp/xdg"
 
-export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompcache"
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
+export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh/zcompcache"
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python/history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
 export PGPASSFILE="$XDG_DATA_HOME/psql/.pgpass"
-export ZSH_CONFIG_DIR="$HOME/.zsh"
 export BOOKMARKS_FILE="$XDG_DATA_HOME/bookmarks/.bookmarks"
+export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/.gitconfig"
+export LPASS_HOME="$XDG_DATA_HOME/lpass"
+
+export AZURE_CONFIG_DIR="$XDG_CONFIG_HOME/azure"
+export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"
+export KUBECACHEDIR="$XDG_CACHE_HOME/kube"
 
 export JARS="$XDG_CODE_HOME/java_jars"
 export SCHEMASPY_LOCATION="$JARS/schemaspy/schemaspy.jar"
@@ -49,6 +55,7 @@ export JAVA_HOME="/opt/homebrew/opt/openjdk@17/bin"
 
 export NPM_PACKAGES="$XDG_DATA_HOME/npm"
 export NPM_CONFIG_PREFIX="$NPM_PACKAGES"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 # Likely do not need this set since node + npm should handle it automatically given the npm prefix is set
 export NODE_PATH="$NODE_PATH:$NPM_PACKAGES/lib/node_modules"
 
@@ -58,7 +65,7 @@ export CMAKE_INSTALL_PREFIX=$ulobin
 
 # Leaving this where it is since it is currently in use
 export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;"
-# export LUAROCKS_CONFIG="$XDG_CONFIG_HOME/luarocks/config.lua"
+export LUAROCKS_CONFIG="$XDG_CONFIG_HOME/luarocks/config.lua"
 
 # Dasht config
 export DASHT_DOCSETS_DIR=$hloc/share/Zeal/Zeal/docsets/

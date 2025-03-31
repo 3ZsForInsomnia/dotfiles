@@ -1,5 +1,3 @@
-# TODO: Pip dependencies - yamllint - anything else?
-
 ############################
 # Variables                #
 ############################
@@ -11,6 +9,8 @@ brew_packages=("eza" "fzf" "fd" "ripgrep" "zsh-syntax-highlighting" "go" "delve"
 brew_packages_with_cask=("copyq" "witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass-cli" "rectangle")
 
 npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen")
+
+pip_packages_to_install=("yamllint")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh")
 
@@ -475,17 +475,23 @@ install_dependencies() {
 
   npm config set prefix "$NPM_PACKAGES"
 
-  npm install -g "$npm_packages_to_install"
+  npm install -g "${npm_packages_to_install[@]}"
 
   echo "Step 2c: Finished installing global npm packages!"
 
-  echo "Step 2d: Download misc other dependencies..."
+  echo "Step 2d: Installing global pip packages..."
+
+  pip3 install "${pip_packages_to_install[@]}"
+
+  echo "Step 2d: Finished installing global pip packages!"
+
+  echo "Step 2e: Download misc other dependencies..."
 
   mkdir "$XDG_CODE_HOME/schemaspy"
   curl -L https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-6.2.4.jar \
     --output "$XDG_CODE_HOME"/schemaspy/schemaspy.jar
 
-  echo "Step 2d: Finished downloading misc other dependencies!"
+  echo "Step 2e: Finished downloading misc other dependencies!"
 }
 
 generate_ssh_keys() {
