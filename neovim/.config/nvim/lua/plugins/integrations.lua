@@ -3,26 +3,17 @@ local cmd = keys.k_cmd
 local k = keys.k
 local o = "<leader>n"
 local c = vim.cmd
-
--- This is the full format for the title of a daily note
--- 9 - Resources/94 - Old activity notes/YYYY/YYYY-[Q]Q/YYYY-MMM/YYYY-[W]WW/YYYY-MMM-DD-dddd.md
-
-local notesPath = vim.fn.expand("$HOME") .. "/Documents/sync"
-local baseFolder = "9 - Resources/94 - Old activity notes"
-
-local escapeSpaces = function(path)
-  return path:gsub(" ", "\\ ")
+local home = os.getenv("HOME")
+local notesPath = home .. "/Documents/sync"
+local baseFolder = function()
+  return "9 - Resources/94 - Old activity notes/"
 end
 
-local getNoteFunctions = {
-  Daily = _G.getCurrentDayNote,
-  Weekly = _G.getCurrentWeekNote,
-  Monthly = _G.getCurrentMonthNote,
-  Quarterly = _G.getCurrentQuarterNote,
-  Yearly = _G.getCurrentYearNote,
-}
-_G.getCurrentForNoteType = function(noteType)
-  return getNoteFunctions[noteType]()
+local catm = function(a, b)
+  return a() .. b() .. ".md"
+end
+local catf = function(a, b)
+  return a() .. b() .. "/"
 end
 
 local dateMap = {
@@ -45,12 +36,69 @@ local dateMap = {
     return os.date("%Y")
   end,
 }
-_G.datePiece = function(piece)
-  return dateMap[piece]()
+
+-- This is the full format for the title of a daily note
+-- 9 - Resources/94 - Old activity notes/YYYY/YYYY-[Q]Q/YYYY-MMM/YYYY-[W]WW/YYYY-MMM-DD-dddd.md
+
+-- 9 - Resources/94 - Old activity notes/YYYY
+local yearFolder = function()
+  return catf(baseFolder, dateMap["Yearly"])
+end
+local getCurrentYearNote = function()
+  return yearFolder .. dateMap["Yearly"]() .. ".md"
 end
 
+-- .../YYYY-[Q]Q
+local quarterFile = function()
+  return dateMap["Yearly"]() .. "-Q" .. dateMap["Quarterly"]()
+end
+local quarterFolder = function()
+  return catf(yearFolder, quarterFile)
+end
+local getCurrentQuarterNote = function()
+  return catm(quarterFolder, quarterFile)
+end
+
+-- .../YYYY-MMM
+local monthFile = function()
+  return dateMap["Yearly"]() .. "-" .. dateMap["Monthly"]()
+end
+local monthFolder = function()
+  return catf(quarterFolder, monthFile)
+end
+local getCurrentMonthNote = function()
+  return catm(monthFolder, monthFile)
+end
+
+-- .../YYYY-[W]WW
+local weekFile = function()
+  return dateMap["Yearly"]() .. "-W" .. dateMap["Weekly"]()
+end
+local weekFolder = function()
+  return catf(monthFolder, weekFile)
+end
+local getCurrentWeekNote = function()
+  return catm(weekFolder, weekFile)
+end
+
+-- .../YYYY-MMM-DD-dddd
+local dailyFile = function()
+  return dateMap["Yearly"]() .. "-" .. dateMap["Monthly"]() .. "-" .. dateMap["Daily"]() .. "-" .. dateMap["Day"]()
+end
+local getCurrentDayNote = function()
+  return catm(weekFolder, dailyFile)
+end
+
+local getNoteFunctions = {
+  Daily = getCurrentDayNote,
+  Weekly = getCurrentWeekNote,
+  Monthly = getCurrentMonthNote,
+  Quarterly = getCurrentQuarterNote,
+  Yearly = getCurrentYearNote,
+}
+
 _G.openNote = function(noteType)
-  local name = _G.getCurrentForNoteType(noteType)
+  local name = getNoteFunctions[noteType]()
   local notePath = notesPath .. "/" .. name
   local f = io.open(notePath, "r")
 
@@ -60,70 +108,9 @@ _G.openNote = function(noteType)
     return
   end
 
-  c("ObsidianNew " .. escapeSpaces(name))
+  c("ObsidianNew " .. name:gsub(" ", "\\ "))
   c("ObsidianTemplate " .. noteType .. "Note.md")
 end
-
--- 9 - Resources/94 - Old activity notes/YYYY
-local yearFolder = function()
-  return baseFolder .. "/" .. _G.datePiece("Yearly")
-end
-_G.getCurrentYearNote = function()
-  return yearFolder() .. "/" .. _G.datePiece("Yearly") .. ".md"
-end
-
--- .../YYYY-[Q]Q
-local quarterFile = function()
-  return _G.datePiece("Yearly") .. "-Q" .. _G.datePiece("Quarterly")
-end
-local quarterFolder = function()
-  return yearFolder() .. "/" .. quarterFile()
-end
-_G.getCurrentQuarterNote = function()
-  return quarterFolder() .. "/" .. quarterFile() .. ".md"
-end
-
--- .../YYYY-MMM
-local monthFile = function()
-  return _G.datePiece("Yearly") .. "-" .. _G.datePiece("Monthly")
-end
-local monthFolder = function()
-  return quarterFolder() .. "/" .. monthFile()
-end
-_G.getCurrentMonthNote = function()
-  return monthFolder() .. "/" .. monthFile() .. ".md"
-end
-
--- .../YYYY-[W]WW
-local weekFile = function()
-  return _G.datePiece("Yearly") .. "-W" .. _G.datePiece("Weekly")
-end
-local weekFolder = function()
-  return monthFolder() .. "/" .. weekFile()
-end
-_G.getCurrentWeekNote = function()
-  return weekFolder() .. "/" .. weekFile() .. ".md"
-end
-
--- .../YYYY-MMM-DD-dddd
-local dailyFile = function()
-  return _G.datePiece("Yearly")
-    .. "-"
-    .. _G.datePiece("Monthly")
-    .. "-"
-    .. _G.datePiece("Daily")
-    .. "-"
-    .. _G.datePiece("Day")
-end
-_G.getCurrentDayNote = function()
-  return weekFolder() .. "/" .. dailyFile() .. ".md"
-end
-
-local openYearly = "lua openNote('Yearly')"
-local openQuarterly = "lua openNote('Quarterly')"
-local openMonthly = "lua openNote('Monthly')"
-local openWeekly = "lua openNote('Weekly')"
-local openDaily = "lua openNote('Daily')"
 
 return {
   {
@@ -141,7 +128,7 @@ return {
       require("obsidian").setup(opts)
     end,
     opts = {
-      dir = "~/Documents/sync",
+      dir = home .. "/Documents/sync",
       workspaces = {
         {
           name = "notes",
@@ -228,27 +215,27 @@ return {
       }),
       cmd({
         key = o .. "t",
-        action = openDaily,
+        action = "lua openNote('Daily')",
         desc = "Open daily note",
       }),
       cmd({
         key = o .. "w",
-        action = openWeekly,
+        action = "lua openNote('Weekly')",
         desc = "Open weekly note",
       }),
       cmd({
-        key = o .. "d",
-        action = openMonthly,
+        key = o .. "m",
+        action = "lua openNote('Monthly')",
         desc = "Open monthly note",
       }),
       cmd({
         key = o .. "q",
-        action = openQuarterly,
+        action = "lua openNote('Quarterly')",
         desc = "Open quarterly note",
       }),
       cmd({
         key = o .. "y",
-        action = openYearly,
+        action = "lua openNote('Yearly')",
         desc = "Open yearly note",
       }),
     },

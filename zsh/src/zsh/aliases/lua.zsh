@@ -1,1 +1,1 @@
-alias lua='lua-5.1'
+alias lua='luajit'

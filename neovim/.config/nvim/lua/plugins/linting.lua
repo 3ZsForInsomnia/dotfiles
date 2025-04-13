@@ -9,7 +9,7 @@ return {
         javascriptreact = { "eslint_d" },
         json = { "jsonlint" },
         lua = { "luacheck" },
-        -- markdown = { "markdownlint" },
+        markdown = { "markdownlint" },
         python = { "flake8" },
         scss = { "stylelint" },
         sh = { "shellcheck" },

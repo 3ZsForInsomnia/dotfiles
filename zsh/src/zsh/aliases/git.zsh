@@ -117,7 +117,8 @@ alias gprm='pullMasThenRebase'
 
 ### Tags
 alias gt='git tag'
-alias gpt='git push --tags'
+alias gtf='git fetch --tags'
+alias gtp='git push --tags'
 
 ### Stashing
 function gstas() { # Stash with name if available, otherwise just stash
@@ -202,32 +203,12 @@ alias localGitIgnore='v ~/.config/git/.gitignore_global'
 alias gpause='git add . && git cm "<back>" --no-verify'
 alias gback='git reset HEAD~1'
 
-### Conventional Commits
-# gczpr() {
-#   eval 'ga . && gcob $1 && git cz && ggp && gpr'
-# }
-
+### Commitizen
 alias gacz='ga .; cz'
+alias gaczp='gacz; gp'
 
 alias czr='cz --retry'
-# alias gaczp='gacz && ggp'
-
-# alias gaczpmr='gacz && gaczpmrPostCommit'
-
-# gaczpmrPostCommit() {
-#     mrURLIfNotPushedYet=$(python ~/gaczpmr.py)
-#     if [ -n "$mrURLIfNotPushedYet" ]
-#     then
-#         echo 'Pushing...'
-#         $(ggp)
-#         echo 'Opening MR url'
-#         $(open $mrURLIfNotPushedYet)
-#     else
-#         echo 'Pushing...'
-#         $(ggp)
-#     fi
-#     echo 'Done!'
-# }
+alias czrp='czr; gp'
 
 function git_current_branch() {
   echo $(git rev-parse --abbrev-ref HEAD)
@@ -241,11 +222,11 @@ function ggp() {
   fi
 }
 
-setupGit() {
-  git config --global alias.ctags '!.git/hooks/ctags'
-  git config --global init.templatedir '~/.config/git/.git_template'
-  git config --global core.excludesfile '~/.config/git/.gitignore_global'
-}
+# setupGit() {
+#   git config --global alias.ctags '!.git/hooks/ctags'
+#   git config --global init.templatedir '~/.config/git/.git_template'
+#   git config --global core.excludesfile '~/.config/git/.gitignore_global'
+# }
 
 ### FZF-based git helpers
 fcoc() {

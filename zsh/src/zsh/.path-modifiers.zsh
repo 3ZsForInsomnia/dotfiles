@@ -23,7 +23,7 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_BIN_HOME=$HOME/.local/bin
 export XDG_DATA_DIRS="$HOME/.local/data:$XDG_DATA_DIRS"
-export XDG_RUNTIME_DIR="/tmp/xdg"
+export XDG_RUNTIME_DIR="/tmp"
 
 export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
 export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh/zcompcache"
@@ -64,7 +64,7 @@ export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 export CMAKE_INSTALL_PREFIX=$ulobin
 
 # Leaving this where it is since it is currently in use
-export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;"
+export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;$XDG_CONFIG_HOME/luarocks/?.lua;"
 export LUAROCKS_CONFIG="$XDG_CONFIG_HOME/luarocks/config.lua"
 
 # Dasht config

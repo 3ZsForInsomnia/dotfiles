@@ -10,6 +10,8 @@ function get_pods_by_namespace {
   kubectl get pods -n "$namespace" -o custom-columns=NAME:.metadata.name --no-headers 2>/dev/null
 }
 
+alias get_pods="k get po -n "
+
 # Function to get the most recent pod based on version
 function get_latest_pod {
   local namespace=$1
@@ -34,7 +36,7 @@ function get_latest_pod {
 }
 
 view_kpod_logs() {
-  local namespace=$1
+  local namespace="$1"
 
   job=$(fkp "$namespace")
 

@@ -34,9 +34,9 @@ return {
     event = "VeryLazy",
     opts = {
       force_write_shada = true,
-      -- Bookmark as confusing/with a question
+      -- Bookmark as wrong
       bookmark_0 = {
-        sign = "",
+        sign = "",
         annotate = true,
       },
       -- Bookmark as flagged/important
@@ -44,24 +44,24 @@ return {
         sign = "⚑",
         annotate = true,
       },
-      -- Bookmark as wrong
+      -- Bookmark as confusing/with a question
       bookmark_8 = {
-        sign = "",
-        annotate = true,
-      },
-      -- Bookmark as known good
-      bookmark_7 = {
-        sign = "",
+        sign = "",
         annotate = true,
       },
       -- Bookmark as info (useful but not wrong/good/home)
-      bookmark_6 = {
+      bookmark_7 = {
         sign = "",
         annotate = true,
       },
       -- Bookmark as home (where I'm currently working)
-      bookmark_5 = {
+      bookmark_6 = {
         sign = "",
+        annotate = true,
+      },
+      -- Bookmark as known good
+      bookmark_5 = {
+        sign = "",
         annotate = true,
       },
       mappings = {

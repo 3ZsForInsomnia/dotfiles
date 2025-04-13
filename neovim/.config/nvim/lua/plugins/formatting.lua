@@ -16,11 +16,11 @@ return {
           java = { require("formatter.filetypes.java").google_java_format },
           javascript = {
             require("formatter.filetypes.javascript").eslint_d,
-            require("formatter.filetypes.javascript").prettierd,
+            -- require("formatter.filetypes.javascript").prettierd,
           },
           javascriptreact = {
             require("formatter.filetypes.javascript").eslint_d,
-            require("formatter.filetypes.javascript").prettierd,
+            -- require("formatter.filetypes.javascript").prettierd,
           },
           json = { require("formatter.filetypes.json").prettierd },
           lua = { require("formatter.filetypes.lua").stylua },
@@ -33,11 +33,11 @@ return {
           sql = { require("formatter.filetypes.sql").sqlformat },
           typescript = {
             require("formatter.filetypes.typescript").eslint_d,
-            require("formatter.filetypes.typescript").prettierd,
+            -- require("formatter.filetypes.typescript").prettierd,
           },
           typescriptreact = {
             require("formatter.filetypes.typescript").eslint_d,
-            require("formatter.filetypes.typescript").prettierd,
+            -- require("formatter.filetypes.typescript").prettierd,
           },
           yaml = { require("formatter.filetypes.yaml").prettierd },
         },

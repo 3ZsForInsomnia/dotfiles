@@ -20,7 +20,7 @@ alias dotsv='dots; renameTab "dots"; v'
 alias shots='j shots'
 alias notes='j notes';
 alias notesv='notes; renameTab "notes"; v'
-alias work='j work; renameTab "work";'
+alias work='j plat; renameTab "work";'
 alias workv='work; v'
 
 alias zshrc="v $HOME/src/dotfiles/zsh/.zshrc"
