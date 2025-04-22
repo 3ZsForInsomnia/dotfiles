@@ -31,15 +31,24 @@ Snacks.toggle
   })
   :map(u .. "C")
 
-local h = "<leader>gh"
-
 cmd({
-  key = h .. "t",
+  key = u .. "B",
   action = "Gitsigns toggle_current_line_blame",
   desc = "Toggle blame line in virutal text on cursor line",
 })
-cmd({
-  key = h .. "d",
-  action = "Gitsigns toggle_deleted",
-  desc = "Show deleted lines",
-})
+
+local gitsigns = require("gitsigns")
+local config = require("gitsigns.config").config
+
+Snacks.toggle
+  .new({
+    name = "Gitsigns Show Deleted",
+    get = function()
+      return config.show_deleted
+    end,
+    set = function(value)
+      config.show_deleted = value
+      gitsigns.refresh()
+    end,
+  })
+  :map(u .. "e")

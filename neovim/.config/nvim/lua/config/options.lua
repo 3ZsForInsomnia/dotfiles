@@ -12,7 +12,7 @@ local h = a.nvim_set_hl
 local home = v.fn.expand("$HOME") .. "/"
 
 c([[
-set shortmess +=S
+  set shortmess +=S
 ]])
 
 o.fillchars = {
@@ -24,10 +24,16 @@ o.fillchars = {
   eob = "󰑀",
 }
 o.signcolumn = "yes:4"
-o.numberwidth = 5
+o.numberwidth = 4
+o.statuscolumn = "%C%s  %{v:relnum?v:relnum:v:lnum} "
+-- Commented out in order to use UFO defaults
 o.foldcolumn = "5"
 o.foldlevelstart = 7
-o.statuscolumn = "%C%s  %{v:relnum?v:relnum:v:lnum} "
+-- UFO defaults/preferred values
+-- o.foldcolumn = "1"
+-- o.foldlevel = 99
+-- o.foldlevelstart = 99
+-- o.foldenable = true
 
 o.softtabstop = 2
 o.showbreak = "↳ "
@@ -115,6 +121,7 @@ h(0, "CursorLineSign", {
 
 v.diagnostic.config({
   float = { border = "single" },
+  signs = { priority = 10 },
 })
 
 -- Markdown settings
@@ -141,8 +148,8 @@ g.mkdp_page_title = "「${name}」"
 
 -- Overrides of LazyVim options
 o.clipboard = ""
-o.completeopt = "menu,noinsert,menuone,noselect,preview"
 o.mouse = ""
+o.completeopt = "menu,noinsert,menuone,noselect,preview"
 
 g.lazyvim_picker = "telescope"
 g.autoformat = false

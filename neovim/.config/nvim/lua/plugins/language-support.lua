@@ -6,9 +6,21 @@ local c = function(command)
 end
 
 return {
-  { "aklt/plantuml-syntax", event = "VeryLazy", ft = "uml" },
-  { "weirongxu/plantuml-previewer.vim", event = "VeryLazy", ft = "uml" },
-  { "CRAG666/code_runner.nvim", config = true, event = "VeryLazy" },
+  {
+    "aklt/plantuml-syntax",
+    event = "VeryLazy",
+    ft = "uml",
+  },
+  {
+    "weirongxu/plantuml-previewer.vim",
+    event = "VeryLazy",
+    ft = "uml",
+  },
+  {
+    "CRAG666/code_runner.nvim",
+    config = true,
+    event = "VeryLazy",
+  },
   {
     "olrtg/nvim-emmet",
     event = "VeryLazy",
@@ -26,7 +38,11 @@ return {
       }),
     },
   },
-  { "vuki656/package-info.nvim", config = true, event = "VeryLazy" },
+  {
+    "vuki656/package-info.nvim",
+    config = true,
+    event = "VeryLazy",
+  },
   {
     "max397574/colortils.nvim",
     config = true,

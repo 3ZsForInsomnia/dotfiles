@@ -182,6 +182,7 @@ return {
         key = o .. "l",
         action = "ObsidianLink",
         desc = "Insert link",
+        mode = "v",
       }),
       cmd({
         key = o .. "f",
@@ -197,6 +198,7 @@ return {
         key = o .. "e",
         action = ":ObsidianExtractNote ",
         desc = "Extract visual selection to a new note",
+        mode = "v",
       }),
       cmd({
         key = o .. "r",

@@ -1,8 +1,10 @@
--- local cmd = require("helpers").k_cmd
--- local d = "<leader>d"
--- local dc = function(command)
---   return "DBUI " .. command
--- end
+local v = vim.fn.sign_define
+
+v("DapBreakpoint", { text = "🟥", texthl = "DiagnosticSignError", priority = 15 })
+v("DapBreakpointCondition", { text = "🟦", texthl = "DiagnosticSignWarn", priority = 15 })
+v("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignInfo", priority = 15 })
+v("DapLogPoint", { text = "🔷", texthl = "DiagnosticSignHint", priority = 15 })
+v("DapStopped", { text = "⭐️", texthl = "DiagnosticSignInfo", priority = 15 })
 
 return {
   { "theHamsta/nvim-dap-virtual-text", event = "VeryLazy" },
@@ -95,7 +97,7 @@ return {
   { "mfussenegger/nvim-dap-python", event = "VeryLazy" },
   { "nvim-telescope/telescope-dap.nvim", event = "VeryLazy" },
   { "mxsdev/nvim-dap-vscode-js", event = "VeryLazy" },
-  { "leoluz/nvim-dap-go", event = "VeryLazy" },
+  { "leoluz/nvim-dap-go", event = "VeryLazy", config = true },
   {
     "microsoft/vscode-js-debug",
     run = "npm install --legacy-peer-deps && npm run compile",
@@ -110,7 +112,6 @@ return {
       "mfussenegger/nvim-dap-python",
       "nvim-telescope/telescope-dap.nvim",
       "mxsdev/nvim-dap-vscode-js",
-      -- "rcarriga/cmp-dap",
       "leoluz/nvim-dap-go",
     },
   },

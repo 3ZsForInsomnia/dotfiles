@@ -170,7 +170,7 @@ return {
           },
         },
         tabline = {
-          lualine_a = { { "buffers", hide_filename_extension = true, mode = 2 } },
+          lualine_a = { { "buffers", max_length = vim.o.columns - 20, hide_filename_extension = true, mode = 2 } },
         },
         inactive_winbar = {},
         extensions = { "neo-tree", "quickfix", "nvim-dap-ui" },

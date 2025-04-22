@@ -207,36 +207,6 @@ return {
     },
   },
   {
-    "stevearc/dressing.nvim",
-    opts = {
-      input = {
-        enabled = true,
-        -- Can be 'left', 'right', or 'center'
-        prompt_align = "left",
-        prefer_width = 0.4,
-        win_options = {
-          winhighlight = "NormalFloat:DiagnosticError",
-          winblend = 10,
-        },
-      },
-      select = {
-        enabled = true,
-        backend = { "telescope", "fzf_lua", "fzf", "builtin", "nui" },
-        fzf_lua = {
-          winopts = {
-            width = 0.5,
-            height = 0.4,
-          },
-        },
-        builtin = {
-          win_options = {
-            winblend = 10,
-          },
-        },
-      },
-    },
-  },
-  {
     "brenoprata10/nvim-highlight-colors",
     opts = {
       render = "background",

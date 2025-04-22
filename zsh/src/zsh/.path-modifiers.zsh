@@ -57,7 +57,7 @@ export NPM_PACKAGES="$XDG_DATA_HOME/npm"
 export NPM_CONFIG_PREFIX="$NPM_PACKAGES"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 # Likely do not need this set since node + npm should handle it automatically given the npm prefix is set
-export NODE_PATH="$NODE_PATH:$NPM_PACKAGES/lib/node_modules"
+export NODE_PATH="$NPM_PACKAGES/lib/node_modules"
 
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 

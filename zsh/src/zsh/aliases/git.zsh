@@ -29,7 +29,8 @@ alias gstuno='gst -uno' # much faster for large commit histories but doesn't sho
 alias currBranch='git rev-parse --abbrev-ref HEAD PC'
 
 ### Committing
-alias gibid='g commit -a --amend -C head'
+alias gibid='git commit -a --amend --no-edit'
+alias gibidp='gibid && gpf!'
 alias gce='g commit --allow-empty'
 alias gc='g commit -v -m'
 gac() {
@@ -209,6 +210,8 @@ alias gaczp='gacz; gp'
 
 alias czr='cz --retry'
 alias czrp='czr; gp'
+alias aczr='ga .; czr'
+alias aczrp='czra; gp'
 
 function git_current_branch() {
   echo $(git rev-parse --abbrev-ref HEAD)

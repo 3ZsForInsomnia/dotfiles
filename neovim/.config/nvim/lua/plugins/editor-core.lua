@@ -8,14 +8,15 @@ local a = 'lua require("ts-node-action").'
 local bk = "<leader>bl"
 
 return {
+  {},
   {
     "folke/which-key.nvim",
     opts = {
       preset = "classic",
       win = {
         height = {
-          min = 8,
-          max = 12,
+          min = 10,
+          max = 20,
         },
         padding = {
           1,

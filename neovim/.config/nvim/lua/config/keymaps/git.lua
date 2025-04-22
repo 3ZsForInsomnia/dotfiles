@@ -1,5 +1,6 @@
-local w = vim.wo
-local s = vim.schedule
+local v = vim
+local w = v.wo
+local s = v.schedule
 local cmd = require("helpers").k_cmd
 
 local h = "<leader>gh"
@@ -7,7 +8,7 @@ local h = "<leader>gh"
 local function map(mode, l, r, opts)
   opts = opts or {}
   -- opts.buffer = bufnr
-  vim.keymap.set(mode, l, r, opts)
+  v.keymap.set(mode, l, r, opts)
 end
 
 -- Navigation
@@ -16,7 +17,7 @@ map({ "n", "v" }, "]h", function()
     return "]c"
   end
   s(function()
-    require("gitsigns").next_hunk()
+    require("gitsigns").nav_hunk("next")
   end)
   return "<Ignore>"
 end, { expr = true })
@@ -26,7 +27,7 @@ map({ "n", "v" }, "[h", function()
     return "[c"
   end
   s(function()
-    require("gitsigns").prev_hunk()
+    require("gitsigns").nav_hunk("prev")
   end)
   return "<Ignore>"
 end, { expr = true })

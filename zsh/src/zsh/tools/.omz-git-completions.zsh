@@ -67,7 +67,15 @@ compdef git_local_branches gcol
 
 alias g='git'
 
-alias ga='git add'
+function ga() {
+  if [ -z "$1" ]; then
+    location="."
+  else
+    location=$1
+  fi
+
+  git add "$location"
+}
 alias gaa='git add --all'
 alias gapa='git add --patch'
 alias gau='git add --update'

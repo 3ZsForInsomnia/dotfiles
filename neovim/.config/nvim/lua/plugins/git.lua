@@ -35,6 +35,12 @@ local reviews = g .. "r" -- And  reviewers, assignees, and actual reviews
 
 return {
   {
+    "lewis6991/gitsigns.nvim",
+    opts = {
+      sign_priority = 20,
+    },
+  },
+  {
     "NeogitOrg/neogit",
     event = "VeryLazy",
     opts = {

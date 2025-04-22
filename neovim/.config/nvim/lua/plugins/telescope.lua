@@ -220,6 +220,7 @@ local loadExtensions = function(load_extension)
   load_extension("conflicts")
   load_extension("persisted")
   load_extension("bookmarks")
+  load_extension("ui-select")
 end
 
 return {
@@ -250,6 +251,7 @@ return {
       "HPRIOR/telescope-gpt",
       "Snikimonkd/telescope-git-conflicts.nvim",
       "olimorris/persisted.nvim",
+      "nvim-telescope/telescope-ui-select.nvim",
     },
     config = function()
       local telescope = require("telescope")

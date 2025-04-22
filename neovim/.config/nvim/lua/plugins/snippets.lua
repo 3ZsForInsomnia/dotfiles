@@ -41,6 +41,7 @@ end
 local js = "javascript"
 local html = "html"
 local ts = "typescript"
+local snippetsLocation = v.fn.stdpath("config") .. "/snippets"
 
 return {
   {
@@ -54,32 +55,25 @@ return {
     },
     dependencies = {
       "giuxtaposition/blink-cmp-copilot",
+      "rafamadriz/friendly-snippets",
       { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
       {
         "L3MON4D3/LuaSnip",
-        version = "v2.*",
         build = (not LazyVim.is_win())
             and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
           or nil,
-        dependencies = {
-          {
-            "rafamadriz/friendly-snippets",
-            config = function()
-              require("luasnip.loaders.from_vscode").lazy_load()
-            end,
-          },
-        },
         config = function()
           local ls = require("luasnip")
           local types = require("luasnip.util.types")
 
-          require("luasnip.loaders.from_lua").load({ paths = { "~/.config/nvim/snippets" } })
+          require("luasnip.loaders.from_vscode").lazy_load()
+          require("luasnip.loaders.from_lua").lazy_load({ paths = { snippetsLocation } })
 
           ls.filetype_extend("typescript", { js })
           ls.filetype_extend("javascriptreact", { js, html })
           ls.filetype_extend("typescriptreact", { ts, js, html })
 
-          require("luasnip").config.setup(luasnipSetupOptions(types))
+          ls.config.setup(luasnipSetupOptions(types))
         end,
       },
       {
@@ -144,6 +138,7 @@ return {
           min_width = 30,
           max_height = 20,
           draw = {
+            treesitter = { "lsp" },
             padding = 2,
             columns = {
               { "label", "label_description", gap = 1 },
@@ -163,7 +158,6 @@ return {
           enabled = g.ai_cmp,
         },
       },
-      signature = { enabled = true },
       sources = {
         compat = {},
         default = { "snippets", "copilot", "lsp", "path", "buffer", "dadbod" },
@@ -178,15 +172,23 @@ return {
               local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
               local kind_idx = #CompletionItemKind + 1
               CompletionItemKind[kind_idx] = "Copilot"
+
               for _, item in ipairs(items) do
                 item.kind = kind_idx
               end
+
               return items
             end,
+          },
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            score_offset = 100, -- show at a higher priority than lsp
           },
         },
       },
       cmdline = { enabled = false },
+      signature = { enabled = true },
       keymap = {
         preset = "super-tab",
         ["<C-y>"] = { "select_and_accept" },
