@@ -19,6 +19,9 @@ return {
     },
     opts = {
       model = "claude-3.7-sonnet-thought",
+      window = {
+        width = 0.5,
+      },
     },
     keys = {
       --

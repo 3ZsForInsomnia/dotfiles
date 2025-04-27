@@ -4,7 +4,6 @@ alias kpf="k port-forward"
 
 function get_pods_by_namespace {
   local namespace=$1
-  local app_prefix=$2
   
   # Get the list of pod names in the namespace
   kubectl get pods -n "$namespace" -o custom-columns=NAME:.metadata.name --no-headers 2>/dev/null
@@ -37,6 +36,7 @@ function get_latest_pod {
 
 view_kpod_logs() {
   local namespace="$1"
+  echo "Fetching logs for the latest pod in namespace: $namespace"
 
   job=$(fkp "$namespace")
 

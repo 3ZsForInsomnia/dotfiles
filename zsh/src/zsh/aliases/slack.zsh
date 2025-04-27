@@ -20,5 +20,6 @@ function setSlackToAvailable() {
 # $1 - What am I working on?
 # $2 - How long will I be working on it?
 function setSlackToBusy() {
-  setSlack "Busy: $1" ":tomato:" "$2"
+  message=$(default "Busy: $1" "Busy")
+  setSlack "$message" "tomato" "$2"
 }

@@ -15,6 +15,11 @@ c([[
   set shortmess +=S
 ]])
 
+o.foldmethod = "manual"
+o.foldcolumn = "5"
+o.foldlevel = 99
+o.foldlevelstart = 99
+o.foldenable = true
 o.fillchars = {
   foldopen = "󰅀",
   foldclose = "󰅂",
@@ -26,14 +31,6 @@ o.fillchars = {
 o.signcolumn = "yes:4"
 o.numberwidth = 4
 o.statuscolumn = "%C%s  %{v:relnum?v:relnum:v:lnum} "
--- Commented out in order to use UFO defaults
-o.foldcolumn = "5"
-o.foldlevelstart = 7
--- UFO defaults/preferred values
--- o.foldcolumn = "1"
--- o.foldlevel = 99
--- o.foldlevelstart = 99
--- o.foldenable = true
 
 o.softtabstop = 2
 o.showbreak = "↳ "
