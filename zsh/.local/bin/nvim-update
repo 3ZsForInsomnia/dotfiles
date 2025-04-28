@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+
+import json
+import os
+import subprocess
+import sys
+import traceback
+from argparse import ArgumentParser
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+# --- XDG Directories ---
+def get_xdg_var(var, fallback):
+    val = os.environ.get(var)
+    if val:
+        return Path(val)
+    # Fallback for STATE_HOME is ~/.local/state, for CONFIG_HOME is ~/.config
+    if fallback.startswith("~"):
+        return Path.home() / fallback[2:]
+    return Path(fallback)
+
+
+STATE_DIR = get_xdg_var("XDG_STATE_HOME", "~/.local/state") / "nvim-update"
+STATE_DIR.mkdir(parents=True, exist_ok=True)
+HISTORY_FILE = STATE_DIR / "version-history.json"
+
+# --- Settings ---
+XDG_CODE_HOME = os.environ.get("XDG_CODE_HOME")
+if not XDG_CODE_HOME:
+    print("Environment variable XDG_CODE_HOME is not set.", file=sys.stderr)
+    sys.exit(1)
+NVIM_SRC = Path(XDG_CODE_HOME) / "neovim"
+NVIM_INSTALL = Path(XDG_CODE_HOME) / "neovim"
+
+
+# --- Logging ---
+def logmsg(*args, prefix="[INFO]"):
+    print(prefix, *args)
+    with open(current_logfile, "a") as fp:
+        print(prefix, *args, file=fp)
+
+
+def logerr(*args):
+    logmsg(*args, prefix="[ERROR]")
+
+
+def logexc(e):
+    details = traceback.format_exc()
+    logerr(f"[EXCEPTION] {str(e)}\n{details}")
+
+
+def start_log():
+    now = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    logf = STATE_DIR / f"upgrade-{now}.log"
+    logf.touch()
+    return logf
+
+
+current_logfile = str(start_log())
+
+
+# --- Version + Git Utilities ---
+def run(cmd, cwd=None, check=True, capture_output=False, env=None):
+    """Run a shell command, raising error if it fails."""
+    logmsg(f"Running: {' '.join(cmd)} (cwd={cwd})")
+    try:
+        completed = subprocess.run(
+            cmd,
+            cwd=cwd,
+            check=check,
+            capture_output=capture_output,
+            text=True,
+            env=env,
+        )
+        if capture_output:
+            return completed.stdout.strip()
+        return None
+    except subprocess.CalledProcessError as e:
+        logexc(e)
+        logerr(f"Command failed: {' '.join(cmd)}")
+        raise
+
+
+def get_sha():
+    """Get current commit SHA and its date."""
+    # Format: SHA and date in ISO format
+    output = run(
+        ["git", "show", "-s", "--format=%h|%ci", "HEAD"],
+        cwd=NVIM_SRC,
+        capture_output=True,
+    )
+    if not output:
+        sha, date = output.split("|", 1)
+        return sha, date.strip()
+    else:
+        return None, None
+
+
+def git_checkout(ref):
+    run(["git", "checkout", ref], cwd=NVIM_SRC, check=True)
+
+
+def remove_build():
+    build = NVIM_SRC / "build"
+    if build.exists():
+        logmsg(f"Removing build dir: {build}")
+        run(["rm", "-rf", str(build)], cwd=NVIM_SRC)
+
+
+def build_and_install():
+    cmake_flags = (
+        f"-DCMAKE_INSTALL_PREFIX={NVIM_INSTALL} " f"-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+    )
+    env = os.environ.copy()
+    env["CMAKE_EXTRA_FLAGS"] = cmake_flags
+    run(["make", "CMAKE_EXTRA_FLAGS=" + cmake_flags], cwd=NVIM_SRC, env=env)
+    run(["make", "install"], cwd=NVIM_SRC, env=env)
+    logmsg(f"Completed build/install to {NVIM_INSTALL}")
+
+
+# --- Version History & Rollback ---
+def load_history():
+    if HISTORY_FILE.exists():
+        try:
+            with open(HISTORY_FILE, "r") as fp:
+                return json.load(fp)
+        except Exception as e:
+            logexc(e)
+            return []
+    return []
+
+
+def save_history(history):
+    try:
+        with open(HISTORY_FILE, "w") as fp:
+            json.dump(history, fp, indent=2)
+        logmsg(f"Saved version history ({len(history)} entries)")
+    except Exception as e:
+        logexc(e)
+        logerr("Failed to save version history!")
+
+
+def add_history_entry(tag, sha, action):
+    history = load_history()
+    ts = datetime.utcnow().isoformat() + "Z"
+    entry = {"timestamp": ts, "tag": tag, "sha": sha, "action": action}
+    if history and history[-1]["sha"] == sha:
+        # Don't repeat
+        return
+    history.append(entry)
+    save_history(history)
+
+
+def print_history():
+    history = load_history()
+    for idx, h in enumerate(history):
+        print(f"{idx}: [{h['timestamp']}] {h['action']} {h['tag']} ({h['sha']})")
+
+
+def last_history():
+    history = load_history()
+    return history[-1] if history else None
+
+
+def prev_history():
+    history = load_history()
+    return history[-2] if len(history) > 1 else None
+
+
+# --- Core actions ---
+def upgrade():
+    try:
+        sha_before, date_before = get_sha()
+        logmsg(f"Before upgrade: {date_before=} {sha_before=}")
+
+        logmsg("Fetching latest origin & tags...")
+        run(["git", "fetch", "origin"], cwd=NVIM_SRC)
+        run(["git", "fetch", "--tags", "--force"], cwd=NVIM_SRC)
+        run(["git", "pull"], cwd=NVIM_SRC)
+        sha_after, date_after = get_sha()
+
+        logmsg(f"After fetch  : {date_after=} {sha_after=}")
+
+        if sha_before == sha_after:
+            logmsg("Already up to date. No upgrade needed.")
+            return
+
+        remove_build()
+        build_and_install()
+
+        logmsg(f"Upgrade complete: {date_after=} {sha_after=}")
+        add_history_entry(
+            date_after, sha_after, "upgrade_from_" + (sha_before or "none")
+        )
+        print(f"Upgraded from {sha_before} to {sha_after}")
+
+    except Exception as e:
+        logexc(e)
+        print("Upgrade failed. See log for details.", file=sys.stderr)
+        sys.exit(1)
+
+
+def rollback():
+    try:
+        h = prev_history()
+        if not h:
+            print("No previous version in history. Can't rollback!")
+            return
+        target_sha = h["sha"]
+        logmsg(f"Rolling back to {target_sha} ({h['tag']}) ...")
+        git_checkout(target_sha)
+        remove_build()
+        build_and_install()
+        add_history_entry(h["tag"], h["sha"], "rollback")
+        print(f"Rolled back to {target_sha} ({h['tag']})")
+    except Exception as e:
+        logexc(e)
+        print("Rollback failed. See log for details.", file=sys.stderr)
+        sys.exit(1)
+
+
+def show_version():
+    sha, date = get_sha()
+    print(f"Current: date={date}, sha={sha}")
+
+
+def show_logfile():
+    print(f"Current log file: {current_logfile}")
+
+
+def manual_checkout(sha):
+    try:
+        logmsg(f"Checking out {sha} ...")
+        git_checkout(sha)
+        remove_build()
+        build_and_install()
+        sha_new, date_new = get_sha()
+        add_history_entry(date_new, sha_new, "manual_checkout")
+        print(f"Checked out {date_new} ({sha_new})")
+    except Exception as e:
+        logexc(e)
+        print("Manual checkout failed. See log for details.", file=sys.stderr)
+        sys.exit(1)
+
+
+# --- CLI ---
+def main():
+    parser = ArgumentParser(description="Advanced Neovim Source Upgrade Manager.")
+    parser.add_argument(
+        "--upgrade", action="store_true", help="Upgrade to latest upstream version."
+    )
+    parser.add_argument(
+        "--rollback",
+        action="store_true",
+        help="Roll back to previous version by history.",
+    )
+    parser.add_argument(
+        "--history",
+        action="store_true",
+        help="Print recorded upgrade/rollback history.",
+    )
+    parser.add_argument(
+        "--version", action="store_true", help="Print current tag and commit SHA."
+    )
+    parser.add_argument(
+        "--logfile", action="store_true", help="Show most recent logfile path."
+    )
+    parser.add_argument(
+        "--checkout", metavar="SHA", help="Manually check out a specific SHA"
+    )
+
+    args = parser.parse_args()
+    if args.upgrade:
+        upgrade()
+    elif args.rollback:
+        rollback()
+    elif args.history:
+        print_history()
+    elif args.version:
+        show_version()
+    elif args.logfile:
+        show_logfile()
+    elif args.checkout:
+        manual_checkout(args.checkout)
+
+
+if __name__ == "__main__":
+    main()

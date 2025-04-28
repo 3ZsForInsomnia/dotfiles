@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "$MY_SYSTEM" == "mac" ]; then
+  mac-dnd
+elif [ "$MY_SYSTEM" == "linux" ]; then
+  arch-dnd
+# else
+#   win-dnd
+fi

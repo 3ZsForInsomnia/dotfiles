@@ -1,0 +1,9 @@
+#compdef nvim-update
+_arguments -s \
+  '--upgrade[Upgrade to latest upstream version]' \
+  '--rollback[Roll back to previous version by history]' \
+  '--history[Print recorded upgrade/rollback history]' \
+  '--version[Print current tag and commit SHA]' \
+  '--logfile[Show most recent logfile path]' \
+  '--checkout=[Manually check out given commit SHA]:commit sha: ' \
+  '*:filename:_files'
