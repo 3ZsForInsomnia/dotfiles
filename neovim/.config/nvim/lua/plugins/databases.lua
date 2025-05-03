@@ -1,3 +1,4 @@
+local v = vim
 local cmd = require("helpers").k_cmd
 local d = "<leader>D"
 local dc = function(command)
@@ -13,10 +14,8 @@ return {
     "kristijanhusak/vim-dadbod-ui",
     event = "VeryLazy",
     config = function()
-      vim.cmd([[
-        let g:db_ui_use_nvim_notify = 1
-        let g:db_ui_use_nerd_fonts = 1
-      ]])
+      v.g.db_ui_use_nvim_notify = 1
+      v.g.db_ui_use_nerd_fonts = 1
     end,
     keys = {
       cmd({

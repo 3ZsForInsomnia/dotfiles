@@ -1,0 +1,670 @@
+auth_type: basic
+epic:
+  name: customfield_10011
+  link: customfield_10014
+installation: Cloud
+issue:
+  fields:
+    custom:
+      - name: End date
+        key: customfield_10070
+        schema:
+          datatype: date
+      - name: Baseline start date
+        key: customfield_10071
+        schema:
+          datatype: date
+      - name: Baseline end date
+        key: customfield_10072
+        schema:
+          datatype: date
+      - name: Task progress
+        key: customfield_10073
+        schema:
+          datatype: number
+      - name: Root Cause Analysis
+        key: customfield_10076
+        schema:
+          datatype: string
+      - name: Env
+        key: customfield_10077
+        schema:
+          datatype: option
+      - name: Platform CAB Status
+        key: customfield_10078
+        schema:
+          datatype: option
+      - name: Platform CAB Approval Date
+        key: customfield_10079
+        schema:
+          datatype: date
+      - name: Atlas goals
+        key: customfield_10112
+        schema:
+          datatype: string
+      - name: Atlas project
+        key: customfield_10113
+        schema:
+          datatype: string
+      - name: Atlas project status
+        key: customfield_10114
+        schema:
+          datatype: number
+      - name: Project overview key
+        key: customfield_10061
+        schema:
+          datatype: string
+      - name: Example of incorrect policy
+        key: customfield_10182
+        schema:
+          datatype: string
+      - name: Project overview status
+        key: customfield_10062
+        schema:
+          datatype: string
+      - name: T-Shirt Size
+        key: customfield_10065
+        schema:
+          datatype: option
+      - name: Risk probability
+        key: customfield_10066
+        schema:
+          datatype: option2
+      - name: Risk consequence
+        key: customfield_10067
+        schema:
+          datatype: option2
+      - name: Task mode
+        key: customfield_10068
+        schema:
+          datatype: option2
+      - name: Program Increment
+        key: customfield_10069
+        schema:
+          datatype: string
+      - name: In Scope
+        key: customfield_10170
+        schema:
+          datatype: string
+      - name: Out of Scope
+        key: customfield_10171
+        schema:
+          datatype: string
+      - name: Exportable
+        key: customfield_10172
+        schema:
+          datatype: array
+          items: option
+      - name: Sentiment
+        key: customfield_10173
+        schema:
+          datatype: array
+          items: sd-sentiment
+      - name: Design link
+        key: customfield_10053
+        schema:
+          datatype: string
+      - name: Goals
+        key: customfield_10174
+        schema:
+          datatype: array
+          items: Goals
+      - name: Status update
+        key: customfield_10054
+        schema:
+          datatype: string
+      - name: Scope Approved
+        key: customfield_10175
+        schema:
+          datatype: number
+      - name: Impacted Carrier(s)
+        key: customfield_10177
+        schema:
+          datatype: array
+          items: option
+      - name: On Hold Reason
+        key: customfield_10210
+        schema:
+          datatype: string
+      - name: PT/PPT
+        key: customfield_10178
+        schema:
+          datatype: array
+          items: option
+      - name: On Hold Until
+        key: customfield_10211
+        schema:
+          datatype: date
+      - name: Department
+        key: customfield_10058
+        schema:
+          datatype: string
+      - name: Fix Type
+        key: customfield_10179
+        schema:
+          datatype: option
+      - name: Updates Needed
+        key: customfield_10212
+        schema:
+          datatype: array
+          items: option
+      - name: Release
+        key: customfield_10059
+        schema:
+          datatype: option
+      - name: Est. Deployment Date
+        key: customfield_10209
+        schema:
+          datatype: date
+      - name: Project start
+        key: customfield_10160
+        schema:
+          datatype: string
+      - name: Submitted forms
+        key: customfield_10040
+        schema:
+          datatype: number
+      - name: Project target
+        key: customfield_10161
+        schema:
+          datatype: string
+      - name: Locked forms
+        key: customfield_10041
+        schema:
+          datatype: number
+      - name: Business Epics
+        key: customfield_10162
+        schema:
+          datatype: option
+      - name: Total forms
+        key: customfield_10042
+        schema:
+          datatype: number
+      - name: Value
+        key: customfield_10163
+        schema:
+          datatype: number
+      - name: Effort
+        key: customfield_10164
+        schema:
+          datatype: number
+      - name: Category
+        key: customfield_10044
+        schema:
+          datatype: option
+      - name: Idea short description
+        key: customfield_10165
+        schema:
+          datatype: string
+      - name: Confidence
+        key: customfield_10166
+        schema:
+          datatype: number
+      - name: Documents
+        key: customfield_10167
+        schema:
+          datatype: string
+      - name: Program
+        key: customfield_10168
+        schema:
+          datatype: array
+          items: option
+      - name: Estimated Effort
+        key: customfield_10169
+        schema:
+          datatype: option
+      - name: Affected services
+        key: customfield_10038
+        schema:
+          datatype: array
+          items: service-entity-field
+      - name: Designs ready
+        key: customfield_10159
+        schema:
+          datatype: number
+      - name: Open forms
+        key: customfield_10039
+        schema:
+          datatype: number
+      - name: Goal
+        key: customfield_10150
+        schema:
+          datatype: array
+          items: option
+      - name: Request participants
+        key: customfield_10030
+        schema:
+          datatype: array
+          items: user
+      - name: Roadmap
+        key: customfield_10151
+        schema:
+          datatype: option
+      - name: Development Hours
+        key: customfield_10031
+        schema:
+          datatype: number
+      - name: Idea archived by
+        key: customfield_10152
+        schema:
+          datatype: array
+          items: user
+      - name: Development Hours
+        key: customfield_10032
+        schema:
+          datatype: number
+      - name: Idea archived on
+        key: customfield_10153
+        schema:
+          datatype: datetime
+      - name: Product Management Time
+        key: customfield_10033
+        schema:
+          datatype: number
+      - name: Idea archived
+        key: customfield_10154
+        schema:
+          datatype: option
+      - name: Integration Area
+        key: customfield_10275
+        schema:
+          datatype: option
+      - name: Development Hours
+        key: customfield_10034
+        schema:
+          datatype: number
+      - name: Teams
+        key: customfield_10155
+        schema:
+          datatype: array
+          items: option
+      - name: Satisfaction
+        key: customfield_10035
+        schema:
+          datatype: sd-feedback
+      - name: Impact score
+        key: customfield_10156
+        schema:
+          datatype: number
+      - name: Department
+        key: customfield_10310
+        schema:
+          datatype: string
+      - name: Satisfaction date
+        key: customfield_10036
+        schema:
+          datatype: datetime
+      - name: Customer segments
+        key: customfield_10157
+        schema:
+          datatype: array
+          items: option
+      - name: Date of hire
+        key: customfield_10311
+        schema:
+          datatype: date
+      - name: Request language
+        key: customfield_10037
+        schema:
+          datatype: sd-request-lang
+      - name: Spec ready
+        key: customfield_10158
+        schema:
+          datatype: number
+      - name: Location
+        key: customfield_10312
+        schema:
+          datatype: string
+      - name: Linked issues
+        key: customfield_10148
+        schema:
+          datatype: number
+      - name: Story Points
+        key: customfield_10028
+        schema:
+          datatype: number
+      - name: Comments
+        key: customfield_10149
+        schema:
+          datatype: number
+      - name: Acceptance Criteria
+        key: customfield_10029
+        schema:
+          datatype: string
+      - name: Hiring manager
+        key: customfield_10308
+        schema:
+          datatype: string
+      - name: Job role
+        key: customfield_10309
+        schema:
+          datatype: string
+      - name: Estimated Effort
+        key: customfield_10140
+        schema:
+          datatype: option
+      - name: Sprint
+        key: customfield_10020
+        schema:
+          datatype: array
+          items: json
+      - name: Atlas goals
+        key: customfield_10141
+        schema:
+          datatype: string
+      - name: Flagged
+        key: customfield_10021
+        schema:
+          datatype: array
+          items: option
+      - name: Atlas project
+        key: customfield_10142
+        schema:
+          datatype: string
+      - name: Target start
+        key: customfield_10022
+        schema:
+          datatype: date
+      - name: Atlas project status
+        key: customfield_10143
+        schema:
+          datatype: number
+      - name: Target end
+        key: customfield_10023
+        schema:
+          datatype: date
+      - name: Impact
+        key: customfield_10144
+        schema:
+          datatype: number
+      - name: "[CHART] Date of First Response"
+        key: customfield_10024
+        schema:
+          datatype: datetime
+      - name: Insights
+        key: customfield_10145
+        schema:
+          datatype: number
+      - name: "[CHART] Time in Status"
+        key: customfield_10025
+        schema:
+          datatype: any
+      - name: Delivery status
+        key: customfield_10146
+        schema:
+          datatype: number
+      - name: Delivery progress
+        key: customfield_10147
+        schema:
+          datatype: number
+      - name: Story point estimate
+        key: customfield_10016
+        schema:
+          datatype: number
+      - name: Complexity
+        key: customfield_10137
+        schema:
+          datatype: number
+      - name: Issue color
+        key: customfield_10017
+        schema:
+          datatype: string
+      - name: Documents
+        key: customfield_10138
+        schema:
+          datatype: string
+      - name: Parent Link
+        key: customfield_10018
+        schema:
+          datatype: any
+      - name: Product Area
+        key: customfield_10139
+        schema:
+          datatype: array
+          items: option
+      - name: Rank
+        key: customfield_10019
+        schema:
+          datatype: any
+      - name: Designs ready
+        key: customfield_10130
+        schema:
+          datatype: number
+      - name: Request Type
+        key: customfield_10010
+        schema:
+          datatype: sd-customerrequesttype
+      - name: Project start
+        key: customfield_10131
+        schema:
+          datatype: string
+      - name: Project target
+        key: customfield_10132
+        schema:
+          datatype: string
+      - name: Epic Status
+        key: customfield_10012
+        schema:
+          datatype: option
+      - name: Category
+        key: customfield_10133
+        schema:
+          datatype: option
+      - name: Epic Color
+        key: customfield_10013
+        schema:
+          datatype: string
+      - name: Value
+        key: customfield_10134
+        schema:
+          datatype: number
+      - name: Effort
+        key: customfield_10135
+        schema:
+          datatype: number
+      - name: Start date
+        key: customfield_10015
+        schema:
+          datatype: date
+      - name: Short description
+        key: customfield_10136
+        schema:
+          datatype: string
+      - name: Change type
+        key: customfield_10005
+        schema:
+          datatype: option
+      - name: Teams
+        key: customfield_10126
+        schema:
+          datatype: array
+          items: option
+      - name: Change risk
+        key: customfield_10006
+        schema:
+          datatype: option
+      - name: Impact score
+        key: customfield_10127
+        schema:
+          datatype: number
+      - name: Change reason
+        key: customfield_10007
+        schema:
+          datatype: option
+      - name: Target User
+        key: customfield_10128
+        schema:
+          datatype: array
+          items: option
+      - name: Actual start
+        key: customfield_10008
+        schema:
+          datatype: datetime
+      - name: Spec ready
+        key: customfield_10129
+        schema:
+          datatype: number
+      - name: Actual end
+        key: customfield_10009
+        schema:
+          datatype: datetime
+      - name: Design
+        key: customfield_10080
+        schema:
+          datatype: array
+          items: design.field.name
+      - name: RYG
+        key: customfield_10081
+        schema:
+          datatype: option
+      - name: Latest Progress
+        key: customfield_10082
+        schema:
+          datatype: string
+      - name: Vulnerability
+        key: customfield_10083
+        schema:
+          datatype: any
+      - name: Comments
+        key: customfield_10120
+        schema:
+          datatype: number
+      - name: Development
+        key: customfield_10000
+        schema:
+          datatype: any
+      - name: Goal
+        key: customfield_10121
+        schema:
+          datatype: array
+          items: option
+      - name: Describe the problem
+        key: customfield_10242
+        schema:
+          datatype: string
+      - name: Team
+        key: customfield_10001
+        schema:
+          datatype: team
+      - name: Roadmap
+        key: customfield_10122
+        schema:
+          datatype: option
+      - name: Business context to resolve the problem
+        key: customfield_10243
+        schema:
+          datatype: string
+      - name: Organizations
+        key: customfield_10002
+        schema:
+          datatype: array
+          items: sd-customerorganization
+      - name: Idea archived by
+        key: customfield_10123
+        schema:
+          datatype: array
+          items: user
+      - name: Example of correct policy
+        key: customfield_10244
+        schema:
+          datatype: string
+      - name: Approvers
+        key: customfield_10003
+        schema:
+          datatype: array
+          items: user
+      - name: Idea archived on
+        key: customfield_10124
+        schema:
+          datatype: datetime
+      - name: Additional Notes
+        key: customfield_10245
+        schema:
+          datatype: string
+      - name: Impact
+        key: customfield_10004
+        schema:
+          datatype: option
+      - name: Idea archived
+        key: customfield_10125
+        schema:
+          datatype: option
+      - name: Impact
+        key: customfield_10115
+        schema:
+          datatype: number
+      - name: Insights
+        key: customfield_10116
+        schema:
+          datatype: number
+      - name: Delivery status
+        key: customfield_10117
+        schema:
+          datatype: number
+      - name: Delivery progress
+        key: customfield_10118
+        schema:
+          datatype: number
+      - name: Linked issues
+        key: customfield_10119
+        schema:
+          datatype: number
+  types:
+    - id: "10000"
+      name: Epic
+      handle: Epic
+      subtask: false
+    - id: "10020"
+      name: Feature
+      handle: Feature
+      subtask: false
+    - id: "10004"
+      name: Story
+      handle: Story
+      subtask: false
+    - id: "10006"
+      name: Sub-task
+      handle: Sub-task
+      subtask: true
+    - id: "10005"
+      name: Task
+      handle: Task
+      subtask: false
+    - id: "10007"
+      name: Bug
+      handle: Bug
+      subtask: false
+    - id: "10021"
+      name: Design
+      handle: Design
+      subtask: false
+    - id: "10022"
+      name: Risk
+      handle: Risk
+      subtask: false
+    - id: "10023"
+      name: Action
+      handle: Action
+      subtask: false
+    - id: "10024"
+      name: Issue
+      handle: Issue
+      subtask: false
+    - id: "10025"
+      name: Dependency
+      handle: Dependency
+      subtask: false
+    - id: "10032"
+      name: QA Automation
+      handle: QA Automation
+      subtask: false
+    - id: "10043"
+      name: Zephyr Test
+      handle: Zephyr Test
+      subtask: false
+login: zachary.levine@onedigital.com
+project:
+  key: POD1
+  type: classic
+server: https://onedigitalproduct.atlassian.net
+timezone: America/New_York

@@ -55,7 +55,10 @@ return {
     },
     dependencies = {
       "giuxtaposition/blink-cmp-copilot",
-      "rafamadriz/friendly-snippets",
+      "disrupted/blink-cmp-conventional-commits",
+      "bydlw98/blink-cmp-env",
+      "Kaiser-Yang/blink-cmp-git",
+      "moyiz/blink-emoji.nvim",
       { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
       {
         "L3MON4D3/LuaSnip",
@@ -76,6 +79,7 @@ return {
           ls.config.setup(luasnipSetupOptions(types))
         end,
       },
+      "rafamadriz/friendly-snippets",
       {
         "saghen/blink.compat",
         optional = true,
@@ -160,12 +164,34 @@ return {
       },
       sources = {
         compat = {},
-        default = { "snippets", "copilot", "lsp", "path", "buffer", "dadbod" },
+        default = {
+          "snippets",
+          "copilot",
+          "lsp",
+          "dadbod",
+          "git",
+          "env",
+          "path",
+          "emoji",
+          "conventional_commits",
+          "buffer",
+        },
         providers = {
-          dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+          buffer = {
+            name = "Buffer",
+            max_items = 10,
+          },
+          conventional_commits = {
+            name = "Conventional Commits",
+            module = "blink-cmp-conventional-commits",
+            enabled = function()
+              return vim.bo.filetype == "gitcommit"
+            end,
+          },
           copilot = {
             name = "copilot",
             module = "blink-cmp-copilot",
+            max_items = 2,
             score_offset = 100,
             async = true,
             transform_items = function(_, items)
@@ -180,10 +206,42 @@ return {
               return items
             end,
           },
+          dadbod = {
+            name = "Dadbod",
+            module = "vim_dadbod_completion.blink",
+          },
+          emoji = {
+            module = "blink-emoji",
+            name = "Emoji",
+            max_items = 7,
+            opts = { insert = true }, -- Insert emoji (default) or complete its name
+          },
+          env = {
+            name = "Env",
+            module = "blink-cmp-env",
+            max_items = 7,
+            --- @type blink-cmp-env.Options
+            opts = {
+              item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
+              show_braces = false,
+              show_documentation_window = true,
+            },
+          },
+          git = {
+            module = "blink-cmp-git",
+            name = "Git",
+            max_items = 5,
+          },
           lazydev = {
             name = "LazyDev",
             module = "lazydev.integrations.blink",
+            max_items = 7,
             score_offset = 100, -- show at a higher priority than lsp
+          },
+          lsp = {
+            name = "LSP",
+            module = "blink.cmp.sources.lsp",
+            max_items = 7,
           },
         },
       },
@@ -191,6 +249,8 @@ return {
       signature = { enabled = true },
       keymap = {
         preset = "super-tab",
+        -- Allows C-e to toggle showing/hiding autocompletions rather than just hiding
+        -- ["<C-e>"] = { "hide", "show" },
         ["<C-y>"] = { "select_and_accept" },
       },
     },

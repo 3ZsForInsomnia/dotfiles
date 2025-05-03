@@ -53,3 +53,32 @@ create_db_schema_diagram() {
     -u "$username" -p "$PASSWORD" \
     -o "$output_directory" 
 }
+
+viewDB() {
+  local user=$1
+  local port=$2
+  local name=$3
+  local host=$4
+
+  psql -U "$user" -h "$host" -p "$port" -d "$name"
+}
+
+#################################
+# Generating database diagrams  #
+#################################
+
+# First arg: environment (dev|qat|uat)
+generateDbDiagramFor() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: generateDbDiagramFor <env>";
+    return 1;
+  fi
+
+  port=$(get_port_for_env "$1");
+  today=$(date +"%Y-%m-%d")
+
+  dir="$WORK_PATH/diagrams/$1/$today"
+  mkdir -p "$dir"
+
+  create_db_schema_diagram "$port" postgres adminTerraform "$dir"
+}

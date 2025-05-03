@@ -35,6 +35,7 @@ export PGPASSFILE="$XDG_DATA_HOME/psql/.pgpass"
 export BOOKMARKS_FILE="$XDG_DATA_HOME/bookmarks/.bookmarks"
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/.gitconfig"
 export LPASS_HOME="$XDG_DATA_HOME/lpass"
+export PAGER="delta"
 
 export AZURE_CONFIG_DIR="$XDG_CONFIG_HOME/azure"
 export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"

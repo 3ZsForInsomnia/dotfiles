@@ -44,6 +44,11 @@ wk.add({
   { "<leader>fm", group = "Misc" },
 
   --
+  -- <Leader>h Http (using Kulala)
+  --
+  { "<leader>h", group = "HTTP" },
+
+  --
   -- <Leader>g
   --
   { "<leader>g", group = "Git" },

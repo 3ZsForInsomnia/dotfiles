@@ -1,12 +1,80 @@
+local g = vim.g
 local cmd = require("helpers").k_cmd
 
+local e = "<leader>e"
+local h = "<leader>h"
+local k = function(command)
+  return "lua require('kulala')." .. command .. "()"
+end
+
 return {
+  {
+    "mistweaverco/kulala.nvim",
+    ft = { "http", "rest", "gql", "graphql" },
+    keys = {
+      cmd({
+        key = h .. "a",
+        action = "enew<cr><cmd>set filetype=http",
+        desc = "Open new HTTP buffer",
+      }),
+      cmd({
+        key = h .. "A",
+        action = k("scratchpad"),
+        desc = "Open http scratchpad",
+      }),
+      cmd({
+        key = h .. "C",
+        action = k("close"),
+        desc = "Close http scratchpad",
+      }),
+      cmd({
+        key = h .. "t",
+        action = k("toggle_view"),
+        desc = "Toggle headers/body",
+      }),
+      cmd({
+        key = h .. "s",
+        action = k("show_stats"),
+        desc = "Show stats",
+      }),
+      cmd({
+        key = h .. "e",
+        action = k("download_graphql_schema"),
+        desc = "Download Gql Schema",
+      }),
+      cmd({
+        key = h .. "c",
+        action = k("run"),
+        desc = "Run HTTP request",
+      }),
+      cmd({
+        key = h .. "i",
+        action = k("inspect"),
+        desc = "Inspect HTTP request",
+      }),
+      cmd({
+        key = h .. "p",
+        action = k("jump_prev"),
+        desc = "Jump to previous request",
+      }),
+      cmd({
+        key = h .. "n",
+        action = k("jump_next"),
+        desc = "Jump to next request",
+      }),
+      cmd({
+        key = h .. "r",
+        action = k("replay"),
+        desc = "Replay HTTP request",
+      }),
+    },
+  },
   {
     "yoshio15/vim-trello",
     event = "VeryLazy",
     config = function()
-      vim.g.vimTrelloApiKey = os.getenv("TRELLO_API_KEY")
-      vim.g.vimTrelloToken = os.getenv("TRELLO_API_TOKEN")
+      g.vimTrelloApiKey = os.getenv("TRELLO_API_KEY")
+      g.vimTrelloToken = os.getenv("TRELLO_API_TOKEN")
     end,
   },
   {
@@ -17,9 +85,9 @@ return {
     "liuchengxu/vista.vim",
     event = "VeryLazy",
     config = function()
-      vim.cmd([[
-         let g:vista_default_executive = 'nvim_lsp'
-      ]])
+      g.vista_default_executive = "nvim_lsp"
+      g.vista_sidebar_position = "vertical topleft"
+      g.vista_sidebar_width = 35
     end,
   },
   {

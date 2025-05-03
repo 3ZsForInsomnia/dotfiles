@@ -46,7 +46,7 @@ return {
     opts = {
       graph_style = "unicode",
       process_spinner = true,
-      initial_branch_name = "feat(pod1-",
+      initial_branch_name = "", -- Placeholder value for input
       disable_line_numbers = false,
       disable_relative_line_numbers = false,
       commit_editor = {
@@ -135,6 +135,19 @@ return {
     event = "VeryLazy",
     opts = {
       default_to_projects_v2 = true,
+      notifications = {
+        current_repo_only = true,
+      },
+      runs = {
+        icons = {
+          success = "✓",
+        },
+      },
+      mappings = {
+        notification = {
+          read = { lhs = "<C-r>", desc = "mark notification as read" },
+        },
+      },
     },
     keys = {
       { "<leader>gi", false },
@@ -152,6 +165,11 @@ return {
         key = g .. "o",
         action = o("notification list"),
         desc = "Notifications",
+      }),
+      cmd({
+        key = g .. "R",
+        action = o("review"),
+        desc = "Review the currently viewed PR",
       }),
 
       ---

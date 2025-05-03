@@ -89,7 +89,7 @@ function fkp {
   fi
 
   # Use fzf to select a pod
-  selected_pod=$(echo "$pods" | fzp --height=40% --border --prompt="Select a pod: ")
+  selected_pod=$(echo "$pods" | fzz --height=40% --border --prompt="Select a pod: ")
 
   if [[ -n "$selected_pod" ]]; then
     echo "$selected_pod" | pbcopy

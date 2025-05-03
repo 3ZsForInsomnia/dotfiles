@@ -1,6 +1,4 @@
-local keybind = require("helpers")
-local cmd = keybind.k_cmd
-local k = keybind.k
+local cmd = require("helpers").k_cmd
 
 local t = function(command)
   return "Telescope " .. command

@@ -87,7 +87,7 @@ function isMacLinuxOrWin() {
 
 # First arg: Message
 # Second arg: Optional title
-createNotification() {
+function createNotification() {
   if [[ "$MY_SYSTEM" == "mac" ]]; then
     if [[ -z "$2" ]]; then
       osascript -e "display notification \"$1\""
@@ -121,18 +121,29 @@ function find_index {
   return 1  # Failure
 }
 
-function check_input {
-  local input="$1"
-  local -a options=("${(@P)2}") # Access array by name using parameter expansion
-
-  # Check if the input is in the options array
-  for option in "${options[@]}"; do
-    if [[ "$input" == "$option" ]]; then
-      return 0  # If input matches an option, return success
+function checkArgument() {
+  local arg_to_check="$1"
+  shift
+  local allowed_values=("$@")
+  
+  local is_allowed=0
+  
+  for value in "${allowed_values[@]}"; do
+    if [[ "$arg_to_check" == "$value" ]]; then
+      is_allowed=1
+      break
     fi
   done
+  
+  if (( is_allowed )); then
+    return 0  # Success
+  else
+    echo "Error: '$arg_to_check' is not an allowed value."
+    echo "Allowed values are: ${allowed_values[@]}"
+    return 1  # Failure
+  fi
+}
 
-  # If no match is found, emit a message with allowed options
-  echo "The allowed set of options is: ${options[@]}"
-  return 1  # Return failure
+toUpper() {
+  tr '[:lower:]' '[:upper:]'
 }

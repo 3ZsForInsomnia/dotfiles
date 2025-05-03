@@ -4,7 +4,7 @@ alias kpf="k port-forward"
 
 function get_pods_by_namespace {
   local namespace=$1
-  
+
   # Get the list of pod names in the namespace
   kubectl get pods -n "$namespace" -o custom-columns=NAME:.metadata.name --no-headers 2>/dev/null
 }
