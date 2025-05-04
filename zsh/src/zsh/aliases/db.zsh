@@ -77,7 +77,7 @@ generateDbDiagramFor() {
   port=$(get_port_for_env "$1");
   today=$(date +"%Y-%m-%d")
 
-  dir="$WORK_PATH/diagrams/$1/$today"
+  dir="$W_PATH/diagrams/$1/$today"
   mkdir -p "$dir"
 
   create_db_schema_diagram "$port" postgres adminTerraform "$dir"

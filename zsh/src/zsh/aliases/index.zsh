@@ -20,4 +20,6 @@ source "$alias_path/slack.zsh"
 source "$alias_path/tui-tools.zsh"
 source "$alias_path/utils.zsh"
 source "$alias_path/wezterm.zsh"
+
+source "$alias_path/devenv.zsh"
 source "$alias_path/work/index.zsh"

@@ -50,7 +50,7 @@ export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border --bind "ctrl-d:p
 
 export FX_THEME=6
 
-export WORK_PATH="$XDG_CODE_HOME/work"
+export W_PATH="$XDG_CODE_HOME/work"
 
 export JAVA_HOME="/opt/homebrew/opt/openjdk@17/bin"
 
@@ -95,11 +95,12 @@ xdgbin=$XDG_BIN_HOME
 cargo=$CARGO_HOME/bin
 wez=/Applications/WezTerm.app/Contents/MacOS
 go=$GOPATH/bin
+brew=/opt/homebrew/bin
 
 # Note that this assumes postgres is installed via homebrew! This must be updated for linux
 psql=/opt/homebrew/opt/postgresql@12/bin
 
-export PATH="$JAVA_HOME:$go:$wez:$cargo:$xdgbin:$ubin:$ulobin:$hlobin:$hbin:$py3:$pybin:$nbin:$maven:$nvim:$psql:$PATH"
+export PATH="$JAVA_HOME:$brew:$go:$wez:$cargo:$xdgbin:$ubin:$ulobin:$hlobin:$hbin:$py3:$pybin:$nbin:$maven:$nvim:$psql:$PATH"
 
 # Must happen after PATH is set
 eval "$(pyenv init --path)"
@@ -119,10 +120,3 @@ else
   # Required for opening browser in WSL
   export BROWSER=wslview
 fi
-
-# This appears unused - site this is from:
-#   https://github.com/sindresorhus/guides/blob/main/npm-global-without-sudo.md
-# Originally needed this on WSL/MacOS, but on Arch it appears irrelevant?
-# Preserve MANPATH if you already defined it somewhere in your config.
-# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
-# export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"

@@ -1,8 +1,20 @@
 #!/bin/sh
-set -e
+set -eu
 PATH="/usr/local/bin:$PATH"
-trap 'rm -f "$$.tags"' EXIT
-git ls-files |
-  ctags --tag-relative -L - -f"$$.tags" --excmd=number
-# ctags --tag-relative -L - -f"$$.tags" --languages=-javascript,sql,java,jsx,tsx,typescript,python --excmd=number
-mv "$$.tags" "tags"
+
+TMP_TAGS="$(mktemp tags.XXXXXX)"
+cleanup() {
+  rm -f "$TMP_TAGS"
+}
+trap cleanup EXIT
+
+git ls-files -z |
+  ctags --tag-relative=yes \
+    --fields=+l \
+    --sort=yes \
+    --extras=+q \
+    -L - \
+    -f "$TMP_TAGS" \
+    --excmd=number
+
+mv "$TMP_TAGS" tags

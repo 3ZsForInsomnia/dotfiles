@@ -24,23 +24,26 @@ alias makeExecutable='chmod +x'
 alias seeMemory='free -m'
 alias seeCpu='htop'
 
-backup() {
+function backup() {
   eval 'cp $1 $1.bak'
 }
 
 alias sortProcsByFilesOpen='lsof -n A '{print $1}' | uniq -c SO -rn H -n 5'
 
-getPort() {
-  eval 'lsof -n -i :$1 G LISTEN'
+function getProcessUsingPort() {
+  lsof -iTCP:"$1" -sTCP:listen
 }
-killPort() {
-  str=$(getPort $1 A '{print $2}')
-  echo "$str"
-
-  command="kill $str"
-  eval "$command"
+function killPort() {
+  port="$1"
+  pids=$(getProcessUsingPort "$port" | awk 'NR>1 {print $2}')
+  if [[ -n "$pids" ]]; then
+    echo "Killing processes $pids using TCP port $port"
+    kill -9 "$pids"
+  else
+    echo "No process found using TCP port $port"
+  fi
 }
-killProcess() {
+function killProcess() {
   process=$(ps P C -d " " -f 1)
   kill -9 "$process"
 }
@@ -49,7 +52,7 @@ alias kp='killProcess'
 alias lc='wc -l'
 
 # $1=file extension
-lineCountForFolder() {
+function lineCountForFolder() {
   echo "Consider using `tokei` instead (it should already be installed)"
   if [ -z "$1" ]; then
     fd --glob '*.*' | xargs wc -l
@@ -108,17 +111,15 @@ function find_index {
   shift
   local options=("$@")
   
-  # Iterate over the options array to find the index of the input
-  for i in "${!options[@]}"; do
+  for i in {1..${#options[@]}}; do
     if [[ "${options[$i]}" == "$input" ]]; then
       echo "$i"
-      return 0  # Success
+      return 0
     fi
   done
 
-  # If no match is found, return -1
   echo "-1"
-  return 1  # Failure
+  return 1
 }
 
 function checkArgument() {
@@ -144,6 +145,6 @@ function checkArgument() {
   fi
 }
 
-toUpper() {
+function toUpper() {
   tr '[:lower:]' '[:upper:]'
 }

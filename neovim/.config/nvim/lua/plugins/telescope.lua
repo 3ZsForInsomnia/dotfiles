@@ -159,6 +159,7 @@ local createOpts = function()
         "--column",
         "--smart-case",
         "--hidden",
+        "--no-ignore",
       },
     },
     extensions = {
