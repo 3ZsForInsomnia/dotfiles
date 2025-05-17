@@ -17,6 +17,14 @@ alias lsrg='eza -lahRTFUm --git -I ".git"--icons G'
 alias grep='rg -i'
 alias find='fd -H'
 alias f='find'
+alias ff='f | fzz'
+
+# Searches by file extension
+function fef() {
+  result=$(fd -e "$1" | fzf -m --ansi --preview 'bat --style=numbers --color=always --line-range :500 {}')
+  echo "$result" | pbcopy
+  echo "$result"
+}
 
 alias fzz="fzf -m --ansi --preview 'bat --style=numbers --color=always --line-range :500 {}'"
 alias fzp="fzz PC"

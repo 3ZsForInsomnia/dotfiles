@@ -38,7 +38,12 @@ return {
     },
   },
   {
+    "mason-org/mason-lspconfig.nvim",
+    version = "^1.0.0",
+  },
+  {
     "williamboman/mason.nvim",
+    version = "^1.0.0",
     cmd = "Mason",
     build = ":MasonUpdate",
     opts_extend = { "ensure_installed" },

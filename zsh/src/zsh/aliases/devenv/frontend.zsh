@@ -26,20 +26,12 @@ function runFeWith() {
     echo "Running FE with $env backend";
   fi
 
+  open http://localhost:4200
+
   dotenvx run --env-file "$config_file" -- nx serve broker-portal-fe
 }
 
 function getBpFeConfig() {
-  getFeConfig "bpfe" "$1" "$W_FEBP"
-}
-
-function updateBpFeConfig() {
   local env="$1"
-  local port="$2"
-
-  file="$W_FEBP/local.$env.env"
-  key="VITE_REACT_APP_API_PATH"
-  value="http://localhost:$port/"
-
-  updateFrontendConfig "$file" "$key" "$value"
+  getFeConfig "bpfe" "$env"
 }

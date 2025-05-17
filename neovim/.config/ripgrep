@@ -1,3 +1,5 @@
+--max-columns=150
+--max-columns-preview
 --no-heading
 --with-filename
 --line-number
@@ -8,3 +10,7 @@
 --glob=!node_modules
 --glob=!lazyvim.json
 --glob=!LICENSE
+--type-add
+img:*.{png,jpg,jpeg,webp,gif,svg}*
+--type-add
+web:*.{html,css,js,jsx,tsx,ts}*

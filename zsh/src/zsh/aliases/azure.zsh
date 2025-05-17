@@ -9,31 +9,57 @@ function getConfig() {
 }
 
 function getConfigGeneric() {
-  local env="$1"
-  local vault="$2"
-  local file="$3"
+  local service="$1"
+  local env="$2"
+  local is_fe="$3"
 
+  loc=$(get_location_for "$service" "$env")
+  vault=$(get_vault_for "$service" "$env")
+  config=$(get_config_for "$service" "$env")
+
+  if [ -z "$loc" ]; then
+    echo "Location not found for $service in $env"
+    return 1
+  fi
+  if [ -z "$vault" ]; then
+    echo "Vault not found for $service in $env"
+    return 1
+  fi
+  if [ -z "$config" ]; then
+    echo "Config not found for $service in $env"
+    return 1
+  fi
+
+  file="$loc/conf.base.$env.json"
+  if [ "$is_fe" = true ]; then
+    file="$loc/base.$env.env"
+  fi
   rm -f "$file"
 
-  getConfig "$env" "$vault" "$file"
+  getConfig "$config" "$vault" "$file"
 }
 
-function addBackendSettingToEnv() {
-  local env_path="$1"
-  local backend="$2"
-  local env="$3"
-
-  printf "\n\n#################################################" >> "$env_path"
-  printf   "\n# NOTE: This .env file is based off of %s      #" "$env" >> "$env_path"
-  printf   "\n#################################################" >> "$env_path"
-  printf "\n\n# Below is env-specific config\n" >> "$env_path"
-  printf   "\nVITE_REACT_APP_API_PATH=%s" "$backend" >> "$env_path"
+function get_port_for() {
+  print -r -- "${E_PORTS[$1:$2]}"
 }
-
-get_port_for()           { print -r -- "${PORTS[$1:$2]}"; }
-get_url_for()            { print -r -- "${URLS[$1:$2]}"; }
-get_namespace_for()      { print -r -- "${NAMESPACES[$1:$2]}"; }
-get_cluster_for()        { print -r -- "${CLUSTERS[$1:$2]}"; }
-get_vault_for()          { print -r -- "${VAULTS[$1:$2]}"; }
-get_resource_group_for() { print -r -- "${RESOURCEGROUPS[$1:$2]}"; }
-get_config_for()         { print -r -- "${CONFIGNAMES[$1:$2]}"; }
+function get_url_for() {
+  print -r -- "${E_URLS[$1:$2]}"
+}
+function get_namespace_for() {
+  print -r -- "${E_NAMESPACES[$1:$2]}"
+}
+function get_cluster_for() {
+  print -r -- "${E_CLUSTERS[$1:$2]}"
+}
+function get_vault_for() {
+  print -r -- "${E_VAULTS[$1:$2]}"
+}
+function get_resource_group_for() {
+  print -r -- "${E_RESOURCEGROUPS[$1:$2]}"
+}
+function get_config_for() {
+  print -r -- "${E_CONFIGNAMES[$1:$2]}"
+}
+function get_location_for() {
+  print -r -- "${E_LOCATIONS[$1:$2]}"
+}

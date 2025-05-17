@@ -53,49 +53,76 @@ function runBpMigrations() {
 }
 
 function useLocalCt() {
-  url=$(get_url_for "ct" "local")
-  port=$(get_port_for "ct" "local")
+  local service="bp"
+  local env="$1"
+  local json_path=".servicesConfig.brokerPortalConfig.aquariumConfig.baseUrl"
+  newVal=$(get_url_for "ct" "local")
+  local is_local="$2"
 
-  aquaUrl="$url:$port"
-  aquaConfig=".servicesConfig.brokerPortalConfig.aquariumConfig.baseUrl"
-
-  updateBackendConfig "$1" "$W_BEBP/conf.local.$1.json" "$aquaConfig" "$aquaUrl" "${W_AVAILABLE_ENVS[@]}"
+  updateBackendConfig "$service" "$env" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
 }
 
 function useNonLocalCt() {
-  url=$(get_url_for "ct" "$1")
-  aquaConfig=".servicesConfig.brokerPortalConfig.aquariumConfig.baseUrl"
+  local service="bp"
+  local env="$1"
+  local json_path=".servicesConfig.brokerPortalConfig.aquariumConfig.baseUrl"
+  newVal=$(get_url_for "ct" "$2")
+  local is_local="$2"
 
-  updateBackendConfig "$1" "$W_BEBP/conf.local.$1.json" "$aquaConfig" "$url" "${W_AVAILABLE_ENVS[@]}"
+  updateBackendConfig "$service" "$env" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
 }
 
 function useLocalBpAuth() {
-  port=$(get_port_for "bp" "localauth")
+  local service="bp"
+  local env="$1"
+  local json_path=".httpPort"
+  newVal=$(get_port_for "bp" "localauth")
+  local is_local=true
 
-  updateBackendConfig "$1" "$W_BEBP/conf.$1.json" ".httpPort" "$port" "${W_AVAILABLE_ENVS[@]}"
-  updatePortInDotEnv "$1" "$port";
- 
+  updateBackendConfig "$service" "$env" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
+
+  fe_newVal=$(get_url_for "bpfe" "localauth")
+  updateFrontendConfig "bpfe" "local" "VITE_REACT_APP_API_PATH" "$fe_newVal"
+
   echo "Note: Running local auth requires running Caddy with \`caddy run\`"
   runAuth;
 }
 
 function useNonLocalBpAuth() {
-  port=$(get_port_for "bp" "local")
+  local service="bp"
+  local env="$1"
+  local json_path=".httpPort"
+  newVal=$(get_port_for "bp" "$2")
+  local is_local=true
 
-  killPort "$port"; # Stop the local auth server before updating the config
+  killPort "$newVal"; # Stop the local auth server before updating the config
 
-  updateBackendConfig "$1" "$W_BEBP/conf.$1.json" ".httpPort" "$port" "${W_AVAILABLE_ENVS[@]}"
-  updatePortInDotEnv "$1" "$port"
+  updateBackendConfig "$service" "$env" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
+
+  fe_newVal=$(get_url_for "bpfe" "local")
+  updateFrontendConfig "bpfe" "local" "VITE_REACT_APP_API_PATH" "$fe_newVal"
 }
 
 function getBpBeConfig() {
-  getBeConfig "$1" "$W_BEBP"
+  getBeConfig "bp" "$1"
 }
 
 function updateBpBeConfig() {
-  updateBackendConfig "$1" "$W_BEBP/conf.$1.json" ".httpPort" "$2" "${W_AVAILABLE_ENVS[@]}"
+  local service="bp"
+  local env="$1"
+  local json_path="$2"
+  local newVal="$3"
+  local is_local="$4"
+
+  updateBackendConfig "$service" "$env" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
 }
 
 function updateAquariumUrl() {
-  updateBackendConfig "$1" "$W_BEBP/conf.$1.json" ".servicesConfig.brokerPortalConfig.aquariumConfig.baseUrl" "$2" "${W_AVAILABLE_ENVS[@]}"
+  local service="bp"
+  local env="$1"
+  local json_path=".servicesConfig.brokerPortalConfig.aquariumConfig.baseUrl"
+  local newVal="$2"
+  local is_local="$3"
+
+  updateBackendConfig "$service" "$env" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
 }

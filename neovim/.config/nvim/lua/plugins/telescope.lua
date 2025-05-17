@@ -27,18 +27,17 @@ local createShortcuts = function()
   return {
     -- Search window mappings
     ["<M-t>"] = open_with_trouble,
-    ["<M-q>s"] = actions.send_to_qflist + actions.open_qflist,
-    ["<M-q>a"] = actions.add_to_qflist + actions.open_qflist,
+    ["<M-q>"] = actions.add_to_qflist,
     ["<M-a>"] = actions.add_selection,
     ["<M-r>"] = actions.remove_selection,
-    ["<M-s>a"] = actions.select_all,
-    ["<M-s>d"] = actions.drop_all,
+    ["<M-A>"] = actions.select_all,
+    ["<M-R>"] = actions.drop_all,
     ["<M-f>"] = actions.results_scrolling_up,
     ["<M-b>"] = actions.results_scrolling_down,
 
     -- Preview window mappings
-    ["<M-z>"] = actions.center,
     ["<M-w>"] = actions.which_key,
+    ["<M-z>"] = actions.center,
     ["<M-u>"] = actions.preview_scrolling_up,
     ["<M-d>"] = actions.preview_scrolling_down,
 
@@ -47,7 +46,7 @@ local createShortcuts = function()
     ["<C-g>"] = quote_prompt_glob,
     ["<C-i>"] = quote_prompt_iglob,
     ["<C-t>"] = find_by_type,
-    ["<C-space>"] = actions.to_fuzzy_refine,
+    ["<C-f>"] = actions.to_fuzzy_refine,
   }
 end
 
@@ -169,17 +168,6 @@ local createOpts = function()
         override_file_sorter = true, -- override the file sorter
         case_mode = "smart_case", -- or "ignore_case" or "respect_case"
       },
-      -- bookmarks = {
-      --   selected_browser = "chrome",
-      --   -- Either provide a shell command to open the URL
-      --   url_open_command = "open",
-      --   -- Show the full path to the bookmark instead of just the bookmark name
-      --   full_path = true,
-      --   -- Add a column which contains the tags for each bookmark for buku
-      --   buku_include_tags = false,
-      --   -- Provide debug messages
-      --   debug = false,
-      -- },
       heading = {
         treesitter = true,
       },
@@ -220,6 +208,7 @@ local loadExtensions = function(load_extension)
   load_extension("persisted")
   load_extension("bookmarks")
   load_extension("ui-select")
+  load_extension("adjacent")
 end
 
 return {
@@ -234,14 +223,9 @@ return {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
     dependencies = {
-      { "nvim-telescope/telescope-live-grep-args.nvim", version = "^1.0.0" },
+      "MaximilianLloyd/adjacent.nvim",
       "benfowler/telescope-luasnip.nvim",
       "LinArcX/telescope-changes.nvim",
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake"
-          .. "--build build --config Release && cmake --install build --prefix build",
-      },
       "3ZsForInsomnia/telescope-angular",
       "debugloop/telescope-undo.nvim",
       "LinArcX/telescope-scriptnames.nvim",
@@ -251,6 +235,13 @@ return {
       "Snikimonkd/telescope-git-conflicts.nvim",
       "olimorris/persisted.nvim",
       "nvim-telescope/telescope-ui-select.nvim",
+      { "barrett-ruth/http-codes.nvim", config = true },
+      { "nvim-telescope/telescope-live-grep-args.nvim", version = "^1.0.0" },
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake"
+          .. "--build build --config Release && cmake --install build --prefix build",
+      },
     },
     config = function()
       local telescope = require("telescope")
@@ -261,6 +252,11 @@ return {
     end,
     keys = function()
       return {
+        cmd({
+          key = f .. "a",
+          action = t("adjacent"),
+          desc = "Search files adjacent to current file",
+        }),
         cmd({
           key = f .. "s",
           action = "lua require('telescope-live-grep-args.shortcuts').grep_word_under_cursor()",
@@ -298,7 +294,7 @@ return {
         --
         cmd({
           key = f .. "o",
-          action = "ObsidianSearch",
+          action = "Obsidian search",
           desc = "Search notes",
         }),
 
@@ -426,6 +422,11 @@ return {
         }),
         cmd({
           key = f .. "dh",
+          action = "HTTPCodes",
+          desc = "Http Codes",
+        }),
+        cmd({
+          key = f .. "dH",
           action = t("help_tags"),
           desc = "Help tags",
         }),
