@@ -10,24 +10,8 @@ hbin="$hloc/bin"
 # Global variables   #
 ######################
 
-# export TERM="wezterm"
-export VISUAL=nvim
-export EDITOR="$VISUAL"
-export TZ='America/New_York'
-export TIMEZONE="America/New_York"
 export CRON_LOG="$HOME/.local/state/cron/cron.log"
 
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_DATA_HOME=$HOME/.local/share
-export XDG_STATE_HOME=$HOME/.local/state
-export XDG_BIN_HOME=$HOME/.local/bin
-export XDG_DATA_DIRS="$HOME/.local/data:$XDG_DATA_DIRS"
-export XDG_RUNTIME_DIR="/tmp"
-
-export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
-export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh/zcompcache"
-export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python/history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
@@ -35,7 +19,6 @@ export PGPASSFILE="$XDG_DATA_HOME/psql/.pgpass"
 export BOOKMARKS_FILE="$XDG_DATA_HOME/bookmarks/.bookmarks"
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/.gitconfig"
 export LPASS_HOME="$XDG_DATA_HOME/lpass"
-export PAGER="delta"
 
 export AZURE_CONFIG_DIR="$XDG_CONFIG_HOME/azure"
 export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"
@@ -101,9 +84,6 @@ brew=/opt/homebrew/bin
 psql=/opt/homebrew/opt/postgresql@12/bin
 
 export PATH="$JAVA_HOME:$brew:$go:$wez:$cargo:$xdgbin:$ubin:$ulobin:$hlobin:$hbin:$py3:$pybin:$nbin:$maven:$nvim:$psql:$PATH"
-
-# Must happen after PATH is set
-eval "$(pyenv init --path)"
 
 ######################
 # OS specific items  #

@@ -14,7 +14,6 @@
 --exclude=tests
 --exclude=*-test-*
 --exclude=plugins
---exclude=zsh-syntax-highlighting
 --exclude=luarc.json
 --exclude=git-completion.bash
 --exclude=package-lock.json

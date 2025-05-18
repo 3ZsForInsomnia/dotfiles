@@ -481,11 +481,7 @@ return {
     cmd = { "PacerStart", "PacerPause", "PacerResume", "PacerResumeCursor" },
     config = function()
       require("pacer").setup({
-        speed = 250,
-        move_cursor = false,
-        highlight = {
-          bold = true,
-        },
+        move_cursor = true,
       })
     end,
   },

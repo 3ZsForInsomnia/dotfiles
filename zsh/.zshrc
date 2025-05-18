@@ -1,50 +1,31 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 
-export XDG_CODE_HOME=$HOME/src
-export ZSH_CONFIG_DIR="$XDG_CODE_HOME/zsh"
 fpath=("$ZSH_CONFIG_DIR/completions" $fpath)
+
+zmodload zsh/complist
 autoload -Uz compinit
-compinit -C
+compinit -C ~/.cache/zsh/.zcompdump
 
-source () {
-    [[ ! "$1.zwc" -nt $1 ]] || zcompile $1
-    builtin source $@
-}
-
-. () {
-    [[ ! "$1.zwc" -nt $1 ]] || zcompile $1
-    builtin . $@
-}
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
+export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh/zcompcache"
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export HISTSIZE=100000
+export SAVEHIST=100000
+setopt append_history
+setopt auto_cd
+setopt correct_all
+export CORRECT_IGNORE_FILE='.*|test'
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 
-export HISTSIZE=100000
-export SAVEHIST=100000
-
-setopt auto_cd
-export CORRECT_IGNORE_FILE='.*|test'
-setopt correct_all
-setopt append_history
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 source "$ZSH_CONFIG_DIR/.source-things.zsh"
-
-# Create the parent directory if it doesn't exist
-# [[ -d $ZSH_COMPDUMP ]] || mkdir -p $ZSH_COMPDUMP
-#
-# _comp_files=($ZSH_COMPDUMP/zcompdump(Nm-20))
-# if (( $#_comp_files )); then
-#     autoload -Uz compinit -C -d "$ZSH_COMPDUMP/.zcompdump-${ZSH_VERSION}"
-# else
-#     autoload -Uz compinit -d "$ZSH_COMPDUMP/.zcompdump-${ZSH_VERSION}"
-# fi

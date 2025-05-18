@@ -757,5 +757,4 @@ zip
 zlib1g-dev
 zlib1g
 zsh-common
-zsh-syntax-highlighting
 zsh
