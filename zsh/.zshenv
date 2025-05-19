@@ -9,6 +9,8 @@ export XDG_DATA_DIRS="$HOME/.local/data:$XDG_DATA_DIRS"
 export XDG_CODE_HOME=$HOME/src
 export ZSH_CONFIG_DIR="$XDG_CODE_HOME/zsh"
 
+export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+
 # Essential environment variables
 export EDITOR=nvim
 export VISUAL=nvim
@@ -16,5 +18,12 @@ export PAGER="delta"
 export TZ='America/New_York'
 export TIMEZONE="America/New_York"
 
+ubin="/usr/bin"
+uloc="/usr/local"
+ulobin="/usr/local/bin"
+hloc="$HOME/.local"
+hlobin="$hloc/bin"
+hbin="$hloc/bin"
+
 # Basic PATH (minimal version needed by all shells)
-export PATH="/usr/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+export PATH="$ubin:$uloc:$ulobin:$hloc:$hlobin:$hbin:$PATH"

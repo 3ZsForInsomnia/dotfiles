@@ -1,9 +1,3 @@
-# bash/zsh completion support for core Git.
-#
-# Copyright (C) 2006,2007 Shawn O. Pearce <spearce@spearce.org>
-# Conceptually based on gitcompletion (http://gitweb.hawaga.org.uk/).
-# Distributed under the GNU General Public License, version 2.0.
-#
 # The contained completion routines provide support for completing:
 #
 #    *) local and remote branch names
@@ -83,21 +77,6 @@ __git_find_repo_path ()
 		__git_repo_path=.git
 	else
 		__git_repo_path="$(git rev-parse --git-dir 2>/dev/null)"
-	fi
-}
-
-# Deprecated: use __git_find_repo_path() and $__git_repo_path instead
-# __gitdir accepts 0 or 1 arguments (i.e., location)
-# returns location of .git repo
-__gitdir ()
-{
-	if [ -z "${1-}" ]; then
-		__git_find_repo_path || return 1
-		echo "$__git_repo_path"
-	elif [ -d "$1/.git" ]; then
-		echo "$1/.git"
-	else
-		echo "$1"
 	fi
 }
 
@@ -854,16 +833,6 @@ __git_complete_refs ()
 	if [ "$dwim" = "yes" ]; then
 		__gitcomp_direct_append "$(__git_dwim_remote_heads "$pfx" "$cur_" "$sfx")"
 	fi
-}
-
-# __git_refs2 requires 1 argument (to pass to __git_refs)
-# Deprecated: use __git_complete_fetch_refspecs() instead.
-__git_refs2 ()
-{
-	local i
-	for i in $(__git_refs "$1"); do
-		echo "$i:$i"
-	done
 }
 
 # Completes refspecs for fetching from a remote repository.

@@ -1,9 +1,5 @@
-#
-# Functions
-#
-
-autoload -Uz compinit
-compinit
+# Use conditional compinit to avoid duplication
+autoload -Uz +X compdef 2>/dev/null || true
 
 # The name of the current branch
 # Back-compatibility wrapper for when this function was defined here in

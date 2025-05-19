@@ -1,5 +1,5 @@
 alias groot="git rev-parse --show-toplevel"
-goToGroot() {
+function goToGroot() {
   $(groot)
 }
 
