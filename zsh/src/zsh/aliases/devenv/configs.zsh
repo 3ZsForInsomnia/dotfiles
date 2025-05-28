@@ -1,10 +1,12 @@
 function addBackendSettingToEnv() {
-  local service="$1"
-  local env="$2"
-
-  location=$(get_location_for "$service" "$env")
-  backend=$(get_url_for "$service" "$env")
-  file="$location/$env.env"
+  local file="$1"
+  local backend="$2"
+  # local service="$1"
+  # local env="$2"
+  #
+  # location=$(get_location_for "$service" "$env")
+  # backend=$(get_url_for "$service" "$env")
+  # file="$location/$env.env"
 
   printf "\n\n#################################################" >> "$file"
   printf   "\n# NOTE: This .env file is based off of %s      #" "$env" >> "$file"
@@ -24,7 +26,7 @@ function commentOutNonLocalFrontendEnvars() {
 
   # Make sure the file exists
   if [[ ! -f "$file" ]]; then
-echo "File not found: $file"
+    echo "File not found: $file"
     return 1
   fi
 
@@ -73,13 +75,18 @@ function getFeConfig() {
   cp "$location/base.$env.env" "$env_file"
 
   # This creates the "user-modified" section of the config file
-  addBackendSettingToEnv "$service" "$env"
+  backend=$(get_url_for "$service" "$env")
+  addBackendSettingToEnv "$env_file" "$backend"
 
   commentOutNonLocalFrontendEnvars "$service" "$env" \
     "VITE_REACT_APP_METRICS_APP_ID" \
     "VITE_REACT_APP_METRICS_CLIENT_TOKEN" \
     "VITE_REACT_APP_METRICS_SITE" \
     "VITE_REACT_APP_METRICS_SERVICE"
+
+  cp "$env_file" "$local_env_file"
+  backend=$(get_url_for "$service" "local")
+  updateFrontendConfig "$service" "qat" "VITE_REACT_APP_API_PATH" "$backend" true
 }
 
 function updateFrontendConfig() {
@@ -87,9 +94,14 @@ function updateFrontendConfig() {
   local env="$2"
   local key="$3"
   local value="$4"
+  local is_local="$5"
 
   config_dir=$(get_location_for "$service" "$env")
   config_file="$config_dir/$env.env"
+  if [[ "$is_local" == true ]]; then
+    config_file="$config_dir/local.$env.env"
+  fi
+  echo "Updating $key in $config_file to $value"
 
   printf "\n%s=%s" "$key" "$value" >> "$config_file"
 }
@@ -98,6 +110,7 @@ function getBeConfig() {
   local service="$1"
   local env="$2"
   location=$(get_location_for "$service" "$env")
+  port=$(get_port_for "$service" "$env")
 
   rm -f "$location/conf.$env.json"
   rm -f "$location/conf.local.$env.json"
@@ -139,6 +152,7 @@ function updateBackendConfig() {
   local tmp_file="$base_config.tmp"
   file="$location/conf.$env.json"
   if [[ "$is_local" == true ]]; then
+    base_config="$location/conf.base.$env.json"
     file="$location/conf.local.$env.json"
   fi
 

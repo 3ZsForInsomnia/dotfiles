@@ -9,13 +9,13 @@ alias runAuth="goToAuth; gob; echo 'Note: Running local auth requires running Ca
 
 function runBeWith() {
   local env="$1"
-  shift
-  local allowed_envs=("$@")
-
-  if ! checkArgument "$env" "${allowed_envs[@]}"; then
-    echo "Invalid environment. Must be one of: ${allowed_envs[@]}"
-    return 1;
-  fi
+  # shift
+  # local allowed_envs=("$@")
+  #
+  # if ! checkArgument "$env" "${allowed_envs[@]}"; then
+  #   echo "Invalid environment. Must be one of: ${allowed_envs[@]}"
+  #   return 1;
+  # fi
 
   plat;
   CompileDaemon \
@@ -120,9 +120,11 @@ function updateBpBeConfig() {
 function updateAquariumUrl() {
   local service="bp"
   local env="$1"
+  local config="$2"
   local json_path=".servicesConfig.brokerPortalConfig.aquariumConfig.baseUrl"
-  local newVal="$2"
-  local is_local="$3"
+  local is_local=true
 
-  updateBackendConfig "$service" "$env" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
+  newVal=$(get_url_for "ct" "$env")
+
+  updateBackendConfig "$service" "$config" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
 }

@@ -70,11 +70,20 @@ return {
       v.diagnostic.config({
         virtual_text = {
           format = function(diagnostic)
-            -- Replace newline and tab characters with space for more compact diagnostics
-            local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+            local message = diagnostic.message:gsub("\n.*", "...")
             return message
+            -- Replace newline and tab characters with space for more compact diagnostics
+            -- local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+            -- return message
 
             -- return diagnostic.message
+          end,
+        },
+        float = {
+          show_header = true,
+          source = true,
+          format = function(diagnostic)
+            return diagnostic.message
           end,
         },
       }, neotest_ns)

@@ -1,6 +1,3 @@
-alias fe="j fe"
-alias febp="j febp"
-
 function runFeWith() {
   local env="$1"
   local as_if_it_were="$2"

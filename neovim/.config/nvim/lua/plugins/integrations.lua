@@ -108,10 +108,11 @@ _G.openNote = function(noteType)
     f:close()
     c("e " .. notePath)
     return
+  else
+    c("ObsidianNew " .. name)
+    -- c("ObsidianNew " .. name:gsub(" ", "\\ "))
+    c("ObsidianTemplate " .. noteType .. "Note.md")
   end
-
-  c("ObsidianNew " .. name:gsub(" ", "\\ "))
-  c("ObsidianTemplate " .. noteType .. "Note.md")
 end
 
 return {
@@ -479,10 +480,5 @@ return {
   {
     dir = "/Users/zacharylevinw/src/pacer.nvim/",
     cmd = { "PacerStart", "PacerPause", "PacerResume", "PacerResumeCursor" },
-    config = function()
-      require("pacer").setup({
-        move_cursor = true,
-      })
-    end,
   },
 }

@@ -2,17 +2,17 @@ alias alg='alias P'
 
 alias ls='eza -lahUm -F --icons --git'
 alias lsg='ls G'
-alias lsd='eza -lahUFmD --icons -I ".git"' 
+alias lsd='eza -lahUmD -F --icons -I ".git"' 
 
 function lsrFunc() {
   if [ -z "$1" ]; then
-    eza -lahRTFUm --git -I ".git"--icons 
+    eza -lahRTUm -F --git -I ".git" --icons
   else
-    eza -lahRTFUm --git -I ".git"--icons -L $1
+    eza -lahRTUm -F --git -I ".git" --icons -L $1
   fi
 }
 alias lsr='lsrFunc'
-alias lsrg='eza -lahRTFUm --git -I ".git"--icons G'
+alias lsrg='eza -lahRTUm -F --git -I ".git" --icons G'
 
 alias grep='rg -i'
 alias find='fd -H'
@@ -33,7 +33,7 @@ alias fzo='o "$(fzf)"'
 
 # ftags - search ctags with preview
 # only works if tags-file was generated with --excmd=number
-ftags() {
+function ftags() {
   local line
   [ -e tags ] &&
   line=$(
@@ -47,27 +47,66 @@ ftags() {
                                       -c "silent tag $(cut -f2 <<< "$line")"
 }
 
-# cdf - cd into the directory of the selected file
-cdf() {
-   local file
-   local dir
-   file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+# fcdf - find and cd to file or directory
+# Usage: fcdf [--all|-a] [query]
+# Options:
+#   --all, -a: Include git-ignored files
+function fcdf() {
+  local include_ignored=false
+  local query=""
+  
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --all|-a)
+        include_ignored=true
+        shift
+        ;;
+      *)
+        query="$1"
+        shift
+        ;;
+    esac
+  done
+  
+  local fd_cmd="fd --hidden --follow --exclude .git"
+  [[ "$include_ignored" = true ]] && fd_cmd="$fd_cmd --no-ignore"
+  [[ -n "$query" ]] && fd_cmd="$fd_cmd '$query'"
+  
+  local target
+  target=$(eval "$fd_cmd" 2>/dev/null | 
+          fzf --preview '[ -d {} ] && eza -la --icons --git --color=always {} || bat --style=numbers --color=always --line-range :500 {}')
+  
+  if [[ -n "$target" ]]; then
+    if [[ -d "$target" ]]; then
+      cd "$target" || return 1
+      echo "Changed to directory: $target"
+    else
+      local dir
+      dir=$(dirname "$target")
+      cd "$dir" || return 1
+      echo "Changed to directory: $dir (parent of $target)"
+    fi
+  else
+    echo "No target selected."
+    return 1
+  fi
 }
 
 # fda - including hidden directories
-fda() {
+function fda() {
   local dir
-  dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
+  dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir" || return 0
 }
 
 # fzf bookmarks
-fbm() {
+function fbm() {
   local mark
   mark=$(cat $XDG_DATA_HOME/bookmarks/.bookmarks 2> /dev/null | fzf +m) && jump "$mark"
 }
 
 # fkill - kill processes - list only the ones you can kill. Modified the earlier script.
-fkill() {
+function fkill() {
     local pid 
     if [ "$UID" != "0" ]; then
         pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
@@ -81,11 +120,41 @@ fkill() {
     fi  
 }
 
-flp() {
+function fkillport() {
+  local port_arg=${1:-}
+  local procs
+  
+  if [[ -n "$port_arg" ]]; then
+    procs=$(lsof -iTCP:$port_arg -sTCP:LISTEN -n -P 2>/dev/null)
+  else
+    procs=$(lsof -iTCP -sTCP:LISTEN -n -P 2>/dev/null)
+  fi
+  
+  if [[ -z "$procs" ]]; then
+    echo "No processes found listening on ports"
+    return 1
+  fi
+  
+  local pid
+  pid=$(echo "$procs" | sed 1d | 
+        fzf -m --height=40% --border --header="Command  PID  User  Port" \
+            --prompt="Select process to kill: " | 
+        awk '{print $2}')
+  
+  if [[ -n "$pid" ]]; then
+    echo "$pid" | xargs kill -${2:-9}
+    echo "Killed process(es) with PID: $pid"
+  else
+    echo "No process selected."
+    return 1
+  fi
+}
+
+function flp() {
   lpass show -c --password $(lpass ls  | fzf | awk '{print $(NF)}' | sed 's/\]//g')
 }
 
-function fkp {
+function fkp() {
   local namespace=$1
 
   # Get the list of pods
@@ -108,7 +177,7 @@ function fkp {
   fi
 }
 
-function fkd {
+function fkd() {
   local namespace=$1
 
   deployments=$(getKDepls "$namespace")
@@ -123,3 +192,35 @@ function fkd {
     return 1
   fi
 }
+
+function fbr() {
+  local branches branch
+  branches=$(git branch --all | grep -v HEAD) &&
+  branch=$(echo "$branches" |
+           fzf --height 50% --ansi --preview 'git log -n 50 --color=always --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {})' |
+           sed "s/.* //" | sed "s#remotes/[^/]*/##") &&
+  git checkout "$branch"
+}
+
+function fh() {
+  print -z $(fc -l 1 | fzf --height 50% --reverse --tac | sed 's/ *[0-9]* *//')
+}
+
+function fenv() {
+  local out
+  out=$(env | fzf)
+  echo "$out" | pbcopy
+  echo "$out"
+}
+
+function frg() {
+  local RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case"
+  local INITIAL_QUERY="${*:-}"
+  : | fzf --ansi --disabled --query "$INITIAL_QUERY" \
+      --bind "start:reload:$RG_PREFIX {q}" \
+      --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
+      --delimiter : \
+      --preview 'bat --color=always {1} --highlight-line {2}' \
+      --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+      --bind 'enter:become(nvim {1} +{2})'
+} 

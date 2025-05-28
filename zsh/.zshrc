@@ -23,10 +23,13 @@ setopt correct_all
 setopt no_beep
 ZSH_DISABLE_COMPFIX=true
 
+bindkey '^R' history-incremental-search-backward
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
-bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
+bindkey "^[[1;3C" forward-word
+bindkey "^[d" backward-delete-word
+bindkey "^[c" delete-word
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)

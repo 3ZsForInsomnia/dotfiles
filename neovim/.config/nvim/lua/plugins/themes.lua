@@ -84,6 +84,7 @@ return {
   },
   { "onsails/lspkind-nvim" },
   { "HiPhish/rainbow-delimiters.nvim" },
+  { "goldos24/rainbow-variables-nvim" },
   {
     "m-demare/hlargs.nvim",
     opts = {

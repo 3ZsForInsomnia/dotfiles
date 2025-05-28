@@ -2,6 +2,15 @@ alias j='jump'
 alias b='bookmark'
 alias shm='showmarks'
 
+function mkcd() {
+  if [ -z "$1" ]; then
+    echo "Usage: mkcd <directory>"
+    return 1
+  fi
+
+  mkdir -p "$1" && cd "$1" || return 1
+}
+
 function o() {
   if [[ $1 == "www."* ]]; then
     str="https://$1"
@@ -21,18 +30,56 @@ function o() {
 }
 
 alias makeExecutable='chmod +x'
-alias seeMemory='free -m'
-alias seeCpu='htop'
+function seeMemory() {
+  if [[ "$MY_SYSTEM" == "mac" ]]; then
+    vm_stat | perl -ne '/page size of (\d+)/ and $size=$1; /Pages\s+([^:]+)[^\d]+(\d+)/ and printf("%-16s % 16.2f MB\n", "$1:", $2 * $size / 1048576);'
+  elif [[ "$MY_SYSTEM" == "linux" ]]; then
+    free -m
+  else
+    echo "Memory stats not supported on this platform"
+  fi
+}
+
+function seeCpu() {
+  if command -v htop &>/dev/null; then
+    htop
+  elif [[ "$MY_SYSTEM" == "mac" ]]; then
+    top -o cpu
+  elif [[ "$MY_SYSTEM" == "linux" ]]; then
+    top
+  else
+    echo "CPU monitor not available"
+  fi
+}
 
 function backup() {
   eval 'cp $1 $1.bak'
 }
 
-alias sortProcsByFilesOpen='lsof -n A '{print $1}' | uniq -c SO -rn H -n 5'
+function sortProcsByFilesOpen() {
+  if command -v lsof &>/dev/null; then
+    lsof -n | awk '{print $1}' | uniq -c | sort -rn | head -n 5
+  else
+    echo "Error: lsof command not found"
+    return 1
+  fi
+}
 
 function getProcessUsingPort() {
-  lsof -iTCP:"$1" -sTCP:listen
+  if [[ -z "$1" ]]; then
+    echo "Usage: getProcessUsingPort <port_number>"
+    return 1
+  fi
+  
+  if [[ "$MY_SYSTEM" == "mac" ]]; then
+    lsof -iTCP:"$1" -sTCP:LISTEN
+  elif [[ "$MY_SYSTEM" == "linux" ]]; then
+    lsof -iTCP:"$1" -sTCP:LISTEN
+  else
+    netstat -ano | grep "LISTENING" | grep ":$1"
+  fi
 }
+
 function killPort() {
   port="$1"
   pids=$(getProcessUsingPort "$port" | awk 'NR>1 {print $2}')
@@ -43,21 +90,51 @@ function killPort() {
     echo "No process found using TCP port $port"
   fi
 }
+
 function killProcess() {
-  process=$(ps P C -d " " -f 1)
-  kill -9 "$process"
+  if [ -z "$1" ]; then
+    echo "Usage: killProcess <process_name>"
+    return 1
+  fi
+  pids=$(pgrep -f "$1")
+  if [ -n "$pids" ]; then
+    echo "Killing processes matching: $1"
+    kill -9 $pids
+  else
+    echo "No processes matching: $1"
+  fi
 }
+
 alias kp='killProcess'
 
 alias lc='wc -l'
 
 # $1=file extension
 function lineCountForFolder() {
-  echo "Consider using `tokei` instead (it should already be installed)"
-  if [ -z "$1" ]; then
-    fd --glob '*.*' | xargs wc -l
+  echo "Consider using 'tokei' instead (it should already be installed)"
+  
+  local cmd=""
+  if command -v fd &>/dev/null; then
+    cmd="fd"
+  elif command -v find &>/dev/null; then
+    cmd="find"
   else
-    fd --glob "*.${1}" | xargs wc -l
+    echo "Neither fd nor find command available"
+    return 1
+  fi
+  
+  if [ -z "$1" ]; then
+    if [[ "$cmd" == "fd" ]]; then
+      fd --glob '*.*' | xargs wc -l
+    else
+      find . -type f | xargs wc -l
+    fi
+  else
+    if [[ "$cmd" == "fd" ]]; then
+      fd --glob "*.${1}" | xargs wc -l
+    else
+      find . -type f -name "*.${1}" | xargs wc -l
+    fi
   fi
 }
 
@@ -111,7 +188,7 @@ function find_index {
   shift
   local options=("$@")
   
-  for i in {1..${#options[@]}}; do
+  for i in $(seq 1 ${#options[@]}); do
     if [[ "${options[$i]}" == "$input" ]]; then
       echo "$i"
       return 0
@@ -148,3 +225,26 @@ function checkArgument() {
 function toUpper() {
   tr '[:lower:]' '[:upper:]'
 }
+
+# Extract any archive automatically
+function extract() {
+  if [ -f "$1" ]; then
+    case "$1" in
+      *.tar.bz2)   tar xjf "$1"     ;;
+      *.tar.gz)    tar xzf "$1"     ;;
+      *.bz2)       bunzip2 "$1"     ;;
+      *.rar)       unrar e "$1"     ;;
+      *.gz)        gunzip "$1"      ;;
+      *.tar)       tar xf "$1"      ;;
+      *.tbz2)      tar xjf "$1"     ;;
+      *.tgz)       tar xzf "$1"     ;;
+      *.zip)       unzip "$1"       ;;
+      *.Z)         uncompress "$1"  ;;
+      *.7z)        7z x "$1"        ;;
+      *)           echo "'$1' cannot be extracted" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+

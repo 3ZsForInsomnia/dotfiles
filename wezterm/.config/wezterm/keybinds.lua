@@ -83,12 +83,6 @@ M.Misc = {
 		mods = "CTRL|SHIFT",
 		action = action.DisableDefaultAssignment,
 	},
-	-- Ctrl-R is used by zsh-autocomplete
-	{
-		key = "r",
-		mods = "CTRL",
-		action = action.DisableDefaultAssignment,
-	},
 	{
 		key = "R",
 		mods = "CTRL",
@@ -105,16 +99,6 @@ M.Misc = {
 				replace_current = false,
 			},
 		}),
-	},
-	{
-		key = "LeftArrow",
-		mods = "OPT",
-		action = action({ SendString = "\x1bb" }),
-	},
-	{
-		key = "RightArrow",
-		mods = "OPT",
-		action = action({ SendString = "\x1bf" }),
 	},
 }
 
