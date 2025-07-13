@@ -1,4 +1,4 @@
-browser:
+browser: open -a "Google Chrome"
 editor: nvim
 git_protocol: ssh
 pager: delta

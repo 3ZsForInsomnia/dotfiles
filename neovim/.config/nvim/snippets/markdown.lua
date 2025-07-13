@@ -33,9 +33,8 @@ return {
   }, {
     t("> [!"),
     c(1, {
-      t("note"),
-      t("abstract"),
       t("info"),
+      t("todo"),
       t("tip"),
       t("success"),
       t("question"),
@@ -46,7 +45,8 @@ return {
       t("example"),
       t("quote"),
     }, {}),
-    t({ "]", "> " }),
+    t("]"),
+    t({ "", "> " }),
     i(2, "Text"),
   }),
 }

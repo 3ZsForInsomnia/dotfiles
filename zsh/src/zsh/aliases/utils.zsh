@@ -70,7 +70,7 @@ function getProcessUsingPort() {
     echo "Usage: getProcessUsingPort <port_number>"
     return 1
   fi
-  
+
   if [[ "$MY_SYSTEM" == "mac" ]]; then
     lsof -iTCP:"$1" -sTCP:LISTEN
   elif [[ "$MY_SYSTEM" == "linux" ]]; then
@@ -112,7 +112,7 @@ alias lc='wc -l'
 # $1=file extension
 function lineCountForFolder() {
   echo "Consider using 'tokei' instead (it should already be installed)"
-  
+
   local cmd=""
   if command -v fd &>/dev/null; then
     cmd="fd"
@@ -122,7 +122,7 @@ function lineCountForFolder() {
     echo "Neither fd nor find command available"
     return 1
   fi
-  
+
   if [ -z "$1" ]; then
     if [[ "$cmd" == "fd" ]]; then
       fd --glob '*.*' | xargs wc -l
@@ -187,7 +187,7 @@ function find_index {
   local input="$1"
   shift
   local options=("$@")
-  
+
   for i in $(seq 1 ${#options[@]}); do
     if [[ "${options[$i]}" == "$input" ]]; then
       echo "$i"
@@ -203,22 +203,22 @@ function checkArgument() {
   local arg_to_check="$1"
   shift
   local allowed_values=("$@")
-  
+
   local is_allowed=0
-  
+
   for value in "${allowed_values[@]}"; do
     if [[ "$arg_to_check" == "$value" ]]; then
       is_allowed=1
       break
     fi
   done
-  
-  if (( is_allowed )); then
-    return 0  # Success
+
+  if ((is_allowed)); then
+    return 0 # Success
   else
     echo "Error: '$arg_to_check' is not an allowed value."
     echo "Allowed values are: ${allowed_values[@]}"
-    return 1  # Failure
+    return 1 # Failure
   fi
 }
 
@@ -230,21 +230,20 @@ function toUpper() {
 function extract() {
   if [ -f "$1" ]; then
     case "$1" in
-      *.tar.bz2)   tar xjf "$1"     ;;
-      *.tar.gz)    tar xzf "$1"     ;;
-      *.bz2)       bunzip2 "$1"     ;;
-      *.rar)       unrar e "$1"     ;;
-      *.gz)        gunzip "$1"      ;;
-      *.tar)       tar xf "$1"      ;;
-      *.tbz2)      tar xjf "$1"     ;;
-      *.tgz)       tar xzf "$1"     ;;
-      *.zip)       unzip "$1"       ;;
-      *.Z)         uncompress "$1"  ;;
-      *.7z)        7z x "$1"        ;;
-      *)           echo "'$1' cannot be extracted" ;;
+    *.tar.bz2) tar xjf "$1" ;;
+    *.tar.gz) tar xzf "$1" ;;
+    *.bz2) bunzip2 "$1" ;;
+    *.rar) unrar e "$1" ;;
+    *.gz) gunzip "$1" ;;
+    *.tar) tar xf "$1" ;;
+    *.tbz2) tar xjf "$1" ;;
+    *.tgz) tar xzf "$1" ;;
+    *.zip) unzip "$1" ;;
+    *.Z) uncompress "$1" ;;
+    *.7z) 7z x "$1" ;;
+    *) echo "'$1' cannot be extracted" ;;
     esac
   else
     echo "'$1' is not a valid file"
   fi
 }
-

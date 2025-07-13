@@ -39,9 +39,16 @@ return {
     },
   },
   {
-    "vuki656/package-info.nvim",
+    "MonsieurTib/package-ui.nvim",
     config = true,
     event = "VeryLazy",
+    keys = {
+      cmd({
+        key = l .. "p",
+        action = "PackageUI",
+        desc = "Open Package UI",
+      }),
+    },
   },
   {
     "max397574/colortils.nvim",

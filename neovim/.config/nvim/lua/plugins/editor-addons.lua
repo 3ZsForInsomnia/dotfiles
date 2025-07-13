@@ -1,7 +1,6 @@
 local g = vim.g
 local cmd = require("helpers").k_cmd
 
-local e = "<leader>e"
 local h = "<leader>h"
 local k = function(command)
   return "lua require('kulala')." .. command .. "()"
@@ -76,6 +75,27 @@ return {
       g.vimTrelloApiKey = os.getenv("TRELLO_API_KEY")
       g.vimTrelloToken = os.getenv("TRELLO_API_TOKEN")
     end,
+  },
+  {
+    "ramilito/kubectl.nvim",
+    config = true,
+    keys = {
+      cmd({
+        key = "<leader>ko",
+        action = "lua require('kubectl').open()",
+        desc = "Open kubectl buffer",
+      }),
+      cmd({
+        key = "<leader>kc",
+        action = "lua require('kubectl').close()",
+        desc = "Close kubectl buffer",
+      }),
+      cmd({
+        key = "<leader>kt",
+        action = "lua require('kubectl').toggle()",
+        desc = "Toggle kubectl buffer",
+      }),
+    },
   },
   {
     "numToStr/Comment.nvim",

@@ -148,7 +148,6 @@ return {
 
       open_notes_in = "current",
       disable_frontmatter = false,
-      open_app_foreground = true,
 
       templates = {
         folder = "9 - Resources/90 - Templates",
@@ -158,6 +157,14 @@ return {
 
       attachments = {
         img_folder = "9 - Resources/98 - Attachments",
+      },
+
+      {
+        open = {
+          func = function(uri)
+            vim.ui.open(uri, { cmd = { "open", "-a", "/Applications/Obsidian.app" } })
+          end,
+        },
       },
 
       follow_url_func = function(url)
@@ -478,7 +485,20 @@ return {
     end,
   },
   {
-    dir = "/Users/zacharylevinw/src/pacer.nvim/",
+    "3ZsForInsomnia/pacer.nvim",
     cmd = { "PacerStart", "PacerPause", "PacerResume", "PacerResumeCursor" },
+    opts = {
+      presets = {
+        Code = {
+          wpm = 350,
+        },
+        Article = {
+          wpm = 425,
+        },
+        LongForm = {
+          wpm = 450,
+        },
+      },
+    },
   },
 }

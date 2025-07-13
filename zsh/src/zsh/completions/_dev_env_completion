@@ -1,0 +1,5 @@
+export W_AVAILABLE_ENVS=("local" "dev" "qat" "uat" "preprod" "prod")
+
+_dev_env_completion() {
+  compadd -a W_AVAILABLE_ENVS
+}

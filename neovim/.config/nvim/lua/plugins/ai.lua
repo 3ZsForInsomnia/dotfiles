@@ -1,4 +1,7 @@
+local v = vim
+
 local k_cmd = require("helpers").k_cmd
+local k = require("helpers").k
 
 local copilot = "<leader>a"
 
@@ -23,6 +26,35 @@ return {
         width = 0.5,
       },
     },
+    config = function(_, opts)
+      -- This is mostly an example
+      local vectorcode_ctx = require("vectorcode.integrations.copilotchat").make_context_provider({
+        -- prompt_header = "Here are relevant files from the repository:", -- Customize header text
+        -- prompt_footer = "\nConsider this context when answering:", -- Customize footer text
+        skip_empty = true, -- Skip adding context when no files are retrieved
+      })
+
+      opts.contexts = {
+        vectorcode = vectorcode_ctx,
+      }
+      opts.sticky = {
+        "#vectorcode",
+      }
+
+      v.api.nvim_create_autocmd("BufEnter", {
+        pattern = "copilot-chat",
+        callback = function()
+          v.opt_local.conceallevel = 0
+          v.opt_local.number = true
+          v.opt_local.relativenumber = true
+          v.opt_local.signcolumn = "no"
+          v.opt_local.foldcolumn = "0"
+          v.opt_local.fillchars = ""
+        end,
+      })
+
+      require("CopilotChat").setup(opts)
+    end,
     keys = {
       --
       -- Utils
@@ -47,9 +79,19 @@ return {
         desc = "Close Chat",
       }),
       k_cmd({
+        key = copilot .. "s",
+        action = "CopilotChatStop",
+        desc = "Stop Chat",
+      }),
+      k({
         key = copilot .. "S",
-        action = "CopilotChatSave",
+        action = ":CopilotChatSave ",
         desc = "Save Chat",
+      }),
+      k({
+        key = copilot .. "l",
+        action = "CopilotChatLoad",
+        desc = "Load Chat",
       }),
 
       --
@@ -135,5 +177,12 @@ return {
         desc = "Copilot Review",
       }),
     },
+  },
+  {
+    "Davidyz/VectorCode",
+    version = "*",
+    build = "uv tool upgrade vectorcode",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = "VectorCode",
   },
 }

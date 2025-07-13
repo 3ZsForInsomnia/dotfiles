@@ -3,6 +3,25 @@ local f = v.fn
 local e = "<leader>e"
 local y = "<leader>y"
 
+local function add_file_to_quickfix(state)
+  local node = state.tree:get_node() -- Get node under cursor
+  if node and node.type == "file" then
+    vim.fn.setqflist({ { filename = node.path } }, "a") -- 'a' appends to quickfix
+    vim.notify("Added to quickfix: " .. node.path)
+  else
+    vim.notify("Node is not a file.", vim.log.levels.WARN)
+  end
+end
+
+local function open_in_diffview(state)
+  local node = state.tree:get_node()
+  if node and node.path then
+    vim.cmd("DiffviewOpen " .. vim.fn.fnameescape(node.path))
+  else
+    vim.notify("No file under cursor", vim.log.levels.WARN)
+  end
+end
+
 return {
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -55,6 +74,13 @@ return {
           never_show = { ".DS_Store", "thumbs.db" },
         },
       },
+      git_status = {
+        window = {
+          mappings = {
+            ["p"] = open_in_diffview,
+          },
+        },
+      },
       window = {
         width = 50,
         mappings = {
@@ -67,6 +93,7 @@ return {
             end,
             desc = "Open with System Application",
           },
+          ["Q"] = add_file_to_quickfix,
           ["Y"] = {
             function(state)
               local node = state.tree:get_node()

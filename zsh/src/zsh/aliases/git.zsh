@@ -165,10 +165,19 @@ alias deleteMerged='git branch --merged | egrep -v "(^\*|master|main|dev)" | xar
 alias gdm='deleteMerged'
 
 ### Branches
-gcob() {
-  # eval 'gcb levine/$1'
-  eval 'gcb $1'
+function gcob() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: gocb <branch-name>"
+    return 1
+  fi
+
+  git checkout -b "$1" 2>/dev/null
+  if [[ $? -ne 0 ]]; then
+    git checkout "$1"
+  fi
 }
+compdef _git gocb=git-checkout
+
 feat() {
   eval 'gcb feat/$1'
 }

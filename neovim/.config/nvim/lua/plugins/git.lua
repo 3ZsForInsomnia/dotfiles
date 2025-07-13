@@ -302,4 +302,29 @@ return {
       }),
     },
   },
+  {
+    dir = "~/src/revman.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      "kkharji/sqlite.lua",
+      "pwntester/octo.nvim",
+    },
+    config = true,
+    -- Lazy load on commands
+    -- cmd = {
+    --   "RevmanAddPR",
+    --   "RevmanEditNotes",
+    --   "RevmanSyncPR",
+    --   "RevmanSyncAll",
+    --   "RevmanSetStatus",
+    --   "RevmanToggleSync",
+    --   "RevmanOpenPR",
+    --   "RevmanStatus",
+    --   "RevmanListPRs",
+    --   "RevmanListOpenPRs",
+    --   "RevmanListMergedPRs",
+    --   "RevmanListUpdatedPRs",
+    -- },
+  },
 }

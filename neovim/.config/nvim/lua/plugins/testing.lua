@@ -47,14 +47,23 @@ return {
       "fredrikaverpil/neotest-golang",
     },
     opts = {
-      opts = { adapters = { "neotest-plenary" } },
       adapters = {
         ["neotest-golang"] = go_config,
         ["neotest-jest"] = js_config,
         ["neotest-python"] = py_config,
       },
-      status = { virtual_text = true },
-      output = { open_on_run = true },
+      diagnostic = {
+        enabled = true,
+        severity = v.diagnostic.severity.ERROR,
+      },
+      status = { virtual_text = true, signs = true },
+      summary = {
+        open = "botright vsplit | vertical resize 75",
+      },
+      output = {
+        enabled = true,
+        enter = false,
+      },
       quickfix = {
         open = function()
           if LazyVim.has("trouble.nvim") then
@@ -66,28 +75,6 @@ return {
       },
     },
     config = function(_, opts)
-      local neotest_ns = v.api.nvim_create_namespace("neotest")
-      v.diagnostic.config({
-        virtual_text = {
-          format = function(diagnostic)
-            local message = diagnostic.message:gsub("\n.*", "...")
-            return message
-            -- Replace newline and tab characters with space for more compact diagnostics
-            -- local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
-            -- return message
-
-            -- return diagnostic.message
-          end,
-        },
-        float = {
-          show_header = true,
-          source = true,
-          format = function(diagnostic)
-            return diagnostic.message
-          end,
-        },
-      }, neotest_ns)
-
       if LazyVim.has("trouble.nvim") then
         opts.consumers = opts.consumers or {}
         -- Refresh and auto close trouble after running tests

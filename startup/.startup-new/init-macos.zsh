@@ -5,12 +5,14 @@
 paths_to_check=("$HOME/.cache" "$HOME/.local/state" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.config" "$HOME/.local/bin" "$HOME/src" "$HOME/Downloads/slack" "$HOME/Downloads/postman" "$HOME/Pictures/screenshots" "$HOME/Documents/test data" "$HOME/Documents/sync" "$HOME/.local/state/psql" "$HOME/.cache/zsh" "$HOME/.local/state/zsh" "$HOME/.local/state/python" "$HOME/.local/share/psql" "$HOME/.local/state/less" "$HOME/.local/share/bookmarks" "$HOME/src/work" "$HOME/.local/share/npm" "$HOME/.local/share/pyenv")
 
 brew_taps="espanso/espanso ankitpokhrel/jira-cli"
-brew_packages=("eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei" "graphviz" "git-delta" "tmux" "overmind" "pngpaste" "hyperfine" "pandoc")
+brew_packages=("eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei" "graphviz" "git-delta" "tmux" "overmind" "pngpaste" "hyperfine" "pandoc" "speedtest-cli" "zoxide" "pipx" "helm" "yq")
 brew_packages_with_cask=("copyq" "witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass-cli" "rectangle")
 
 npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint")
 
-pip_packages_to_install=("yamllint")
+pip_packages_to_install=("yamllint" "shell-gpt")
+
+uv_packages_to_install=("vectorcode")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh")
 
@@ -481,9 +483,14 @@ install_dependencies() {
 
   echo "Step 2d: Installing global pip packages..."
 
-  pip3 install "${pip_packages_to_install[@]}"
+  pipx install "${pip_packages_to_install[@]}"
 
   echo "Step 2d: Finished installing global pip packages!"
+
+  echo "Step 2e: Installing Python uv..."
+
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  uv tool install "${uv_packages_to_install[@]}"
 
   echo "Step 2e: Download misc other dependencies..."
 

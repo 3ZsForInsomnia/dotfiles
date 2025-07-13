@@ -50,7 +50,6 @@ return {
     build = g.lazyvim_blink_main and "cargo build --release",
     opts_extend = {
       "sources.completion.enabled_providers",
-      "sources.compat",
       "sources.default",
     },
     dependencies = {
@@ -80,12 +79,6 @@ return {
         end,
       },
       "rafamadriz/friendly-snippets",
-      {
-        "saghen/blink.compat",
-        optional = true,
-        opts = {},
-        version = not g.lazyvim_blink_main and "*",
-      },
     },
     event = "InsertEnter",
 
@@ -96,8 +89,6 @@ return {
         preset = "luasnip",
       },
       appearance = {
-        use_nvim_cmp_as_default = false,
-        nerd_font_variant = "mono",
         kind_icons = {
           Copilot = "",
           Text = "󰉿",
@@ -133,20 +124,57 @@ return {
         },
       },
       completion = {
-        accept = {
-          auto_brackets = {
-            enabled = true,
-          },
-        },
         menu = {
           min_width = 30,
           max_height = 20,
           draw = {
             treesitter = { "lsp" },
             padding = 2,
+            gap = 2,
             columns = {
-              { "label", "label_description", gap = 1 },
-              { "kind_icon", "kind" },
+              { "kind_icon", "kind", "label" },
+              { "label_description", "source_name" },
+            },
+            components = {
+              label = {
+                text = function(ctx)
+                  return require("colorful-menu").blink_components_text(ctx)
+                end,
+                highlight = function(ctx)
+                  return require("colorful-menu").blink_components_highlight(ctx)
+                end,
+              },
+              kind_icon = {
+                text = function(ctx)
+                  local icon = ctx.kind_icon
+                  if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                    local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.label)
+                    if dev_icon then
+                      icon = dev_icon
+                    end
+                  else
+                    icon = require("lspkind").symbolic(ctx.kind, {
+                      mode = "symbol",
+                    })
+                  end
+
+                  return icon .. ctx.icon_gap
+                end,
+
+                -- Optionally, use the highlight groups from nvim-web-devicons
+                -- You can also add the same function for `kind.highlight` if you want to
+                -- keep the highlight groups in sync with the icons.
+                highlight = function(ctx)
+                  local hl = ctx.kind_hl
+                  if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                    local dev_icon, dev_hl = require("nvim-web-devicons").get_icon(ctx.label)
+                    if dev_icon then
+                      hl = dev_hl
+                    end
+                  end
+                  return hl
+                end,
+              },
             },
           },
         },
@@ -154,16 +182,16 @@ return {
           auto_show = true,
           auto_show_delay_ms = 200,
           window = {
-            min_width = 15,
-            max_height = 30,
+            min_width = 20,
+            max_height = 50,
           },
         },
         ghost_text = {
           enabled = g.ai_cmp,
+          auto_show = true,
         },
       },
       sources = {
-        compat = {},
         default = {
           "snippets",
           "copilot",
@@ -175,17 +203,18 @@ return {
           "emoji",
           "conventional_commits",
           "buffer",
+          "path",
         },
         providers = {
           buffer = {
             name = "Buffer",
-            max_items = 10,
+            max_items = 5,
           },
           conventional_commits = {
             name = "Conventional Commits",
             module = "blink-cmp-conventional-commits",
             enabled = function()
-              return vim.bo.filetype == "gitcommit"
+              return v.bo.filetype == "gitcommit"
             end,
           },
           copilot = {
@@ -213,13 +242,13 @@ return {
           emoji = {
             module = "blink-emoji",
             name = "Emoji",
-            max_items = 7,
+            max_items = 5,
             opts = { insert = true }, -- Insert emoji (default) or complete its name
           },
           env = {
             name = "Env",
             module = "blink-cmp-env",
-            max_items = 7,
+            max_items = 3,
             --- @type blink-cmp-env.Options
             opts = {
               item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
@@ -239,55 +268,43 @@ return {
             score_offset = 100, -- show at a higher priority than lsp
           },
           lsp = {
-            name = "LSP",
-            module = "blink.cmp.sources.lsp",
             max_items = 7,
           },
         },
       },
-      cmdline = { enabled = false },
-      signature = { enabled = true },
+      signature = {
+        enabled = true,
+        trigger = {
+          enabled = true,
+        },
+        window = {
+          scrollbar = true,
+          min_width = 20,
+          max_height = 50,
+        },
+      },
+      cmdline = {
+        enabled = true,
+        keymap = {
+          ["<Tab>"] = { "show", "accept" },
+        },
+        completion = {
+          menu = {
+            auto_show = true,
+          },
+          ghost_text = {
+            enabled = true,
+          },
+        },
+      },
       keymap = {
         preset = "super-tab",
         -- Allows C-e to toggle showing/hiding autocompletions rather than just hiding
-        -- ["<C-e>"] = { "hide", "show" },
-        ["<C-y>"] = { "select_and_accept" },
+        ["<C-e>"] = { "hide", "show" },
       },
     },
-    ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
+    ---@param opts blink.cmp.Config
     config = function(_, opts)
-      -- setup compat sources
-      local enabled = opts.sources.default
-      for _, source in ipairs(opts.sources.compat or {}) do
-        opts.sources.providers[source] = v.tbl_deep_extend(
-          "force",
-          { name = source, module = "blink.compat.source" },
-          opts.sources.providers[source] or {}
-        )
-        if type(enabled) == "table" and not v.tbl_contains(enabled, source) then
-          table.insert(enabled, source)
-        end
-      end
-
-      -- add ai_accept to <Tab> key
-      if not opts.keymap["<Tab>"] then
-        if opts.keymap.preset == "super-tab" then -- super-tab
-          opts.keymap["<Tab>"] = {
-            require("blink.cmp.keymap.presets")["super-tab"]["<Tab>"][1],
-            LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
-            "fallback",
-          }
-        else -- other presets
-          opts.keymap["<Tab>"] = {
-            LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
-            "fallback",
-          }
-        end
-      end
-
-      -- Unset custom prop to pass blink.cmp validation
-      opts.sources.compat = nil
-
       -- check if we need to override symbol kinds
       for _, provider in pairs(opts.sources.providers or {}) do
         ---@cast provider blink.cmp.SourceProviderConfig|{kind?:string}
@@ -317,6 +334,103 @@ return {
       end
 
       require("blink.cmp").setup(opts)
+    end,
+  },
+  {
+    "xzbdmw/colorful-menu.nvim",
+    config = function()
+      -- You don't need to set these options.
+      require("colorful-menu").setup({
+        ls = {
+          lua_ls = {
+            -- Maybe you want to dim arguments a bit.
+            arguments_hl = "@comment",
+          },
+          gopls = {
+            -- By default, we render variable/function's type in the right most side,
+            -- to make them not to crowd together with the original label.
+
+            -- when true:
+            -- foo             *Foo
+            -- ast         "go/ast"
+
+            -- when false:
+            -- foo *Foo
+            -- ast "go/ast"
+            align_type_to_right = true,
+            -- When true, label for field and variable will format like "foo: Foo"
+            -- instead of go's original syntax "foo Foo". If align_type_to_right is
+            -- true, this option has no effect.
+            add_colon_before_type = false,
+            -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+            preserve_type_when_truncate = true,
+          },
+          -- for lsp_config or typescript-tools
+          ts_ls = {
+            -- false means do not include any extra info,
+            -- see https://github.com/xzbdmw/colorful-menu.nvim/issues/42
+            extra_info_hl = "@comment",
+          },
+          vtsls = {
+            -- false means do not include any extra info,
+            -- see https://github.com/xzbdmw/colorful-menu.nvim/issues/42
+            extra_info_hl = "@comment",
+          },
+          ["rust-analyzer"] = {
+            -- Such as (as Iterator), (use std::io).
+            extra_info_hl = "@comment",
+            -- Similar to the same setting of gopls.
+            align_type_to_right = true,
+            -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+            preserve_type_when_truncate = true,
+          },
+          clangd = {
+            -- Such as "From <stdio.h>".
+            extra_info_hl = "@comment",
+            -- Similar to the same setting of gopls.
+            align_type_to_right = true,
+            -- the hl group of leading dot of "•std::filesystem::permissions(..)"
+            import_dot_hl = "@comment",
+            -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+            preserve_type_when_truncate = true,
+          },
+          zls = {
+            -- Similar to the same setting of gopls.
+            align_type_to_right = true,
+          },
+          roslyn = {
+            extra_info_hl = "@comment",
+          },
+          dartls = {
+            extra_info_hl = "@comment",
+          },
+          -- The same applies to pyright/pylance
+          basedpyright = {
+            -- It is usually import path such as "os"
+            extra_info_hl = "@comment",
+          },
+          pylsp = {
+            extra_info_hl = "@comment",
+            -- Dim the function argument area, which is the main
+            -- difference with pyright.
+            arguments_hl = "@comment",
+          },
+          -- If true, try to highlight "not supported" languages.
+          fallback = true,
+          -- this will be applied to label description for unsupport languages
+          fallback_extra_info_hl = "@comment",
+        },
+        -- If the built-in logic fails to find a suitable highlight group for a label,
+        -- this highlight is applied to the label.
+        fallback_highlight = "@variable",
+        -- If provided, the plugin truncates the final displayed text to
+        -- this width (measured in display cells). Any highlights that extend
+        -- beyond the truncation point are ignored. When set to a float
+        -- between 0 and 1, it'll be treated as percentage of the width of
+        -- the window: math.floor(max_width * vim.api.nvim_win_get_width(0))
+        -- Default 60.
+        max_width = 60,
+      })
     end,
   },
 }

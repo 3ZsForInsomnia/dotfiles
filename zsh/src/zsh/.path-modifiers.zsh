@@ -84,7 +84,7 @@ rust="$HOME/.cargo/bin"
 # Note that this assumes postgres is installed via homebrew! This must be updated for linux
 psql=/opt/homebrew/opt/postgresql@12/bin
 
-typeset -U path  # Ensures unique entries
+typeset -U path # Ensures unique entries
 path=(
   "$JAVA_HOME"
   "$rust"
@@ -99,6 +99,7 @@ path=(
   "$maven"
   "$nvim"
   "$psql"
+  "$kubediff"
   $path
 )
 export PATH
@@ -110,18 +111,18 @@ function setup_deferred_env() {
   export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
   export PGPASSFILE="$XDG_DATA_HOME/psql/.pgpass"
   export BOOKMARKS_FILE="$XDG_DATA_HOME/bookmarks/.bookmarks"
-  
+
   # Config paths
-  export AZURE_CONFIG_DIR="$XDG_CONFIG_HOME/azure" 
+  export AZURE_CONFIG_DIR="$XDG_CONFIG_HOME/azure"
   export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"
   export KUBECACHEDIR="$XDG_CACHE_HOME/kube"
   export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep"
-  
+
   # Java related
   export JARS="$XDG_CODE_HOME/java_jars"
   export SCHEMASPY_LOCATION="$JARS/schemaspy/schemaspy.jar"
   export POSTGRES_JDBC_LOCATION="$JARS/postgres/postgres.jar"
-  
+
   # Less commonly used env vars
   export LPASS_HOME="$XDG_DATA_HOME/lpass"
   export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;$XDG_CONFIG_HOME/luarocks/?.lua;"

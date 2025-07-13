@@ -8,11 +8,11 @@ function addBackendSettingToEnv() {
   # backend=$(get_url_for "$service" "$env")
   # file="$location/$env.env"
 
-  printf "\n\n#################################################" >> "$file"
-  printf   "\n# NOTE: This .env file is based off of %s      #" "$env" >> "$file"
-  printf   "\n#################################################" >> "$file"
-  printf "\n\n# Below is env-specific config\n" >> "$file"
-  printf   "\nVITE_REACT_APP_API_PATH=%s" "$backend" >> "$file"
+  printf "\n\n#################################################" >>"$file"
+  printf "\n# NOTE: This .env file is based off of %s      #" "$env" >>"$file"
+  printf "\n#################################################" >>"$file"
+  printf "\n\n# Below is env-specific config\n" >>"$file"
+  printf "\nVITE_REACT_APP_API_PATH=%s" "$backend" >>"$file"
 }
 
 function commentOutNonLocalFrontendEnvars() {
@@ -30,33 +30,33 @@ function commentOutNonLocalFrontendEnvars() {
     return 1
   fi
 
-   # Create a temporary file
+  # Create a temporary file
   local temp_file="$file.tmp"
-  touch "$temp_file"  # Initialize empty temp file
+  touch "$temp_file" # Initialize empty temp file
 
   # Process each line of the file
   while IFS= read -r line || [[ -n "$line" ]]; do
     local should_comment=false
-    
+
     # Check if this line sets any of the specified variables and is not already commented
     for var in "${vars_to_comment[@]}"; do
       if [[ "$line" =~ ^[[:space:]]*${var}[[:space:]]*= && ! "$line" =~ ^[[:space:]]*# ]]; then
         should_comment=true
-        break  # Exit the loop once we know we need to comment this line
+        break # Exit the loop once we know we need to comment this line
       fi
     done
-    
+
     # Write the line to the temp file, with a comment if needed
     if [[ "$should_comment" == true ]]; then
-      echo "# $line" >> "$temp_file"
+      echo "# $line" >>"$temp_file"
     else
-      echo "$line" >> "$temp_file"
+      echo "$line" >>"$temp_file"
     fi
-  done < "$file"
+  done <"$file"
 
   # Replace the original file with the temporary file
   mv "$temp_file" "$file"
- 
+
 }
 
 function getFeConfig() {
@@ -103,7 +103,7 @@ function updateFrontendConfig() {
   fi
   echo "Updating $key in $config_file to $value"
 
-  printf "\n%s=%s" "$key" "$value" >> "$config_file"
+  printf "\n%s=%s" "$key" "$value" >>"$config_file"
 }
 
 function getBeConfig() {
@@ -126,11 +126,11 @@ function getBeConfig() {
   dbUser="$W_DB_BP_USERNAME"
 
   propertyValue="user=$dbUser dbname=$W_DB_NAME sslmode=require host=$W_DB_HOST port=$port"
-  jq "$propertyName = \"$propertyValue\"" "$downloaded_config" > "$new_config"
+  jq "$propertyName = \"$propertyValue\"" "$downloaded_config" >"$new_config"
 
   dbUser="postgres"
   propertyValue="user=$dbUser dbname=$W_DB_NAME sslmode=require host=$W_DB_HOST port=$port"
-  jq "$propertyName = \"$propertyValue\"" "$downloaded_config" > "$new_local_config"
+  jq "$propertyName = \"$propertyValue\"" "$downloaded_config" >"$new_local_config"
 }
 
 function updateBackendConfig() {
@@ -144,7 +144,7 @@ function updateBackendConfig() {
 
   if ! checkArgument "$env" "${allowed_envs[@]}"; then
     echo "Invalid environment. Must be one of: ${allowed_envs[@]}"
-    return 1;
+    return 1
   fi
 
   location=$(get_location_for "$service" "$env")
@@ -156,6 +156,6 @@ function updateBackendConfig() {
     file="$location/conf.local.$env.json"
   fi
 
-  jq "$json_path = \"$newVal\"" "$base_config" > "$tmp_file";
-  mv "$tmp_file" "$file";
+  jq "$json_path = \"$newVal\"" "$base_config" >"$tmp_file"
+  mv "$tmp_file" "$file"
 }

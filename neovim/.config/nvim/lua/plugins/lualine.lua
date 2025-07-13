@@ -153,6 +153,18 @@ return {
           },
           lualine_c = { custom_fname },
           lualine_x = {
+            {
+              function()
+                return require("vectorcode.integrations").lualine(nil)[1]()
+              end,
+              cond = function()
+                if package.loaded["vectorcode"] == nil then
+                  return false
+                else
+                  return require("vectorcode.integrations").lualine(nil).cond()
+                end
+              end,
+            },
             "filetype",
           },
           lualine_y = { "progress" },

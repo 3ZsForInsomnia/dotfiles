@@ -1,60 +1,87 @@
-alias -g G='| rg -i '
-alias -g GV='| rg -v'
-alias -g GC='| rg -C 3'
+#!/usr/bin/env zsh
+# Global Aliases (-g) for ZSH
+# These aliases can be used anywhere in a command line, not just at the beginning
 
-alias -g F='| fzf'
+# ===== SEARCHING =====
+alias -g G='| rg -i '   # Case-insensitive grep with ripgrep
+alias -g GV='| rg -v'   # Invert match
+alias -g GC='| rg -C 3' # Show 3 lines of context
 
-alias -g L='| less'
-alias -g SO='| sort'
-# Sort and remove duplicates
-alias -g U='| sort | uniq'
-# Sort, remove duplicates, and add number of occurrences
-alias -g UC='| sort | uniq -c'
-# Sort, remove duplicates, and add number of occurrences in reverse order (most frequent first)
-alias -g USD='| sort | uniq -c | sort -nr'
+# ===== SELECTION =====
+alias -g F='| fzf' # Interactive filtering
 
-alias -g H='| head'
+# ===== TEXT PROCESSING =====
+alias -g L='| less'                        # Paging
+alias -g SO='| sort'                       # Simple sort
+alias -g U='| sort | uniq'                 # Remove duplicates
+alias -g UC='| sort | uniq -c'             # Count occurrences
+alias -g USD='| sort | uniq -c | sort -nr' # Sort by frequency
+
+# ===== TRUNCATION =====
+alias -g H='| head' # First few lines
 alias -g H1='| head -n 10'
 alias -g H2='| head -n 20'
-alias -g T='| tail'
+alias -g T='| tail' # Last few lines
 alias -g T1='| tail -n 10'
 alias -g T2='| tail -n 20'
 
-alias -g J='| jq'
-alias -g Z='| fx'
+# ===== DATA FORMATTING =====
+alias -g J='| jq' # JSON processing
+alias -g Z='| fx' # JSON viewer
 
-alias -g X='| xargs'
+# ===== TEXT MANIPULATION =====
+alias -g X='| xargs' # Command building
+alias -g C='| cut'   # Cut columns
+alias -g TR='| tr'   # Translate characters
+alias -g S='| sed'   # Stream editor
+alias -g A='| awk'   # Text processing
+alias -g W='| wc -l' # Count lines
 
-alias -g C='| cut'
-alias -g TR='| tr'
-alias -g S='| sed'
+# ===== COLUMN EXTRACTION =====
+alias -g K='| awky' # Custom awk wrapper
 
-alias -g A='| awk'
-alias -g K='| awky'
+# AWK column selector function
 awky() {
   awk -v var="$1" '{print $var}'
 }
 
-# Get the nth column
-alias -g F1='| awky 1'
-alias -g F2='| awky 2'
-alias -g F3='| awky 3'
-alias -g F4='| awky 4'
-alias -g F5='| awky 5'
-alias -g F6='| awky 6'
-alias -g F7='| awky 7'
-alias -g F8='| awky 8'
-alias -g F9='| awky 9'
+# Column selection shortcuts
+for i in {1..9}; do
+  alias -g F$i="| awky $i"
+done
 
+# ===== CLIPBOARD OPERATIONS =====
 if [ "$MY_SYSTEM" = "linux" ]; then
-  alias -g PC='| xclip -sel clip'
-  alias -g PP='| xclip -sel clip -o'
+  alias -g PC='| xclip -sel clip'    # Pipe to clipboard
+  alias -g PP='| xclip -sel clip -o' # Pipe from clipboard
+  alias P='xclip -sel clip -o'       # Print clipboard
+
+  alias copy='xclip -sel clip -o'  # Clipboard command
+  alias paste='xclip -sel clip -o' # Paste command
+
+  alias clip="copyq"
 elif [ "$MY_SYSTEM" = "mac" ]; then
   alias -g PC='| pbcopy'
   alias -g PP='| pbpaste'
+  alias P='pbpaste'
+
+  alias copy='pbcopy'
+  alias paste='pbpaste'
+
+  alias clip="/Applications/CopyQ.app/Contents/MacOS/CopyQ"
 fi
 
-alias -g V='| nvim '
-alias -g O='> wtf.txt'
+function cl() {
+  local position=${1:-0} # Default to clipboard position 0
+  clip read "$position"
+}
 
-alias -g W='| wc -l'
+# For use in command substitution
+function CL() {
+  local position=${1:-0}
+  cl "$position" # No need for echo + command substitution
+}
+
+# ===== EDITING & OUTPUT =====
+alias -g V='| nvim '   # Pipe to Neovim
+alias -g O='> wtf.txt' # Quick output file

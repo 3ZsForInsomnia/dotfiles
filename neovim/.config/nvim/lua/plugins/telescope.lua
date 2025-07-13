@@ -163,10 +163,10 @@ local createOpts = function()
     },
     extensions = {
       fzf = {
-        fuzzy = true, -- false will only do exact matching
-        override_generic_sorter = true, -- override the generic sorter
-        override_file_sorter = true, -- override the file sorter
-        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+        fuzzy = true,
+        override_generic_sorter = true,
+        override_file_sorter = true,
+        case_mode = "smart_case",
       },
       heading = {
         treesitter = true,
@@ -218,6 +218,52 @@ return {
     opts = {
       selected_browser = "chrome",
     },
+  },
+  {
+    "axkirillov/easypick.nvim",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+    },
+    config = function()
+      local easypick = require("easypick")
+      local chatLocation = "~/.local/share/nvim/copilotchat_history"
+
+      easypick.setup({
+        pickers = {
+          {
+            name = "copilot_chats",
+            command = "fd . " .. chatLocation .. " | awk -F/ '{print $NF}' | sed 's/\\.json$//'",
+            previewer = function(selected)
+              local full_path = vim.fn.expand(chatLocation .. "/" .. selected .. ".json")
+
+              return {
+                command = "cat " .. full_path,
+                cwd = nil,
+              }
+            end,
+            -- previewer = function(selected)
+            --   local full_path = vim.fn.expand(chatLocation .. "/" .. selected .. ".json")
+            --
+            --   return {
+            --     command = "cat "
+            --       .. full_path
+            --       .. ' | jq -r \'.messages[] | "\\n## " + (.role | if . == "user" then "Me" else "Copilot" end) + ":\\n\\n" + .content\'',
+            --     cwd = nil,
+            --   }
+            -- end,
+            action = function(selection)
+              vim.cmd("CopilotChatLoad " .. selection.value)
+              vim.cmd("CopilotChatOpen")
+            end,
+          },
+          {
+            name = "changed_files",
+            command = "git diff --name-only $(git merge-base HEAD main)",
+            previewer = easypick.previewers.branch_diff({ base_branch = "main" }),
+          },
+        },
+      })
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -398,6 +444,11 @@ return {
         --
         -- Documentation
         --
+        cmd({
+          key = f .. "da",
+          action = "Easypick copilot_chats",
+          desc = "Copilot chats",
+        }),
         cmd({
           key = f .. "dd",
           action = "DevdocsOpen",

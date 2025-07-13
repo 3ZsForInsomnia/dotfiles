@@ -66,10 +66,13 @@ ag("term_open_insert", {})
 au({ "TermOpen" }, {
   group = "term_open_insert",
   pattern = "*",
-  command = [[
-      startinsert
-      setlocal nonumber norelativenumber nospell signcolumn=no noruler
-    ]],
+  callback = function()
+    local buf_name = v.api.nvim_buf_get_name(0)
+    if not string.match(buf_name, "neotest") then
+      v.cmd.startinsert()
+      v.opt_local.ruler = false
+    end
+  end,
 })
 
 au({ "User" }, {
@@ -95,7 +98,14 @@ au("FileType", {
 au("FileType", {
   pattern = "qf",
   callback = function()
-    vim.opt_local.buflisted = false
+    v.opt_local.buflisted = false
+  end,
+})
+
+au({ "BufNewFile", "BufRead" }, {
+  pattern = "*.zsh",
+  callback = function()
+    v.bo.filetype = "sh"
   end,
 })
 

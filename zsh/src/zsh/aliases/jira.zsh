@@ -62,6 +62,43 @@ function moveTicketTo() {
   jira issue move "$issue_id" "$status"
 }
 
+# Usage: moveCurrentTicketTo [status]
+# If no status is provided, it will prompt to select one
+moveCurrentTicketTo() {
+  # Get current branch name
+  local branch=$(git branch --show-current)
+  
+  # Extract ticket ID using regex
+  local ticket_id
+  if [[ $branch =~ (SC-[0-9]+|POD[1-4]-[0-9]+) ]]; then
+    ticket_id=${BASH_REMATCH[1]}
+  else
+    echo "Current branch '$branch' doesn't contain a valid Jira ticket ID (SC-XXXX or PODX-XXXX)"
+    return 1
+  fi
+  
+  # If no status provided, let user select from common statuses
+  local status=$1
+  if [[ -z $status ]]; then
+    local statuses=("$jira_doing" "$jira_rev" "$jira_qa")
+    status=$(printf "%s\n" "${statuses[@]}" | fzf --prompt="Move ticket $ticket_id to: ")
+    
+    if [[ -z $status ]]; then
+      echo "No status selected."
+      return 1
+    fi
+  fi
+  
+  echo "Moving $ticket_id to $status..."
+  moveTicketTo "$ticket_id" "$status"
+}
+
+# Convenience aliases
+alias moveCurrTicketToReview="moveCurrentTicketTo \"$jira_rev\""
+alias moveCurrTicketToQA="moveCurrentTicketTo \"$jira_qa\""
+alias moveCurrTicketToInProgress="moveCurrentTicketTo \"$jira_doing\""
+
+
 # Statuses
 export jira_open="Open"
 export jira_blocked="Blocked"

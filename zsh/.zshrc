@@ -11,19 +11,39 @@ fpath=("$ZSH_CONFIG_DIR/completions" $fpath)
 zmodload zsh/complist
 skip_global_compinit=1
 autoload -Uz is-at-least
+autoload -Uz compinit && compinit
 
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
-export HISTSIZE=100000
-export SAVEHIST=100000
-export CORRECT_IGNORE_FILE='.*|test'
+export HISTSIZE=1000000000
+export SAVEHIST=1000000000
 
+setopt EXTENDED_HISTORY
+setopt hist_ignore_dups
+setopt share_history
 setopt append_history
+
 setopt auto_cd
+
+export CORRECT_IGNORE_FILE='.*|test'
 setopt correct_all
 setopt no_beep
 ZSH_DISABLE_COMPFIX=true
 
-bindkey '^R' history-incremental-search-backward
+function fancy_history_widget() {
+  BUFFER=$(
+    \history 1 | awk '{$1=""; print substr($0,2)}' |
+      fzf --reverse \
+        --prompt="History> " \
+        --preview '~/src/zsh/tools/pretty-hist-preview.zsh {}'
+  )
+  CURSOR=$#BUFFER
+  zle reset-prompt
+}
+
+# source "$ZSH_CONFIG_DIR/tools/pretty-hist-preview.zsh"
+zle -N fancy_history_widget
+bindkey '^R' fancy_history_widget
+
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
 bindkey "^[[1;3D" backward-word
@@ -43,5 +63,7 @@ source "$ZSH_CONFIG_DIR/.source-things.zsh"
     zcompile "$zcompdump"
   fi
 } &!
+
+eval "$(zoxide init zsh)"
 
 # zprof

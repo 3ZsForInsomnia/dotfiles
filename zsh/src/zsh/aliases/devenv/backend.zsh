@@ -17,23 +17,32 @@ function runBeWith() {
   #   return 1;
   # fi
 
-  plat;
+  eval "plat"
   CompileDaemon \
     -build="go build -C ./main/brokerportal" \
     -command="./main/brokerportal/brokerportal -conf=./main/brokerportal/conf.$1.json"
 }
 
+function runBeWithLocal() {
+  local env="$1"
+
+  eval "plat"
+  CompileDaemon \
+    -build="go build -C ./main/brokerportal" \
+    -command="./main/brokerportal/brokerportal -conf=./main/brokerportal/conf.local.$env.json"
+}
+
 function runBeDebugWith() {
   local env="$1"
-  shift
-  local allowed_envs=("$@")
+  # shift
+  # local allowed_envs=("$@")
+  #
+  # if ! checkArgument "$env" "${allowed_envs[@]}"; then
+  #   echo "Invalid environment. Must be one of: ${allowed_envs[@]}"
+  #   return 1
+  # fi
 
-  if ! checkArgument "$env" "${allowed_envs[@]}"; then
-    echo "Invalid environment. Must be one of: ${allowed_envs[@]}"
-    return 1;
-  fi
-
-  plat;
+  eval "plat"
   CompileDaemon \
     -build="go build -C ./main/brokerportal" \
     -command="dlv exec ./main/brokerportal/brokerportal -- -conf=./main/brokerportal/conf.$1.json"
@@ -41,15 +50,19 @@ function runBeDebugWith() {
 
 function runBpMigrations() {
   local env="$1"
-  shift
-  local allowed_envs=("$@")
+  # shift
+  # local allowed_envs=("$@")
+  #
+  # if ! checkArgument "$env" "${allowed_envs[@]}"; then
+  #   echo "Invalid base environment. Must be one of: ${allowed_envs[@]}"
+  #   return 1
+  # fi
 
-  if ! checkArgument "$env" "${allowed_envs[@]}"; then
-    echo "Invalid base environment. Must be one of: ${allowed_envs[@]}"
-    return 1;
+  if [[ "$env" == "local" ]]; then
+    env="local.dev"
   fi
 
-  go run "$W_PATH"/platform/main/brokerportal -conf "$W_PATH"/platform/main/brokerportal/conf."$1".json --migration --sql "$W_PATH"/platform/services/sql/
+  go run "$W_PATH"/platform/main/brokerportal -conf "$W_PATH"/platform/main/brokerportal/conf."$env".json --migration --sql "$W_PATH"/platform/services/sql/
 }
 
 function useLocalCt() {
@@ -73,8 +86,8 @@ function useNonLocalCt() {
 }
 
 function useLocalBpAuth() {
+  env="$1"
   local service="bp"
-  local env="$1"
   local json_path=".httpPort"
   newVal=$(get_port_for "bp" "localauth")
   local is_local=true
@@ -83,9 +96,6 @@ function useLocalBpAuth() {
 
   fe_newVal=$(get_url_for "bpfe" "localauth")
   updateFrontendConfig "bpfe" "local" "VITE_REACT_APP_API_PATH" "$fe_newVal"
-
-  echo "Note: Running local auth requires running Caddy with \`caddy run\`"
-  runAuth;
 }
 
 function useNonLocalBpAuth() {
@@ -95,7 +105,7 @@ function useNonLocalBpAuth() {
   newVal=$(get_port_for "bp" "$2")
   local is_local=true
 
-  killPort "$newVal"; # Stop the local auth server before updating the config
+  killPort "$newVal" # Stop the local auth server before updating the config
 
   updateBackendConfig "$service" "$env" "$json_path" "$newVal" "$is_local" "${W_AVAILABLE_ENVS[@]}"
 

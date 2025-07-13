@@ -16,10 +16,13 @@ sources=(
   "nvim.zsh"
   "python.zsh"
   "searching.zsh"
+  "sgpt.zsh"
   "slack.zsh"
   "tui-tools.zsh"
   "utils.zsh"
   "wezterm.zsh"
+  # "devenv/index.zsh"
+  # "work/index.zsh"
 )
 
 for source_file in "${sources[@]}"; do

@@ -59,6 +59,10 @@ wk.add({
   { "<leader>gc", group = "Octo Comments, Threads, Reactions" },
   { "<leader>gr", group = "Octo Reviews, Assignees" },
 
+  --
+  -- Misc
+  --
+  { "<leader>k", group = "Kubectl and Docker" },
   { "<leader>l", group = "Location list" },
   { "<leader>n", group = "Obsidian" },
   { "<leader>q", group = "Quickfix list" },
