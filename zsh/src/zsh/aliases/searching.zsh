@@ -162,6 +162,12 @@ function fbr() {
     git checkout "$branch"
 }
 
+function fcom() {
+  git log --oneline --color=always |
+    fzf --ansi --no-sort --preview 'git show --color=always {1}' |
+    cut -d' ' -f1
+}
+
 function fh() {
   print -z $(fc -l 1 | fzf --height 50% --reverse --tac | sed 's/ *[0-9]* *//')
 }

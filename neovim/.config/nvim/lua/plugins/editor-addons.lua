@@ -187,7 +187,8 @@ return {
         "chatgpt-input",
         "copilot-chat",
         "NeogitPopup",
-        "",
+        "codecompanion",
+        "octo",
       },
       max_count = 4,
       restricted_keys = {
@@ -211,21 +212,38 @@ return {
     },
   },
   {
-    "OXY2DEV/markview.nvim",
-    lazy = false,
-    branch = "dev",
-    ft = "markdown",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-tree/nvim-web-devicons",
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown", "codecompanion" },
+    opts = {
+      completions = {
+        blink = { enabled = true },
+        lsp = { enabled = true },
+      },
+      file_types = { "markdown", "codecompanion" },
     },
-    config = function()
-      local presets = require("markview.presets")
-      return {
-        headings = presets.headings.decorated_labels,
-      }
-    end,
   },
+  -- {
+  --   "OXY2DEV/markview.nvim",
+  --   lazy = false,
+  --   branch = "dev",
+  --   ft = "markdown",
+  --   dependencies = {
+  --     "nvim-treesitter/nvim-treesitter",
+  --     "nvim-tree/nvim-web-devicons",
+  --   },
+  --   opts = {
+  --     preview = {
+  --       filetypes = { "markdown", "codecompanion" },
+  --       ignore_buftypes = {},
+  --     },
+  --   },
+  --   config = function()
+  --     local presets = require("markview.presets")
+  --     return {
+  --       headings = presets.headings.decorated_labels,
+  --     }
+  --   end,
+  -- },
   {
     "luckasRanarison/tailwind-tools.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
@@ -246,6 +264,25 @@ return {
           },
         },
       },
+    },
+  },
+  {
+    "HakonHarnes/img-clip.nvim",
+    opts = {
+      filetypes = {
+        codecompanion = {
+          prompt_for_file_name = false,
+          template = "[Image]($FILE_PATH)",
+          use_absolute_path = true,
+        },
+      },
+    },
+    keys = {
+      cmd({
+        key = "<leader>zp",
+        action = "PasteImage",
+        desc = "Paste image form clipboard into buffer",
+      }),
     },
   },
 }

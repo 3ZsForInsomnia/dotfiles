@@ -3,6 +3,7 @@ local c = v.cmd
 
 local keys = require("helpers")
 local cmd = keys.k_cmd
+local k = keys.k
 
 local o = "<leader>n"
 local home = os.getenv("HOME")
@@ -135,6 +136,7 @@ return {
       end, { noremap = false, expr = true })
 
       require("obsidian").setup(opts)
+      require("config.notes-ai-utils").setup()
     end,
     opts = {
       dir = notesPath,
@@ -203,6 +205,7 @@ return {
       },
       sort_by = "modified",
       sort_reversed = true,
+      footer = { enabled = false },
     },
     keys = {
       cmd({
@@ -215,10 +218,15 @@ return {
         action = "Obsidian quick_switch",
         desc = "Open quick switch",
       }),
-      cmd({
+      k({
         key = o .. "i",
-        action = "Obsidian template",
+        action = ":Obsidian template ",
         desc = "Insert template",
+      }),
+      k({
+        key = o .. "p",
+        action = "<cmd>Obsidian template pomodoro<cr>5kA",
+        desc = "Insert pomodoro template",
       }),
       cmd({
         key = o .. "I",
@@ -268,7 +276,7 @@ return {
         desc = "Pick tags",
       }),
       cmd({
-        key = o .. "p",
+        key = o .. "P",
         action = "Obsidian paste_img",
         desc = "Paste image from clipboard with name",
       }),
@@ -302,6 +310,22 @@ return {
         key = o .. "y",
         action = "lua openNote('Yearly')",
         desc = "Open yearly note",
+      }),
+
+      cmd({
+        key = o .. "a1",
+        action = "RecentNotesToQuickFixList 1",
+        desc = "Send files edited within last 1 day to quickfix",
+      }),
+      cmd({
+        key = o .. "a7",
+        action = "RecentNotesToQuickFixList 7",
+        desc = "Send files edited within last 7 days to quickfix",
+      }),
+      cmd({
+        key = o .. "aqc",
+        action = "CloseNewQuickFixBuffers",
+        desc = "Close buffers that were not in the saved list",
       }),
     },
   },

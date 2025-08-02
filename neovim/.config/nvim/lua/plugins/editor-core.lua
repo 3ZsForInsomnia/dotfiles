@@ -11,6 +11,7 @@ return {
     opts = {
       preset = "classic",
       win = {
+        no_overlap = false,
         height = {
           min = 12,
           max = 20,

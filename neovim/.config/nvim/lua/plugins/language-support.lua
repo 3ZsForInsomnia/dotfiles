@@ -44,7 +44,7 @@ return {
     event = "VeryLazy",
     keys = {
       cmd({
-        key = l .. "p",
+        key = l .. "P",
         action = "PackageUI",
         desc = "Open Package UI",
       }),

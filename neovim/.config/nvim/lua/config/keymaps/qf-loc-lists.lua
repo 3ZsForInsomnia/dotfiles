@@ -14,8 +14,13 @@ cmd({
   desc = "Close quickfix list",
 })
 cmd({
+  key = q .. "e",
+  action = "cdo edit",
+  desc = "Edit all files in quickfix list",
+})
+cmd({
   key = q .. "o",
-  action = "lopen",
+  action = "copen",
   desc = "Open quickfix list",
 })
 cmd({

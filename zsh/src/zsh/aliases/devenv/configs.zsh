@@ -126,10 +126,11 @@ function getBeConfig() {
   dbUser="$W_DB_BP_USERNAME"
 
   propertyValue="user=$dbUser dbname=$W_DB_NAME sslmode=require host=$W_DB_HOST port=$port"
+  echo "Updating $propertyName in $downloaded_config to $propertyValue for config $new_config"
   jq "$propertyName = \"$propertyValue\"" "$downloaded_config" >"$new_config"
 
-  dbUser="postgres"
   propertyValue="user=$dbUser dbname=$W_DB_NAME sslmode=require host=$W_DB_HOST port=$port"
+  echo "Updating $propertyName in $downloaded_config to $propertyValue for config $new_local_config"
   jq "$propertyName = \"$propertyValue\"" "$downloaded_config" >"$new_local_config"
 }
 
@@ -148,11 +149,10 @@ function updateBackendConfig() {
   fi
 
   location=$(get_location_for "$service" "$env")
-  local base_config="$location/conf.base.$env.json"
+  local base_config="$location/conf.$env.json"
   local tmp_file="$base_config.tmp"
   file="$location/conf.$env.json"
   if [[ "$is_local" == true ]]; then
-    base_config="$location/conf.base.$env.json"
     file="$location/conf.local.$env.json"
   fi
 

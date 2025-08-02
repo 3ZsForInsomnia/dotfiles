@@ -202,6 +202,7 @@ return {
           "path",
           "emoji",
           "conventional_commits",
+          "codecompanion",
           "buffer",
           "path",
         },
@@ -219,6 +220,7 @@ return {
           },
           copilot = {
             name = "copilot",
+            kind = "Copilot",
             module = "blink-cmp-copilot",
             max_items = 2,
             score_offset = 100,
@@ -270,6 +272,9 @@ return {
           lsp = {
             max_items = 7,
           },
+        },
+        per_filetype = {
+          codecompanion = { "codecompanion" },
         },
       },
       signature = {

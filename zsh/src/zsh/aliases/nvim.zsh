@@ -1,6 +1,8 @@
-openNvim() {
-  if [ -z "$1" ]
-  then
+export NVIM_PLUGINS="$HOME/.local/share/nvim/lazy"
+alias goToPlugins='cd "$NVIM_PLUGINS"'
+
+function openNvim() {
+  if [ -z "$1" ]; then
     nvim .
   else
     nvim "$1"
@@ -8,7 +10,7 @@ openNvim() {
 }
 alias v='openNvim'
 
-genTags() {
+function genTags() {
   if [[ "$MY_SYSTEM" == "mac" ]]; then
     # /opt/homebrew/Cellar/universal-ctags/p6.1.20241229.0/bin/ctags -R --excmd=number
     # /opt/homebrew/Cellar/universal-ctags/HEAD/bin/ctags -R --excmd=number

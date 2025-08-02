@@ -50,6 +50,9 @@ return {
     end,
     opts = {
       sources = { "filesystem", "git_status", "document_symbols", "buffers" },
+      buffers = {
+        show_unloaded = true,
+      },
       open_files_do_not_replace_types = { "terminal", "Trouble", "trouble", "qf", "Outline" },
       popup_border_style = "NC",
       use_popups_for_input = false,
@@ -138,14 +141,14 @@ return {
     end,
     keys = {
       {
-        e .. "o",
+        e .. "f",
         function()
           require("neo-tree.command").execute({ toggle = true, dir = LazyVim.root() })
         end,
         desc = "Explorer NeoTree (Root Dir)",
       },
       {
-        e .. "O",
+        e .. "F",
         function()
           require("neo-tree.command").execute({ toggle = true, dir = v.uv.cwd() })
         end,

@@ -33,6 +33,86 @@ local prs = g .. "p" -- And repos
 local comments = g .. "c" -- And threads and reactions
 local reviews = g .. "r" -- And  reviewers, assignees, and actual reviews
 
+local revman = "<leader>p"
+
+local function jump_unreviewed(direction)
+  local target_buf, win = nil, nil
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local name = vim.api.nvim_buf_get_name(buf)
+    if name:find("OctoChangedFiles") then
+      target_buf = buf
+      win = vim.fn.bufwinid(buf)
+      break
+    end
+  end
+  if not target_buf then
+    vim.notify("No OctoChangedFiles buffer found", vim.log.levels.WARN)
+    return
+  end
+
+  if win == -1 or win == nil then
+    vim.cmd("sbuffer " .. target_buf)
+    win = vim.fn.bufwinid(target_buf)
+  else
+    vim.api.nvim_set_current_win(win)
+  end
+
+  local lines = vim.api.nvim_buf_get_lines(target_buf, 0, -1, false)
+  local cur_line = vim.api.nvim_win_get_cursor(win)[1] -- 1-based
+
+  local indices = {}
+  for i, line in ipairs(lines) do
+    if line:find("󰄰") or line:find("󰀨") then
+      table.insert(indices, i)
+    end
+  end
+  if #indices == 0 then
+    vim.notify("No unreviewed/changed files found", vim.log.levels.INFO)
+    return
+  end
+
+  -- Find the next/prev index, skipping the current line if it's a match
+  local target
+  if direction == "next" then
+    for _, i in ipairs(indices) do
+      if i > cur_line then
+        target = i
+        break
+      end
+    end
+    if not target then
+      target = indices[1] -- wrap
+    end
+  else -- prev
+    for idx = #indices, 1, -1 do
+      if indices[idx] < cur_line then
+        target = indices[idx]
+        break
+      end
+    end
+    if not target then
+      target = indices[#indices] -- wrap
+    end
+  end
+
+  -- Only simulate <CR> if the target line is a file entry
+  if target then
+    vim.api.nvim_win_set_cursor(win, { target, 0 })
+    -- Confirm the line is a file entry (should match the icons)
+    local line = lines[target]
+    if line and (line:find("󰄰") or line:find("󰀨")) then
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
+    end
+  end
+end
+
+vim.keymap.set("n", "]u", function()
+  jump_unreviewed("next")
+end, { desc = "Next unreviewed/changed file" })
+vim.keymap.set("n", "[u", function()
+  jump_unreviewed("prev")
+end, { desc = "Prev unreviewed/changed file" })
+
 return {
   {
     "lewis6991/gitsigns.nvim",
@@ -134,6 +214,10 @@ return {
     "pwntester/octo.nvim",
     event = "VeryLazy",
     opts = {
+      suppress_missing_scope = {
+        projects_v2 = true,
+      },
+      default_merge_method = "squash",
       default_to_projects_v2 = true,
       notifications = {
         current_repo_only = true,
@@ -234,7 +318,6 @@ return {
       ---
       --- Reviews
       ---
-
       cmd({
         key = reviews .. "a",
         action = o("assignee add"),
@@ -310,21 +393,114 @@ return {
       "kkharji/sqlite.lua",
       "pwntester/octo.nvim",
     },
+    lazy = false,
     config = true,
-    -- Lazy load on commands
-    -- cmd = {
-    --   "RevmanAddPR",
-    --   "RevmanEditNotes",
-    --   "RevmanSyncPR",
-    --   "RevmanSyncAll",
-    --   "RevmanSetStatus",
-    --   "RevmanToggleSync",
-    --   "RevmanOpenPR",
-    --   "RevmanStatus",
-    --   "RevmanListPRs",
-    --   "RevmanListOpenPRs",
-    --   "RevmanListMergedPRs",
-    --   "RevmanListUpdatedPRs",
-    -- },
+    opts = {
+      database = {
+        path = vim.fn.stdpath("state") .. "/revman/revman.db",
+      },
+      retention = {
+        days = 0,
+      },
+      background = {
+        frequency = 15,
+      },
+      keymaps = {
+        save_notes = "<leader>zz",
+      },
+      log_level = "info",
+    },
+    keys = {
+      cmd({
+        key = revman .. "S",
+        action = "RevmanSyncAllPRs",
+        desc = "Sync all PRs",
+      }),
+      cmd({
+        key = revman .. "s",
+        action = "RevmanSyncPR",
+        desc = "Sync current PR",
+      }),
+      cmd({
+        key = revman .. "L",
+        action = "RevmanListPRs",
+        desc = "List all PRs",
+      }),
+      cmd({
+        key = revman .. "l",
+        action = "RevmanListOpenPRs",
+        desc = "List open PRs",
+      }),
+      cmd({
+        key = revman .. "r",
+        action = "RevmanListPRsNeedingReview",
+        desc = "List PRs needing review",
+      }),
+      cmd({
+        key = revman .. "m",
+        action = "RevmanListMergedPRs",
+        desc = "List merged PRs",
+      }),
+      cmd({
+        key = revman .. "n",
+        action = "RevmanNudgePRs",
+        desc = "Nudge PRs",
+      }),
+      cmd({
+        key = revman .. "R",
+        action = "RevmanListRepos",
+        desc = "List Repos",
+      }),
+      k({
+        key = revman .. "a",
+        action = ":RevmanAddPR ",
+        desc = "Add PR",
+      }),
+      cmd({
+        key = revman .. "A",
+        action = "RevmanAddRepo",
+        desc = "Add Repo",
+      }),
+      cmd({
+        key = revman .. "U",
+        action = "RevmanListAuthors",
+        desc = "List Authors",
+      }),
+      cmd({
+        key = revman .. "I",
+        action = "RevmanShowNotes",
+        desc = "Show notes for current PR",
+      }),
+      cmd({
+        key = revman .. "i",
+        action = "RevmanAddNote",
+        desc = "Add note to current PR",
+      }),
+      cmd({
+        key = revman .. "s",
+        action = "RevmanSetStatus",
+        desc = "Set status for current PR",
+      }),
+      cmd({
+        key = revman .. "S",
+        action = "RevmanSetStatusForCurrentPR",
+        desc = "Set status for current PR",
+      }),
+      cmd({
+        key = revman .. "S1",
+        action = 'RevmanSetStatusForCurrentPR "waiting_for_changes"',
+        desc = "Set status for current PR to waiting for changes",
+      }),
+      cmd({
+        key = revman .. "S2",
+        action = 'RevmanSetStatusForCurrentPR "waiting_for_review"',
+        desc = "Set status for current PR to waiting for review",
+      }),
+      cmd({
+        key = revman .. "S3",
+        action = 'RevmanSetStatusForCurrentPR "approved"',
+        desc = "Set status for current PR to approved",
+      }),
+    },
   },
 }

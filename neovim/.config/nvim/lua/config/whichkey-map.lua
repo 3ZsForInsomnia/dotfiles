@@ -4,7 +4,7 @@ wk.add({
   --
   -- <Leader>a
   --
-  { "<leader>a", group = "Github Copilot" },
+  { "<leader>a", group = "What's the A stand for..." },
 
   --
   -- <Leader>b
@@ -65,8 +65,10 @@ wk.add({
   { "<leader>k", group = "Kubectl and Docker" },
   { "<leader>l", group = "Location list" },
   { "<leader>n", group = "Obsidian" },
+  { "<leader>na", group = "Helpers to add notes to AI context" },
   { "<leader>q", group = "Quickfix list" },
   { "<leader>r", group = "Refactoring" },
+  { "<leader>p", group = "Revman" },
 
   --
   -- <Leader>s

@@ -170,3 +170,11 @@ a.nvim_exec(
 ]],
   false
 )
+
+au("FileType", {
+  pattern = "octo",
+  callback = function()
+    v.wo.number = true
+    v.wo.relativenumber = true
+  end,
+})

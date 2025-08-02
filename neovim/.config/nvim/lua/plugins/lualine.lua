@@ -1,9 +1,9 @@
+local v = vim
 local icons = require("lazyvim.config").icons
 
 local navic = require("nvim-navic")
 navic.setup({ highlight = true, depth_limit = 3, depth_limit_indicator = "..." })
 
--- Custom filename handler for bottom status bar
 local custom_fname = require("lualine.components.filename"):extend()
 local highlight = require("lualine.highlight")
 local default_status_colors = { saved = "#228B22", modified = "#C70039" }
@@ -25,14 +25,13 @@ end
 
 function custom_fname:update_status()
   local data = custom_fname.super.update_status(self)
-  data = highlight.component_format_highlight(
-    vim.bo.modified and self.status_colors.modified or self.status_colors.saved
-  ) .. data
+  data = highlight.component_format_highlight(v.bo.modified and self.status_colors.modified or self.status_colors.saved)
+    .. data
   return data
 end
 
 local gitSignsForFile = function()
-  local gitsigns = vim.b.gitsigns_status_dict
+  local gitsigns = v.b.gitsigns_status_dict
   if gitsigns then
     return {
       added = gitsigns.added,
@@ -46,7 +45,7 @@ end
 local M = {}
 
 M.handle = nil
-M.timer = vim.loop.new_timer()
+M.timer = v.loop.new_timer()
 M.statusValues = { fileCount = 0, addCount = 0, delCount = 0, untracked = 0 }
 
 M.isInRepo = function()
@@ -151,7 +150,9 @@ return {
               },
             },
           },
-          lualine_c = { custom_fname },
+          lualine_c = {
+            { "filename", new_file_status = true, path = 1 },
+          },
           lualine_x = {
             {
               function()
@@ -165,7 +166,6 @@ return {
                 end
               end,
             },
-            "filetype",
           },
           lualine_y = { "progress" },
           lualine_z = {
@@ -180,10 +180,17 @@ return {
             color_correction = nil,
             navic_opts = nil,
           },
+          lualine_z = {
+            {
+              "searchcount",
+              maxcount = 999,
+              timeout = 500,
+            },
+          },
         },
-        tabline = {
-          lualine_a = { { "buffers", max_length = vim.o.columns - 20, hide_filename_extension = true, mode = 2 } },
-        },
+        -- tabline = {
+        --   lualine_a = { { "buffers", max_length = vim.o.columns - 20, hide_filename_extension = true, mode = 2 } },
+        -- },
         inactive_winbar = {},
         extensions = { "neo-tree", "quickfix", "nvim-dap-ui" },
       })
