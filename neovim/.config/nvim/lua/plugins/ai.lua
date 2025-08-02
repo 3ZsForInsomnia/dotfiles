@@ -1,7 +1,10 @@
+local v = vim
+
 local k_cmd = require("helpers").k_cmd
 local k = require("helpers").k
 
 local a = "<leader>a"
+local c = "<leader>ag"
 
 local dailyPlanningText = [[
 You are my personal planning assistant. I will share notes from the day before, along with my current work tasks (from Jira) and personal tasks (from Trello).
@@ -91,188 +94,188 @@ return {
     event = "VeryLazy",
     config = true,
   },
-  -- {
-  --   "CopilotC-Nvim/CopilotChat.nvim",
-  --   event = "VeryLazy",
-  --   branch = "canary",
-  --   dependencies = {
-  --     {
-  --       "zbirenbaum/copilot.lua",
-  --       opts = {
-  --         suggestion = { enabled = false },
-  --         panel = { enabled = false },
-  --       },
-  --     },
-  --     { "nvim-lua/plenary.nvim" },
-  --   },
-  --   opts = {
-  --     model = "claude-sonnet-4",
-  --     window = {
-  --       width = 0.5,
-  --     },
-  --   },
-  --   config = function(_, opts)
-  --     -- This is mostly an example
-  --     local vectorcode_ctx = require("vectorcode.integrations.copilotchat").make_context_provider({
-  --       -- prompt_header = "Here are relevant files from the repository:", -- Customize header text
-  --       -- prompt_footer = "\nConsider this context when answering:", -- Customize footer text
-  --       skip_empty = true, -- Skip adding context when no files are retrieved
-  --     })
-  --
-  --     opts.contexts = {
-  --       vectorcode = vectorcode_ctx,
-  --     }
-  --     opts.sticky = {
-  --       "#vectorcode",
-  --     }
-  --
-  --     v.api.nvim_create_autocmd("BufEnter", {
-  --       pattern = "copilot-chat",
-  --       callback = function()
-  --         v.opt_local.conceallevel = 0
-  --         v.opt_local.number = true
-  --         v.opt_local.relativenumber = true
-  --         v.opt_local.signcolumn = "no"
-  --         v.opt_local.foldcolumn = "0"
-  --         v.opt_local.fillchars = ""
-  --       end,
-  --     })
-  --
-  --     require("CopilotChat").setup(opts)
-  --   end,
-  --   keys = {
-  --     --
-  --     -- Disable Lazyvim defaults
-  --     --
-  --     { a, false },
-  --     { a, false, mode = "v" },
-  --     { a .. "a", false },
-  --     { a .. "ap", false },
-  --     { a .. "aq", false },
-  --     { a .. "ax", false },
-  --
-  --     --
-  --     -- Utils
-  --     --
-  --     k_cmd({
-  --       key = a .. "m",
-  --       action = "CopilotChatModels",
-  --       desc = "Copilot Select Model",
-  --     }),
-  --
-  --     --
-  --     -- Chat commands
-  --     --
-  --     k_cmd({
-  --       key = a .. "c",
-  --       action = "CopilotChat",
-  --       desc = "Copilot Chat",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "C",
-  --       action = "CopilotChatClose",
-  --       desc = "Copilot Close Chat",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "S",
-  --       action = "CopilotChatStop",
-  --       desc = "Copilot Stop Chat",
-  --     }),
-  --     k({
-  --       key = a .. "s",
-  --       action = ":CopilotChatSave ",
-  --       desc = "Copilot Save Chat",
-  --     }),
-  --     k({
-  --       key = a .. "l",
-  --       action = "CopilotChatLoad ",
-  --       desc = "Copilot Load Chat",
-  --     }),
-  --
-  --     --
-  --     -- Prompts
-  --     --
-  --     k_cmd({
-  --       key = a .. "b",
-  --       action = "CopilotChatBetterNamings",
-  --       desc = "Copilot Better Namings",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "d",
-  --       action = "CopilotChatDocs",
-  --       desc = "Copilot Docs",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "e",
-  --       action = "CopilotChatExplain",
-  --       desc = "Copilot Explain",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "f",
-  --       action = "CopilotChatFix",
-  --       desc = "Copilot Fix",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "g",
-  --       action = "CopilotChatCommit",
-  --       desc = "Copilot Git Commit",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "l",
-  --       action = "CopilotChatFixDiagnostic",
-  --       desc = "Copilot Fix Diagnostic",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "o",
-  --       action = "CopilotChatOptimize",
-  --       desc = "Copilot Optimize",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "t",
-  --       action = "CopilotChatTests",
-  --       desc = "Copilot Tests",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "v",
-  --       action = "CopilotChatReview",
-  --       desc = "Copilot Review",
-  --     }),
-  --
-  --     --
-  --     -- Visual Mode Prompts
-  --     --
-  --     k_cmd({
-  --       key = a .. "d",
-  --       action = "CopilotChatDocs",
-  --       desc = "Copilot Docs",
-  --       mode = "v",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "e",
-  --       action = "CopilotChatExplain",
-  --       desc = "Copilot Explain",
-  --       mode = "v",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "o",
-  --       action = "CopilotChatOptimize",
-  --       mode = "v",
-  --       desc = "Copilot Optimize",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "t",
-  --       action = "CopilotChatTests",
-  --       desc = "Copilot Tests",
-  --       mode = "v",
-  --     }),
-  --     k_cmd({
-  --       key = a .. "r",
-  --       action = "CopilotChatReview",
-  --       mode = "v",
-  --       desc = "Copilot Review",
-  --     }),
-  --   },
-  -- },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    event = "VeryLazy",
+    branch = "canary",
+    dependencies = {
+      {
+        "zbirenbaum/copilot.lua",
+        opts = {
+          suggestion = { enabled = false },
+          panel = { enabled = false },
+        },
+      },
+      { "nvim-lua/plenary.nvim" },
+    },
+    opts = {
+      model = "claude-sonnet-4",
+      window = {
+        width = 0.5,
+      },
+    },
+    config = function(_, opts)
+      -- This is mostly an example
+      local vectorcode_ctx = require("vectorcode.integrations.copilotchat").make_context_provider({
+        -- prompt_header = "Here are relevant files from the repository:", -- Customize header text
+        -- prompt_footer = "\nConsider this context when answering:", -- Customize footer text
+        skip_empty = true, -- Skip adding context when no files are retrieved
+      })
+
+      opts.contexts = {
+        vectorcode = vectorcode_ctx,
+      }
+      opts.sticky = {
+        "#vectorcode",
+      }
+
+      v.api.nvim_create_autocmd("BufEnter", {
+        pattern = "copilot-chat",
+        callback = function()
+          v.opt_local.conceallevel = 0
+          v.opt_local.number = true
+          v.opt_local.relativenumber = true
+          v.opt_local.signcolumn = "no"
+          v.opt_local.foldcolumn = "0"
+          v.opt_local.fillchars = ""
+        end,
+      })
+
+      require("CopilotChat").setup(opts)
+    end,
+    keys = {
+      --
+      -- Disable Lazyvim defaults
+      --
+      { a, false },
+      { a, false, mode = "v" },
+      { a .. "a", false },
+      { a .. "ap", false },
+      { a .. "aq", false },
+      { a .. "ax", false },
+
+      --
+      -- Utils
+      --
+      k_cmd({
+        key = c .. "m",
+        action = "CopilotChatModels",
+        desc = "Copilot Select Model",
+      }),
+
+      --
+      -- Chat commands
+      --
+      k_cmd({
+        key = c .. "c",
+        action = "CopilotChat",
+        desc = "Copilot Chat",
+      }),
+      k_cmd({
+        key = c .. "C",
+        action = "CopilotChatClose",
+        desc = "Copilot Close Chat",
+      }),
+      k_cmd({
+        key = c .. "S",
+        action = "CopilotChatStop",
+        desc = "Copilot Stop Chat",
+      }),
+      k({
+        key = c .. "s",
+        action = ":CopilotChatSave ",
+        desc = "Copilot Save Chat",
+      }),
+      k({
+        key = c .. "l",
+        action = "CopilotChatLoad ",
+        desc = "Copilot Load Chat",
+      }),
+
+      --
+      -- Prompts
+      --
+      k_cmd({
+        key = c .. "b",
+        action = "CopilotChatBetterNamings",
+        desc = "Copilot Better Namings",
+      }),
+      k_cmd({
+        key = c .. "d",
+        action = "CopilotChatDocs",
+        desc = "Copilot Docs",
+      }),
+      k_cmd({
+        key = c .. "e",
+        action = "CopilotChatExplain",
+        desc = "Copilot Explain",
+      }),
+      k_cmd({
+        key = c .. "f",
+        action = "CopilotChatFix",
+        desc = "Copilot Fix",
+      }),
+      k_cmd({
+        key = c .. "g",
+        action = "CopilotChatCommit",
+        desc = "Copilot Git Commit",
+      }),
+      k_cmd({
+        key = c .. "l",
+        action = "CopilotChatFixDiagnostic",
+        desc = "Copilot Fix Diagnostic",
+      }),
+      k_cmd({
+        key = c .. "o",
+        action = "CopilotChatOptimize",
+        desc = "Copilot Optimize",
+      }),
+      k_cmd({
+        key = c .. "t",
+        action = "CopilotChatTests",
+        desc = "Copilot Tests",
+      }),
+      k_cmd({
+        key = c .. "v",
+        action = "CopilotChatReview",
+        desc = "Copilot Review",
+      }),
+
+      --
+      -- Visual Mode Prompts
+      --
+      k_cmd({
+        key = c .. "d",
+        action = "CopilotChatDocs",
+        desc = "Copilot Docs",
+        mode = "v",
+      }),
+      k_cmd({
+        key = c .. "e",
+        action = "CopilotChatExplain",
+        desc = "Copilot Explain",
+        mode = "v",
+      }),
+      k_cmd({
+        key = c .. "o",
+        action = "CopilotChatOptimize",
+        mode = "v",
+        desc = "Copilot Optimize",
+      }),
+      k_cmd({
+        key = c .. "t",
+        action = "CopilotChatTests",
+        desc = "Copilot Tests",
+        mode = "v",
+      }),
+      k_cmd({
+        key = c .. "r",
+        action = "CopilotChatReview",
+        mode = "v",
+        desc = "Copilot Review",
+      }),
+    },
+  },
   {
     "Davidyz/VectorCode",
     version = "*",
