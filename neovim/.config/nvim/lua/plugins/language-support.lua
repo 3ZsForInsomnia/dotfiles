@@ -8,22 +8,20 @@ end
 return {
   {
     "aklt/plantuml-syntax",
-    event = "VeryLazy",
     ft = "uml",
   },
   {
     "weirongxu/plantuml-previewer.vim",
-    event = "VeryLazy",
     ft = "uml",
   },
   {
     "CRAG666/code_runner.nvim",
+    cmd = { "RunCode", "RunFile" },
     config = true,
-    event = "VeryLazy",
   },
   {
     "olrtg/nvim-emmet",
-    event = "VeryLazy",
+    ft = { "html", "css", "javascript", "typescript", "vue", "svelte", "markdown" },
     keys = {
       cmd({
         key = l .. "e",
@@ -40,8 +38,8 @@ return {
   },
   {
     "MonsieurTib/package-ui.nvim",
+    cmd = "PackageUI",
     config = true,
-    event = "VeryLazy",
     keys = {
       cmd({
         key = l .. "P",
@@ -52,8 +50,8 @@ return {
   },
   {
     "max397574/colortils.nvim",
+    cmd = "Colortils",
     config = true,
-    event = "VeryLazy",
     keys = {
       cmd({
         key = l .. "cp",
@@ -84,7 +82,7 @@ return {
   },
   {
     "Equilibris/nx.nvim",
-    event = "VeryLazy",
+    lazy = true,
     config = function()
       return {
         nx_cmd_root = "nx",
@@ -94,5 +92,8 @@ return {
       }
     end,
   },
-  { "kkharji/sqlite.lua" },
+  {
+    "kkharji/sqlite.lua",
+    lazy = true,
+  },
 }

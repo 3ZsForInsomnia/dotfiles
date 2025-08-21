@@ -13,7 +13,139 @@ local unvisited = {
   hl_group = green,
 }
 
-local luasnipSetupOptions = function(types)
+local js = "javascript"
+local html = "html"
+local ts = "typescript"
+local snippetsLocation = v.fn.stdpath("config") .. "/snippets"
+
+local colorful_menu_config = function()
+  require("colorful-menu").setup({
+    ls = {
+      lua_ls = {
+        -- Maybe you want to dim arguments a bit.
+        arguments_hl = "@comment",
+      },
+      gopls = {
+        -- By default, we render variable/function's type in the right most side,
+        -- to make them not to crowd together with the original label.
+
+        -- when true:
+        -- foo             *Foo
+        -- ast         "go/ast"
+
+        -- when false:
+        -- foo *Foo
+        -- ast "go/ast"
+        align_type_to_right = true,
+        -- When true, label for field and variable will format like "foo: Foo"
+        -- instead of go's original syntax "foo Foo". If align_type_to_right is
+        -- true, this option has no effect.
+        add_colon_before_type = false,
+        -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+        preserve_type_when_truncate = true,
+      },
+      -- for lsp_config or typescript-tools
+      ts_ls = {
+        -- false means do not include any extra info,
+        -- see https://github.com/xzbdmw/colorful-menu.nvim/issues/42
+        extra_info_hl = "@comment",
+      },
+      vtsls = {
+        -- false means do not include any extra info,
+        -- see https://github.com/xzbdmw/colorful-menu.nvim/issues/42
+        extra_info_hl = "@comment",
+      },
+      ["rust-analyzer"] = {
+        -- Such as (as Iterator), (use std::io).
+        extra_info_hl = "@comment",
+        -- Similar to the same setting of gopls.
+        align_type_to_right = true,
+        -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+        preserve_type_when_truncate = true,
+      },
+      clangd = {
+        -- Such as "From <stdio.h>".
+        extra_info_hl = "@comment",
+        -- Similar to the same setting of gopls.
+        align_type_to_right = true,
+        -- the hl group of leading dot of "•std::filesystem::permissions(..)"
+        import_dot_hl = "@comment",
+        -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+        preserve_type_when_truncate = true,
+      },
+      zls = {
+        -- Similar to the same setting of gopls.
+        align_type_to_right = true,
+      },
+      roslyn = {
+        extra_info_hl = "@comment",
+      },
+      dartls = {
+        extra_info_hl = "@comment",
+      },
+      -- The same applies to pyright/pylance
+      basedpyright = {
+        -- It is usually import path such as "os"
+        extra_info_hl = "@comment",
+      },
+      pylsp = {
+        extra_info_hl = "@comment",
+        -- Dim the function argument area, which is the main
+        -- difference with pyright.
+        arguments_hl = "@comment",
+      },
+      -- If true, try to highlight "not supported" languages.
+      fallback = true,
+      -- this will be applied to label description for unsupport languages
+      fallback_extra_info_hl = "@comment",
+    },
+    -- If the built-in logic fails to find a suitable highlight group for a label,
+    -- this highlight is applied to the label.
+    fallback_highlight = "@variable",
+    -- If provided, the plugin truncates the final displayed text to
+    -- this width (measured in display cells). Any highlights that extend
+    -- beyond the truncation point are ignored. When set to a float
+    -- between 0 and 1, it'll be treated as percentage of the width of
+    -- the window: math.floor(max_width * vim.api.nvim_win_get_width(0))
+    -- Default 60.
+    max_width = 60,
+  })
+end
+
+local filetypes_to_load_snippets_for = {
+  "bash",
+  "zsh",
+  "css",
+  "scss",
+  "html",
+  "javascript",
+  "typescript",
+  "javascriptreact",
+  "typescriptreact",
+  "python",
+  "go",
+  "sql",
+  "json",
+  "markdown",
+  "lua",
+}
+
+local function load_snippets_for_ft()
+  local ft = v.bo.filetype
+  if ft and ft ~= "" then
+    require("luasnip.loaders.from_vscode").lazy_load({
+      include = { ft },
+    })
+  end
+end
+
+v.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = filetypes_to_load_snippets_for,
+  callback = load_snippets_for_ft,
+})
+
+local luasnipSetupOptions = function()
+  local types = require("luasnip.util.types")
   return {
     history = true,
     delete_check_events = "TextChanged",
@@ -38,14 +170,50 @@ local luasnipSetupOptions = function(types)
   }
 end
 
-local js = "javascript"
-local html = "html"
-local ts = "typescript"
-local snippetsLocation = v.fn.stdpath("config") .. "/snippets"
-
 return {
+  { "rafamadriz/friendly-snippets", event = "InsertEnter" },
+  {
+    "L3MON4D3/LuaSnip",
+    event = "InsertEnter",
+    lazy = true,
+    opts = {
+      history = true,
+      delete_check_events = "TextChanged",
+    },
+    depdencies = {
+      "rafamadriz/friendly-snippets",
+    },
+    config = function(_, opts)
+      local ls = require("luasnip")
+      ls.setup(opts)
+
+      ls.config.setup(luasnipSetupOptions())
+      ls.filetype_extend("typescript", { js })
+      ls.filetype_extend("javascriptreact", { js, html })
+      ls.filetype_extend("typescriptreact", { ts, js, html })
+      require("luasnip.loaders.from_lua").lazy_load({ paths = { snippetsLocation } })
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      LazyVim.cmp.actions.snippet_forward = function()
+        if ls.jumpable(1) then
+          v.schedule(function()
+            ls.jump(1)
+          end)
+          return true
+        end
+      end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      LazyVim.cmp.actions.snippet_stop = function()
+        if ls.expand_or_jumpable() then -- or just jumpable(1) is fine?
+          ls.unlink_current()
+          return true
+        end
+      end
+    end,
+  },
   {
     "saghen/blink.cmp",
+    event = "VeryLazy",
     version = not g.lazyvim_blink_main and "*",
     build = g.lazyvim_blink_main and "cargo build --release",
     opts_extend = {
@@ -53,34 +221,22 @@ return {
       "sources.default",
     },
     dependencies = {
-      "giuxtaposition/blink-cmp-copilot",
-      "disrupted/blink-cmp-conventional-commits",
-      "bydlw98/blink-cmp-env",
-      "Kaiser-Yang/blink-cmp-git",
-      "moyiz/blink-emoji.nvim",
-      { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
+      { "giuxtaposition/blink-cmp-copilot", lazy = true },
+      { "disrupted/blink-cmp-conventional-commits", lazy = true },
+      { "bydlw98/blink-cmp-env", lazy = true },
+      { "Kaiser-Yang/blink-cmp-git", lazy = true },
       {
-        "L3MON4D3/LuaSnip",
-        build = (not LazyVim.is_win())
-            and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
-          or nil,
-        config = function()
-          local ls = require("luasnip")
-          local types = require("luasnip.util.types")
-
-          require("luasnip.loaders.from_vscode").lazy_load()
-          require("luasnip.loaders.from_lua").lazy_load({ paths = { snippetsLocation } })
-
-          ls.filetype_extend("typescript", { js })
-          ls.filetype_extend("javascriptreact", { js, html })
-          ls.filetype_extend("typescriptreact", { ts, js, html })
-
-          ls.config.setup(luasnipSetupOptions(types))
-        end,
+        "xzbdmw/colorful-menu.nvim",
+        config = colorful_menu_config,
+        lazy = true,
       },
-      "rafamadriz/friendly-snippets",
+      { "moyiz/blink-emoji.nvim", lazy = true },
+      {
+        "kristijanhusak/vim-dadbod-completion",
+        ft = { "sql", "mysql", "plsql" },
+      },
+      "L3MON4D3/LuaSnip",
     },
-    event = "InsertEnter",
 
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
@@ -202,7 +358,6 @@ return {
           "path",
           "emoji",
           "conventional_commits",
-          "codecompanion",
           "buffer",
           "path",
         },
@@ -274,7 +429,7 @@ return {
           },
         },
         per_filetype = {
-          codecompanion = { "codecompanion" },
+          codecompanion = { inherit_defaults = true, "codecompanion" },
         },
       },
       signature = {
@@ -339,103 +494,6 @@ return {
       end
 
       require("blink.cmp").setup(opts)
-    end,
-  },
-  {
-    "xzbdmw/colorful-menu.nvim",
-    config = function()
-      -- You don't need to set these options.
-      require("colorful-menu").setup({
-        ls = {
-          lua_ls = {
-            -- Maybe you want to dim arguments a bit.
-            arguments_hl = "@comment",
-          },
-          gopls = {
-            -- By default, we render variable/function's type in the right most side,
-            -- to make them not to crowd together with the original label.
-
-            -- when true:
-            -- foo             *Foo
-            -- ast         "go/ast"
-
-            -- when false:
-            -- foo *Foo
-            -- ast "go/ast"
-            align_type_to_right = true,
-            -- When true, label for field and variable will format like "foo: Foo"
-            -- instead of go's original syntax "foo Foo". If align_type_to_right is
-            -- true, this option has no effect.
-            add_colon_before_type = false,
-            -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
-            preserve_type_when_truncate = true,
-          },
-          -- for lsp_config or typescript-tools
-          ts_ls = {
-            -- false means do not include any extra info,
-            -- see https://github.com/xzbdmw/colorful-menu.nvim/issues/42
-            extra_info_hl = "@comment",
-          },
-          vtsls = {
-            -- false means do not include any extra info,
-            -- see https://github.com/xzbdmw/colorful-menu.nvim/issues/42
-            extra_info_hl = "@comment",
-          },
-          ["rust-analyzer"] = {
-            -- Such as (as Iterator), (use std::io).
-            extra_info_hl = "@comment",
-            -- Similar to the same setting of gopls.
-            align_type_to_right = true,
-            -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
-            preserve_type_when_truncate = true,
-          },
-          clangd = {
-            -- Such as "From <stdio.h>".
-            extra_info_hl = "@comment",
-            -- Similar to the same setting of gopls.
-            align_type_to_right = true,
-            -- the hl group of leading dot of "•std::filesystem::permissions(..)"
-            import_dot_hl = "@comment",
-            -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
-            preserve_type_when_truncate = true,
-          },
-          zls = {
-            -- Similar to the same setting of gopls.
-            align_type_to_right = true,
-          },
-          roslyn = {
-            extra_info_hl = "@comment",
-          },
-          dartls = {
-            extra_info_hl = "@comment",
-          },
-          -- The same applies to pyright/pylance
-          basedpyright = {
-            -- It is usually import path such as "os"
-            extra_info_hl = "@comment",
-          },
-          pylsp = {
-            extra_info_hl = "@comment",
-            -- Dim the function argument area, which is the main
-            -- difference with pyright.
-            arguments_hl = "@comment",
-          },
-          -- If true, try to highlight "not supported" languages.
-          fallback = true,
-          -- this will be applied to label description for unsupport languages
-          fallback_extra_info_hl = "@comment",
-        },
-        -- If the built-in logic fails to find a suitable highlight group for a label,
-        -- this highlight is applied to the label.
-        fallback_highlight = "@variable",
-        -- If provided, the plugin truncates the final displayed text to
-        -- this width (measured in display cells). Any highlights that extend
-        -- beyond the truncation point are ignored. When set to a float
-        -- between 0 and 1, it'll be treated as percentage of the width of
-        -- the window: math.floor(max_width * vim.api.nvim_win_get_width(0))
-        -- Default 60.
-        max_width = 60,
-      })
     end,
   },
 }

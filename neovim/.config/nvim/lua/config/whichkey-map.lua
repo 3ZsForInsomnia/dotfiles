@@ -119,6 +119,10 @@ wk.add({
   { "[7", desc = "Good bookmark" },
   { "[6", desc = "Info bookmark" },
   { "[5", desc = "Home bookmark" },
+  { "[B", desc = "First buffer" },
+  { "[Q", desc = "First error" },
+  { "[T", desc = "Tag" },
+  { "[<C-T>", desc = "Preview next tag" },
 
   --
   -- Next (])
@@ -132,6 +136,10 @@ wk.add({
   { "]7", desc = "Good bookmark" },
   { "]6", desc = "Info bookmark" },
   { "]5", desc = "Home bookmark" },
+  { "]B", desc = "Last buffer" },
+  { "]Q", desc = "Last error" },
+  { "]T", desc = "Tag" },
+  { "]<C-T>", desc = "Preview previous tag" },
 
   --
   -- Ctrl

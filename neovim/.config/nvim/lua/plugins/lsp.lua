@@ -8,6 +8,7 @@ end
 return {
   {
     "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
     opts = function()
       local keys = require("lazyvim.plugins.lsp.keymaps").get()
       keys[#keys + 1] = { "<leader>ca", false }
@@ -31,6 +32,8 @@ return {
   },
   {
     "folke/trouble.nvim",
+    lazy = true,
+    cmd = "Trouble",
     opts = { use_diagnostic_signs = true },
     keys = {
       { "<leader>cs", false },
@@ -39,6 +42,7 @@ return {
   },
   {
     "mason-org/mason-lspconfig.nvim",
+    lazy = true,
     version = "^1.0.0",
   },
   {
@@ -91,6 +95,7 @@ return {
   },
   {
     "aznhe21/actions-preview.nvim",
+    lazy = true,
     config = true,
     keys = {
       cmd({
@@ -100,9 +105,10 @@ return {
       }),
     },
   },
-  { "RRethy/nvim-treesitter-textsubjects" },
+  { "RRethy/nvim-treesitter-textsubjects", lazy = true },
   {
     "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile", "BufWritePRe", "VeryLazy" },
     config = function()
       local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
       parser_config.markdown.used_by = "octo"

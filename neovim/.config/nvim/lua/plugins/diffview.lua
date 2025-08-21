@@ -8,36 +8,43 @@ local f = function(command)
 end
 
 return {
-  {
-    "isakbm/gitgraph.nvim",
-    dependencies = { "sindrets/diffview.nvim" },
-    event = "VeryLazy",
-    ---@type I.GGConfig
-    opts = {
-      hooks = {
-        -- Check diff of a commit
-        on_select_commit = function(commit)
-          vim.notify("DiffviewOpen " .. commit.hash .. "^!")
-          vim.cmd(":DiffviewOpen " .. commit.hash .. "^!")
-        end,
-        -- Check diff from commit a -> commit b
-        on_select_range_commit = function(from, to)
-          vim.notify("DiffviewOpen " .. from.hash .. "~1.." .. to.hash)
-          vim.cmd(":DiffviewOpen " .. from.hash .. "~1.." .. to.hash)
-        end,
-      },
-    },
-    keys = {
-      cmd({
-        key = "<leader>gg",
-        action = "lua require('gitgraph').draw({}, { all = true, max_count = 5000 })",
-        desc = "Draw GitGraph",
-      }),
-    },
-  },
+  -- Used for CodeCompanion diffs
+  { "echasnovski/mini.diff", version = false },
   {
     "sindrets/diffview.nvim",
-    event = "VeryLazy",
+    cmd = {
+      f("Open"),
+      f("Close"),
+      f("Open origin/main"),
+      f("Open origin/HEAD...HEAD"),
+    },
+    dependencies = {
+      {
+        "isakbm/gitgraph.nvim",
+        ---@type I.GGConfig
+        opts = {
+          hooks = {
+            -- Check diff of a commit
+            on_select_commit = function(commit)
+              vim.notify("DiffviewOpen " .. commit.hash .. "^!")
+              vim.cmd(":DiffviewOpen " .. commit.hash .. "^!")
+            end,
+            -- Check diff from commit a -> commit b
+            on_select_range_commit = function(from, to)
+              vim.notify("DiffviewOpen " .. from.hash .. "~1.." .. to.hash)
+              vim.cmd(":DiffviewOpen " .. from.hash .. "~1.." .. to.hash)
+            end,
+          },
+        },
+        keys = {
+          cmd({
+            key = "<leader>gg",
+            action = "lua require('gitgraph').draw({}, { all = true, max_count = 5000 })",
+            desc = "Draw GitGraph",
+          }),
+        },
+      },
+    },
     config = function()
       local actions = require("diffview.actions")
 

@@ -120,9 +120,8 @@ return {
   {
     "obsidian-nvim/obsidian.nvim",
     version = "*",
-    lazy = true,
     ft = { "markdown" },
-    -- event = "VeryLazy",
+    lazy = true,
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
@@ -314,18 +313,13 @@ return {
 
       cmd({
         key = o .. "a1",
-        action = "RecentNotesToQuickFixList 1",
+        action = "OpenRecentNotes 1",
         desc = "Send files edited within last 1 day to quickfix",
       }),
       cmd({
         key = o .. "a7",
-        action = "RecentNotesToQuickFixList 7",
+        action = "OpenRecentNotes 7",
         desc = "Send files edited within last 7 days to quickfix",
-      }),
-      cmd({
-        key = o .. "aqc",
-        action = "CloseNewQuickFixBuffers",
-        desc = "Close buffers that were not in the saved list",
       }),
     },
   },

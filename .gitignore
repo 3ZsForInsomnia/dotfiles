@@ -5,7 +5,7 @@ node_modules
 tags
 
 *work*
-.env
+.env*
 base.yml
 
 # Miscellaneous stuff that shouldn't be committed

@@ -1,7 +1,6 @@
 local M = {}
 
 M.shortenPath = function(cwd)
-	print("cwd", cwd)
 	-- cwd = string.gsub(cwd, '%20', '')
 	-- cwd = string.gsub(cwd, '/Users/zachary/', '')
 	-- cwd = string.gsub(cwd, '/Users/zachary', 'Home')
@@ -59,7 +58,6 @@ end
 function M.getNextEvent()
 	local event = readFile("/Users/zachary/.local/state/cal/nextEvent.txt")
 	event = string.gsub(event, "\n", "")
-	print("event: ", event)
 	return event .. "  "
 end
 

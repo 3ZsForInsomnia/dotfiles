@@ -11,7 +11,7 @@ local react = merge({ "react", "react_router", "tailwindcss", "html" }, js)
 return {
   {
     "luckasRanarison/nvim-devdocs",
-    event = "VeryLazy",
+    cmd = { "DevdocsOpen", "DevdocsFetch", "DevdocsInstall" },
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",

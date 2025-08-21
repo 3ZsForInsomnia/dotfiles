@@ -19,6 +19,7 @@ export PGPASSFILE="$XDG_DATA_HOME/psql/.pgpass"
 export BOOKMARKS_FILE="$XDG_DATA_HOME/bookmarks/.bookmarks"
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/.gitconfig"
 export LPASS_HOME="$XDG_DATA_HOME/lpass"
+export LPASS_AGENT_TIMEOUT=$((7 * 24 * 60 * 60)) # 7 days in seconds
 
 export AZURE_CONFIG_DIR="$XDG_CONFIG_HOME/azure"
 export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"

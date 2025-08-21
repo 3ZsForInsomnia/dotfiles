@@ -6,6 +6,18 @@ local k = function(command)
   return "lua require('kulala')." .. command .. "()"
 end
 
+local function split_env_var(var, sep)
+  local str = os.getenv(var)
+  if not str then
+    return {}
+  end
+  local t = {}
+  for s in string.gmatch(str, "([^" .. sep .. "]+)") do
+    table.insert(t, s)
+  end
+  return t
+end
+
 return {
   {
     "mistweaverco/kulala.nvim",
@@ -70,14 +82,27 @@ return {
   },
   {
     "yoshio15/vim-trello",
-    event = "VeryLazy",
+    cmd = "VimTrello",
     config = function()
       g.vimTrelloApiKey = os.getenv("TRELLO_API_KEY")
       g.vimTrelloToken = os.getenv("TRELLO_API_TOKEN")
     end,
   },
+  -- {
+  --   dir = "~/src/jira-ai",
+  --   event = "VeryLazy",
+  --   config = true,
+  --   opts = {
+  --     jira_projects = split_env_var("JIRA_PROJECTS", ","),
+  --     jira_base_url = os.getenv("JIRA_BASE_URL"),
+  --     jira_email_address = os.getenv("JIRA_EMAIL_ADDRESS"),
+  --     jira_api_token = os.getenv("JIRA_API_TOKEN"),
+  --   },
+  -- },
   {
     "ramilito/kubectl.nvim",
+    dependencies = "saghen/blink.download",
+    event = "VeryLazy",
     config = true,
     keys = {
       cmd({
@@ -103,7 +128,7 @@ return {
   },
   {
     "liuchengxu/vista.vim",
-    event = "VeryLazy",
+    cmd = "Vista",
     config = function()
       g.vista_default_executive = "nvim_lsp"
       g.vista_sidebar_position = "vertical topleft"
@@ -112,7 +137,7 @@ return {
   },
   {
     "mbbill/undotree",
-    event = "VeryLazy",
+    cmd = "UndotreeToggle",
     keys = {
       cmd({
         key = "<leader>uu",
@@ -246,6 +271,15 @@ return {
   -- },
   {
     "luckasRanarison/tailwind-tools.nvim",
+    ft = {
+      "html",
+      "css",
+      "scss",
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+    },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {
       {

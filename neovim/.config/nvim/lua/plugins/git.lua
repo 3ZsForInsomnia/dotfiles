@@ -35,83 +35,8 @@ local reviews = g .. "r" -- And  reviewers, assignees, and actual reviews
 
 local revman = "<leader>p"
 
-local function jump_unreviewed(direction)
-  local target_buf, win = nil, nil
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    local name = vim.api.nvim_buf_get_name(buf)
-    if name:find("OctoChangedFiles") then
-      target_buf = buf
-      win = vim.fn.bufwinid(buf)
-      break
-    end
-  end
-  if not target_buf then
-    vim.notify("No OctoChangedFiles buffer found", vim.log.levels.WARN)
-    return
-  end
-
-  if win == -1 or win == nil then
-    vim.cmd("sbuffer " .. target_buf)
-    win = vim.fn.bufwinid(target_buf)
-  else
-    vim.api.nvim_set_current_win(win)
-  end
-
-  local lines = vim.api.nvim_buf_get_lines(target_buf, 0, -1, false)
-  local cur_line = vim.api.nvim_win_get_cursor(win)[1] -- 1-based
-
-  local indices = {}
-  for i, line in ipairs(lines) do
-    if line:find("󰄰") or line:find("󰀨") then
-      table.insert(indices, i)
-    end
-  end
-  if #indices == 0 then
-    vim.notify("No unreviewed/changed files found", vim.log.levels.INFO)
-    return
-  end
-
-  -- Find the next/prev index, skipping the current line if it's a match
-  local target
-  if direction == "next" then
-    for _, i in ipairs(indices) do
-      if i > cur_line then
-        target = i
-        break
-      end
-    end
-    if not target then
-      target = indices[1] -- wrap
-    end
-  else -- prev
-    for idx = #indices, 1, -1 do
-      if indices[idx] < cur_line then
-        target = indices[idx]
-        break
-      end
-    end
-    if not target then
-      target = indices[#indices] -- wrap
-    end
-  end
-
-  -- Only simulate <CR> if the target line is a file entry
-  if target then
-    vim.api.nvim_win_set_cursor(win, { target, 0 })
-    -- Confirm the line is a file entry (should match the icons)
-    local line = lines[target]
-    if line and (line:find("󰄰") or line:find("󰀨")) then
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
-    end
-  end
-end
-
-vim.keymap.set("n", "]u", function()
-  jump_unreviewed("next")
-end, { desc = "Next unreviewed/changed file" })
-vim.keymap.set("n", "[u", function()
-  jump_unreviewed("prev")
-end, { desc = "Prev unreviewed/changed file" })
+vim.keymap.set("i", "@", "@<C-x><C-o>", { silent = true, buffer = true })
+vim.keymap.set("i", "#", "#<C-x><C-o>", { silent = true, buffer = true })
 
 return {
   {
@@ -122,7 +47,22 @@ return {
   },
   {
     "NeogitOrg/neogit",
-    event = "VeryLazy",
+    cmd = {
+      "Neogit",
+      "NeogitCommit",
+      "NeogitRebase",
+      "NeogitMerge",
+      "NeogitLog",
+      "NeogitBranch",
+      "NeogitStash",
+      "NeogitPull",
+      "NeogitPush",
+      "NeogitFetch",
+      "NeogitDiff",
+      "NeogitCherryPick",
+      "NeogitLogCurrent",
+      "NeogitResetState",
+    },
     opts = {
       graph_style = "unicode",
       process_spinner = true,
@@ -212,7 +152,21 @@ return {
   },
   {
     "pwntester/octo.nvim",
-    event = "VeryLazy",
+    cmd = {
+      "Octo",
+      "OctoSearch",
+      "OctoNotificationList",
+      "OctoReview",
+      "OctoPrBrowser",
+      "OctoRepoBrowser",
+      "OctoPrCreate",
+      "OctoPrChecks",
+      "OctoPrChanges",
+      "OctoPrEdit",
+      "OctoPrDiff",
+      "OctoPrList",
+      "OctoPrCheckout",
+    },
     opts = {
       suppress_missing_scope = {
         projects_v2 = true,
@@ -383,33 +337,52 @@ return {
         action = o("thread unresolve"),
         desc = "Unresolve a PR Thread",
       }),
+
+      --
+      -- Jumps
+      --
+      -- k({
+      --   key = "[u",
+      --   action = function()
+      --     jump_unreviewed("prev")
+      --   end,
+      --   desc = "Prev unreviewed/changed file",
+      -- }),
+      -- k({
+      --   key = "]u",
+      --   action = function()
+      --     jump_unreviewed("next")
+      --   end,
+      --   desc = "Next unreviewed/changed file",
+      -- }),
     },
   },
   {
     dir = "~/src/revman.nvim",
+    cmd = {
+      "RevmanSyncAllPRs",
+      "RevmanSyncPR",
+      "RevmanListPRs",
+      "RevmanListOpenPRs",
+      "RevmanListPRsNeedingReview",
+      "RevmanListMergedPRs",
+      "RevmanNudgePRs",
+      "RevmanListRepos",
+      "RevmanAddPR",
+      "RevmanAddRepo",
+      "RevmanListAuthors",
+      "RevmanShowNotes",
+      "RevmanAddNote",
+      "RevmanSetStatus",
+      "RevmanSetStatusForCurrentPR",
+    },
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",
       "kkharji/sqlite.lua",
       "pwntester/octo.nvim",
     },
-    lazy = false,
     config = true,
-    opts = {
-      database = {
-        path = vim.fn.stdpath("state") .. "/revman/revman.db",
-      },
-      retention = {
-        days = 0,
-      },
-      background = {
-        frequency = 15,
-      },
-      keymaps = {
-        save_notes = "<leader>zz",
-      },
-      log_level = "info",
-    },
     keys = {
       cmd({
         key = revman .. "S",

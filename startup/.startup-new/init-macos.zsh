@@ -8,11 +8,11 @@ brew_taps="espanso/espanso ankitpokhrel/jira-cli"
 brew_packages=("eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei" "graphviz" "git-delta" "tmux" "overmind" "pngpaste" "hyperfine" "pandoc" "speedtest-cli" "zoxide" "pipx" "helm" "yq")
 brew_packages_with_cask=("copyq" "witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass-cli" "rectangle")
 
-npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint")
+npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai")
 
 pip_packages_to_install=("yamllint" "shell-gpt")
 
-uv_packages_to_install=("vectorcode")
+uv_packages_to_install=("vectorcode" "basic-memory")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh")
 

@@ -8,6 +8,7 @@ local a = 'lua require("ts-node-action").'
 return {
   {
     "folke/which-key.nvim",
+    event = "VeryLazy",
     opts = {
       preset = "classic",
       win = {
@@ -30,8 +31,8 @@ return {
   },
   {
     "ckolkey/ts-node-action",
+    lazy = true,
     dependencies = { "nvim-treesitter" },
-    opts = {},
     keys = {
       k_cmd({
         key = ll .. "a",
@@ -52,7 +53,7 @@ return {
   },
   { "andymass/vim-matchup" },
   { "winston0410/range-highlight.nvim", opts = {} },
-  { "godlygeek/tabular", event = "VeryLazy" },
+  { "godlygeek/tabular", ft = "markdown" },
   { "kylechui/nvim-surround", config = true },
   {
     "olimorris/persisted.nvim",
@@ -111,10 +112,26 @@ return {
   },
   {
     "folke/todo-comments.nvim",
-    event = "VeryLazy",
+    ft = {
+      "html",
+      "css",
+      "scss",
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "go",
+      "pythong",
+      "bash",
+      "zsh",
+      "lua",
+      "json",
+    },
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
-      { "<leader>st", false },
+      -- { "<leader>st", false },
+      { "[t", false },
+      { "]t", false },
       { "<leader>sT", false },
     },
   },

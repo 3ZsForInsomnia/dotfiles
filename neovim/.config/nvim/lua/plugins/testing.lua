@@ -25,17 +25,64 @@ local go_config = {
   },
 }
 
+local function jump_to_next_failed_test()
+  require("neotest").jump.next({ status = "failed" })
+end
+
+local function jump_to_prev_failed_test()
+  require("neotest").jump.prev({ status = "failed" })
+end
+
 return {
   {
     "andythigpen/nvim-coverage",
+    event = "VeryLazy",
     rocks = { "lua-xmlreader" },
     requires = "nvim-lua/plenary.nvim",
-    config = function()
-      require("coverage").setup()
-    end,
+    config = true,
+    keys = {
+      {
+        l .. "c",
+        function()
+          require("coverage").load(true)
+        end,
+        desc = "Show coverage",
+      },
+      {
+        l .. "Cl",
+        function()
+          require("coverage").load(false)
+        end,
+        desc = "Load coverage",
+      },
+      {
+        l .. "Ch",
+        function()
+          require("coverage").hide()
+        end,
+        desc = "Hide coverage",
+      },
+      {
+        l .. "Ct",
+        function()
+          require("coverage").load(false)
+          require("coverage").toggle()
+        end,
+        desc = "Toggle coverage",
+      },
+      {
+        l .. "Cs",
+        function()
+          require("coverage").load(false)
+          require("coverage").summary()
+        end,
+        desc = "Show coverage summary",
+      },
+    },
   },
   {
     "nvim-neotest/neotest",
+    lazy = true,
     dependencies = {
       "nvim-neotest/nvim-nio",
       "nvim-lua/plenary.nvim",
@@ -209,42 +256,20 @@ return {
         end,
         desc = "Run Jest Watch",
       },
+
       {
-        l .. "c",
+        "[t",
         function()
-          require("coverage").load(true)
+          jump_to_prev_failed_test()
         end,
-        desc = "Show coverage",
+        desc = "Previous Failed Test",
       },
       {
-        l .. "Cl",
+        "]t",
         function()
-          require("coverage").load(false)
+          jump_to_next_failed_test()
         end,
-        desc = "Load coverage",
-      },
-      {
-        l .. "Ch",
-        function()
-          require("coverage").hide()
-        end,
-        desc = "Hide coverage",
-      },
-      {
-        l .. "Ct",
-        function()
-          require("coverage").load(false)
-          require("coverage").toggle()
-        end,
-        desc = "Toggle coverage",
-      },
-      {
-        l .. "Cs",
-        function()
-          require("coverage").load(false)
-          require("coverage").summary()
-        end,
-        desc = "Show coverage summary",
+        desc = "Next Failed Test",
       },
     },
   },

@@ -8,11 +8,19 @@ end
 return {
   {
     "tpope/vim-dadbod",
+    cmd = "DB",
     event = "VeryLazy",
   },
   {
     "kristijanhusak/vim-dadbod-ui",
-    event = "VeryLazy",
+    cmd = {
+      "DBUI",
+      "DBUIToggle",
+      "DBUIAddConnection",
+      "DBUIFindBuffer",
+      "DBUILastQueryInfo",
+      "DBUIRenameBuffer",
+    },
     config = function()
       v.g.db_ui_use_nvim_notify = 1
       v.g.db_ui_use_nerd_fonts = 1

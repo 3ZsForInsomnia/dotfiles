@@ -208,6 +208,7 @@ return {
   },
   {
     "brenoprata10/nvim-highlight-colors",
+    ft = { "css", "scss", "html", "javascript", "typescript", "lua" },
     opts = {
       render = "background",
       enable_tailwind = true,

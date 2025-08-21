@@ -121,10 +121,10 @@ function fkill() {
 
 function fkillport() {
   local port_arg=${1:-}
-  local procs
+  local procs pid
 
   if [[ -n "$port_arg" ]]; then
-    procs=$(lsof -iTCP:$port_arg -sTCP:LISTEN -n -P 2>/dev/null)
+    procs=$(getProcessUsingPort "$port_arg")
   else
     procs=$(lsof -iTCP -sTCP:LISTEN -n -P 2>/dev/null)
   fi
@@ -134,14 +134,13 @@ function fkillport() {
     return 1
   fi
 
-  local pid
   pid=$(echo "$procs" | sed 1d |
     fzf -m --height=40% --border --header="Command  PID  User  Port" \
       --prompt="Select process to kill: " |
-    awk '{print $2}')
+    awk '{print $2}' | sort -u | tr '\n' ' ' | xargs)
 
   if [[ -n "$pid" ]]; then
-    echo "$pid" | xargs kill -${2:-9}
+    kill -${2:-9} $pid
     echo "Killed process(es) with PID: $pid"
   else
     echo "No process selected."

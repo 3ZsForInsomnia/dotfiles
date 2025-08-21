@@ -2,7 +2,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "moonfly",
+      colorscheme = "catpuccin",
       defaults = {
         autocmds = true,
         keymaps = true,

@@ -67,3 +67,7 @@ source "$ZSH_CONFIG_DIR/.source-things.zsh"
 eval "$(zoxide init zsh)"
 
 # zprof
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+zstyle ':completion:*' menu select

@@ -115,6 +115,8 @@ local createOpts = function()
           ".local",
           "--exclude",
           "share",
+          "--exclude",
+          "\\.venv",
         },
       },
     },
@@ -131,6 +133,11 @@ local createOpts = function()
         ".next",
         "lazy-lock.json",
         "lazyvim.json",
+        "package-lock.json",
+        ".coverage",
+        ".repro",
+        ".nx",
+        "\\.venv",
       },
       prompt_prefix = icons.common.Telescope .. " " .. icons.misc.Carat .. " ",
       selection_caret = icons.common.Arrow .. " ",
@@ -159,7 +166,7 @@ local createOpts = function()
         "--smart-case",
         "--hidden",
         "--no-ignore",
-        "--glob=!tags",
+        "--glob=!tags", -- Exclude tags file from search
       },
     },
     extensions = {
@@ -216,47 +223,49 @@ return {
   {
     "dhruvmanila/browser-bookmarks.nvim",
     version = "*",
+    lazy = true,
     opts = {
       selected_browser = "chrome",
     },
   },
   {
     "axkirillov/easypick.nvim",
+    cmd = "Easypick",
     dependencies = {
       "nvim-telescope/telescope.nvim",
     },
     config = function()
       local easypick = require("easypick")
-      -- local chatLocation = "~/.local/share/nvim/copilotchat_history"
+      local chatLocation = "~/.local/share/nvim/copilotchat_history"
 
       easypick.setup({
         pickers = {
-          -- {
-          --   name = "copilot_chats",
-          --   command = "fd . " .. chatLocation .. " | awk -F/ '{print $NF}' | sed 's/\\.json$//'",
-          --   previewer = function(selected)
-          --     local full_path = vim.fn.expand(chatLocation .. "/" .. selected .. ".json")
-          --
-          --     return {
-          --       command = "cat " .. full_path,
-          --       cwd = nil,
-          --     }
-          --   end,
-          --   -- previewer = function(selected)
-          --   --   local full_path = vim.fn.expand(chatLocation .. "/" .. selected .. ".json")
-          --   --
-          --   --   return {
-          --   --     command = "cat "
-          --   --       .. full_path
-          --   --       .. ' | jq -r \'.messages[] | "\\n## " + (.role | if . == "user" then "Me" else "Copilot" end) + ":\\n\\n" + .content\'',
-          --   --     cwd = nil,
-          --   --   }
-          --   -- end,
-          --   action = function(selection)
-          --     vim.cmd("CopilotChatLoad " .. selection.value)
-          --     vim.cmd("CopilotChatOpen")
-          --   end,
-          -- },
+          {
+            name = "copilot_chats",
+            command = "fd . " .. chatLocation .. " | awk -F/ '{print $NF}' | sed 's/\\.json$//'",
+            previewer = function(selected)
+              local full_path = vim.fn.expand(chatLocation .. "/" .. selected .. ".json")
+
+              return {
+                command = "cat " .. full_path,
+                cwd = nil,
+              }
+            end,
+            -- previewer = function(selected)
+            --   local full_path = vim.fn.expand(chatLocation .. "/" .. selected .. ".json")
+            --
+            --   return {
+            --     command = "cat "
+            --       .. full_path
+            --       .. ' | jq -r \'.messages[] | "\\n## " + (.role | if . == "user" then "Me" else "Copilot" end) + ":\\n\\n" + .content\'',
+            --     cwd = nil,
+            --   }
+            -- end,
+            action = function(selection)
+              vim.cmd("CopilotChatLoad " .. selection.value)
+              vim.cmd("CopilotChatOpen")
+            end,
+          },
           {
             name = "changed_files",
             command = "git diff --name-only $(git merge-base HEAD main)",
@@ -268,6 +277,7 @@ return {
   },
   {
     "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
     tag = "0.1.8",
     dependencies = {
       "MaximilianLloyd/adjacent.nvim",

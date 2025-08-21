@@ -1,8 +1,4 @@
-local home = os.getenv("HOME")
-
 return {
-  { "zdcthomas/yop.nvim" },
-  { "winston0410/cmd-parser.nvim" },
   {
     "vhyrro/luarocks.nvim",
     priority = 1000,
@@ -13,9 +9,10 @@ return {
   },
   {
     "mistricky/codesnap.nvim",
+    cmd = { "CodeSnap", "CodeSnapSave" },
     build = "make build_generator",
     opts = {
-      save_path = home .. "/Pictures/screenshots/code",
+      save_path = os.getenv("HOME") .. "/Pictures/screenshots/code",
       has_breadcrumbs = true,
       bg_theme = "bamboo",
     },

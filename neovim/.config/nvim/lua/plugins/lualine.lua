@@ -1,9 +1,6 @@
 local v = vim
 local icons = require("lazyvim.config").icons
 
-local navic = require("nvim-navic")
-navic.setup({ highlight = true, depth_limit = 3, depth_limit_indicator = "..." })
-
 local custom_fname = require("lualine.components.filename"):extend()
 local highlight = require("lualine.highlight")
 local default_status_colors = { saved = "#228B22", modified = "#C70039" }
@@ -47,19 +44,26 @@ local M = {}
 M.handle = nil
 M.timer = v.loop.new_timer()
 M.statusValues = { fileCount = 0, addCount = 0, delCount = 0, untracked = 0 }
+M.isInsideARepo = nil
 
 M.isInRepo = function()
+  if M.isInsideARepo ~= nil then
+    return M.isInsideARepo
+  end
+
   M.handle = io.popen([[
     if GPATH=`git rev-parse --show-toplevel --quiet 2>/dev/null`; then
       echo "repo: $GPATH"
     fi
   ]])
 
-  local repo = M.handle:read("*a")
-  return string.len(repo) > 0
-end
+  local raw = M.handle:read("*a")
+  local repo = string.len(raw) > 0
 
-M.isInsideARepo = M.isInRepo()
+  M.isInsideARepo = repo
+
+  return repo
+end
 
 M.gitStatus = {
   filesTouched = function()
@@ -77,43 +81,80 @@ M.gitStatus = {
 }
 
 M.gitStatusForRepo = function()
-  if not M.isInsideARepo then
+  if not M.isInRepo() then
     M.statusValues = {
       fileCount = "N/A",
       addCount = "N/A",
       delCount = "N/A",
       untracked = "N/A",
     }
-
     return
   end
 
-  M.handle = io.popen("git diff --shortstat")
-  local statusText = M.handle:read("*a")
+  vim.system({
+    "sh",
+    "-c",
+    [[
+      git diff --shortstat; 
+      echo "SEPARATOR"; 
+      git ls-files --others --exclude-standard | wc -l
+    ]],
+  }, {}, function(result)
+    if result.code == 0 then
+      local output = result.stdout
+      local parts = v.split(output, "SEPARATOR")
+      local statusText = parts[1] or ""
+      local untracked = v.trim(parts[2] or "0")
 
-  local fileCount = string.match(statusText, "(%d+) file") or "0"
-  local addCount = string.match(statusText, "(%d+) inser") or "0"
-  local delCount = string.match(statusText, "(%d+) del") or "0"
+      local fileCount = string.match(statusText, "(%d+) file") or "0"
+      local addCount = string.match(statusText, "(%d+) inser") or "0"
+      local delCount = string.match(statusText, "(%d+) del") or "0"
 
-  M.handle = io.popen("git ls-files --others --exclude-standard | wc -l")
-  local untracked = M.handle:read("*a")
-  untracked = string.gsub(untracked, "%s+", "")
-
-  M.statusValues = {
-    fileCount = fileCount,
-    addCount = addCount,
-    delCount = delCount,
-    untracked = untracked,
-  }
-
-  M.handle:close()
+      M.statusValues = {
+        fileCount = fileCount,
+        addCount = addCount,
+        delCount = delCount,
+        untracked = untracked,
+      }
+    else
+      -- Fallback on error
+      M.statusValues = {
+        fileCount = "ERR",
+        addCount = "ERR",
+        delCount = "ERR",
+        untracked = "ERR",
+      }
+    end
+  end)
 end
 
 return {
   {
-    "nvim-lualine/lualine.nvim",
+    "SmiteshP/nvim-navic",
+    event = "VeryLazy",
     config = function()
-      M.gitStatusForRepo()
+      require("nvim-navic").setup({
+        highlight = true,
+        depth_limit = 3,
+        depth_limit_indicator = "...",
+      })
+    end,
+  },
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    config = function()
+      vim.defer_fn(function()
+        M.isInsideARepo = M.isInRepo()
+        if not M.isInsideARepo then
+          return
+        end
+
+        M.gitStatusForRepo()
+        M.timer:start(5000, 5000, function()
+          M.gitStatusForRepo()
+        end)
+      end, 2000)
 
       require("lualine").setup({
         options = {
@@ -133,12 +174,35 @@ return {
             { "b:gitsigns_head", icon = "", color = { fg = "#77ff77" } },
             {
               M.gitStatus.untracked,
+              cond = function()
+                return M.isInRepo()
+              end,
               color = { fg = "#74b2ff" },
               separator = "",
             },
-            { M.gitStatus.filesTouched, color = { fg = "#e3c78a" }, separator = "" },
-            { M.gitStatus.modified, color = { fg = "#36c692" }, separator = "" },
-            { M.gitStatus.removed, color = { fg = "#ff5454" } },
+            {
+              M.gitStatus.filesTouched,
+              cond = function()
+                return M.isInRepo()
+              end,
+              color = { fg = "#e3c78a" },
+              separator = "",
+            },
+            {
+              M.gitStatus.modified,
+              cond = function()
+                return M.isInRepo()
+              end,
+              color = { fg = "#36c692" },
+              separator = "",
+            },
+            {
+              M.gitStatus.removed,
+              cond = function()
+                return M.isInRepo()
+              end,
+              color = { fg = "#ff5454" },
+            },
             {
               "diagnostics",
               always_visible = true,
@@ -154,6 +218,7 @@ return {
             { "filename", new_file_status = true, path = 1 },
           },
           lualine_x = {
+            -- require("token-count.integrations.lualine").current_buffer,
             {
               function()
                 return require("vectorcode.integrations").lualine(nil)[1]()
@@ -188,16 +253,9 @@ return {
             },
           },
         },
-        -- tabline = {
-        --   lualine_a = { { "buffers", max_length = vim.o.columns - 20, hide_filename_extension = true, mode = 2 } },
-        -- },
         inactive_winbar = {},
         extensions = { "neo-tree", "quickfix", "nvim-dap-ui" },
       })
-
-      M.timer:start(2500, 2500, function()
-        M.gitStatusForRepo()
-      end)
     end,
   },
 }

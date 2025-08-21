@@ -26,27 +26,11 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
+    init = function()
+      return false
+    end,
     deactivate = function()
       v.cmd([[Neotree close]])
-    end,
-    init = function()
-      -- FIX: use `autocmd` for lazy-loading neo-tree instead of directly requiring it,
-      -- because `cwd` is not set up properly.
-      v.api.nvim_create_autocmd("BufEnter", {
-        group = v.api.nvim_create_augroup("Neotree_start_directory", { clear = true }),
-        desc = "Start Neo-tree with directory",
-        once = true,
-        callback = function()
-          if package.loaded["neo-tree"] then
-            return
-          else
-            local stats = v.uv.fs_stat(f.argv(0))
-            if stats and stats.type == "directory" then
-              require("neo-tree")
-            end
-          end
-        end,
-      })
     end,
     opts = {
       sources = { "filesystem", "git_status", "document_symbols", "buffers" },
@@ -66,6 +50,9 @@ return {
         },
       },
       filesystem = {
+        -- components = {
+        --   token_count = require("token-count.integrations.neo-tree").get_component(),
+        -- },
         bind_to_cwd = false,
         follow_current_file = { enabled = true },
         use_libuv_file_watcher = true,
@@ -75,6 +62,25 @@ return {
           hide_hidden = false,
           always_show = { ".gitignore" },
           never_show = { ".DS_Store", "thumbs.db" },
+        },
+        renderers = {
+          file = {
+            {
+              "container",
+              width = "100%",
+              right_padding = 1,
+              content = {
+                {
+                  "name",
+                  use_git_status_colors = true,
+                  zindex = 10,
+                },
+                { "git_status", zindex = 20, align = "right" },
+                { "diagnostics", zindex = 20, align = "right" },
+                -- { "token_count", zindex = 10, align = "right" },
+              },
+            },
+          },
         },
       },
       git_status = {
@@ -137,6 +143,7 @@ return {
         { event = events.FILE_MOVED, handler = on_move },
         { event = events.FILE_RENAMED, handler = on_move },
       })
+
       require("neo-tree").setup(opts)
     end,
     keys = {
@@ -187,7 +194,7 @@ return {
   },
   {
     "mikavilpas/yazi.nvim",
-    event = "VeryLazy",
+    cmd = "Yazi",
     ---@type YaziConfig
     opts = {
       -- if you want to open yazi instead of netrw, see below for more info

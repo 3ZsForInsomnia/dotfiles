@@ -82,10 +82,10 @@ function getProcessUsingPort() {
 
 function killPort() {
   port="$1"
-  pids=$(getProcessUsingPort "$port" | awk 'NR>1 {print $2}')
+  pids=$(getProcessUsingPort "$port" | awk 'NR>1 {print $2}' | sort -u | tr '\n' ' ' | xargs)
   if [[ -n "$pids" ]]; then
     echo "Killing processes $pids using TCP port $port"
-    kill -9 "$pids"
+    kill -9 $pids
   else
     echo "No process found using TCP port $port"
   fi

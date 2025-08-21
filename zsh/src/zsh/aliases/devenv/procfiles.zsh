@@ -20,6 +20,7 @@ function bpfebe() {
   echo "Make sure to set your auth setup properly!\n\n"
   forego start -f ./procfiles/local_fe_be -e ./procfiles/.env
 }
+
 function ctbpfebe() {
   if [[ -z "$1" ]]; then
     echo "Usage: bpfebe <environment>"

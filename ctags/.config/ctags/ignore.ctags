@@ -23,3 +23,5 @@
 --exclude=*.mjs
 --exclude=.gitignore
 --exclude=coverage/lcov-report
+--exclude=coverage
+--exclude=.repro

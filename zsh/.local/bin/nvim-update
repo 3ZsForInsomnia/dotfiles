@@ -2,6 +2,8 @@
 
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 import traceback
@@ -24,6 +26,8 @@ def get_xdg_var(var, fallback):
 STATE_DIR = get_xdg_var("XDG_STATE_HOME", "~/.local/state") / "nvim-update"
 STATE_DIR.mkdir(parents=True, exist_ok=True)
 HISTORY_FILE = STATE_DIR / "version-history.json"
+BACKUP_DIR = STATE_DIR / "nvim-backups"
+BACKUP_DIR.mkdir(parents=True, exist_ok=True)
 
 # --- Settings ---
 XDG_CODE_HOME = os.environ.get("XDG_CODE_HOME")
@@ -60,14 +64,34 @@ def start_log():
 current_logfile = str(start_log())
 
 
-# --- Version + Git Utilities ---
-def run(cmd, cwd=None, check=True, capture_output=False, env=None):
+def backup_nvim(sha):
+    nvim_bin = NVIM_INSTALL / "bin" / "nvim"
+    backup_bin = BACKUP_DIR / f"nvim-{sha}"
+    if nvim_bin.exists():
+        shutil.copy2(nvim_bin, backup_bin)
+        logmsg(f"Backed up nvim binary to {backup_bin}")
+        return backup_bin.exists()
+    else:
+        logerr(f"nvim binary not found at {nvim_bin}")
+        return False
+
+
+def restore_nvim(sha):
+    nvim_bin = NVIM_INSTALL / "bin" / "nvim"
+    backup_bin = BACKUP_DIR / f"nvim-{sha}"
+    if backup_bin.exists():
+        shutil.copy2(backup_bin, nvim_bin)
+        logmsg(f"Restored nvim binary from {backup_bin}")
+    else:
+        logerr(f"No backup found for SHA {sha} at {backup_bin}")
+
+
+def run(cmd, check=True, capture_output=False, env=None):
     """Run a shell command, raising error if it fails."""
-    logmsg(f"Running: {' '.join(cmd)} (cwd={cwd})")
+    logmsg(f"Running: {' '.join(cmd)}")
     try:
         completed = subprocess.run(
             cmd,
-            cwd=cwd,
             check=check,
             capture_output=capture_output,
             text=True,
@@ -82,15 +106,28 @@ def run(cmd, cwd=None, check=True, capture_output=False, env=None):
         raise
 
 
+def get_installed_nvim_sha():
+    try:
+        output = run([str(NVIM_INSTALL / "bin/nvim"), "--version"], capture_output=True)
+        # Look for a pattern like 'g82f08f33c1' in the first line
+        first_line = output.splitlines()[0]
+        m = re.search(r"g([0-9a-f]{7,})", first_line)
+        if m:
+            return m.group(1)
+        return None
+    except Exception as e:
+        logexc(e)
+        return None
+
+
 def get_sha():
     """Get current commit SHA and its date."""
     # Format: SHA and date in ISO format
     output = run(
         ["git", "show", "-s", "--format=%h|%ci", "HEAD"],
-        cwd=NVIM_SRC,
         capture_output=True,
     )
-    if not output:
+    if output:
         sha, date = output.split("|", 1)
         return sha, date.strip()
     else:
@@ -98,24 +135,26 @@ def get_sha():
 
 
 def git_checkout(ref):
-    run(["git", "checkout", ref], cwd=NVIM_SRC, check=True)
+    run(["git", "checkout", ref], check=True)
 
 
 def remove_build():
     build = NVIM_SRC / "build"
     if build.exists():
         logmsg(f"Removing build dir: {build}")
-        run(["rm", "-rf", str(build)], cwd=NVIM_SRC)
+        run(["rm", "-rf", str(build)])
 
 
 def build_and_install():
-    cmake_flags = (
-        f"-DCMAKE_INSTALL_PREFIX={NVIM_INSTALL} " f"-DCMAKE_BUILD_TYPE=RelWithDebInfo"
-    )
+    cmake_flags = [
+        f"-DCMAKE_INSTALL_PREFIX={NVIM_INSTALL}",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+    ]
     env = os.environ.copy()
-    env["CMAKE_EXTRA_FLAGS"] = cmake_flags
-    run(["make", "CMAKE_EXTRA_FLAGS=" + cmake_flags], cwd=NVIM_SRC, env=env)
-    run(["make", "install"], cwd=NVIM_SRC, env=env)
+    # Run cmake configuration step
+    run(["cmake", "-S", ".", "-B", "build"] + cmake_flags, env=env)
+    # Build
+    run(["cmake", "--build", "build", "--target", "install"], env=env)
     logmsg(f"Completed build/install to {NVIM_INSTALL}")
 
 
@@ -171,29 +210,40 @@ def prev_history():
 # --- Core actions ---
 def upgrade():
     try:
-        sha_before, date_before = get_sha()
-        logmsg(f"Before upgrade: {date_before=} {sha_before=}")
+        logmsg("Deleting local tags 'nightly' and 'stable' if they exist...")
+        run(["git", "tag", "-d", "nightly"])
+        run(["git", "tag", "-d", "stable"])
 
         logmsg("Fetching latest origin & tags...")
-        run(["git", "fetch", "origin"], cwd=NVIM_SRC)
-        run(["git", "fetch", "--tags", "--force"], cwd=NVIM_SRC)
-        run(["git", "pull"], cwd=NVIM_SRC)
-        sha_after, date_after = get_sha()
+        run(["git", "fetch", "--no-tags", "origin"])
+        run(["git", "fetch", "--tags", "--force"])
 
-        logmsg(f"After fetch  : {date_after=} {sha_after=}")
+        logmsg("Checking out latest 'nightly' tag...")
+        run(["git", "checkout", "nightly"])
 
-        if sha_before == sha_after:
-            logmsg("Already up to date. No upgrade needed.")
+        sha_repo, date_repo = get_sha()
+        sha_installed = get_installed_nvim_sha()
+        logmsg(f"Nightly tag SHA: {sha_repo}, Installed: {sha_installed}")
+
+        if sha_repo == sha_installed:
+            logmsg("Already up to date with nightly. No upgrade needed.")
+            print("Already up to date with nightly. No upgrade needed.")
             return
+
+        if sha_installed:
+            if not backup_nvim(sha_installed):
+                logerr("Backup failed! Aborting upgrade.")
+                print("Backup failed! Aborting upgrade.", file=sys.stderr)
+                return
 
         remove_build()
         build_and_install()
 
-        logmsg(f"Upgrade complete: {date_after=} {sha_after=}")
+        logmsg(f"Upgrade complete: {date_repo=} {sha_repo=}")
         add_history_entry(
-            date_after, sha_after, "upgrade_from_" + (sha_before or "none")
+            date_repo, sha_repo, "upgrade_from_" + (sha_installed or "none")
         )
-        print(f"Upgraded from {sha_before} to {sha_after}")
+        print(f"Upgraded from {sha_installed} to {sha_repo} (nightly)")
 
     except Exception as e:
         logexc(e)
@@ -209,9 +259,7 @@ def rollback():
             return
         target_sha = h["sha"]
         logmsg(f"Rolling back to {target_sha} ({h['tag']}) ...")
-        git_checkout(target_sha)
-        remove_build()
-        build_and_install()
+        restore_nvim(target_sha)
         add_history_entry(h["tag"], h["sha"], "rollback")
         print(f"Rolled back to {target_sha} ({h['tag']})")
     except Exception as e:
@@ -222,7 +270,23 @@ def rollback():
 
 def show_version():
     sha, date = get_sha()
-    print(f"Current: date={date}, sha={sha}")
+    installed_sha = get_installed_nvim_sha()
+    print(f"Repo HEAD: date={date}, sha={sha}")
+    print(f"Installed nvim: sha={installed_sha}")
+    if sha == installed_sha:
+        print("You are on the latest version.")
+    elif installed_sha:
+        try:
+            # Count commits between installed and HEAD
+            count = run(
+                ["git", "rev-list", "--count", f"{installed_sha}..HEAD"],
+                capture_output=True,
+            )
+            print(f"You are {count} commits behind the latest version.")
+        except Exception:
+            print("Could not determine how far behind you are.")
+    else:
+        print("Could not determine installed version.")
 
 
 def show_logfile():
@@ -269,6 +333,12 @@ def main():
     parser.add_argument(
         "--checkout", metavar="SHA", help="Manually check out a specific SHA"
     )
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
+
+    os.chdir(NVIM_SRC)
 
     args = parser.parse_args()
     if args.upgrade:
