@@ -218,7 +218,7 @@ return {
             { "filename", new_file_status = true, path = 1 },
           },
           lualine_x = {
-            -- require("token-count.integrations.lualine").current_buffer,
+            require("token-count.integrations.lualine").current_buffer,
             {
               function()
                 return require("vectorcode.integrations").lualine(nil)[1]()

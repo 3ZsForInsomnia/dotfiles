@@ -1,12 +1,10 @@
-local cmd = require("helpers").k_cmd
-
 local u = "<leader>u"
 
 Snacks.toggle
   .new({
     name = "Vista",
     get = function()
-      return vim.cmd("g:vista#sidebar#IsOpen()") == "1"
+      return vim.fn["vista#sidebar#IsOpen"]() == 1
     end,
     set = function()
       vim.cmd("Vista!!")
@@ -31,22 +29,32 @@ Snacks.toggle
   })
   :map(u .. "C")
 
-cmd({
-  key = u .. "B",
-  action = "Gitsigns toggle_current_line_blame",
-  desc = "Toggle blame line in virutal text on cursor line",
-})
+Snacks.toggle
+  .new({
+    name = "Gitsigns Current Line Blame",
+    get = function()
+      local config = require("gitsigns.config").config
 
-local gitsigns = require("gitsigns")
-local config = require("gitsigns.config").config
+      return config.current_line_blame
+    end,
+    set = function(value)
+      require("gitsigns").toggle_current_line_blame(value)
+    end,
+  })
+  :map(u .. "B")
 
 Snacks.toggle
   .new({
     name = "Gitsigns Show Deleted",
     get = function()
+      local config = require("gitsigns.config").config
+
       return config.show_deleted
     end,
     set = function(value)
+      local gitsigns = require("gitsigns")
+      local config = require("gitsigns.config").config
+
       config.show_deleted = value
       gitsigns.refresh()
     end,

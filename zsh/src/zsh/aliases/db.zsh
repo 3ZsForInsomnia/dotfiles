@@ -43,15 +43,15 @@ create_db_schema_diagram() {
 
   PASSWORD=$(get_pg_password "$port" "$username")
 
-  java                            \
-    -jar "$SCHEMASPY_LOCATION"    \
-    -t pgsql -all                 \
+  java \
+    -jar "$SCHEMASPY_LOCATION" \
+    -t pgsql -all \
     -dp "$POSTGRES_JDBC_LOCATION" \
-    -db "$database_name"          \
-    -host localhost               \
-    -port "$port"                 \
+    -db "$database_name" \
+    -host localhost \
+    -port "$port" \
     -u "$username" -p "$PASSWORD" \
-    -o "$output_directory" 
+    -o "$output_directory"
 }
 
 viewDB() {
@@ -70,11 +70,11 @@ viewDB() {
 # First arg: environment (dev|qat|uat)
 generateDbDiagramFor() {
   if [[ -z "$1" ]]; then
-    echo "Usage: generateDbDiagramFor <env>";
-    return 1;
+    echo "Usage: generateDbDiagramFor <env>"
+    return 1
   fi
 
-  port=$(get_port_for_env "$1");
+  port=$(get_port_for_env "$1")
   today=$(date +"%Y-%m-%d")
 
   dir="$W_PATH/diagrams/$1/$today"

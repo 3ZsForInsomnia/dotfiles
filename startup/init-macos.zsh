@@ -31,7 +31,11 @@ dotfiles_to_unstow=(
 )
 
 PERSONAL_EMAIL="comrade.topanga@gmail.com"
-WORK_EMAIL="zachary.levine@onedigital.com"
+WORK_EMAIL="zachary.levine@centrobenefits.com"
+
+NPM_PACKAGES="$HOME/.local/share/npm"
+BOOKMARKS_FILE="$HOME/.local/share/bookmarks/.bookmarks"
+TIMEZONE="America/New_York"
 
 ssh_keys_to_create=("PERSONAL")
 
@@ -80,7 +84,7 @@ curl_this_gist() {
   curl -L \
   -H "Accept: application/vnd.github+json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/gists/06976a1e2ae3f7f73814ec187e308d9a > "$HOME/init-macos.sh" && source "$HOME/init-macos.sh"
+  https://api.github.com/gists/06976a1e2ae3f7f73814ec187e308d9a | jq -r '.files["init-macos.zsh"].content' > "$HOME/init-macos.zsh" && source "$HOME/init-macos.zsh"
 }
 
 check_command_is_installed() {
@@ -112,7 +116,7 @@ check_npm_installed() {
   NPM_FAILED_PACKAGES=()  # Initialize the variable to hold missing packages
 
   for package in "${packages[@]}"; do
-    local clean_pkg="${pkg/@latest/}"
+    local clean_pkg="${package/@latest/}"
     if ! npm list -g --depth=0 "$clean_pkg" >/dev/null 2>&1; then
       NPM_FAILED_PACKAGES+=("$clean_pkg")
     fi
@@ -194,10 +198,60 @@ download_gist() {
   fi
 }
 
+clone_gist_folder() {
+  local gist_id=$1
+  local destination_path=$2
+  local folder_name=$3
+
+  # Check if gh command is available
+  if ! command -v gh &>/dev/null; then
+    echo "Error: gh CLI is not installed. Please install it from https://cli.github.com/."
+    return 1
+  fi
+
+  # Validate that all arguments are provided
+  if [[ -z "$gist_id" || -z "$destination_path" || -z "$folder_name" ]]; then
+    echo "Usage: clone_gist_folder <gist_id> <destination_path> <folder_name>"
+    return 1
+  fi
+
+  # Create destination directory if it doesn't exist
+  mkdir -p "$destination_path"
+
+  # Create a temporary directory for cloning
+  local temp_dir=$(mktemp -d)
+
+  # Clone the gist to temp directory
+  if ! gh gist clone "$gist_id" "$temp_dir/gist_clone"; then
+    echo "Error: Failed to clone gist $gist_id"
+    rm -rf "$temp_dir"
+    return 1
+  fi
+
+  # Copy all files from the cloned gist to the destination
+  cp -r "$temp_dir/gist_clone/"* "$destination_path/"
+
+  # Clean up temp directory
+  rm -rf "$temp_dir"
+
+  echo "Gist $gist_id successfully cloned to $destination_path"
+  return 0
+}
+
 handle_all_gists() {
   local file_path="$1"
   while IFS=' ' read -r arg1 arg2 arg3; do
-    download_gist "$arg1" "$arg2" "$arg3"
+    # Skip empty lines and comments
+    [[ -z "$arg1" || "$arg1" =~ ^# ]] && continue
+    
+    # Check if arg3 has a file extension (contains a dot) or ends with /
+    if [[ "$arg3" == *"."* ]]; then
+      # Single file gist
+      download_gist "$arg1" "$arg2" "$arg3"
+    else
+      # Multi-file gist (folder)
+      clone_gist_folder "$arg1" "$arg2" "$arg3"
+    fi
   done < "$file_path"
 }
 
@@ -226,9 +280,9 @@ check_if_applications_installed() {
   export APPLICATIONS_NOT_INSTALLED=()
 
   for application in "${applications[@]}"; do
-    a_l="${(L)application}"
+    application_lower="${(L)application}"
     if ! ls /Applications | grep -qi "^.*${application_lower}.*$"; then
-      APPLICATIONS_NOT_INSTALLED+=("$a_l")
+      APPLICATIONS_NOT_INSTALLED+=("$application_lower")
     fi
   done
 }
@@ -256,12 +310,15 @@ run_all_steps() {
   show_steps;
 
   setup_filesystem;
-  install_dependencies;
+  install_homebrew;
+  install_homebrew_packages;
+  install_npm_packages;
+  install_python_packages;
+  install_misc_dependencies;
   generate_ssh_keys;
 
   install_neovim;
   unstow_dotfiles;
-  retrieve_hidden_gists;
 
   set_macos_settings;
 
@@ -273,11 +330,14 @@ run_all_steps() {
 
 step_functions=(
   setup_filesystem
-  install_dependencies
+  install_homebrew
+  install_homebrew_packages
+  install_npm_packages
+  install_python_packages
+  install_misc_dependencies
   generate_ssh_keys
   install_neovim
   unstow_dotfiles
-  retrieve_hidden_gists
   set_macos_settings
   print_manual_steps
   print_macos_steps
@@ -291,7 +351,7 @@ if [ $# -eq 0 ]; then
   fi
 
   for step_num in "$@"; do
-    if (( step_num >= 1 && step_num <= 10 )); then
+    if (( step_num >= 1 && step_num <= 13 )); then
       echo "Executing Step $step_num..."
       ${step_functions[step_num-1]}
     else
@@ -303,25 +363,28 @@ if [ $# -eq 0 ]; then
 show_steps() {
   echo "It looks like you are setting up a new MacOS computer!"
   echo "The first thing to do is copy this file to your local filesytem run chmod +x {filename}.sh, and source it, as shown below"
-  echo 'curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/gists/06976a1e2ae3f7f73814ec187e308d9a > "~/init-macos.sh" chmod +x ~/init-macos.sh && source "~/init-macos.sh"'
+  echo 'curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/gists/06976a1e2ae3f7f73814ec187e308d9a | jq -r '\''.files["init-macos.zsh"].content'\'' > "~/init-macos.zsh" && chmod +x ~/init-macos.zsh && source "~/init-macos.zsh"'
   echo ""
   echo ""
   echo "This script can perform the following steps..."
   echo ""
   echo "Step 1: Creating standard folder structure"
-  echo "Step 2: Installing dependencies and their respective managers"
-  echo "Step 3: Creating SSH keys"
-  echo "Step 4: Installing Neovim from source"
-  echo "Step 5: Cloning dotfiles repo and unstowing dotfiles"
-  echo "Step 6: Retrieve hidden gists"
-  echo "Step 7: Set MacOS settings that can be handled via CLI"
+  echo "Step 2: Installing Homebrew package manager"
+  echo "Step 3: Installing Homebrew packages and casks"
+  echo "Step 4: Installing npm packages"
+  echo "Step 5: Installing Python packages (pip/pipx and uv)"
+  echo "Step 6: Installing miscellaneous dependencies"
+  echo "Step 7: Creating SSH keys"
+  echo "Step 8: Installing Neovim from source"
+  echo "Step 9: Cloning dotfiles repo and unstowing dotfiles"
+  echo "Step 10: Set MacOS settings that can be handled via CLI"
   echo ""
   echo "At this point, the steps become manual and are broken up into two parts:"
   echo ""
-  echo "Step 8: Manual steps to complete setup"
-  echo "Step 9: Update MacOS settings (also manual)"
+  echo "Step 11: Manual steps to complete setup"
+  echo "Step 12: Update MacOS settings (also manual)"
   echo ""
-  echo "Step 10: Run healthcheck to see what failed"
+  echo "Step 13: Run healthcheck to see what failed"
   echo "And then you should be done!"
 
   show_help;
@@ -418,12 +481,12 @@ setup_filesystem() {
   echo "Step 1: Finished creating XDG and other basic folders!"
 }
 
-install_dependencies() {
+install_homebrew() {
   ############################
   # Install Brew             #
   ############################
 
-  echo "Step 2: Installing dependencies and their respective managers"
+  echo "Step 2: Installing Homebrew package manager"
   echo "Step 2: Installing Homebrew if not present"
 
   if command -v brew >/dev/null 2>&1; then
@@ -449,56 +512,100 @@ install_dependencies() {
   brew tap domt4/autoupdate;
   brew autoupdate start;
 
+  echo "Step 2: Finished setting up Homebrew!"
+}
+
+install_homebrew_packages() {
   ############################
   # Install Homebrew Deps    #
   ############################
 
-  echo "Step 2: Installing Homebrew dependencies"
+  echo "Step 3: Installing Homebrew packages and casks"
 
-  echo "Step 2a: Tapping Homebrew casks..."
+  if ! check_command_is_installed brew; then
+    echo "Step 3: Homebrew is not installed. Please run step 2 first."
+    return 1
+  fi
 
-  brew tap "$brew_taps"
+  echo "Step 3a: Tapping Homebrew repositories..."
 
-  echo "Step 2a: Finished tapping Homebrew casks!"
+  brew tap ${brew_taps}
 
-  echo "Step 2b: Installing Homebrew packages..."
+  echo "Step 3a: Finished tapping Homebrew repositories!"
 
-  brew install "$brew_packages"
+  echo "Step 3b: Installing Homebrew packages..."
 
-  brew install --cask "$brew_packages_with_cask"
+  brew install "${brew_packages[@]}"
 
-  echo "Step 2b: Finished installing Homebrew dependencies!"
+  echo "Step 3c: Installing Homebrew cask packages..."
 
+  brew install --cask "${brew_packages_with_cask[@]}"
+
+  echo "Step 3: Finished installing Homebrew packages and casks!"
+}
+
+install_npm_packages() {
   ############################
   # Install Node/npm Deps    #
   ############################
 
-  echo "Step 2c: Installing global npm packages..."
+  echo "Step 4: Installing npm packages"
+
+  if ! check_command_is_installed npm; then
+    echo "Step 4: npm is not installed. Please ensure Node.js is installed first."
+    return 1
+  fi
+
+  echo "Step 4a: Configuring npm prefix..."
 
   npm config set prefix "$NPM_PACKAGES"
 
+  echo "Step 4b: Installing global npm packages..."
+
   npm install -g "${npm_packages_to_install[@]}"
 
-  echo "Step 2c: Finished installing global npm packages!"
+  echo "Step 4: Finished installing npm packages!"
+}
 
-  echo "Step 2d: Installing global pip packages..."
+install_python_packages() {
+  ############################
+  # Install Python Deps      #
+  ############################
 
-  pipx install "${pip_packages_to_install[@]}"
+  echo "Step 5: Installing Python packages"
 
-  echo "Step 2d: Finished installing global pip packages!"
+  echo "Step 5a: Installing pip packages via pipx..."
 
-  echo "Step 2e: Installing Python uv..."
+  if check_command_is_installed pipx; then
+    pipx install "${pip_packages_to_install[@]}"
+    echo "Step 5a: Finished installing pip packages via pipx!"
+  else
+    echo "Step 5a: pipx is not installed. Skipping pip package installation."
+  fi
+
+  echo "Step 5b: Installing Python uv and packages..."
 
   curl -LsSf https://astral.sh/uv/install.sh | sh
   uv tool install "${uv_packages_to_install[@]}"
 
-  echo "Step 2e: Download misc other dependencies..."
+  echo "Step 5: Finished installing Python packages!"
+}
 
-  mkdir "$XDG_CODE_HOME/schemaspy"
+install_misc_dependencies() {
+  ############################
+  # Misc Dependencies        #
+  ############################
+
+  echo "Step 6: Installing miscellaneous dependencies"
+
+  echo "Step 6a: Downloading schemaspy..."
+
+  mkdir -p "$XDG_CODE_HOME/schemaspy"
   curl -L https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-6.2.4.jar \
     --output "$XDG_CODE_HOME"/schemaspy/schemaspy.jar
 
-  echo "Step 2e: Finished downloading misc other dependencies!"
+  echo "Step 6: Finished installing miscellaneous dependencies!"
+
 }
 
 generate_ssh_keys() {
@@ -506,12 +613,12 @@ generate_ssh_keys() {
   # Generate SSH Keys        #
   ############################
 
-  echo "Step 3: Creating SSH keys..."
+  echo "Step 7: Creating SSH keys..."
 
-  echo "Step 3: Creating ssh keys for ${ssh_keys_to_create[@]}"
+  echo "Step 7: Creating ssh keys for ${ssh_keys_to_create[@]}"
   create_ssh_keys "${ssh_keys_to_create[@]}";
 
-  echo "Step 3: Finished creating work ssh key!"
+  echo "Step 7: Finished creating SSH keys!"
 }
 
 install_neovim() {
@@ -519,7 +626,7 @@ install_neovim() {
   # Install Neovim           #
   ############################
 
-  echo "Step 4: Installing Neovim from source..."
+  echo "Step 8: Installing Neovim from source..."
 
   cd "$XDG_CODE_HOME";
 
@@ -532,9 +639,9 @@ install_neovim() {
   export PATH="$XDG_CODE_HOME/neovim/bin:$PATH"
 
   if check_command_is_installed nvim; then
-    echo "Step 4: Finished installing Neovim from source!"
+    echo "Step 8: Finished installing Neovim from source!"
   else
-    echo "Step 4: Was unable to install Neovim from source. The script can and will continue, and report on this later."
+    echo "Step 8: Was unable to install Neovim from source. The script can and will continue, and report on this later."
     export NEOVIM_FAILED=true
   fi
 
@@ -546,27 +653,25 @@ unstow_dotfiles() {
   # Unstow dotfiles          #
   ############################
 
-  echo "Step 5: Cloning dotfiles repo and unstowing dotfiles..."
+  echo "Step 9: Cloning dotfiles repo and unstowing dotfiles..."
 
   cd "$XDG_CODE_HOME";
   git clone https://github.com/3ZsForInsomnia/dotfiles.git;
 
-  # Nothing needs to be done for this repo, just convenient to pull it here.
-  git clone git@github.com:3ZsForInsomnia/learning.git;
 
-  echo "Step 5a: Finished cloning dotfiles repo!"
+  echo "Step 9a: Finished cloning dotfiles repo!"
 
   if check_command_is_installed stow; then
-    echo "Step 5b: Stow is installed, unstowing dotfiles..."
+    echo "Step 9b: Stow is installed, unstowing dotfiles..."
     cd dotfiles;
     unstowAll;
-    echo "Step 5b: Finished unstowing dotfiles!"
+    echo "Step 9b: Finished unstowing dotfiles!"
   else
-    echo "Step 5b: Stow is not installed. We can continue and report on this later"
+    echo "Step 9b: Stow is not installed. We can continue and report on this later"
     export UNSTOW_FAILED=true
   fi
 
-  echo "Step 5c: Initializing zshmarks file..."
+  echo "Step 9c: Initializing zshmarks file..."
 
   printf "%s|src\n%s/dotfiles|dots\n%s/work|work\n%s|docs\n%s/sync|notes\n%s/test data/|tdata\n%s/screenshots|shots\n%s|dls\n%s/slack|dlslack\n" \
   "$HOME/src" \
@@ -580,7 +685,7 @@ unstow_dotfiles() {
   "$HOME/Downloads" \
   > "$BOOKMARKS_FILE"
 
-  echo "Step 5c: Finished setting zshmarks!"
+  echo "Step 9c: Finished setting zshmarks!"
   
   cd "$HOME";
 }
@@ -590,7 +695,7 @@ retrieve_hidden_gists() {
   # Retrieve hidden gists    #
   ############################
 
-  echo "Step 6: Retrieving hidden gists..."
+  echo "Step 10: Retrieving hidden gists..."
 
   if check_command_is_installed gh; then
     echo "gh CLI is installed, you will be able to load your hidden gists"
@@ -608,7 +713,7 @@ retrieve_hidden_gists() {
 
   handle_all_gists "$HOME/hidden-gists.txt"
 
-  echo "Step 6: Finished retrieving hidden gists!"
+  echo "Step 10: Finished retrieving hidden gists!"
 }
 
 set_macos_settings() {
@@ -616,33 +721,33 @@ set_macos_settings() {
   # Set MacOS settings       #
   ############################
 
-  echo "Step 7: Setting MacOS settings that can be handled via CLI..."
+  echo "Step 10: Setting MacOS settings that can be handled via CLI..."
 
   sudo -v
 
-  echo "Step 7a: Unsetting smart quotes and dashes..."
+  echo "Step 10a: Unsetting smart quotes and dashes..."
 
   # Unset smart quotes and dashes
   defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
   defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
-  echo "Step 7b: Setting dock and menu bar preferences..."
+  echo "Step 10b: Setting dock and menu bar preferences..."
 
   defaults write com.apple.dock "autohide" -bool "true"
   defaults write com.apple.dock "show-recents" -bool "false"
   defaults write com.apple.dock "mru-spaces" -bool "false"
   killall Dock
 
-  echo "Step 7c: Setting Finder preferences..."
+  echo "Step 10c: Setting Finder preferences..."
   defaults write com.apple.finder "AppleShowAllFiles" -bool "true"
   defaults write NSGlobalDomain _HIHideMenuBar -bool true
   killall Finder
 
-  echo "Step 7d: Setting sound and appearance settings..."
+  echo "Step 10d: Setting sound and appearance settings..."
   osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true'
   osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/System/Library/Desktop Pictures/Solid Colors/Black.png"'
 
-  echo "Step 7e: Setting miscellaneous preferences..."
+  echo "Step 10e: Setting miscellaneous preferences..."
 
   systemsetup -settimezone "$TIMEZONE" > /dev/null
 
@@ -653,7 +758,7 @@ set_macos_settings() {
 
   defaults write com.apple.spaces "spans-displays" -bool "true" && killall SystemUIServer
 
-  echo "Step 7: Finished setting MacOS settings!"
+  echo "Step 10: Finished setting MacOS settings!"
   echo "Note, you should probably restart your laptop after running this step."
 }
 
@@ -662,16 +767,18 @@ print_manual_steps() {
   # Manual steps             #
   ############################
 
-  echo "Step 8: Manual steps to complete setup:"
-  echo "Step 8a: Log into Github and register ssh keys"
-  echo "Step 8b: Log into gh cli and run script to pull hidden gists. There is a bash function included in this file that you can run to do this automatically once you have logged into gh"
+  echo "Step 11: Manual steps to complete setup:"
+  echo "Step 11a: Log into Github and register ssh keys"
+  echo "Step 11b: Clone learning repo with SSH: cd \$XDG_CODE_HOME && git clone git@github.com:3ZsForInsomnia/learning.git"
+  echo "Step 11c: Log into gh cli and run script to pull hidden gists. There is a bash function included in this file that you can run to do this automatically once you have logged into gh"
   echo "To do this, use gh to pull down your gist containing the list of hidden gists, and run \`handle_all_gists <file>\`"
+  echo "Or alternatively, run the \`retrieve_hidden_gists\` function after setting up gh auth"
   echo ""
-  echo "Step 8c: Setup Obsidian sync"
-  echo "Step 8d: Log into Chrome, make it default web browser"
+  echo "Step 11d: Setup Obsidian sync"
+  echo "Step 11e: Log into Chrome, make it default web browser"
 
   other_apps=("Slack" "Postman" "Lastpass" "Lastpass Cli" "Tidal" "Copilot in Neovim")
-  echo "Log into each of these manually: "
+  echo "Step 11f: Log into each of these manually: "
   echo_each_element "${other_apps[@]}"
 }
 
@@ -680,13 +787,13 @@ print_macos_steps() {
   # MacOS Settings           #
   ############################
 
-  echo "Step 9: Update the following MacOS settings:"
-  echo "Step 9a: Set caps-lock to act as escape"
-  echo "Step 9b: Add Hebrew keyboard layout"
-  echo "Step 9c: Hide spotlight and siri from top bar"
-  echo "Step 9d: Turn off automatic display brightness"
-  echo "Step 9e: Turn off startup and interface sounds"
-  echo "Step 8f: Turn on Night shift and configure schedule"
+  echo "Step 12: Update the following MacOS settings:"
+  echo "Step 12a: Set caps-lock to act as escape"
+  echo "Step 12b: Add Hebrew keyboard layout"
+  echo "Step 12c: Hide spotlight and siri from top bar"
+  echo "Step 12d: Turn off automatic display brightness"
+  echo "Step 12e: Turn off startup and interface sounds"
+  echo "Step 12f: Turn on Night shift and configure schedule"
 }
 
 ############################
@@ -988,9 +1095,9 @@ healthcheck() {
 }
 
 run_healthcheck() {
-  echo "Step 9: Running full health check..."
+  echo "Step 13: Running full health check..."
 
   healthcheck;
 
-  echo "Step 9: Finished checking for failed installations!"
+  echo "Step 13: Finished checking for failed installations!"
 }

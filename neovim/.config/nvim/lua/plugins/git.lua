@@ -359,23 +359,7 @@ return {
   },
   {
     dir = "~/src/revman.nvim",
-    cmd = {
-      "RevmanSyncAllPRs",
-      "RevmanSyncPR",
-      "RevmanListPRs",
-      "RevmanListOpenPRs",
-      "RevmanListPRsNeedingReview",
-      "RevmanListMergedPRs",
-      "RevmanNudgePRs",
-      "RevmanListRepos",
-      "RevmanAddPR",
-      "RevmanAddRepo",
-      "RevmanListAuthors",
-      "RevmanShowNotes",
-      "RevmanAddNote",
-      "RevmanSetStatus",
-      "RevmanSetStatusForCurrentPR",
-    },
+    event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",
@@ -383,6 +367,11 @@ return {
       "pwntester/octo.nvim",
     },
     config = true,
+    opts = {
+      picker = {
+        backend = "telescope",
+      },
+    },
     keys = {
       cmd({
         key = revman .. "S",

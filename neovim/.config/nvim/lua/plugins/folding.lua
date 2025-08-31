@@ -52,6 +52,9 @@ return {
       end
 
       local provider_selector = function(bufnr, filetype, buftype)
+        if filetype == "markdown" then
+          return { "treesitter", custom_regions_fold(bufnr) }
+        end
         return { "lsp", custom_regions_fold(bufnr) }
       end
 

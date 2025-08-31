@@ -25,3 +25,4 @@
 --exclude=coverage/lcov-report
 --exclude=coverage
 --exclude=.repro
+--exclude=.nx

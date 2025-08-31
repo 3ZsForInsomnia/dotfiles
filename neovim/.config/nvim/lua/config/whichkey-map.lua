@@ -107,6 +107,8 @@ wk.add({
   { "m6", desc = "Info" },
   { "m5", desc = "Home" },
 
+  { "z=", desc = "Spell Suggestions" },
+
   --
   -- Previous ([)
   --

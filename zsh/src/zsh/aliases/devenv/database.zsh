@@ -27,6 +27,7 @@ function refreshQuotesDb() {
 function _viewAppDb() {
   local service=$1
   local env=$2
+  local db=$(default "$3" "$W_DB_NAME")
 
   # Select username based on app
   local username
@@ -49,6 +50,7 @@ function _viewAppDb() {
   dev) port_index=2 ;;
   qat) port_index=3 ;;
   uat) port_index=4 ;;
+  preprod) port_index=5 ;;
   prod) port_index=5 ;;
   *)
     echo "Invalid environment: $env (must be 'local', 'dev', 'qat', 'uat', or 'prod')" >&2
@@ -56,7 +58,9 @@ function _viewAppDb() {
     ;;
   esac
 
-  viewDB "$username" "${W_DB_PORTS[$port_index]}" "$W_DB_NAME" "$W_DB_HOST"
+  # cmd="viewDB $username ${W_DB_PORTS[$port_index]} $db $W_DB_HOST"
+  # echo "Running: $cmd"
+  viewDB "$username" "${W_DB_PORTS[$port_index]}" "$db" "$W_DB_HOST"
 }
 
 # Single function to access any database
@@ -71,6 +75,7 @@ alias viewLocalBpDb='_viewAppDb bp local'
 alias viewDevBpDb='_viewAppDb bp dev'
 alias viewQatBpDb='_viewAppDb bp qat'
 alias viewUatBpDb='_viewAppDb bp uat'
+alias viewPreprodBpDb='_viewAppDb bp preprod preprod'
 alias viewProdBpDb='_viewAppDb bp prod'
 
 alias viewDevCtDb='_viewAppDb ct dev'

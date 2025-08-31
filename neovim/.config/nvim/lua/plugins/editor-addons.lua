@@ -88,17 +88,17 @@ return {
       g.vimTrelloToken = os.getenv("TRELLO_API_TOKEN")
     end,
   },
-  -- {
-  --   dir = "~/src/jira-ai",
-  --   event = "VeryLazy",
-  --   config = true,
-  --   opts = {
-  --     jira_projects = split_env_var("JIRA_PROJECTS", ","),
-  --     jira_base_url = os.getenv("JIRA_BASE_URL"),
-  --     jira_email_address = os.getenv("JIRA_EMAIL_ADDRESS"),
-  --     jira_api_token = os.getenv("JIRA_API_TOKEN"),
-  --   },
-  -- },
+  {
+    dir = "~/src/jira-ai",
+    event = "VeryLazy",
+    config = true,
+    opts = {
+      jira_projects = split_env_var("JIRA_PROJECTS", ","),
+      jira_base_url = os.getenv("JIRA_BASE_URL"),
+      jira_email_address = os.getenv("JIRA_EMAIL_ADDRESS"),
+      jira_api_token = os.getenv("JIRA_API_TOKEN"),
+    },
+  },
   {
     "ramilito/kubectl.nvim",
     dependencies = "saghen/blink.download",
@@ -214,6 +214,7 @@ return {
         "NeogitPopup",
         "codecompanion",
         "octo",
+        "mcphub",
       },
       max_count = 4,
       restricted_keys = {
@@ -247,28 +248,6 @@ return {
       file_types = { "markdown", "codecompanion" },
     },
   },
-  -- {
-  --   "OXY2DEV/markview.nvim",
-  --   lazy = false,
-  --   branch = "dev",
-  --   ft = "markdown",
-  --   dependencies = {
-  --     "nvim-treesitter/nvim-treesitter",
-  --     "nvim-tree/nvim-web-devicons",
-  --   },
-  --   opts = {
-  --     preview = {
-  --       filetypes = { "markdown", "codecompanion" },
-  --       ignore_buftypes = {},
-  --     },
-  --   },
-  --   config = function()
-  --     local presets = require("markview.presets")
-  --     return {
-  --       headings = presets.headings.decorated_labels,
-  --     }
-  --   end,
-  -- },
   {
     "luckasRanarison/tailwind-tools.nvim",
     ft = {

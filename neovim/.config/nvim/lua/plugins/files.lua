@@ -50,9 +50,9 @@ return {
         },
       },
       filesystem = {
-        -- components = {
-        --   token_count = require("token-count.integrations.neo-tree").get_component(),
-        -- },
+        components = {
+          token_count = require("token-count.integrations.neo-tree").get_component(),
+        },
         bind_to_cwd = false,
         follow_current_file = { enabled = true },
         use_libuv_file_watcher = true,
@@ -77,7 +77,7 @@ return {
                 },
                 { "git_status", zindex = 20, align = "right" },
                 { "diagnostics", zindex = 20, align = "right" },
-                -- { "token_count", zindex = 10, align = "right" },
+                { "token_count", zindex = 10, align = "right" },
               },
             },
           },

@@ -504,7 +504,7 @@ return {
   },
   {
     "3ZsForInsomnia/pacer.nvim",
-    cmd = { "PacerStart", "PacerPause", "PacerResume", "PacerResumeCursor" },
+    cmd = "PacerStart",
     opts = {
       presets = {
         Code = {
