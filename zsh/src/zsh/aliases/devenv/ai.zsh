@@ -10,3 +10,5 @@ function vca() {
     vectorcode vectorise "$path$filetype"
   done
 }
+
+alias vc="vectorcode"

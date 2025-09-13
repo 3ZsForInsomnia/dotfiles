@@ -51,7 +51,8 @@ o.secure = true -- Ensures other vimrc files cannot write/do more than o.variabl
 
 o.timeout = true
 o.timeoutlen = 300
-o.updatetime = 75
+o.ttimeoutlen = 10
+o.updatetime = 300
 
 o.wrap = true
 o.breakindent = true

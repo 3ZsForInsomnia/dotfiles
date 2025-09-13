@@ -95,8 +95,8 @@ M.gitStatusForRepo = function()
     "sh",
     "-c",
     [[
-      git diff --shortstat; 
-      echo "SEPARATOR"; 
+      git diff --shortstat;
+      echo "SEPARATOR";
       git ls-files --others --exclude-standard | wc -l
     ]],
   }, {}, function(result)
@@ -137,6 +137,7 @@ return {
         highlight = true,
         depth_limit = 3,
         depth_limit_indicator = "...",
+        lazy_update_context = true,
       })
     end,
   },
@@ -151,10 +152,10 @@ return {
         end
 
         M.gitStatusForRepo()
-        M.timer:start(5000, 5000, function()
+        M.timer:start(10000, 10000, function()
           M.gitStatusForRepo()
         end)
-      end, 2000)
+      end, 5000)
 
       require("lualine").setup({
         options = {
@@ -166,7 +167,25 @@ return {
           ignore_focus = {},
           always_divide_middle = true,
           globalstatus = true,
-          refresh = { statusline = 2500, tabline = 2500, winbar = 2500 },
+          refresh = {
+            statusline = 100,
+            tabline = 1000,
+            winbar = 250,
+            events = {
+              "WinEnter",
+              "BufEnter",
+              "BufWritePost",
+              "SessionLoadPost",
+              "FileChangedShellPost",
+              "VimResized",
+              "Filetype",
+              "CursorHold",
+              "CursorHoldI",
+              -- "CursorMoved",
+              -- "CursorMovedI",
+              "ModeChanged",
+            },
+          },
         },
         sections = {
           lualine_a = { { "mode", separator = { left = "" } } },
@@ -219,18 +238,6 @@ return {
           },
           lualine_x = {
             require("token-count.integrations.lualine").current_buffer,
-            {
-              function()
-                return require("vectorcode.integrations").lualine(nil)[1]()
-              end,
-              cond = function()
-                if package.loaded["vectorcode"] == nil then
-                  return false
-                else
-                  return require("vectorcode.integrations").lualine(nil).cond()
-                end
-              end,
-            },
           },
           lualine_y = { "progress" },
           lualine_z = {

@@ -171,26 +171,26 @@ local luasnipSetupOptions = function()
 end
 
 return {
-  { "rafamadriz/friendly-snippets", event = "InsertEnter" },
   {
     "L3MON4D3/LuaSnip",
-    event = "InsertEnter",
     lazy = true,
-    opts = {
-      history = true,
-      delete_check_events = "TextChanged",
+    -- event = "InsertEnter",
+    dependencies = {
+      { "rafamadriz/friendly-snippets", lazy = true },
     },
-    depdencies = {
-      "rafamadriz/friendly-snippets",
-    },
-    config = function(_, opts)
+    config = function()
       local ls = require("luasnip")
-      ls.setup(opts)
+      ls.setup({
+        history = true,
+        delete_check_events = "TextChanged",
+      })
 
       ls.config.setup(luasnipSetupOptions())
+
       ls.filetype_extend("typescript", { js })
       ls.filetype_extend("javascriptreact", { js, html })
       ls.filetype_extend("typescriptreact", { ts, js, html })
+
       require("luasnip.loaders.from_lua").lazy_load({ paths = { snippetsLocation } })
 
       ---@diagnostic disable-next-line: duplicate-set-field
@@ -213,7 +213,7 @@ return {
   },
   {
     "saghen/blink.cmp",
-    event = "VeryLazy",
+    event = "InsertEnter",
     version = not g.lazyvim_blink_main and "*",
     build = g.lazyvim_blink_main and "cargo build --release",
     opts_extend = {
@@ -221,16 +221,15 @@ return {
       "sources.default",
     },
     dependencies = {
-      { "giuxtaposition/blink-cmp-copilot", lazy = true },
-      { "disrupted/blink-cmp-conventional-commits", lazy = true },
-      { "bydlw98/blink-cmp-env", lazy = true },
-      { "Kaiser-Yang/blink-cmp-git", lazy = true },
+      "giuxtaposition/blink-cmp-copilot",
+      "disrupted/blink-cmp-conventional-commits",
+      "bydlw98/blink-cmp-env",
+      "Kaiser-Yang/blink-cmp-git",
       {
         "xzbdmw/colorful-menu.nvim",
         config = colorful_menu_config,
-        lazy = true,
       },
-      { "moyiz/blink-emoji.nvim", lazy = true },
+      "moyiz/blink-emoji.nvim",
       {
         "kristijanhusak/vim-dadbod-completion",
         ft = { "sql", "mysql", "plsql" },

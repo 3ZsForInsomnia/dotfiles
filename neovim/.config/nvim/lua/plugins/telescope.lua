@@ -203,20 +203,20 @@ end
 local loadExtensions = function(load_extension)
   load_extension("fzf")
   load_extension("live_grep_args")
-  load_extension("changes")
-  load_extension("file_browser")
-  load_extension("luasnip")
-  load_extension("scriptnames")
-  load_extension("heading")
-  load_extension("undo")
-  load_extension("angular")
-  load_extension("noice")
-  load_extension("gpt")
-  load_extension("conflicts")
-  load_extension("persisted")
-  load_extension("bookmarks")
   load_extension("ui-select")
-  load_extension("adjacent")
+
+  -- load_extension("adjacent")
+  -- load_extension("angular")
+  -- load_extension("bookmarks")
+  -- load_extension("changes")
+  -- load_extension("conflicts")
+  -- load_extension("file_browser")
+  -- load_extension("heading")
+  -- load_extension("luasnip")
+  -- load_extension("noice")
+  -- load_extension("persisted")
+  -- load_extension("scriptnames")
+  -- load_extension("undo")
 end
 
 return {
@@ -280,25 +280,31 @@ return {
     cmd = "Telescope",
     tag = "0.1.8",
     dependencies = {
-      "MaximilianLloyd/adjacent.nvim",
-      "benfowler/telescope-luasnip.nvim",
-      "LinArcX/telescope-changes.nvim",
-      "3ZsForInsomnia/telescope-angular",
-      "debugloop/telescope-undo.nvim",
-      "LinArcX/telescope-scriptnames.nvim",
-      "crispgm/telescope-heading.nvim",
-      "nvim-telescope/telescope-file-browser.nvim",
-      "HPRIOR/telescope-gpt",
-      "Snikimonkd/telescope-git-conflicts.nvim",
-      "olimorris/persisted.nvim",
-      "nvim-telescope/telescope-ui-select.nvim",
-      { "barrett-ruth/http-codes.nvim", config = true },
-      { "nvim-telescope/telescope-live-grep-args.nvim", version = "^1.0.0" },
       {
         "nvim-telescope/telescope-fzf-native.nvim",
-        run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake"
-          .. "--build build --config Release && cmake --install build --prefix build",
+        run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
       },
+      { "nvim-telescope/telescope-live-grep-args.nvim", version = "^1.0.0" },
+      "nvim-telescope/telescope-ui-select.nvim",
+
+      { "MaximilianLloyd/adjacent.nvim", cmd = { "Telescope adjacent" } },
+      { "benfowler/telescope-luasnip.nvim", cmd = { "Telescope luasnip" } },
+      { "LinArcX/telescope-changes.nvim", cmd = { "Telescope changes" } },
+      { "3ZsForInsomnia/telescope-angular", cmd = { "Telescope angular" } },
+      { "debugloop/telescope-undo.nvim", cmd = { "Telescope undo" } },
+      { "LinArcX/telescope-scriptnames.nvim", cmd = { "Telescope scriptnames" } },
+      { "crispgm/telescope-heading.nvim", cmd = { "Telescope heading" } },
+      { "nvim-telescope/telescope-file-browser.nvim", cmd = { "Telescope file_browser" } },
+      { "HPRIOR/telescope-gpt", cmd = { "Telescope gpt" } },
+      { "Snikimonkd/telescope-git-conflicts.nvim", cmd = { "Telescope conflicts" } },
+      { "olimorris/persisted.nvim", cmd = { "Telescope persisted" } },
+      {
+        "dhruvmanila/browser-bookmarks.nvim",
+        version = "*",
+        cmd = { "Telescope bookmarks" },
+        opts = { selected_browser = "chrome" },
+      },
+      { "barrett-ruth/http-codes.nvim", cmd = { "HTTPCodes", "Telescope http" }, config = true },
     },
     config = function()
       local telescope = require("telescope")

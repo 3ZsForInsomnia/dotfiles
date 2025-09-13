@@ -219,8 +219,8 @@ alias gaczp='gacz; gp'
 
 alias czr='cz --retry'
 alias czrp='czr; gp'
-alias aczr='ga .; czr'
-alias aczrp='czra; gp'
+alias gaczr='ga .; czr'
+alias gaczrp='czra; gp'
 
 function git_current_branch() {
   echo $(git rev-parse --abbrev-ref HEAD)

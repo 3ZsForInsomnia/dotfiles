@@ -30,7 +30,7 @@
         "stdio"
       ],
       "command": "npx",
-      "disabled": false
+      "disabled": true
     },
     "dbhub-revman": {
       "args": [
@@ -43,6 +43,22 @@
       ],
       "command": "npx",
       "disabled": false
+    },
+    "github": {
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "command": "docker",
+      "disabled": false,
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+      },
+      "type": "stdio"
     },
     "kubernetes": {
       "args": [

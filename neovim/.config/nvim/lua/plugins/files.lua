@@ -50,9 +50,6 @@ return {
         },
       },
       filesystem = {
-        components = {
-          token_count = require("token-count.integrations.neo-tree").get_component(),
-        },
         bind_to_cwd = false,
         follow_current_file = { enabled = true },
         use_libuv_file_watcher = true,
@@ -143,6 +140,9 @@ return {
         { event = events.FILE_MOVED, handler = on_move },
         { event = events.FILE_RENAMED, handler = on_move },
       })
+
+      opts.filesystem.components = opts.filesystem.components or {}
+      opts.filesystem.components.token_count = require("token-count.integrations.neo-tree").get_component()
 
       require("neo-tree").setup(opts)
     end,

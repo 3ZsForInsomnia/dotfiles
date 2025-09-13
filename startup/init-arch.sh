@@ -13,7 +13,7 @@ aur_packages=("luacheck" "powerlevel10k-git" "espanso" "lastpass-cli" "jira-cli"
 # Cross-platform GUI applications (some available as Flatpak/AUR)
 gui_applications=("copyq" "obsidian" "google-chrome" "slack-desktop" "postman-bin")
 
-npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai")
+npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree")
 
 pip_packages_to_install=("yamllint" "shell-gpt")
 
@@ -238,23 +238,23 @@ clone_gist_folder() {
 
   # Create destination directory if it doesn't exist
   mkdir -p "$destination_path"
-  
+
   # Create a temporary directory for cloning
   local temp_dir=$(mktemp -d)
-  
+
   # Clone the gist to temp directory
   if ! gh gist clone "$gist_id" "$temp_dir/gist_clone"; then
     echo "Error: Failed to clone gist $gist_id"
     rm -rf "$temp_dir"
     return 1
   fi
-  
+
   # Copy all files from the cloned gist to the destination
   cp -r "$temp_dir/gist_clone/"* "$destination_path/"
-  
+
   # Clean up temp directory
   rm -rf "$temp_dir"
-  
+
   echo "Gist $gist_id successfully cloned to $destination_path"
   return 0
 }
@@ -264,7 +264,7 @@ handle_all_gists() {
   while IFS=' ' read -r arg1 arg2 arg3; do
     # Skip empty lines and comments
     [[ -z "$arg1" || "$arg1" =~ ^# ]] && continue
-    
+
     # Check if arg3 has a file extension (contains a dot) or ends with /
     if [[ "$arg3" == *"."* ]]; then
       # Single file gist

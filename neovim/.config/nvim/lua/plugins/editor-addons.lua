@@ -102,7 +102,7 @@ return {
   {
     "ramilito/kubectl.nvim",
     dependencies = "saghen/blink.download",
-    event = "VeryLazy",
+    lazy = true,
     config = true,
     keys = {
       cmd({
@@ -241,6 +241,8 @@ return {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = { "markdown", "codecompanion" },
     opts = {
+      preset = "obsidian",
+      debounce = 250,
       completions = {
         blink = { enabled = true },
         lsp = { enabled = true },

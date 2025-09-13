@@ -5,7 +5,6 @@ return {
     lazy = false,
     ---@type snacks.Config
     opts = {
-      animate = { enabled = true },
       bigfile = { enabled = true },
       dim = { enabled = true },
       image = { enabled = true },
@@ -13,11 +12,12 @@ return {
       input = { enabled = true },
       notifier = { enabled = true },
       quickfile = { enabled = true },
-      words = { enabled = true },
 
+      animate = { enabled = false },
       dashboard = { enabled = false },
       scroll = { enabled = false },
       statuscolumn = { enabled = false },
+      words = { enabled = false },
     },
   },
 }

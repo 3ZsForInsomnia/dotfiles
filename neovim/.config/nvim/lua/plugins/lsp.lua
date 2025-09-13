@@ -32,7 +32,6 @@ return {
   },
   {
     "folke/trouble.nvim",
-    lazy = true,
     cmd = "Trouble",
     opts = { use_diagnostic_signs = true },
     keys = {
@@ -108,10 +107,11 @@ return {
   { "RRethy/nvim-treesitter-textsubjects", lazy = true },
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPost", "BufNewFile", "BufWritePRe", "VeryLazy" },
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
       parser_config.markdown.used_by = "octo"
+      vim.treesitter.language.register("markdown", "octo")
 
       require("nvim-treesitter.configs").setup({
         modules = {},

@@ -258,12 +258,12 @@ return {
         action = "Obsidian search",
         desc = "Search notes",
       }),
-      -- k({
-      --   key = o .. "e",
-      --   action = ":ObsidianExtractNote ",
-      --   desc = "Extract visual selection to a new note",
-      --   mode = "v",
-      -- }),
+      k({
+        key = o .. "e",
+        action = ":Obsidian extract_note ",
+        desc = "Extract visual selection to a new note",
+        mode = "v",
+      }),
       cmd({
         key = o .. "r",
         action = "Obsidian rename",

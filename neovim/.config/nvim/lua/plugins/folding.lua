@@ -5,7 +5,7 @@ local getbuf = v.api.nvim_get_current_buf
 return {
   {
     "kevinhwang91/nvim-ufo",
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       "kevinhwang91/promise-async",
     },

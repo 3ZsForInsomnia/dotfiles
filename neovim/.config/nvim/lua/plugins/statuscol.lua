@@ -7,7 +7,7 @@ return {
 
       require("statuscol").setup({
         relculright = true,
-        ft_ignore = { "neo-tree", "dbui", "vista_kind", "Outline" },
+        ft_ignore = { "neo-tree", "dbui", "vista_kind", "Outline", "codecompanion" },
         segments = {
           {
             text = {
