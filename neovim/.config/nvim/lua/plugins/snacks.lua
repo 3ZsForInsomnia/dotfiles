@@ -3,14 +3,17 @@ return {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
-    ---@type snacks.Config
     opts = {
-      bigfile = { enabled = true },
+      bigfile = {
+        enabled = true,
+        notify = true,
+      },
       dim = { enabled = true },
       image = { enabled = true },
       indent = { enabled = true },
       input = { enabled = true },
       notifier = { enabled = true },
+      profiler = { enabled = true },
       quickfile = { enabled = true },
 
       animate = { enabled = false },

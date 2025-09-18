@@ -8,8 +8,6 @@ local f = function(command)
 end
 
 return {
-  -- Used for CodeCompanion diffs
-  { "echasnovski/mini.diff", version = false },
   {
     "sindrets/diffview.nvim",
     cmd = {

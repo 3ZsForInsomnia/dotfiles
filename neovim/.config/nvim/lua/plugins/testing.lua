@@ -6,22 +6,21 @@ local js_config = {
   jestCommand = "npm run test --",
   jestConfigFile = "jest.config.ts",
   env = { CI = true },
-  cwd = function(path)
-    return vim.fn.getcwd()
+  cwd = function()
+    return v.fn.getcwd()
   end,
   --   discovery = {
   --     enabled = false,
   --   },
 }
 
-local py_config = {}
-
 local go_config = {
+  dap_go_enabled = true,
   go_test_args = {
     "-v",
     -- "-race",
     "-count=1",
-    "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
+    "-coverprofile=" .. v.fn.getcwd() .. "/coverage.out",
   },
 }
 
@@ -90,14 +89,11 @@ return {
       "nvim-treesitter/nvim-treesitter",
 
       "nvim-neotest/neotest-jest",
-      "nvim-neotest/neotest-python",
-      "fredrikaverpil/neotest-golang",
     },
     opts = {
       adapters = {
         ["neotest-golang"] = go_config,
         ["neotest-jest"] = js_config,
-        ["neotest-python"] = py_config,
       },
       diagnostic = {
         enabled = true,
@@ -163,7 +159,7 @@ return {
             adapters[#adapters + 1] = config
           elseif config ~= false then
             local adapter = require(name)
-            if type(config) == "table" and not vim.tbl_isempty(config) then
+            if type(config) == "table" and not v.tbl_isempty(config) then
               local meta = getmetatable(adapter)
               if adapter.setup then
                 adapter.setup(config)

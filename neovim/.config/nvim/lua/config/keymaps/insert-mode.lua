@@ -1,6 +1,5 @@
 local k = require("helpers").k
 
---
 -- <C-w>: Delete one word backwards
 -- <C-u>: Delete to the beginning of the line
 -- <C-t>: Indent current line
@@ -8,9 +7,22 @@ local k = require("helpers").k
 
 k({
   key = "<C-z>",
-  action = "<Cmd>lua require('telescope.builtin').spell_suggest()<CR>",
+  action = "<Cmd>lua Snacks.picker.spelling()<CR>",
   desc = "Spellcheck current or previous word",
   mode = "i",
+})
+
+k({
+  key = "z<C-z>",
+  action = "<Cmd>lua Snacks.picker.spelling()<CR>",
+  desc = "Spellcheck suggestions",
+})
+
+k({
+  key = "<C-z>",
+  action = "<Cmd>lua Snacks.picker.spelling()<CR>",
+  desc = "Spellcheck visual selection",
+  mode = "v",
 })
 
 -- Just here because the other spellcheck thing is here

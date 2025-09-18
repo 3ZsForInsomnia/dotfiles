@@ -103,9 +103,3 @@ au({ "CursorMoved", "CursorMovedI" }, {
     extended_search_count()
   end,
 })
-
--- Telescope previewer wrap
-au("User", {
-  pattern = "TelescopePreviewerLoaded",
-  command = "setlocal wrap",
-})

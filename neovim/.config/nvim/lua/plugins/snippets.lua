@@ -112,43 +112,9 @@ local colorful_menu_config = function()
   })
 end
 
-local filetypes_to_load_snippets_for = {
-  "bash",
-  "zsh",
-  "css",
-  "scss",
-  "html",
-  "javascript",
-  "typescript",
-  "javascriptreact",
-  "typescriptreact",
-  "python",
-  "go",
-  "sql",
-  "json",
-  "markdown",
-  "lua",
-}
-
-local function load_snippets_for_ft()
-  local ft = v.bo.filetype
-  if ft and ft ~= "" then
-    require("luasnip.loaders.from_vscode").lazy_load({
-      include = { ft },
-    })
-  end
-end
-
-v.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = filetypes_to_load_snippets_for,
-  callback = load_snippets_for_ft,
-})
-
-local luasnipSetupOptions = function()
+local luasnipSetupOptions = function(opts)
   local types = require("luasnip.util.types")
-  return {
-    history = true,
-    delete_check_events = "TextChanged",
+  local defaults = {
     ext_opts = {
       [types.choiceNode] = {
         active = {
@@ -168,47 +134,23 @@ local luasnipSetupOptions = function()
       },
     },
   }
+
+  return v.tbl_deep_extend("force", defaults, opts or {})
 end
 
 return {
   {
     "L3MON4D3/LuaSnip",
     lazy = true,
-    -- event = "InsertEnter",
-    dependencies = {
-      { "rafamadriz/friendly-snippets", lazy = true },
-    },
-    config = function()
+    config = function(_, opts)
       local ls = require("luasnip")
-      ls.setup({
-        history = true,
-        delete_check_events = "TextChanged",
-      })
-
-      ls.config.setup(luasnipSetupOptions())
+      ls.config.setup(luasnipSetupOptions(opts))
 
       ls.filetype_extend("typescript", { js })
       ls.filetype_extend("javascriptreact", { js, html })
       ls.filetype_extend("typescriptreact", { ts, js, html })
 
       require("luasnip.loaders.from_lua").lazy_load({ paths = { snippetsLocation } })
-
-      ---@diagnostic disable-next-line: duplicate-set-field
-      LazyVim.cmp.actions.snippet_forward = function()
-        if ls.jumpable(1) then
-          v.schedule(function()
-            ls.jump(1)
-          end)
-          return true
-        end
-      end
-      ---@diagnostic disable-next-line: duplicate-set-field
-      LazyVim.cmp.actions.snippet_stop = function()
-        if ls.expand_or_jumpable() then -- or just jumpable(1) is fine?
-          ls.unlink_current()
-          return true
-        end
-      end
     end,
   },
   {
@@ -218,27 +160,25 @@ return {
     build = g.lazyvim_blink_main and "cargo build --release",
     opts_extend = {
       "sources.completion.enabled_providers",
+      "sources.compat",
       "sources.default",
     },
     dependencies = {
-      "giuxtaposition/blink-cmp-copilot",
+      "L3MON4D3/LuaSnip",
       "disrupted/blink-cmp-conventional-commits",
       "bydlw98/blink-cmp-env",
+      "moyiz/blink-emoji.nvim",
       "Kaiser-Yang/blink-cmp-git",
       {
         "xzbdmw/colorful-menu.nvim",
         config = colorful_menu_config,
       },
-      "moyiz/blink-emoji.nvim",
       {
         "kristijanhusak/vim-dadbod-completion",
         ft = { "sql", "mysql", "plsql" },
       },
-      "L3MON4D3/LuaSnip",
     },
 
-    ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
     opts = {
       snippets = {
         preset = "luasnip",
@@ -429,6 +369,7 @@ return {
         },
         per_filetype = {
           codecompanion = { inherit_defaults = true, "codecompanion" },
+          lua = { inherit_defaults = true, "lazydev" },
         },
       },
       signature = {

@@ -15,6 +15,73 @@ function addBackendSettingToEnv() {
   printf "\nVITE_REACT_APP_API_PATH=%s" "$backend" >>"$file"
 }
 
+function setBeConfig() {
+  # Handle help flag
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: setBeConfig <service> <env> [config_type]"
+    echo ""
+    echo "Upload backend configuration files to Azure Key Vault"
+    echo ""
+    echo "Arguments:"
+    echo "  service      Service name"
+    echo "  env          Environment (e.g., qat, prod)"
+    echo "  config_type  Optional config type:"
+    echo "               - (empty)  uses conf.<env>.json (default)"
+    echo "               - base     uses conf.base.<env>.json"
+    echo "               - local    uses conf.local.<env>.json"
+    echo ""
+    echo "Examples:"
+    echo "  setBeConfig myservice qat           # uploads conf.qat.json"
+    echo "  setBeConfig myservice qat base      # uploads conf.base.qat.json"
+    echo "  setBeConfig myservice qat local     # uploads conf.local.qat.json"
+    return 0
+  fi
+
+  local service="$1"
+  local env="$2"
+  local config_type="$3" # optional: "base", "local", or empty for default
+
+  loc=$(get_location_for "$service" "$env")
+  vault=$(get_vault_for "$service" "$env")
+  config=$(get_config_for "$service" "$env")
+
+  if [ -z "$loc" ]; then
+    echo "Location not found for $service in $env"
+    return 1
+  fi
+  if [ -z "$vault" ]; then
+    echo "Vault not found for $service in $env"
+    return 1
+  fi
+  if [ -z "$config" ]; then
+    echo "Config not found for $service in $env"
+    return 1
+  fi
+
+  # Determine which config file to use
+  local file
+  if [ -z "$config_type" ]; then
+    file="$loc/conf.$env.json"
+  elif [ "$config_type" = "base" ]; then
+    file="$loc/conf.base.$env.json"
+  elif [ "$config_type" = "local" ]; then
+    file="$loc/conf.local.$env.json"
+  else
+    echo "Invalid config_type. Must be 'base', 'local', or empty for default"
+    return 1
+  fi
+
+  # Validate file exists
+  if [ ! -f "$file" ]; then
+    echo "Config file not found: $file"
+    return 1
+  fi
+
+  # Print file info regardless of upload success
+  echo "Using config file: $file"
+
+  setConfig "$config" "$vault" "$file"
+}
 function commentOutNonLocalFrontendEnvars() {
   local service="$1"
   local env="$2"

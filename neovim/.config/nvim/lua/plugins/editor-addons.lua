@@ -215,6 +215,7 @@ return {
         "codecompanion",
         "octo",
         "mcphub",
+        "snacks_notif_history",
       },
       max_count = 4,
       restricted_keys = {
@@ -242,12 +243,12 @@ return {
     ft = { "markdown", "codecompanion" },
     opts = {
       preset = "obsidian",
+      filetypes = { "markdown", "codecompanion" },
       debounce = 250,
       completions = {
         blink = { enabled = true },
         lsp = { enabled = true },
       },
-      file_types = { "markdown", "codecompanion" },
     },
   },
   {

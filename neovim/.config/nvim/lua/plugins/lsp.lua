@@ -8,7 +8,7 @@ end
 return {
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre", "BufNewFile", "BufWritePre" },
     opts = function()
       local keys = require("lazyvim.plugins.lsp.keymaps").get()
       keys[#keys + 1] = { "<leader>ca", false }
@@ -39,22 +39,15 @@ return {
       { "<leader>cS", false },
     },
   },
+  "mason-org/mason-lspconfig.nvim",
   {
-    "mason-org/mason-lspconfig.nvim",
-    lazy = true,
-    version = "^1.0.0",
-  },
-  {
-    "williamboman/mason.nvim",
-    version = "^1.0.0",
+    "mason-org/mason.nvim",
     cmd = "Mason",
     build = ":MasonUpdate",
     opts_extend = { "ensure_installed" },
     opts = {
       ensure_installed = {
-        "angular-language-server",
         "bash-language-server",
-        "black",
         "css-lsp",
         "cspell",
         "dockerfile-language-server",
@@ -62,26 +55,21 @@ return {
         "eslint_d",
         "flake8",
         "graphql-language-service-cli",
-        "gopls",
         "html-lsp",
         "isort",
         "java-language-server",
-        "js-debug-adapter",
         "jq",
         "json-lsp",
         "lua-language-server",
         "luacheck",
-        "markdown-toc",
         "marksman",
         "nginx-language-server",
         "nxls",
         "prettier",
         "pyright",
         "shellcheck",
-        "shfmt",
         "sqlfmt",
         "sqlls",
-        "stylua",
         "stylelint",
         "tailwindcss-language-server",
         "typescript-language-server",
@@ -108,156 +96,126 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-      parser_config.markdown.used_by = "octo"
-      vim.treesitter.language.register("markdown", "octo")
-
-      require("nvim-treesitter.configs").setup({
-        modules = {},
-        ensure_installed = {
-          "awk",
-          "bash",
-          "css",
-          "gitignore",
-          "go",
-          "graphql",
-          "html",
-          "http",
-          "java",
-          "javascript",
-          "jq",
-          "jsdoc",
-          "json",
-          "lua",
-          "markdown",
-          "python",
-          "scss",
-          "regex",
-          "tsx",
-          "typescript",
-          "vim",
-          "yaml",
+    opts = {
+      ensure_installed = {
+        "awk",
+        "css",
+        "graphql",
+        "http",
+        "jq",
+        "jsdoc",
+      },
+      ignore_install = {},
+      sync_install = true,
+      auto_install = true,
+      highlight = {
+        enable = true, -- false will disable the whole extension
+        additional_vim_regex_highlighting = { "markdown" },
+        disable = {}, -- list of language that will be disabled
+      },
+      textsubjects = {
+        enable = true,
+        prev_selection = ",", -- (Optional) keymap to select the previous selection
+        keymaps = {
+          ["."] = "textsubjects-smart",
+          [";"] = "textsubjects-container-outer",
+          ["i;"] = "textsubjects-container-inner",
         },
-        ignore_install = {},
-        sync_install = true,
-        auto_install = true,
-        highlight = {
-          enable = true, -- false will disable the whole extension
-          additional_vim_regex_highlighting = { "markdown" },
-          disable = {}, -- list of language that will be disabled
-        },
-        textsubjects = {
+      },
+      textobjects = {
+        enable = true,
+        select = {
           enable = true,
-          prev_selection = ",", -- (Optional) keymap to select the previous selection
+          lookahead = true,
           keymaps = {
-            ["."] = "textsubjects-smart",
-            [";"] = "textsubjects-container-outer",
-            ["i;"] = "textsubjects-container-inner",
+            -- You can use the capture groups defined in textobjects.scm
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["aa"] = "@call.outer",
+            ["ia"] = "@call.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = "@class.inner",
+            ["al"] = "@loop.outer",
+            ["il"] = "@loop.inner",
+            ["ai"] = "@conditional.outer",
+            ["ii"] = "@conditional.inner",
+            ["ao"] = "@block.outer",
+            ["io"] = "@block.inner",
+            ["am"] = "@comment.inner",
           },
         },
-        textobjects = {
+        move = {
           enable = true,
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["aa"] = "@call.outer",
-              ["ia"] = "@call.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-              ["al"] = "@loop.outer",
-              ["il"] = "@loop.inner",
-              ["ai"] = "@conditional.outer",
-              ["ii"] = "@conditional.inner",
-              ["ao"] = "@block.outer",
-              ["io"] = "@block.inner",
-              ["am"] = "@comment.inner",
-            },
+          set_jumps = true,
+          goto_next_start = {
+            ["[F"] = "@function.outer",
+            ["[C"] = "@class.outer",
+            ["[A"] = "@call.outer",
+            ["[O"] = "@block.outer",
+            ["[I"] = "@conditional.outer",
+            ["[L"] = "@loop.outer",
           },
-          move = {
-            enable = true,
-            set_jumps = true,
-            goto_next_start = {
-              ["[F"] = "@function.outer",
-              ["[C"] = "@class.outer",
-              ["[A"] = "@call.outer",
-              ["[O"] = "@block.outer",
-              ["[I"] = "@conditional.outer",
-              ["[L"] = "@loop.outer",
-            },
-            goto_next_end = {
-              ["]f"] = "@function.outer",
-              ["]c"] = "@class.outer",
-              ["]a"] = "@call.outer",
-              ["]o"] = "@block.outer",
-              ["]i"] = "@conditional.outer",
-              ["]l"] = "@loop.outer",
-            },
-            goto_previous_start = {
-              ["[f"] = "@function.outer",
-              ["[c"] = "@class.outer",
-              ["[a"] = "@call.outer",
-              ["[o"] = "@block.outer",
-              ["[i"] = "@conditional.outer",
-              ["[l"] = "@loop.outer",
-            },
-            goto_previous_end = {
-              ["]F"] = "@function.outer",
-              ["]C"] = "@class.outer",
-              ["]A"] = "@call.outer",
-              ["]O"] = "@block.outer",
-              ["]I"] = "@conditional.outer",
-              ["]L"] = "@loop.outer",
-            },
+          goto_next_end = {
+            ["]f"] = "@function.outer",
+            ["]c"] = "@class.outer",
+            ["]a"] = "@call.outer",
+            ["]o"] = "@block.outer",
+            ["]i"] = "@conditional.outer",
+            ["]l"] = "@loop.outer",
           },
-          swap = {
-            enable = true,
-            swap_next = { ["<leader>swp"] = "@parameter.inner" },
-            swap_previous = { ["<leader>swP"] = "@parameter.inner" },
+          goto_previous_start = {
+            ["[f"] = "@function.outer",
+            ["[c"] = "@class.outer",
+            ["[a"] = "@call.outer",
+            ["[o"] = "@block.outer",
+            ["[i"] = "@conditional.outer",
+            ["[l"] = "@loop.outer",
+          },
+          goto_previous_end = {
+            ["]F"] = "@function.outer",
+            ["]C"] = "@class.outer",
+            ["]A"] = "@call.outer",
+            ["]O"] = "@block.outer",
+            ["]I"] = "@conditional.outer",
+            ["]L"] = "@loop.outer",
           },
         },
-        indent = { enable = true },
-        incremental_selection = {
+        swap = {
           enable = true,
-          keymaps = {
-            init_selection = "gnn",
-            node_incremental = "grn",
-            scope_incremental = "grc",
-            node_decremental = "grm",
-          },
+          swap_next = { ["<leader>swp"] = "@parameter.inner" },
+          swap_previous = { ["<leader>swP"] = "@parameter.inner" },
         },
-        rainbow = {
-          enable = true,
-          query = "rainbow-delimiters",
-          strategy = require("rainbow-delimiters").strategy.global,
-          extended_mode = true,
-          max_file_lines = nil,
+      },
+      indent = { enable = true },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "gnn",
+          node_incremental = "grn",
+          scope_incremental = "grc",
+          node_decremental = "grm",
         },
-        autotag = { enable = true },
-        matchup = { enable = true },
-        pairs = {
-          enable = true,
-          disable = {},
-          highlight_pair_events = { "CursorMoved" },
-          highlight_self = false,
-          goto_right_end = false,
-          fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')",
-          keymaps = {
-            goto_partner = "%",
-            delete_balanced = "X",
-          },
-          delete_balanced = {
-            only_on_first_char = false,
-            fallback_cmd_normal = nil,
-            longest_partner = false,
-          },
+      },
+      autotag = { enable = true },
+      matchup = { enable = true },
+      pairs = {
+        enable = true,
+        disable = {},
+        highlight_pair_events = { "CursorMoved" },
+        highlight_self = false,
+        goto_right_end = false,
+        fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')",
+        keymaps = {
+          goto_partner = "%",
+          delete_balanced = "X",
         },
-      })
-    end,
+        delete_balanced = {
+          only_on_first_char = false,
+          fallback_cmd_normal = nil,
+          longest_partner = false,
+        },
+      },
+    },
     keys = {
       cmd({
         key = l .. "e",

@@ -105,14 +105,12 @@ return {
         },
       },
       "theHamsta/nvim-dap-virtual-text",
-      "mfussenegger/nvim-dap-python",
-      "nvim-telescope/telescope-dap.nvim",
+      -- "nvim-telescope/telescope-dap.nvim",
       {
         "microsoft/vscode-js-debug",
         run = "npm install --legacy-peer-deps && npm run compile",
       },
       "mxsdev/nvim-dap-vscode-js",
-      "leoluz/nvim-dap-go",
     },
     config = function()
       v("DapBreakpoint", { text = "🟥", texthl = "DiagnosticSignError", priority = 15 })

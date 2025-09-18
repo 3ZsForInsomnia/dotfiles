@@ -74,7 +74,7 @@ return {
                 },
                 { "git_status", zindex = 20, align = "right" },
                 { "diagnostics", zindex = 20, align = "right" },
-                { "token_count", zindex = 10, align = "right" },
+                -- { "token_count", zindex = 10, align = "right" },
               },
             },
           },
@@ -142,7 +142,7 @@ return {
       })
 
       opts.filesystem.components = opts.filesystem.components or {}
-      opts.filesystem.components.token_count = require("token-count.integrations.neo-tree").get_component()
+      -- opts.filesystem.components.token_count = require("token-count.integrations.neo-tree").get_component()
 
       require("neo-tree").setup(opts)
     end,

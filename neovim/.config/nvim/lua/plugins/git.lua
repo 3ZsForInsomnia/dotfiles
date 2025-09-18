@@ -39,12 +39,13 @@ vim.keymap.set("i", "@", "@<C-x><C-o>", { silent = true, buffer = true })
 vim.keymap.set("i", "#", "#<C-x><C-o>", { silent = true, buffer = true })
 
 return {
-  {
-    "lewis6991/gitsigns.nvim",
-    opts = {
-      sign_priority = 20,
-    },
-  },
+  -- {
+  --   "lewis6991/gitsigns.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     sign_priority = 20,
+  --   },
+  -- },
   {
     "NeogitOrg/neogit",
     cmd = {
@@ -74,7 +75,7 @@ return {
       },
       -- Each Integration is auto-detected through plugin presence, however, it can be disabled by setting to `false`
       integrations = {
-        telescope = true,
+        snacks = true,
         diffview = true,
       },
     },
@@ -154,31 +155,29 @@ return {
     "pwntester/octo.nvim",
     cmd = {
       "Octo",
-      "OctoSearch",
-      "OctoNotificationList",
-      "OctoReview",
-      "OctoPrBrowser",
-      "OctoRepoBrowser",
-      "OctoPrCreate",
-      "OctoPrChecks",
-      "OctoPrChanges",
-      "OctoPrEdit",
-      "OctoPrDiff",
-      "OctoPrList",
-      "OctoPrCheckout",
+      -- "OctoSearch",
+      -- "OctoNotificationList",
+      -- "OctoReview",
+      -- "OctoPrBrowser",
+      -- "OctoRepoBrowser",
+      -- "OctoPrCreate",
+      -- "OctoPrChecks",
+      -- "OctoPrChanges",
+      -- "OctoPrEdit",
+      -- "OctoPrDiff",
+      -- "OctoPrList",
+      -- "OctoPrCheckout",
     },
     opts = {
       suppress_missing_scope = {
         projects_v2 = true,
       },
-      default_merge_method = "squash",
-      default_to_projects_v2 = true,
       notifications = {
         current_repo_only = true,
       },
       runs = {
         icons = {
-          success = "✓",
+          succeeded = "✓",
         },
       },
       mappings = {
@@ -187,6 +186,10 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      vim.treesitter.language.register("markdown", "octo")
+      require("octo").setup(opts)
+    end,
     keys = {
       { "<leader>gi", false },
       { "<leader>gI", false },
@@ -337,24 +340,6 @@ return {
         action = o("thread unresolve"),
         desc = "Unresolve a PR Thread",
       }),
-
-      --
-      -- Jumps
-      --
-      -- k({
-      --   key = "[u",
-      --   action = function()
-      --     jump_unreviewed("prev")
-      --   end,
-      --   desc = "Prev unreviewed/changed file",
-      -- }),
-      -- k({
-      --   key = "]u",
-      --   action = function()
-      --     jump_unreviewed("next")
-      --   end,
-      --   desc = "Next unreviewed/changed file",
-      -- }),
     },
   },
   {
@@ -362,16 +347,10 @@ return {
     event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
       "kkharji/sqlite.lua",
       "pwntester/octo.nvim",
     },
     config = true,
-    opts = {
-      picker = {
-        backend = "telescope",
-      },
-    },
     keys = {
       cmd({
         key = revman .. "S",

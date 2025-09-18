@@ -130,18 +130,6 @@ end
 
 return {
   {
-    "SmiteshP/nvim-navic",
-    event = "VeryLazy",
-    config = function()
-      require("nvim-navic").setup({
-        highlight = true,
-        depth_limit = 3,
-        depth_limit_indicator = "...",
-        lazy_update_context = true,
-      })
-    end,
-  },
-  {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     config = function()
@@ -236,9 +224,9 @@ return {
           lualine_c = {
             { "filename", new_file_status = true, path = 1 },
           },
-          lualine_x = {
-            require("token-count.integrations.lualine").current_buffer,
-          },
+          -- lualine_x = {
+          --   require("token-count.integrations.lualine").current_buffer,
+          -- },
           lualine_y = { "progress" },
           lualine_z = {
             { "location", separator = { right = "" }, left_padding = 2 },

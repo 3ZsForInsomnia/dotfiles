@@ -96,10 +96,33 @@ function setConfig() {
 }
 
 function setConfigGeneric() {
+  # Handle help flag
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: setConfigGeneric <service> <env> <is_fe> [config_type]"
+    echo ""
+    echo "Upload configuration files to Azure Key Vault (generic function)"
+    echo ""
+    echo "Arguments:"
+    echo "  service      Service name"
+    echo "  env          Environment (e.g., qat, prod)"
+    echo "  is_fe        Boolean: true for frontend, false for backend"
+    echo "  config_type  For backend only:"
+    echo "               - (empty/base)  uses conf.base.<env>.json (default)"
+    echo "               - local         uses conf.local.<env>.json"
+    echo "               - default       uses conf.<env>.json"
+    echo ""
+    echo "Examples:"
+    echo "  setConfigGeneric myservice qat false           # uploads conf.base.qat.json"
+    echo "  setConfigGeneric myservice qat false local     # uploads conf.local.qat.json"
+    echo "  setConfigGeneric myservice qat false default   # uploads conf.qat.json"
+    echo "  setConfigGeneric myservice qat true            # uploads base.qat.env"
+    return 0
+  fi
+
   local service="$1"
   local env="$2"
   local is_fe="$3"
-  local reason="$4"
+  local config_type="$4"  # for backend: "base", "local", "default", or empty (defaults to "base")
 
   loc=$(get_location_for "$service" "$env")
   vault=$(get_vault_for "$service" "$env")
@@ -118,12 +141,33 @@ function setConfigGeneric() {
     return 1
   fi
 
-  file="$loc/conf.base.$env.json"
+  local file
   if [ "$is_fe" = true ]; then
     file="$loc/base.$env.env"
+  else
+    # Backend config file selection - no longer assumes base
+    if [ -z "$config_type" ] || [ "$config_type" = "base" ]; then
+      file="$loc/conf.base.$env.json"
+    elif [ "$config_type" = "local" ]; then
+      file="$loc/conf.local.$env.json"
+    elif [ "$config_type" = "default" ]; then
+      file="$loc/conf.$env.json"
+    else
+      echo "Invalid config_type. Must be 'base', 'local', 'default', or empty"
+      return 1
+    fi
   fi
+ 
+  # Validate file exists
+  if [ ! -f "$file" ]; then
+    echo "Config file not found: $file"
+    return 1
+  fi
+ 
+  # Print file info regardless of upload success
+  echo "Using config file: $file"
 
-  setConfig "$config" "$vault" "$file" "$reason"
+  setConfig "$config" "$vault" "$file"
 }
 
 function get_port_for() {

@@ -120,7 +120,8 @@ return {
   {
     "obsidian-nvim/obsidian.nvim",
     version = "*",
-    ft = { "markdown" },
+    event = "VeryLazy",
+    -- ft = { "markdown" },
     lazy = true,
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -188,7 +189,7 @@ return {
       },
 
       picker = {
-        name = "telescope.nvim",
+        name = "snacks.pick",
         note_mappings = {
           -- Create a new note from your query.
           new = "<C-x>",
