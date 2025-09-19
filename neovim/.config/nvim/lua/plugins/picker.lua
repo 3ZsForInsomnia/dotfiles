@@ -1,48 +1,66 @@
 local f = "<leader>f"
 
--- Factory function to create live args configurations
-local function create_live_args(type, include_content_args)
-  local prefix = type == "rg" and "" or "fzf_"
-  local args = {
-    ["<C-g>"] = { "add_" .. prefix .. (type == "rg" and "glob" or "file"), mode = { "i", "n" } },
-    ["<C-i>"] = { "add_" .. prefix .. (type == "rg" and "iglob" or "ifile"), mode = { "i", "n" } },
-    ["<C-p>"] = { "add_" .. prefix .. (type == "rg" and "path_glob" or "path"), mode = { "i", "n" } },
-    ["<C-P>"] = { "add_" .. prefix .. (type == "rg" and "path_iglob" or "ipath"), mode = { "i", "n" } },
-  }
-
-  if include_content_args then
-    args["<C-k>"] = { "quote_prompt", mode = { "i", "n" } }
-    if type == "rg" then
-      args["<C-t>"] = { "add_type_filter", mode = { "i", "n" } }
-    end
-  end
-
-  return args
-end
-
-local rg_live_args = create_live_args("rg", true)
-local fzf_live_args = create_live_args("fzf", true)
-local rg_file_args = create_live_args("rg", false)
-local fzf_file_args = create_live_args("fzf", false)
-
 return {
   "folke/snacks.nvim",
   lazy = false,
   opts = {
     picker = {
-      layout = {
-        preset = "telescope",
-        reverse = true,
-        layout = {
-          width = 0.925,
-          height = 0.925,
+      -- Define custom layouts
+      layouts = {
+        custom_telescope = {
+          reverse = true,
+          layout = {
+            box = "horizontal",
+            backdrop = false,
+            width = 0.9,
+            height = 0.9,
+            border = "none",
+            {
+              box = "vertical",
+              { win = "list", title = " Results ", title_pos = "center", border = "rounded" },
+              { win = "input", height = 1, border = "rounded", title = "{title} {live} {flags}", title_pos = "center" },
+            },
+            {
+              win = "preview",
+              title = "{preview:Preview}",
+              width = 0.65,
+              border = "rounded",
+              title_pos = "center",
+            },
+          },
+        },
+
+        -- Custom select layout with better height
+        custom_select = {
+          preview = false,
+          layout = {
+            backdrop = false,
+            width = 0.5,
+            min_width = 80,
+            height = 0.6, -- Much taller than default 0.4
+            min_height = 10, -- Ensure minimum height
+            box = "vertical",
+            border = "rounded",
+            title = "{title}",
+            title_pos = "center",
+            { win = "input", height = 1, border = "top" },
+            { win = "list", border = "none" },
+          },
         },
       },
 
+      -- Set default layout for all pickers
+      layout = {
+        preset = "custom_telescope",
+      },
+
       sources = {
+        select = {
+          layout = { preset = "custom_select" },
+        },
         files = {
           hidden = true,
-          ignored = false,
+          ignored = true,
           exclude = {
             ".luarc.json",
             "node_modules",
@@ -71,7 +89,7 @@ return {
         },
         grep = {
           hidden = true,
-          ignored = false,
+          ignored = true,
           exclude = {
             "tags",
             "node_modules",
@@ -90,138 +108,7 @@ return {
 
       -- Custom actions for live args functionality
       actions = {
-        -- Quote current input (like <C-k> in telescope)
-        quote_prompt = function(picker)
-          local input = picker.input:get()
-          picker.input:set('"' .. input .. '"')
-        end,
-
-        -- Add extension glob pattern (like <C-g> in telescope)
-        add_glob = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " --glob '**/*."
-          picker.input:set(new_input)
-          -- Position cursor after the dot
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input - 1 }) -- before closing quote
-            end
-          end)
-        end,
-
-        -- Add inverse extension glob pattern (like <C-i> in telescope)
-        add_iglob = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " --glob !'**/*."
-          picker.input:set(new_input)
-          -- Position cursor after the dot
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input - 1 }) -- before closing quote
-            end
-          end)
-        end,
-
-        -- Add file type filter (like <C-t> in telescope)
-        add_type_filter = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " --type "
-          picker.input:set(new_input)
-          -- Position cursor at the end
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input })
-            end
-          end)
-        end,
-
-        -- Add path glob pattern
-        add_path_glob = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " --glob '"
-          picker.input:set(new_input)
-          -- Position cursor after the quote
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input })
-            end
-          end)
-        end,
-
-        -- Add inverse path glob pattern
-        add_path_iglob = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " --glob !'"
-          picker.input:set(new_input)
-          -- Position cursor after the quote
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input })
-            end
-          end)
-        end,
-
-        -- FZF-style actions
-        -- Add file pattern (FZF style)
-        add_fzf_file = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " file:*."
-          picker.input:set(new_input)
-          -- Position cursor after the dot
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input })
-            end
-          end)
-        end,
-
-        -- Add inverse file pattern (FZF style)
-        add_fzf_ifile = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " !file:*."
-          picker.input:set(new_input)
-          -- Position cursor after the dot
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input })
-            end
-          end)
-        end,
-
-        -- Add path pattern (FZF style)
-        add_fzf_path = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " file:"
-          picker.input:set(new_input)
-          -- Position cursor at the end
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input })
-            end
-          end)
-        end,
-
-        -- Add inverse path pattern (FZF style)
-        add_fzf_ipath = function(picker)
-          local input = picker.input:get()
-          local new_input = input .. " !file:"
-          picker.input:set(new_input)
-          -- Position cursor at the end
-          vim.schedule(function()
-            if picker.input.win and vim.api.nvim_win_is_valid(picker.input.win) then
-              local pos = vim.api.nvim_win_get_cursor(picker.input.win)
-              vim.api.nvim_win_set_cursor(picker.input.win, { pos[1], #new_input })
-            end
-          end)
-        end,
+        -- Custom actions can be added here if needed
       },
 
       -- Key mappings that recreate your telescope shortcuts
@@ -273,11 +160,7 @@ return {
         function()
           Snacks.picker.files({
             title = "Files (rg)",
-            win = {
-              input = {
-                keys = rg_file_args,
-              },
-            },
+            layout = { preset = "custom_telescope" },
           })
         end,
         desc = "Files (rg)",
@@ -288,11 +171,6 @@ return {
           Snacks.picker.grep({
             title = "Live Grep (rg)",
             live = true,
-            win = {
-              input = {
-                keys = rg_live_args,
-              },
-            },
           })
         end,
         desc = "Live Grep (rg)",
@@ -304,11 +182,6 @@ return {
             title = "Live Grep (fzf)",
             live = true,
             matcher = { fuzzy = true },
-            win = {
-              input = {
-                keys = fzf_live_args,
-              },
-            },
           })
         end,
         desc = "Live Grep (fzf)",
@@ -319,11 +192,6 @@ return {
           Snacks.picker.files({
             title = "Files (fzf)",
             matcher = { fuzzy = true },
-            win = {
-              input = {
-                keys = fzf_file_args,
-              },
-            },
           })
         end,
         desc = "Files (fzf)",
@@ -336,11 +204,6 @@ return {
           Snacks.picker.files({
             title = "Files Adjacent to Current",
             cwd = current_dir,
-            win = {
-              input = {
-                keys = rg_file_args,
-              },
-            },
           })
         end,
         desc = "Files adjacent to current file",
@@ -474,6 +337,13 @@ return {
         desc = "Git commits in buffer",
       },
       {
+        f .. "gl",
+        function()
+          Snacks.picker.git_log_line()
+        end,
+        desc = "Git commits for current line",
+      },
+      {
         f .. "gf",
         function()
           Snacks.picker.git_files()
@@ -565,6 +435,13 @@ return {
         end,
         desc = "LSP type definitions",
       },
+       {
+         f .. "lD",
+         function()
+           Snacks.picker.lsp_declarations()
+         end,
+         desc = "LSP declarations",
+       },
 
       --
       -- Diagnostics

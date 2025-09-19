@@ -216,6 +216,7 @@ return {
         "octo",
         "mcphub",
         "snacks_notif_history",
+        "k8s_pod_logs",
       },
       max_count = 4,
       restricted_keys = {

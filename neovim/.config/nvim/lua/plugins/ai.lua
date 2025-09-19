@@ -49,21 +49,20 @@ return {
   -- },
   {
     "olimorris/codecompanion.nvim",
-    event = "VeryLazy",
-    -- cmd = {
-    --   "CodeCompanion",
-    --   "CodeCompanionChat",
-    --   "CodeCompanionChatAdd",
-    --   "CodeCompanionChatInline",
-    --   "CodeCompanionChatToggle",
-    --   "CodeCompanionActions",
-    --   "CodeCompanionPrompt",
-    -- },
+    cmd = {
+      "CodeCompanion",
+      "CodeCompanionChat",
+      "CodeCompanionChatAdd",
+      "CodeCompanionChatInline",
+      "CodeCompanionChatToggle",
+      "CodeCompanionActions",
+      "CodeCompanionPrompt",
+    },
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "ravitemer/codecompanion-history.nvim",
-      "3ZsForInsomnia/vs-code-companion",
+      -- "3ZsForInsomnia/vs-code-companion",
     },
     opts = {
       opts = {
@@ -260,10 +259,10 @@ return {
       },
     },
     config = function(_, opts)
-      opts.strategies.chat.slash_commands = {
-        vs_import = require("vs-code-companion").import_slash_command,
-        vs_select = require("vs-code-companion").select_slash_command,
-      }
+      -- opts.strategies.chat.slash_commands = {
+      --   vs_import = require("vs-code-companion").import_slash_command,
+      --   vs_select = require("vs-code-companion").select_slash_command,
+      -- }
 
       require("codecompanion").setup(opts)
     end,

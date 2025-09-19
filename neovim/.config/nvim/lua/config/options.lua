@@ -147,7 +147,7 @@ o.clipboard = ""
 o.mouse = ""
 o.completeopt = "menu,noinsert,menuone,noselect,preview"
 
-g.lazyvim_picker = "telescope"
+g.lazyvim_picker = "snacks"
 g.autoformat = false
 
 v.filetype.add({

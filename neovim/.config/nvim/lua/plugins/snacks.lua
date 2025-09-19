@@ -13,6 +13,7 @@ return {
       indent = { enabled = true },
       input = { enabled = true },
       notifier = { enabled = true },
+     picker = { enabled = true },
       profiler = { enabled = true },
       quickfile = { enabled = true },
 
