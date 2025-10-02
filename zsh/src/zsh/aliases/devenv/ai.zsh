@@ -1,4 +1,6 @@
-alias runVectorDb="docker run -v ./chroma-data:/data -p 8000:8000 chromadb/chroma"
+alias vc="vectorcode"
+
+alias runVectorDb="docker run -d -v ~/.local/share/chromadb:/data -p 8000:8000 chromadb/chroma:0.6.3"
 
 function vcq() {
   # Show help if -h is passed
@@ -57,12 +59,10 @@ function vcq() {
 # takes a list of filetypes and runs `vectorcode vectorise` on them
 function vca() {
   filetypes=("$@")
-  path="./**/*."
+  source_path="./**/*."
 
   for filetype in "${filetypes[@]}"; do
     echo "Vectorising $filetype files..."
-    vectorcode vectorise "$path$filetype"
+    vectorcode vectorise "$source_path$filetype"
   done
 }
-
-alias vc="vectorcode"

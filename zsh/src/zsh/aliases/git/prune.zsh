@@ -261,4 +261,4 @@ function _interactive_prune_workflow() {
 }
 
 # Export the preview function so FZF can use it
-export -f _generate_pr_preview
+# export -f _generate_pr_preview

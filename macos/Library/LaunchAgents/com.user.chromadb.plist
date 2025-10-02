@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.user.chromadb</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/docker</string>
+    <string>run</string>
+    <string>--rm</string>
+    <string>-v</string>
+    <string>/Users/zacharylevinw/.local/share/chroma-data:/data</string>
+    <string>-p</string>
+    <string>8000:8000</string>
+    <string>chromadb/chroma:0.6.3</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/tmp/chromadb.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/chromadb.err</string>
+</dict>
+</plist>

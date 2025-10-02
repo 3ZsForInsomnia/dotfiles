@@ -18,7 +18,7 @@ fi
 
 # Create bookmarks_file it if it doesn't exist
 if [[ ! -f $BOOKMARKS_FILE ]]; then
-  mkdir $XD_DATA_HOME/bookmarks
+  mkdir $XDG_DATA_HOME/bookmarks
 	touch $BOOKMARKS_FILE
 fi
 

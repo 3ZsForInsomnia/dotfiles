@@ -1,9 +1,12 @@
-alias myJira="jira issue list -a$(jira me) -s~Done -s~Canceled -q'project IS NOT EMPTY'"
+alias myJira="jira issue list -a$JIRA_ME -s~Done -s~Canceled -q'project IS NOT EMPTY'"
 
 alias jiraopen="jira issue list -sopen"
 alias viewJiraTicket="jira issue view --comments 5"
-alias viewCurrentTicket="jira issue view $(current_branch) --comments 5"
 
+function viewCurrentTicket() {
+  current_branch=$(git branch --show-current)
+  jira issue view "$current_branch" --comments 5
+}
 alias viewUsersTickets="jira issue list -sopen -s'In Progress' -s'Blocked' -s'CODE REVIEW' -q'project IS NOT EMPTY' -a"
 
 function assignTicket() {

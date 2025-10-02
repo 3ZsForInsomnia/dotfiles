@@ -6,7 +6,7 @@ sources=(
   "db.zsh"
   "docker.zsh"
   "ghub.zsh"
-  "git.zsh"
+  # "git.zsh"
   "golang.zsh"
   "jira.zsh"
   "js-ts.zsh"
@@ -33,5 +33,5 @@ for source_file in "${sources[@]}"; do
   fi
 done
 
-lazyLoad directory "~/src" "$alias_path/git/index.zsh"
+lazyLoad directory "$HOME/src" "$alias_path/git/index.zsh"
 lazyLoad directory "$W_PATH" "$alias_path/work/index.zsh" "Lazy load work environment utils"

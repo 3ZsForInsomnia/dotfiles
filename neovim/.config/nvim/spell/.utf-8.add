@@ -226,3 +226,5 @@ sqlite
 jq
 dotfiles
 submodules
+kubernetes
+echo

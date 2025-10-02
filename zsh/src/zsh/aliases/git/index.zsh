@@ -1,24 +1,21 @@
-#!/usr/bin/env zsh
-
 # Git Aliases and Functions - Main Index
 # Sources all git-related functionality
 
-# Get the directory where this script is located
-local git_dir="${${(%):-%x}:A:h}"
+git_dir="${ZSH_CONFIG_DIR}/aliases/git"
 
 # Source FZF helpers first (provides universal FZF configuration)
 source "$git_dir/../../tools/fzf-helpers.zsh"
 
 # Source all git modules
-source "$git_dir/core.zsh"
-source "$git_dir/stash.zsh"
-source "$git_dir/rebase.zsh"
-source "$git_dir/cherry-pick.zsh"
-source "$git_dir/prune.zsh"
-source "$git_dir/tags.zsh"
 source "$git_dir/bisect.zsh"
-source "$git_dir/worktree.zsh"
+source "$git_dir/cherry-pick.zsh"
+source "$git_dir/core.zsh"
 source "$git_dir/fzf.zsh"
+source "$git_dir/prune.zsh"
+source "$git_dir/rebase.zsh"
+source "$git_dir/stash.zsh"
+source "$git_dir/tags.zsh"
+source "$git_dir/wtrees.zsh"
 
 # Set up shared configuration
 export GIT_MAIN_BRANCH="${GIT_MAIN_BRANCH:-main}"
@@ -49,42 +46,42 @@ function ghelp() {
   local category="$1"
 
   case "$category" in
-    "core")
-      _show_core_help
-      ;;
-    "stash")
-      _show_stash_help
-      ;;
-    "rebase")
-      _show_rebase_help
-      ;;
-    "cherry")
-      _show_cherry_help
-      ;;
-    "prune")
-      _show_prune_help
-      ;;
-    "tags")
-      _show_tags_help
-      ;;
-    "bisect")
-      _show_bisect_help
-      ;;
-    "worktree")
-      _show_worktree_help
-      ;;
-    "")
-      _show_all_help
-      ;;
-    *)
-      echo "Unknown category: $category"
-      echo "Run 'ghelp -h' for available categories"
-      ;;
+  "core")
+    _show_core_help
+    ;;
+  "stash")
+    _show_stash_help
+    ;;
+  "rebase")
+    _show_rebase_help
+    ;;
+  "cherry")
+    _show_cherry_help
+    ;;
+  "prune")
+    _show_prune_help
+    ;;
+  "tags")
+    _show_tags_help
+    ;;
+  "bisect")
+    _show_bisect_help
+    ;;
+  "worktree")
+    _show_worktree_help
+    ;;
+  "")
+    _show_all_help
+    ;;
+  *)
+    echo "Unknown category: $category"
+    echo "Run 'ghelp -h' for available categories"
+    ;;
   esac
 }
 
 function _show_core_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 🔧 Core Git Operations:
 
 Status & Info:
@@ -159,7 +156,7 @@ EOF
 }
 
 function _show_stash_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 📦 Stash Operations:
 
 Basic Stashing:
@@ -192,7 +189,7 @@ EOF
 }
 
 function _show_rebase_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 🔄 Rebase & Merge Operations:
 
 Core Rebase:
@@ -231,7 +228,7 @@ EOF
 }
 
 function _show_cherry_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 🍒 Cherry-Pick Operations:
 
 Core Cherry-Pick:
@@ -269,7 +266,7 @@ EOF
 }
 
 function _show_prune_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 🌿 Branch Pruning (PR-Based):
 
 Main Commands:
@@ -297,7 +294,7 @@ EOF
 }
 
 function _show_tags_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 🏷️  Tag Operations:
 
 Basic Tags:
@@ -332,7 +329,7 @@ EOF
 }
 
 function _show_bisect_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 🔍 Bisect Operations (Find Problematic Commits):
 
 Starting:
@@ -373,7 +370,7 @@ EOF
 }
 
 function _show_worktree_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 🌳 Worktree Operations (Multiple Working Directories):
 
 Basic Operations:
@@ -410,7 +407,7 @@ EOF
 }
 
 function _show_all_help() {
-  cat << 'EOF'
+  cat <<'EOF'
 🚀 Git Command Categories:
 
 📋 ghelp core     - Basic operations (status, add, commit, push, pull)
@@ -439,8 +436,4 @@ EOF
 }
 
 # Make help functions available
-export -f ghelp _show_core_help _show_stash_help _show_rebase_help _show_cherry_help _show_prune_help _show_tags_help _show_bisect_help _show_worktree_help _show_all_help
-
-# Success message
-echo "✅ Git aliases and functions loaded!"
-echo "Run 'ghelp' for command reference or 'ghelp <category>' for specific help."
+# export -f ghelp _show_core_help _show_stash_help _show_rebase_help _show_cherry_help _show_prune_help _show_tags_help _show_bisect_help _show_worktree_help _show_all_help
