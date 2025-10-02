@@ -54,7 +54,7 @@ bindkey "^[c" delete-word
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-source "$ZSH_CONFIG_DIR/.source-things.zsh"
+source "$ZSH_CONFIG_DIR/source-things.zsh"
 
 # Compile .zcompdump in the background
 {
