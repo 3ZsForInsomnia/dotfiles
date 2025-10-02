@@ -85,7 +85,7 @@ function unstowAll() {
   fi
 }
 
-updateInitScriptGist() {
+function updateInitScriptGist() {
   gistId=""
   if [[ "$MY_SYSTEM" == "mac" ]]; then
     gistId="06976a1e2ae3f7f73814ec187e308d9a"

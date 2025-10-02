@@ -87,7 +87,6 @@ return {
       return {
         nx_cmd_root = "nx",
         command_runner = require("nx.command-runners").terminal_cmd(),
-        form_renderer = require("nx.form-renderers").telescope(),
         read_init = true,
       }
     end,

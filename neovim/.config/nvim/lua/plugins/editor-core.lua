@@ -113,7 +113,7 @@ return {
           { "<leader>zs", group = "Sessions" },
 
           --
-          -- Misc
+          -- Uncategorized <Leader> bindings
           --
           { "<leader>k", group = "Kubectl and Docker" },
           { "<leader>l", group = "Location list" },
@@ -131,6 +131,12 @@ return {
           { "<leader>y", group = "Yazi" },
 
           --
+          -- Non-<Leader> bindings
+          --
+          { "z", group = "Folds" },
+          { "z=", desc = "Spell Suggestions" },
+
+          --
           -- Marks (m)
           --
           { "m", group = "Marks" },
@@ -140,12 +146,6 @@ return {
           { "m7", desc = "Good" },
           { "m6", desc = "Info" },
           { "m5", desc = "Home" },
-
-          { "gs", group = "Surrounds" },
-          { "gr", group = "Refactoring" },
-
-          { "z", group = "Folds" },
-          { "z=", desc = "Spell Suggestions" },
 
           --
           -- Previous ([)
@@ -213,9 +213,13 @@ return {
     },
   },
   { "andymass/vim-matchup" },
-  { "winston0410/range-highlight.nvim", opts = {} },
+  { "winston0410/range-highlight.nvim", event = "VeryLazy" },
   { "godlygeek/tabular", ft = "markdown" },
-  { "kylechui/nvim-surround", config = true },
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    config = true,
+  },
   {
     "olimorris/persisted.nvim",
     lazy = false,
@@ -299,5 +303,15 @@ return {
   {
     "OXY2DEV/helpview.nvim",
     lazy = false,
+  },
+  {
+    "rcarriga/nvim-notify",
+    opts = {
+      max_width = 100,
+      max_height = 10,
+      minimum_width = 40,
+      render = "wrapped-compact",
+      timeout = 3000,
+    },
   },
 }

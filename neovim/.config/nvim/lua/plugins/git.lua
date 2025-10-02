@@ -39,13 +39,14 @@ vim.keymap.set("i", "@", "@<C-x><C-o>", { silent = true, buffer = true })
 vim.keymap.set("i", "#", "#<C-x><C-o>", { silent = true, buffer = true })
 
 return {
-  -- {
-  --   "lewis6991/gitsigns.nvim",
-  --   event = "VeryLazy",
-  --   opts = {
-  --     sign_priority = 20,
-  --   },
-  -- },
+  {
+    "lewis6991/gitsigns.nvim",
+    enabled = true,
+    event = "LazyFile",
+    opts = {
+      sign_priority = 20,
+    },
+  },
   {
     "NeogitOrg/neogit",
     cmd = {
@@ -152,7 +153,8 @@ return {
     },
   },
   {
-    "pwntester/octo.nvim",
+    dir = "~/src/octo.nvim",
+    -- "pwntester/octo.nvim",
     cmd = {
       "Octo",
       -- "OctoSearch",
@@ -169,6 +171,7 @@ return {
       -- "OctoPrCheckout",
     },
     opts = {
+      picker = "snacks",
       suppress_missing_scope = {
         projects_v2 = true,
       },
@@ -343,7 +346,8 @@ return {
     },
   },
   {
-    dir = "~/src/revman.nvim",
+    "3ZsForInsomnia/revman.nvim",
+    -- dir = "~/src/revman.nvim",
     event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -351,6 +355,9 @@ return {
       "pwntester/octo.nvim",
     },
     config = true,
+    opts = {
+      picker = "snacks",
+    },
     keys = {
       cmd({
         key = revman .. "S",

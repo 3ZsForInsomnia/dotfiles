@@ -14,7 +14,7 @@ function ghen() {
 
 # USAGE: select_run_for_workflow <workflow_file> <n>
 # Returns the run id of a selected run
-select_run_for_workflow() {
+function select_run_for_workflow() {
   local workflow=$1
   local n=${2:-10}
   gh run list --workflow "$workflow" -L "$n" --json databaseId,displayTitle,headBranch,status,conclusion,createdAt \
@@ -24,7 +24,7 @@ select_run_for_workflow() {
 
 # USAGE: viewGhubPrChecks <pr_number>
 # Shows the status of checks for a specified PR and opens logs in browser
-viewGhubPrChecks() {
+function viewGhubPrChecks() {
   local pr_number=$1
 
   if [[ -z $pr_number ]]; then

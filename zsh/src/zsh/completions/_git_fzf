@@ -1,0 +1,11 @@
+#compdef fbr fcoc ftco fbremote
+
+local -a commands
+commands=(
+  'fbr:Browse and checkout branches'
+  'fcoc:Browse and checkout commits'
+  'ftco:Browse and checkout tags'
+  'fbremote:Browse and checkout remote branches'
+)
+
+_describe 'git fzf commands' commands

@@ -1,0 +1,6 @@
+#compdef fkp fks fkd fkns fkctx fkcm fksecret fksvc fkjob
+
+# Individual kubernetes FZF functions - no parameter completion needed
+# These functions are interactive and don't take meaningful parameters
+
+return 0

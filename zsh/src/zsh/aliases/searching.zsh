@@ -75,7 +75,9 @@ function fcdf() {
 
   local target
   target=$(eval "$fd_cmd" 2>/dev/null |
-    fzf --preview '[ -d {} ] && eza -la --icons --git --color=always {} || bat --style=numbers --color=always --line-range :500 {}')
+    fzf --preview="_fzf_file_preview {}" \
+        --preview-window="right:60%:wrap" \
+        --header="Enter=cd to file/dir, Ctrl-S=inspect, Alt-V=open in nvim")
 
   if [[ -n "$target" ]]; then
     if [[ -d "$target" ]]; then
@@ -107,11 +109,32 @@ function fbm() {
 
 # fkill - kill processes - list only the ones you can kill. Modified the earlier script.
 function fkill() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: fkill [signal]"
+    echo "Interactive process killer with enhanced preview"
+    echo "Default signal is 9 (SIGKILL)"
+    echo ""
+    echo "FZF Key Bindings:"
+    echo "  Enter     - Kill selected process(es)"
+    echo "  Ctrl-S    - Show detailed process information"
+    echo "  Tab       - Multi-select processes"
+    echo "  Ctrl-C    - Cancel"
+    return 0
+  fi
+
   local pid
   if [ "$UID" != "0" ]; then
-    pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+    pid=$(ps -f -u $UID | sed 1d | 
+      fzf -m --preview="_fzf_process_preview {}" \
+          --preview-window="right:60%:wrap" \
+          --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" | 
+      awk '{print $2}')
   else
-    pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+    pid=$(ps -ef | sed 1d | 
+      fzf -m --preview="_fzf_process_preview {}" \
+          --preview-window="right:60%:wrap" \
+          --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" | 
+      awk '{print $2}')
   fi
 
   if [ "x$pid" != "x" ]; then
@@ -120,6 +143,14 @@ function fkill() {
 }
 
 function fkillport() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: fkillport [port] [signal]"
+    echo "Interactive port-based process killer with enhanced preview"
+    echo "If port is specified, shows only processes using that port"
+    echo "Default signal is 9 (SIGKILL)"
+    return 0
+  fi
+
   local port_arg=${1:-}
   local procs pid
 
@@ -135,8 +166,10 @@ function fkillport() {
   fi
 
   pid=$(echo "$procs" | sed 1d |
-    fzf -m --height=40% --border --header="Command  PID  User  Port" \
-      --prompt="Select process to kill: " |
+    fzf -m --preview="_fzf_process_preview {}" \
+        --preview-window="right:60%:wrap" \
+        --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" \
+        --prompt="Select process to kill: " |
     awk '{print $2}' | sort -u | tr '\n' ' ' | xargs)
 
   if [[ -n "$pid" ]]; then
@@ -152,28 +185,24 @@ function flp() {
   lpass show -c --password $(lpass ls | fzf | awk '{print $(NF)}' | sed 's/\]//g')
 }
 
-function fbr() {
-  local branches branch
-  branches=$(git branch --all | grep -v HEAD) &&
-    branch=$(echo "$branches" |
-      fzf --height 50% --ansi --preview 'git log -n 50 --color=always --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {})' |
-      sed "s/.* //" | sed "s#remotes/[^/]*/##") &&
-    git checkout "$branch"
-}
-
-function fcom() {
-  git log --oneline --color=always |
-    fzf --ansi --no-sort --preview 'git show --color=always {1}' |
-    cut -d' ' -f1
-}
-
-function fh() {
-  print -z $(fc -l 1 | fzf --height 50% --reverse --tac | sed 's/ *[0-9]* *//')
-}
-
 function fenv() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: fenv"
+    echo "Interactive environment variable browser"
+    echo "Browse and copy environment variables to clipboard"
+    echo ""
+    echo "FZF Key Bindings:"
+    echo "  Enter     - Copy variable to clipboard and display"
+    echo "  Alt-Y     - Copy to clipboard (same as Enter)"
+    echo "  Ctrl-C    - Cancel"
+    return 0
+  fi
+
   local out
-  out=$(env | fzf)
+  out=$(env | sort | 
+    fzf --preview="echo {}" \
+        --preview-window="up:3:wrap" \
+        --header="Enter=copy to clipboard, Ctrl-C=cancel")
   echo "$out" | clip
   echo "$out"
 }

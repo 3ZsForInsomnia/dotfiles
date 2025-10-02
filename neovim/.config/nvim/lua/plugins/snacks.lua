@@ -4,16 +4,13 @@ return {
     priority = 1000,
     lazy = false,
     opts = {
-      bigfile = {
-        enabled = true,
-        notify = true,
-      },
+      bigfile = { enabled = true },
       dim = { enabled = true },
       image = { enabled = true },
       indent = { enabled = true },
       input = { enabled = true },
-      notifier = { enabled = true },
-     picker = { enabled = true },
+      notifier = { enabled = false },
+      picker = { enabled = true },
       profiler = { enabled = true },
       quickfile = { enabled = true },
 

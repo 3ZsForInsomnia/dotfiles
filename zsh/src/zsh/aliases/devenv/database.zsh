@@ -73,12 +73,12 @@ function viewDb() {
 
 alias viewLocalBpDb='_viewAppDb bp local'
 alias viewDevBpDb='_viewAppDb bp dev'
-alias viewQatBpDb='_viewAppDb bp qat'
+alias viewQatBpDb='_viewAppDb bp qat qat'
 alias viewUatBpDb='_viewAppDb bp uat'
 alias viewPreprodBpDb='_viewAppDb bp preprod preprod'
 alias viewProdBpDb='_viewAppDb bp prod'
 
 alias viewDevCtDb='_viewAppDb ct dev'
-alias viewQatCtDb='_viewAppDb ct qat'
+alias viewQatCtDb='_viewAppDb ct qat qat'
 alias viewUatCtDb='_viewAppDb ct uat'
 alias viewProdCtDb='_viewAppDb ct prod'

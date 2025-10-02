@@ -85,6 +85,35 @@ function view_kpod_logs() {
       kubectl logs -n "$namespace" "$pod"
     fi
   fi
+  
+  # Build kubectl logs command
+  local log_cmd="kubectl logs -n $namespace $pod"
+  if [[ -n "$container" ]]; then
+    log_cmd="$log_cmd -c $container"
+  fi
+  if [[ "$follow" == true ]]; then
+    log_cmd="$log_cmd -f"
+  fi  
+  if [[ -n "$tail_lines" ]]; then
+    log_cmd="$log_cmd --tail=$tail_lines"
+  fi
+  
+  # Display info
+  echo "📋 Viewing logs for: $pod"
+  if [[ -n "$container" ]]; then
+    echo "📦 Container: $container"
+  fi
+  echo "📍 Namespace: $namespace"
+  if [[ -n "$service" && -n "$env" ]]; then
+    echo "🏷️  Service: $service (env: $env)"
+  fi
+  if [[ "$follow" == true ]]; then
+    echo "🔄 Streaming logs (press Ctrl+C to exit)"
+  fi
+  echo ""
+  
+  # Execute logs command
+  eval "$log_cmd"
 }
 
 function get_latest_version_row() {
@@ -181,10 +210,12 @@ function getKPodStatus() {
   local service=$1
   local env=$2
   local pod=$3
+  local container=$4
 
   namespace=$(get_namespace_for "$service" "$env")
   
   if [[ -z "$pod" ]]; then
+    echo "🔍 Select pod for logs:"
     pod=$(fkp "$namespace")
     if [[ -z "$pod" ]]; then
       return 1
@@ -262,14 +293,17 @@ function kpsh() {
     fi
   fi
   
-  local containers=$(kubectl get pod "$pod" -n "$namespace" -o jsonpath='{.spec.containers[*].name}')
-  local container
-  
-  if [[ $(echo "$containers" | wc -w) -gt 1 ]]; then
-    container=$(echo "$containers" | tr ' ' '\n' | fzf --height=40% --border --prompt="Select Container: ")
-    if [[ -z "$container" ]]; then
-      echo "No container selected."
-      return 1
+  if [[ -z "$container" ]]; then
+    local containers=$(kubectl get pod "$pod" -n "$namespace" -o jsonpath='{.spec.containers[*].name}')
+    
+    if [[ $(echo "$containers" | wc -w) -gt 1 ]]; then
+      echo "🔍 Multiple containers found, select one:"
+      container=$(echo "$containers" | tr ' ' '\n' | 
+        fzf $(fzf_select_opts) --prompt="Select Container: ")
+      if [[ -z "$container" ]]; then
+        echo "❌ No container selected."
+        return 1
+      fi
     fi
     echo "Starting shell in pod $pod, container $container..."
     kubectl exec -it -n "$namespace" "$pod" -c "$container" -- sh -c "bash || ash || sh"
@@ -471,6 +505,22 @@ function kctx() {
 # Pod Functions with FZF
 # ------------------------------------------------------------------------------
 function fkp() {
+ if [[ "$1" == "-h" ]]; then
+   echo "Usage: fkp [service] [env] | fkp [namespace]"
+   echo "Interactive pod selection with enhanced preview"
+   echo "Shows pod status, events, and resource usage"
+   echo ""
+   echo "FZF Key Bindings:"
+   echo "  Enter     - Select pod (copy to clipboard)"
+   echo "  Ctrl-S    - Show detailed pod description"
+   echo "  Ctrl-L    - View pod logs"
+   echo "  Ctrl-E    - Shell into pod"
+   echo "  Ctrl-R    - Restart pod (delete to trigger restart)"
+   echo "  Alt-P     - Toggle preview"
+   echo "  Ctrl-C    - Cancel"
+   return 0
+ fi
+
   # Interactive pod selection
   local service=$1
   local env=$2
@@ -483,30 +533,79 @@ function fkp() {
   fi
   
   if [[ -z "$namespace" ]]; then
-    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | fzf --height=40% --border --prompt="Select Namespace: ")
+    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | 
+      fzf $(fzf_select_opts) --prompt="Select Namespace: ")
     if [[ -z "$namespace" ]]; then
       echo "No namespace selected."
       return 1
     fi
   fi
   
+ echo "🔍 Fetching pods in namespace: $namespace"
+ 
   # Get pod list without headers and use fzf to select
-  local pod_line=$(kubectl get pods -n "$namespace" -o "custom-columns=NAME:.metadata.name,STATUS:.status.phase,RESTARTS:.status.containerStatuses[0].restartCount,AGE:.metadata.creationTimestamp" --no-headers --sort-by=.metadata.creationTimestamp | fzf --height=40% --border --prompt="Select Pod ($namespace): ")
+  local pod_line
+  pod_line=$(kubectl get pods -n "$namespace" \
+    -o "custom-columns=NAME:.metadata.name,STATUS:.status.phase,RESTARTS:.status.containerStatuses[0].restartCount,AGE:.metadata.creationTimestamp" \
+    --no-headers --sort-by=.metadata.creationTimestamp | \
+    fzf $(fzf_git_opts) \
+        --preview="_fzf_k8s_pod_preview {} $namespace" \
+        --bind="ctrl-l:execute(kubectl logs -n $namespace {1} -f)" \
+        --bind="ctrl-e:execute(kubectl exec -it -n $namespace {1} -- /bin/bash || kubectl exec -it -n $namespace {1} -- /bin/sh)" \
+        --bind="ctrl-r:execute(kubectl delete pod -n $namespace {1})" \
+        --bind="ctrl-s:execute(_fzf_k8s_pod_inspect {} $namespace)" \
+        --header="Enter=select, Ctrl-L=logs, Ctrl-E=shell, Ctrl-R=restart, Ctrl-S=describe")
   
   if [[ -n "$pod_line" ]]; then
     # Extract just the pod name (first column)
     local pod_name=$(echo "$pod_line" | awk '{print $1}')
-    echo "$pod_name" | copy
+    echo "$pod_name" | pbcopy
+    echo "✅ Selected pod: $pod_name (copied to clipboard)"
     echo "$pod_name"
     return 0
   else
-    echo "No pod selected."
+    echo "❌ No pod selected."
     return 1
   fi
 }
 
 function kplogs() {
+ if [[ "$1" == "-h" ]]; then
+   echo "Usage: kplogs [service] [env] [pod] [container]"
+   echo "Interactive pod logs viewer with streaming support"
+   echo ""  
+   echo "Options:"
+   echo "  -f, --follow    Follow logs (stream)"
+   echo "  --tail N        Show last N lines"
+   echo ""
+   echo "Examples:"
+   echo "  kplogs                    # Interactive pod selection"
+   echo "  kplogs myservice prod     # Select pod from service/env"
+   echo "  kplogs -f                 # Stream logs"
+   return 0
+ fi
+
   # Interactive pod logs viewer (service/env aware)
+ local follow=false
+ local tail_lines=""
+ 
+ # Parse flags
+ while [[ $# -gt 0 ]]; do
+   case "$1" in
+     -f|--follow)
+       follow=true
+       shift
+       ;;
+     --tail)
+       tail_lines="$2"
+       shift 2
+       ;;
+     *)
+       break
+       ;;
+   esac
+ done
+ 
   local service=$1
   local env=$2
   local pod=$3
@@ -529,16 +628,61 @@ function kplogs() {
       echo "No container selected."
       return 1
     fi
-    
-    echo "Viewing logs for $pod/$container in namespace $namespace"
-    echo "Service: $service (env: $env)"
-    echo "Press Ctrl+C to exit"
-    kubectl logs -n "$namespace" "$pod" -c "$container" -f
+  fi
+}
+
+### Service Functions with FZF
+
+function fks() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: fks [namespace]"
+    echo "Interactive service browser with enhanced preview"
+    echo "Shows service details, endpoints, and associated pods"
+    echo ""
+    echo "FZF Key Bindings:"
+    echo "  Enter     - Select service (copy to clipboard)"
+    echo "  Ctrl-S    - Show detailed service description"
+    echo "  Ctrl-P    - Port-forward to service"
+    echo "  Ctrl-E    - Show endpoints"
+    echo "  Alt-P     - Toggle preview"
+    echo "  Ctrl-C    - Cancel"
+    return 0
+  fi
+
+  local namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
+  
+  if [[ -z "$namespace" ]]; then
+    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | 
+      fzf $(fzf_select_opts) --prompt="Select Namespace: ")
+    if [[ -z "$namespace" ]]; then
+      echo "❌ No namespace selected."
+      return 1
+    fi
+  fi
+  
+  echo "🔍 Fetching services in namespace: $namespace"
+  
+  # Get service list
+  local service_line
+  service_line=$(kubectl get services -n "$namespace" \
+    -o "custom-columns=NAME:.metadata.name,TYPE:.spec.type,CLUSTER-IP:.spec.clusterIP,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip,PORTS:.spec.ports[*].port" \
+    --no-headers | \
+    fzf $(fzf_git_opts) \
+        --preview="_fzf_k8s_service_preview {} $namespace" \
+        --bind="ctrl-p:execute(echo 'Port-forward: kubectl port-forward -n $namespace service/{1} LOCAL_PORT:SERVICE_PORT')" \
+        --bind="ctrl-e:execute(kubectl get endpoints -n $namespace {1})" \
+        --bind="ctrl-s:execute(_fzf_k8s_service_inspect {} $namespace)" \
+        --header="Enter=select, Ctrl-P=port-forward info, Ctrl-E=endpoints, Ctrl-S=describe")
+  
+  if [[ -n "$service_line" ]]; then
+    local service_name=$(echo "$service_line" | awk '{print $1}')
+    echo "$service_name" | pbcopy
+    echo "✅ Selected service: $service_name (copied to clipboard)"
+    echo "$service_name"
+    return 0
   else
-    echo "Viewing logs for $pod in namespace $namespace"
-    echo "Service: $service (env: $env)"
-    echo "Press Ctrl+C to exit"
-    kubectl logs -n "$namespace" "$pod" -f
+    echo "❌ No service selected."
+    return 1
   fi
 }
 

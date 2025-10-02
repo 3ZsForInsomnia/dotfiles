@@ -21,7 +21,7 @@ sources=(
   "tui-tools.zsh"
   "utils.zsh"
   "wezterm.zsh"
-  # "devenv/index.zsh"
+  "devenv/index.zsh"
   # "work/index.zsh"
 )
 
@@ -33,5 +33,5 @@ for source_file in "${sources[@]}"; do
   fi
 done
 
-lazyLoad directory "$W_PATH" "$alias_path/devenv/index.zsh" "Lazy load dev environment utils"
+lazyLoad directory "~/src" "$alias_path/git/index.zsh"
 lazyLoad directory "$W_PATH" "$alias_path/work/index.zsh" "Lazy load work environment utils"

@@ -22,6 +22,18 @@
       "command": "npx",
       "disabled": true
     },
+    "dbhub-jira-ai": {
+      "args": [
+        "-y",
+        "@bytebase/dbhub",
+        "--transport",
+        "stdio",
+        "--dsn",
+        "sqlite:///Users/zacharylevinw/.local/share/nvim/jira-ai/jira_ai.db"
+      ],
+      "command": "npx",
+      "disabled": false
+    },
     "dbhub-plat": {
       "args": [
         "-y",

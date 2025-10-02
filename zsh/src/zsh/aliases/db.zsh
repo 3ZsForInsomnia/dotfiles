@@ -1,6 +1,6 @@
 # First arg: Port
 # Second arg: User
-get_pg_password() {
+function get_pg_password() {
   PGHOST="localhost"
   PGPORT="$1"
   PGUSER="$2"
@@ -21,7 +21,7 @@ get_pg_password() {
 # Third arg: username
 # Fourth arg: output directory
 # Assumes password is in "$PGPASSFILE"
-create_db_schema_diagram() {
+function create_db_schema_diagram() {
   if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
     echo "Usage: create_db_schema_diagram <port> <database_name> <username> <output_directory -- optional>"
 
@@ -54,7 +54,7 @@ create_db_schema_diagram() {
     -o "$output_directory"
 }
 
-viewDB() {
+function viewDB() {
   local user=$1
   local port=$2
   local name=$3
@@ -68,7 +68,7 @@ viewDB() {
 #################################
 
 # First arg: environment (dev|qat|uat)
-generateDbDiagramFor() {
+function generateDbDiagramFor() {
   if [[ -z "$1" ]]; then
     echo "Usage: generateDbDiagramFor <env>"
     return 1

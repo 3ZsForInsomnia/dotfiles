@@ -39,30 +39,36 @@ return {
       })
     end,
   },
-  -- {
-  --   "3ZsForInsomnia/token-count.nvim",
-  --   event = { "BufReadPost", "BufNewFile" },
-  --   config = true,
-  --   opts = {
-  --     model = "claude-4-sonnet",
-  --   },
-  -- },
+  {
+    "3ZsForInsomnia/token-count.nvim",
+    -- dir = "~/src/token-count.nvim",
+    event = "VeryLazy",
+    config = true,
+    opts = {
+      model = "claude-4-sonnet",
+    },
+  },
   {
     "olimorris/codecompanion.nvim",
     cmd = {
       "CodeCompanion",
       "CodeCompanionChat",
-      "CodeCompanionChatAdd",
-      "CodeCompanionChatInline",
-      "CodeCompanionChatToggle",
       "CodeCompanionActions",
-      "CodeCompanionPrompt",
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "ravitemer/codecompanion-history.nvim",
-      -- "3ZsForInsomnia/vs-code-companion",
+      {
+        -- "3ZsForInsomnia/vs-code-companion",
+        dir = "~/src/vs-code-companion",
+        cmd = "VsccImport",
+      },
+      {
+        -- "3ZsForInsomnia/code-companion-picker",
+        dir = "~/src/code-companion-picker",
+        cmd = "CodeCompanionPrompts",
+      },
     },
     opts = {
       opts = {
@@ -219,6 +225,7 @@ return {
           adapter = {
             name = "copilot",
             model = "claude-sonnet-4",
+            -- model = "claude-sonnet-4.5",
           },
           keymaps = {
             close = {
@@ -232,6 +239,7 @@ return {
         inline = {
           adapter = {
             name = "copilot",
+            -- model = "claude-sonnet-4.5",
             model = "claude-sonnet-4",
           },
           keymaps = {
@@ -259,10 +267,11 @@ return {
       },
     },
     config = function(_, opts)
-      -- opts.strategies.chat.slash_commands = {
-      --   vs_import = require("vs-code-companion").import_slash_command,
-      --   vs_select = require("vs-code-companion").select_slash_command,
-      -- }
+      opts.strategies.chat.slash_commands = {
+        prompts = require("code-companion-picker").select_slash_command,
+        tools = require("code-companion-picker").select_tool_slash_command,
+        -- import = ...
+      }
 
       require("codecompanion").setup(opts)
     end,

@@ -28,8 +28,16 @@ if [[ "$raw" =~ ^: ]]; then
   echo -e "\e[1mOriginal:\e[0m"
   echo "$cmd" | bat --language bash --style plain --color always
   echo
-  echo -e "\e[1mVariables Expanded:\e[0m"
-  print -rl -- ${(e):-${cmd}} | bat --language bash --style plain --color always
+  echo -e "\e[1mFully Expanded:\e[0m"
+  # Multi-level alias and variable expansion (up to 5 levels)
+  local expanded="$cmd"
+  local prev_expanded
+  for ((i=1; i<=5; i++)); do
+    prev_expanded="$expanded"
+    expanded=$(print -rl -- ${(e):-${expanded}})
+    [[ "$expanded" == "$prev_expanded" ]] && break
+  done
+  echo "$expanded" | bat --language bash --style plain --color always
 else
   echo "No EXTENDED_HISTORY data for this entry."
 fi

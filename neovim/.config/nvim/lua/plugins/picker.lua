@@ -5,7 +5,6 @@ return {
   lazy = false,
   opts = {
     picker = {
-      -- Define custom layouts
       layouts = {
         custom_telescope = {
           reverse = true,
@@ -23,22 +22,21 @@ return {
             {
               win = "preview",
               title = "{preview:Preview}",
-              width = 0.65,
+              width = 0.60,
               border = "rounded",
               title_pos = "center",
             },
           },
         },
 
-        -- Custom select layout with better height
         custom_select = {
           preview = false,
           layout = {
             backdrop = false,
             width = 0.5,
             min_width = 80,
-            height = 0.6, -- Much taller than default 0.4
-            min_height = 10, -- Ensure minimum height
+            height = 0.6,
+            min_height = 10,
             box = "vertical",
             border = "rounded",
             title = "{title}",
@@ -106,16 +104,25 @@ return {
         },
       },
 
-      -- Custom actions for live args functionality
-      actions = {
-        -- Custom actions can be added here if needed
+      formatters = {
+        file = {
+          icon_width = 2,
+        },
       },
 
-      -- Key mappings that recreate your telescope shortcuts
       win = {
+        preview = {
+          minimal = true,
+          wo = {
+            number = true,
+            foldcolumn = "0",
+            foldenable = false,
+            wrap = false,
+          },
+        },
         input = {
           keys = {
-            -- Navigation and selection (matching your telescope mappings)
+            -- Navigation and selection
             ["<M-q>"] = { "qflist", mode = { "i", "n" } },
             ["<M-a>"] = { "select_and_next", mode = { "i", "n" } },
             ["<M-r>"] = { "select_and_prev", mode = { "i", "n" } },
@@ -133,6 +140,14 @@ return {
           },
         },
         list = {
+          wo = {
+            conceallevel = 0,
+            concealcursor = "",
+            signcolumn = "no",
+            foldcolumn = "0",
+            number = false,
+            relativenumber = false,
+          },
           keys = {
             -- Same mappings for list window
             ["<M-q>"] = "qflist",
@@ -435,13 +450,13 @@ return {
         end,
         desc = "LSP type definitions",
       },
-       {
-         f .. "lD",
-         function()
-           Snacks.picker.lsp_declarations()
-         end,
-         desc = "LSP declarations",
-       },
+      {
+        f .. "lD",
+        function()
+          Snacks.picker.lsp_declarations()
+        end,
+        desc = "LSP declarations",
+      },
 
       --
       -- Diagnostics

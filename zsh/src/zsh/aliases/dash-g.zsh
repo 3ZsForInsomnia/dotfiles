@@ -41,7 +41,7 @@ alias -g W='| wc -l' # Count lines
 alias -g K='| awky' # Custom awk wrapper
 
 # AWK column selector function
-awky() {
+function awky() {
   awk -v var="$1" '{print $var}'
 }
 

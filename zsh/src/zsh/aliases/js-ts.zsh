@@ -1,4 +1,4 @@
-detectNpmOrYarn() {
+function detectNpmOrYarn() {
   if git rev-parse --is-inside-work-tree &> /dev/null; then
     if [[ -f $(groot)"/yarn.lock" ]]; then
       echo "yarn"
@@ -10,7 +10,7 @@ detectNpmOrYarn() {
   fi
 }
 
-getLockfile() {
+function getLockfile() {
   manager=$(detectNpmOrYarn);
 
   if [[ $manager == "npm" ]]; then
@@ -20,7 +20,7 @@ getLockfile() {
   fi
 }
 
-cleanDeps() {
+function cleanDeps() {
   lockfile=$(getLockfile);
   
   goToGroot;
@@ -28,7 +28,7 @@ cleanDeps() {
   rm -f "$lockfile";
 }
 
-installDeps() {
+function installDeps() {
   manager=$(detectNpmOrYarn);
 
   if [[ $manager == "npm" ]]; then
@@ -45,49 +45,49 @@ alias version='cat package.json J ".version"'
 alias n="npm "
 alias y="yarn "
 
-nr() {
+function nr() {
   manager=$(detectNpmOrYarn);
   command="$manager run $1"
 
   eval "$command"
 }
 
-nrd() {
+function nrd() {
   manager=$(detectNpmOrYarn);
   command="$manager run dev"
 
   eval "$command"
 }
 
-nrb() {
+function nrb() {
   manager=$(detectNpmOrYarn);
   command="$manager run build"
 
   eval "$command"
 }
 
-nrt() {
+function nrt() {
   manager=$(detectNpmOrYarn);
   command="$manager run test"
 
   eval "$command"
 }
 
-nrl() {
+function nrl() {
   manager=$(detectNpmOrYarn);
   command="$manager run lint"
 
   eval "$command"
 }
 
-nrsto() {
+function nrsto() {
   manager=$(detectNpmOrYarn);
   command="$manager run storybook"
 
   eval "$command"
 }
 
-ni() {
+function ni() {
   manager=$(detectNpmOrYarn);
   if [[ $manager == "npm" ]]; then
     command="$manager install $1"
@@ -98,7 +98,7 @@ ni() {
   eval "$command"
 }
 
-niglobal() {
+function niglobal() {
   manager=$(detectNpmOrYarn);
   if [[ $manager == "npm" ]]; then
     command="$manager install -g $1"
@@ -110,7 +110,7 @@ niglobal() {
 }
 alias ng='niglobal'
 
-nin() {
+function nin() {
   manager=$(detectNpmOrYarn);
 
   if [[ $manager == "npm" ]]; then
@@ -122,7 +122,7 @@ nin() {
   eval "$command"
 }
 
-nins() {
+function nins() {
   manager=$(detectNpmOrYarn);
 
   if [[ $manager == "npm" ]]; then
@@ -143,6 +143,6 @@ alias shadadd='npx shadcn@latest add '
 alias jup='jest --updateSnapshot'
 
 # watch $1=Folder $2=Extension
-watch() {
+function watch() {
   eval 'nodemon --exec "forego start" --watch $1 -e $2'
 }

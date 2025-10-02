@@ -64,7 +64,7 @@ function moveTicketTo() {
 
 # Usage: moveCurrentTicketTo [status]
 # If no status is provided, it will prompt to select one
-moveCurrentTicketTo() {
+function moveCurrentTicketTo() {
   # Get current branch name
   local branch=$(git branch --show-current)
 

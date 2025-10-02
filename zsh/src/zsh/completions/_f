@@ -1,0 +1,46 @@
+#compdef f
+
+# Handle f prefix completion for FZF functions
+local -a commands
+commands=(
+  # Git FZF Functions
+  'fbr:Browse and checkout branches'
+  'fcoc:Browse and checkout commits'
+  'ftco:Browse and checkout tags'
+  'fbremote:Browse and checkout remote branches'
+  'fcom:Browse and checkout commits'
+  'fgdiff:Compare branches with file diffs'
+  'fgsearch:Search commits with filters'
+  'fstash:Interactive stash manager'
+  'ftag:Browse and manage tags'
+  'ftagco:Browse and checkout tags'
+  'fwt:Browse and manage worktrees'
+  'fbisect:Interactive bisect setup'
+  'fcpick:Browse and cherry-pick commits'
+  'fcpicklog:Browse commits from full log'
+  
+  # Kubernetes FZF Functions
+  'fkp:Browse and manage pods'
+  'fks:Browse and manage services'  
+  'fkd:Browse deployments interactively'
+  'fkns:Browse and switch namespaces'
+  'fkctx:Browse and switch contexts'
+  'fkcm:Browse config maps'
+  'fksecret:Browse secrets'
+  'fksvc:Browse services interactively'
+  'fkjob:Browse jobs'
+  
+  # Search Functions  
+  'fef:Find and edit files'
+  'ftags:Browse and jump to ctags'
+  'fcdf:Change directory with fzf'
+  'fda:Find and open directories'
+  'fbm:Browse and manage bookmarks'
+  'fkill:Find and kill processes'
+  'fkillport:Find and kill processes by port'
+  'flp:List and manage processes'
+  'fenv:Browse environment variables'
+  'frg:Interactive ripgrep with preview'
+)
+
+_describe 'interactive f functions' commands

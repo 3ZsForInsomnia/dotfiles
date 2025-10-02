@@ -22,7 +22,7 @@ if [[ ! -f $BOOKMARKS_FILE ]]; then
 	touch $BOOKMARKS_FILE
 fi
 
-_zshmarks_move_to_trash(){
+function _zshmarks_move_to_trash(){
   if [[ $(uname) == "Linux"* || $(uname) == "FreeBSD"*  ]]; then
     label=`date +%s`
     mkdir -p ~/.local/share/Trash/info ~/.local/share/Trash/files
@@ -59,7 +59,7 @@ function bookmark() {
     fi
 }
 
-__zshmarks_zgrep() {
+function __zshmarks_zgrep() {
 	local outvar="$1"; shift
 	local pattern="$1"
 	local filename="$2"

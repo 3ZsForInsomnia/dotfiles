@@ -1,3 +1,4 @@
+local v = vim
 local k_cmd = require("helpers").k_cmd
 local k = require("helpers").k
 local c = "<C-"
@@ -10,10 +11,10 @@ k_cmd({
   mode = "v",
 })
 
-vim.api.nvim_set_keymap("i", "<C-j>", "<Plug>luasnip-next-choice", {})
-vim.api.nvim_set_keymap("s", "<C-j>", "<Plug>luasnip-next-choice", {})
-vim.api.nvim_set_keymap("i", "<C-k>", "<Plug>luasnip-prev-choice", {})
-vim.api.nvim_set_keymap("s", "<C-k>", "<Plug>luasnip-prev-choice", {})
+v.api.nvim_set_keymap("i", "<M-j>", "<Plug>luasnip-next-choice", {})
+v.api.nvim_set_keymap("s", "<M-j>", "<Plug>luasnip-next-choice", {})
+v.api.nvim_set_keymap("i", "<M-k>", "<Plug>luasnip-prev-choice", {})
+v.api.nvim_set_keymap("s", "<M-k>", "<Plug>luasnip-prev-choice", {})
 
 -- k({
 --   key = c .. "j>",

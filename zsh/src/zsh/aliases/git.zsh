@@ -33,7 +33,7 @@ alias gibid='git commit -a --amend --no-edit'
 alias gibidp='gibid && gpf!'
 alias gce='g commit --allow-empty'
 alias gc='g commit -v -m'
-gac() {
+function gac() {
   if [ -z "$2" ]; then
     location="."
   else
@@ -43,7 +43,7 @@ gac() {
   $(ga $location)
   $(gc $1)
 }
-gacp() {
+function gacp() {
   if [ -z "$2" ]; then
     location="."
   else
@@ -53,15 +53,15 @@ gacp() {
   $(gac "$1" "$location")
   $(ggp)
 }
-gcbc() { # Checkout new branch and commit
+function gcbc() { # Checkout new branch and commit
   $(gco $1)
 }
 # What is arg 2?
-gcbcp() { # Checkout new branch, commit and push
+function gcbcp() { # Checkout new branch, commit and push
   $(gcbc $1 $2)
   $(ggp)
 }
-gab() { # Add and checkout new branch
+function gab() { # Add and checkout new branch
   if [ -z "$2" ]; then
     location="."
   else
@@ -72,11 +72,11 @@ gab() { # Add and checkout new branch
   $(gco $1)
 }
 # 1 = branch, 2 = message, 3 = directory/path
-gacbc() { # Add, checkout new branch, commit
+function gacbc() { # Add, checkout new branch, commit
   $(gab $1 $3)
   $(gc $2)
 }
-gacbcp() { # Add, checkout new branch, commit, push
+function gacbcp() { # Add, checkout new branch, commit, push
   $(gabc $1 $2 $3)
   $(ggp)
 }
@@ -91,14 +91,16 @@ function grbh() {
 
 alias gfapu='gfa && gup'
 alias gfapm='gfa && gup && gcm'
-pullBranchThenMergeWithIt() {
+
+function pullBranchThenMergeWithIt() {
   currentBranch=$(git symbolic-ref --short HEAD)
   $(gco $1)
   $(ggl)
   $(gco $currentBranch)
   $(git merge $1)
 }
-pullBranchThenRebaseWithIt() {
+
+function pullBranchThenRebaseWithIt() {
   $(gsta)
   currentBranch=$(git symbolic-ref --short HEAD)
   $(gco $1)
@@ -107,10 +109,12 @@ pullBranchThenRebaseWithIt() {
   $(grb $1)
   $(gstaa)
 }
-pullMasThenMerge() {
+
+function pullMasThenMerge() {
   eval 'pullBranchThenMergeWithIt $(git_main_branch)'
 }
-pullMasThenRebase() {
+
+function pullMasThenRebase() {
   eval 'pullBranchThenRebaseWithIt $(git_main_branch)'
 }
 alias gpmm='pullMasThenMerge'
@@ -136,21 +140,22 @@ alias gstapua='gstapu && gstaa'
 function gstaa() {
   if [ -z "$1" ]; then
     $(git stash apply)
-  elif [ "$1" = <- >]; then
+  elif [[ "$1" =~ ^[0-9]+$ ]]; then
     git stash pop stash@{$1}
   else
     git stash apply $(git stash list | grep "$1" | cut -d: -f1 | head -n 1)
   fi
 }
-stashThenRunAndApply() {
+function stashThenRunAndApply() {
   $(gsta)
   eval $1
   $(gstaa)
 }
-stashMergeMas() {
+function stashMergeMas() {
   $(stashThenRunAndApply pullMasThenMerge)
 }
-stashRebaseMas() {
+
+function stashRebaseMas() {
   $(stashThenRunAndApply pullMasThenRebase)
 }
 alias gstamm='stashMergeMas'
@@ -165,9 +170,14 @@ alias deleteMerged='git branch --merged | egrep -v "(^\*|master|main|dev)" | xar
 alias gdm='deleteMerged'
 
 ### Branches
+function gco() {
+  git checkout "$@"
+}
+compdef git_local_branches gco
+
 function gcob() {
   if [[ -z "$1" ]]; then
-    echo "Usage: gocb <branch-name>"
+    echo "Usage: gcob <branch-name>"
     return 1
   fi
 
@@ -176,31 +186,28 @@ function gcob() {
     git checkout "$1"
   fi
 }
-compdef _git gocb=git-checkout
+compdef _git gcob=git-checkout
 
-feat() {
+function gcbft() { # feat
   eval 'gcb feat/$1'
 }
-fix() {
+function gcbfx() { # fix
   eval 'gcb fix/$1'
 }
-chore() {
+function gcbch() { # chore
   eval 'gcb chore/$1'
 }
-refactor() {
+function gcbrf() { # refactor
   eval 'gcb refactor/$1'
 }
-# docs() {
-#   eval 'gcb docs/$1'
-# }
-style() {
+function gcbdc() { # docs
+  eval 'gcb docs/$1'
+}
+function gcbst() { # style
   eval 'gcb style/$1'
 }
-# test() {
-#   eval 'gcb test/$1'
-# }
-gcoo() {
-  eval 'gco zl-$1'
+function gcbts() { # test
+  eval 'gcb test/$1'
 }
 
 ### Revert and log
@@ -240,23 +247,35 @@ function ggp() {
 #   git config --global core.excludesfile '~/.config/git/.gitignore_global'
 # }
 
+function searchGitLogs() {
+  local string="$1"
+
+  git log -S "$string" --source --all --patch --color | less -R
+}
+
+###
 ### FZF-based git helpers
-fcoc() {
+###
+
+# fcoc - checkout git commit from fzf list (like fco but for commits)
+function fcoc() {
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
     commit=$(echo "$commits" | fzf --tac +s +m -e) &&
     git checkout $(echo "$commit" | sed "s/ .*//")
 }
+
 # fbr - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
-fbr() {
+function fbr() {
   local branches branch
   branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
     branch=$(echo "$branches" |
       fzf-tmux -d $((2 + $(wc -l <<<"$branches"))) +m) &&
     git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
+
 # fco_preview - checkout git branch/tag, with a preview showing the commits between the tag/branch and HEAD
-fco_preview() {
+function fco_preview() {
   local tags branches target
   branches=$(
     git --no-pager branch --all \
@@ -276,20 +295,22 @@ fco_preview() {
   ) || return
   git checkout $(awk '{print $2}' <<<"$target")
 }
+
 # fcoc_preview - checkout git commit with previews
-fcoc_preview() {
+function fcoc_preview() {
   local commit
   commit=$(glNoGraph |
     fzf --no-sort --reverse --tiebreak=index --no-multi \
       --ansi --preview="$_viewGitLogLine") &&
     git checkout $(echo "$commit" | sed "s/ .*//")
 }
+
 # fstash - easier way to deal with stashes
 # type fstash to get a list of your stashes
 # enter shows you the contents of the stash
 # ctrl-d shows a diff of the stash against your current HEAD
 # ctrl-b checks the stash out as a branch, for easier merging
-fstash() {
+function fstash() {
   local out q k sha
   while out=$(
     git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |

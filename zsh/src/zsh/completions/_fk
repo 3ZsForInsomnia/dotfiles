@@ -1,0 +1,17 @@
+#compdef fk
+
+# Handle fk prefix completion
+local -a commands
+commands=(
+  'fkcm:Browse config maps'
+  'fkctx:Browse and switch contexts'
+  'fkd:Browse deployments interactively'
+  'fkjob:Browse jobs'
+  'fkns:Browse and switch namespaces'
+  'fkp:Browse and manage pods'
+  'fks:Browse and manage services'
+  'fksecret:Browse secrets'
+  'fksvc:Browse services interactively'
+)
+
+_describe 'kubernetes fk commands' commands

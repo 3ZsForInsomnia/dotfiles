@@ -38,17 +38,15 @@ Focus on being thorough and questioning everything to prevent gaps, ambiguities,
 ]]
 
 return {
-  {
-    strategy = "chat",
-    description = "Let's tell a fantastic and wonderful story together",
-    opts = {
-      index = 2,
-      is_slash_cmd = true,
-      auto_submit = false,
-      short_name = "story_writing",
-    },
-    prompts = {
-      { role = "user", content = storyWritingText },
-    },
+  strategy = "chat",
+  description = "Let's tell a fantastic and wonderful story together",
+  opts = {
+    index = 2,
+    is_slash_cmd = true,
+    auto_submit = false,
+    short_name = "story_writing",
+  },
+  prompts = {
+    { role = "user", content = storyWritingText },
   },
 }

@@ -4,7 +4,7 @@ _reveal_cmd_alias=""
 typeset -A _alias_cache
 
 # Reveal Executed Alias - optimized version
-alias_for() {
+function alias_for() {
   # Skip commands with punctuation (faster check)
   [[ $1 == *[[:punct:]]* ]] && return
   
@@ -34,7 +34,7 @@ alias_for() {
   [[ -n "$result" ]] && print -r -- "$result ${2}"
 }
 
-expand_command_line() {
+function expand_command_line() {
   # Extract first word without invoking awk
   local first rest
   first="${1%% *}"
@@ -48,7 +48,7 @@ expand_command_line() {
   [[ -n $_reveal_cmd_alias ]] && print -r -- "${T_GREEN}❯ ${T_YELLOW}${_reveal_cmd_alias}${F_RESET}"
 }
 
-pre_validation() {
+function pre_validation() {
   [[ $# -eq 0 ]] && return
   expand_command_line "$@"
 }

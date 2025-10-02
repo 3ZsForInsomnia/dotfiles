@@ -1,0 +1,6 @@
+#compdef fbr fcoc ftco fbremote fcom fgdiff fgsearch fstash ftag ftagco fwt fbisect fcpick fcpicklog
+
+# Individual git FZF functions - no parameter completion needed
+# These functions are interactive and don't take meaningful parameters
+
+return 0

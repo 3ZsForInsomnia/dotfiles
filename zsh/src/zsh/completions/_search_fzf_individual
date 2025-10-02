@@ -1,0 +1,6 @@
+#compdef fef ftags fcdf fda fbm fkill fkillport flp fenv frg
+
+# Individual search FZF functions - no parameter completion needed  
+# These functions are interactive and don't take meaningful parameters
+
+return 0

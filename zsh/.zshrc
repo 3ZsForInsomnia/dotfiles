@@ -31,7 +31,7 @@ ZSH_DISABLE_COMPFIX=true
 
 function fancy_history_widget() {
   BUFFER=$(
-    \history 1 | awk '{$1=""; print substr($0,2)}' |
+    \history -r 1 | awk '{$1=""; print substr($0,2)}' |
       fzf --reverse \
         --prompt="History> " \
         --preview '~/src/zsh/tools/pretty-hist-preview.zsh {}'
@@ -71,3 +71,21 @@ eval "$(zoxide init zsh)"
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
 zstyle ':completion:*' menu select
+
+# Completion styling - show descriptions properly
+zstyle ':completion:*' format '%B-- %d --%b'
+zstyle ':completion:*:descriptions' format '%B-- %d --%b'
+zstyle ':completion:*:warnings' format '%BNo matches found%b'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# Show descriptions on separate line
+zstyle ':completion:*' auto-description 'specify: %d'
+
+# Force reload completions (useful for testing)
+alias reload-completions='autoload -U compinit && compinit'
+
+# Load help system
+source "$ZSH_CONFIG_DIR/tools/help/main.zsh" 2>/dev/null

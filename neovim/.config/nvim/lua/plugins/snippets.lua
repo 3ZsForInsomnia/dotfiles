@@ -160,13 +160,13 @@ return {
     build = g.lazyvim_blink_main and "cargo build --release",
     opts_extend = {
       "sources.completion.enabled_providers",
-      "sources.compat",
       "sources.default",
     },
     dependencies = {
       "L3MON4D3/LuaSnip",
       "disrupted/blink-cmp-conventional-commits",
       "bydlw98/blink-cmp-env",
+      "giuxtaposition/blink-cmp-copilot",
       "moyiz/blink-emoji.nvim",
       "Kaiser-Yang/blink-cmp-git",
       {
@@ -282,8 +282,7 @@ return {
           },
         },
         ghost_text = {
-          enabled = g.ai_cmp,
-          auto_show = true,
+          enabled = true,
         },
       },
       sources = {

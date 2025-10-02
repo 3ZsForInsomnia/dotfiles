@@ -36,30 +36,35 @@ function lazyLoad() {
       local func_name="_check_directory_trigger_${safe_trigger}"
       
       # Define or update the function
+      # Use here-document to avoid complex quoting
       eval "$func_name() {
-        if [[ \"\$PWD\" == \"$trigger_value\"* ]]; then
-          local file_list=\"${(P)handler_var}\"
+$(cat <<EOF
+        if [[ "\$PWD" == "$trigger_value"* ]]; then
+          local file_list="${(P)handler_var}"
           
           local IFS=':'
           for file in \${=file_list}; do
-            local load_key=\"\${file//[^a-zA-Z0-9]/_}\"
-            local loaded_var=\"LAZYLOAD_LOADED_\$load_key\"
+            local load_key="\${file//[^a-zA-Z0-9]/_}"
+            local loaded_var="LAZYLOAD_LOADED_\$load_key"
             
-            if [[ -z \"\${(P)loaded_var}\" ]]; then
-              # echo \"🔄 Loading: \$file\"
-              if [[ -f \"\$file\" ]]; then
-                source \"\$file\"
-                eval \"\$loaded_var=1\"
+            if [[ -z "\${(P)loaded_var}" ]]; then
+              # echo "🔄 Loading: \$file"
+              if [[ -f "\$file" ]]; then
+                source "\$file"
+                eval "\$loaded_var=1"
               else
-                echo \"⚠️ Error: File doesn't exist: \$file\"
+                echo "⚠️ Error: File doesn't exist: \$file"
               fi
             fi
           done
         fi
+EOF
+)
       }"
       
       # Register the hook if not already done
-      if ! (( ${chpwd_functions[(I)$func_name]} )); then
+      # Use faster check - avoid array search
+      if [[ ${chpwd_functions[(r)$func_name]} != $func_name ]]; then
         add-zsh-hook chpwd "$func_name"
       fi
       
@@ -71,31 +76,36 @@ function lazyLoad() {
       local func_name="_check_command_trigger_${safe_trigger}"
       
       # Define or update the function
+      # Use here-document to avoid complex quoting
       eval "$func_name() {
-        local cmd=\"\$1\"
-        if [[ \"\$cmd\" == \"$trigger_value\"* ]]; then
-          local file_list=\"${(P)handler_var}\"
+$(cat <<EOF
+        local cmd="\$1"
+        if [[ "\$cmd" == "$trigger_value"* ]]; then
+          local file_list="${(P)handler_var}"
           
           local IFS=':'
           for file in \${=file_list}; do
-            local load_key=\"\${file//[^a-zA-Z0-9]/_}\"
-            local loaded_var=\"LAZYLOAD_LOADED_\$load_key\"
+            local load_key="\${file//[^a-zA-Z0-9]/_}"
+            local loaded_var="LAZYLOAD_LOADED_\$load_key"
             
-            if [[ -z \"\${(P)loaded_var}\" ]]; then
-              # echo \"🔄 Loading: \$file\"
-              if [[ -f \"\$file\" ]]; then
-                source \"\$file\"
-                eval \"\$loaded_var=1\"
+            if [[ -z "\${(P)loaded_var}" ]]; then
+              # echo "🔄 Loading: \$file"
+              if [[ -f "\$file" ]]; then
+                source "\$file"
+                eval "\$loaded_var=1"
               else
-                echo \"⚠️ Error: File doesn't exist: \$file\"
+                echo "⚠️ Error: File doesn't exist: \$file"
               fi
             fi
           done
         fi
+EOF
+)
       }"
       
       # Register the hook if not already done
-      if ! (( ${preexec_functions[(I)$func_name]} )); then
+      # Use faster check - avoid array search  
+      if [[ ${preexec_functions[(r)$func_name]} != $func_name ]]; then
         add-zsh-hook preexec "$func_name"
       fi
       ;;
@@ -129,14 +139,20 @@ function lazyLoadMulti() {
 function compile_large_zsh_files() {
   local size_threshold=2560 # This in in bytes (2.5 KB)
   
-  echo "Compiling large .zsh files..."
+  # Run silently to avoid startup noise
+  # echo "Compiling large .zsh files..."
   
-  fd -H -t f "\.zsh$" "$ZSH_CONFIG_DIR" | while read -r file; do
+  # Use faster approach - avoid subshell pipe
+  local -a zsh_files
+  zsh_files=($ZSH_CONFIG_DIR/**/*.zsh(N))
+  
+  local file
+  for file in "${zsh_files[@]}"; do
     local file_size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null)
     
     if [[ $file_size -gt $size_threshold ]]; then
       if [[ ! -f "${file}.zwc" || "$file" -nt "${file}.zwc" ]]; then
-        echo "Compiling large file: $file ($file_size bytes)"
+        # echo "Compiling large file: $file ($file_size bytes)"
         zcompile "$file"
       fi
     fi
@@ -156,7 +172,10 @@ zsh-defer source "$ZSH_CONFIG_DIR/tools/zsh-autosuggestions/zsh-autosuggestions.
 zsh-defer source "$ZSH_CONFIG_DIR/tools/fast-syntax-highlight/fast-syntax-highlighting.plugin.zsh"
 zsh-defer source "$ZSH_CONFIG_DIR/tools/zsh-you-should-use/you-should-use.plugin.zsh"
 zsh-defer source "$ZSH_CONFIG_DIR/tools/zshmarks/zshmarks.plugin.zsh"
+zsh-defer compile_large_zsh_files
 
 source "$ZSH_CONFIG_DIR/tools/.reveal-alias.zsh"
 source "$ZSH_CONFIG_DIR/tools/.omz-git-completions.zsh"
 source "$ZSH_CONFIG_DIR/aliases/index.zsh"
+
+source "$ZSH_CONFIG_DIR/tools/help/zh.zsh"

@@ -505,6 +505,7 @@ return {
   },
   {
     "3ZsForInsomnia/pacer.nvim",
+    -- dir = "~/src/pacer.nvim",
     cmd = "PacerStart",
     opts = {
       presets = {

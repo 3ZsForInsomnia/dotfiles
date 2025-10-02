@@ -90,9 +90,12 @@ return {
   },
   {
     dir = "~/src/jira-ai",
+    -- "3ZsForInsomnia/jira-ai",
     event = "VeryLazy",
     config = true,
     opts = {
+      log_level = "INFO",
+      picker = "snacks",
       jira_projects = split_env_var("JIRA_PROJECTS", ","),
       jira_base_url = os.getenv("JIRA_BASE_URL"),
       jira_email_address = os.getenv("JIRA_EMAIL_ADDRESS"),
@@ -125,6 +128,7 @@ return {
   {
     "numToStr/Comment.nvim",
     config = true,
+    event = "VeryLazy",
   },
   {
     "liuchengxu/vista.vim",
@@ -285,6 +289,7 @@ return {
   },
   {
     "HakonHarnes/img-clip.nvim",
+    event = "VeryLazy",
     opts = {
       filetypes = {
         codecompanion = {

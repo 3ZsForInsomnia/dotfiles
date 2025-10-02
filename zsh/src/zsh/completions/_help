@@ -1,0 +1,16 @@
+#compdef zhelp
+
+# Load completion from help system
+if [[ -f "$ZSH_CONFIG_DIR/tools/help/completion.zsh" ]]; then
+  source "$ZSH_CONFIG_DIR/tools/help/completion.zsh"
+  _help_completion "$@"
+else
+  # Fallback basic completion
+  local -a basic_options
+  basic_options=(
+    '--rebuild-cache:Rebuild function cache'
+    '--show-cache:Show cache information'
+    '--tags:List all available tags'
+  )
+  _describe 'help options' basic_options
+fi
