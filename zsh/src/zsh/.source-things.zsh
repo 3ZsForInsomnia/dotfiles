@@ -168,7 +168,7 @@ source "$ZSH_CONFIG_DIR/.path-modifiers.zsh"
 source "$ZSH_CONFIG_DIR/.env"
 
 zsh-defer setup_deferred_env
-# zsh-defer source "$ZSH_CONFIG_DIR/tools/zsh-autosuggestions/zsh-autosuggestions.zsh"
+zsh-defer source "$ZSH_CONFIG_DIR/tools/zsh-autosuggestions/zsh-autosuggestions.zsh"
 zsh-defer source "$ZSH_CONFIG_DIR/tools/fast-syntax-highlight/fast-syntax-highlighting.plugin.zsh"
 zsh-defer source "$ZSH_CONFIG_DIR/tools/zsh-you-should-use/you-should-use.plugin.zsh"
 zsh-defer source "$ZSH_CONFIG_DIR/tools/zshmarks/zshmarks.plugin.zsh"
