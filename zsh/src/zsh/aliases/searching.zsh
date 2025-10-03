@@ -22,7 +22,7 @@ alias ff='f | fzz'
 # Searches by file extension
 function fef() {
   result=$(fd -e "$1" | fzf -m --ansi --preview 'bat --style=numbers --color=always --line-range :500 {}')
-  echo "$result" | clip
+  echo "$result" | copy
   echo "$result"
 }
 
@@ -76,8 +76,8 @@ function fcdf() {
   local target
   target=$(eval "$fd_cmd" 2>/dev/null |
     fzf --preview="_fzf_file_preview {}" \
-        --preview-window="right:60%:wrap" \
-        --header="Enter=cd to file/dir, Ctrl-S=inspect, Alt-V=open in nvim")
+      --preview-window="right:60%:wrap" \
+      --header="Enter=cd to file/dir, Ctrl-S=inspect, Alt-V=open in nvim")
 
   if [[ -n "$target" ]]; then
     if [[ -d "$target" ]]; then
@@ -124,16 +124,16 @@ function fkill() {
 
   local pid
   if [ "$UID" != "0" ]; then
-    pid=$(ps -f -u $UID | sed 1d | 
+    pid=$(ps -f -u $UID | sed 1d |
       fzf -m --preview="_fzf_process_preview {}" \
-          --preview-window="right:60%:wrap" \
-          --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" | 
+        --preview-window="right:60%:wrap" \
+        --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" |
       awk '{print $2}')
   else
-    pid=$(ps -ef | sed 1d | 
+    pid=$(ps -ef | sed 1d |
       fzf -m --preview="_fzf_process_preview {}" \
-          --preview-window="right:60%:wrap" \
-          --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" | 
+        --preview-window="right:60%:wrap" \
+        --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" |
       awk '{print $2}')
   fi
 
@@ -167,9 +167,9 @@ function fkillport() {
 
   pid=$(echo "$procs" | sed 1d |
     fzf -m --preview="_fzf_process_preview {}" \
-        --preview-window="right:60%:wrap" \
-        --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" \
-        --prompt="Select process to kill: " |
+      --preview-window="right:60%:wrap" \
+      --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" \
+      --prompt="Select process to kill: " |
     awk '{print $2}' | sort -u | tr '\n' ' ' | xargs)
 
   if [[ -n "$pid" ]]; then
@@ -199,11 +199,11 @@ function fenv() {
   fi
 
   local out
-  out=$(env | sort | 
+  out=$(env | sort |
     fzf --preview="echo {}" \
-        --preview-window="up:3:wrap" \
-        --header="Enter=copy to clipboard, Ctrl-C=cancel")
-  echo "$out" | clip
+      --preview-window="up:3:wrap" \
+      --header="Enter=copy to clipboard, Ctrl-C=cancel")
+  echo "$out" | copy
   echo "$out"
 }
 

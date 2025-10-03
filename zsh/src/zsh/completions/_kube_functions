@@ -1,0 +1,296 @@
+#compdef getKDepls delKDepl findAndDelKDepl kdscale get_pods view_kpod_logs k kpf
+
+# Load kubernetes completion cache system
+autoload -Uz "${0:h}/_kube_cache_system" 2>/dev/null || true
+
+# Function to provide smart argument completion for kubernetes functions
+function _kube_functions_complete_args() {
+  local cmd="$1"
+  
+  # Only provide completion if kubectl is available
+  if ! command -v kubectl >/dev/null 2>&1; then
+    return 1
+  fi
+  
+  case "$cmd" in
+    view_kpod_logs|delKDepl|kdscale)
+      # These functions take service/env pattern: <service> <env> [deployment]
+      if (( CURRENT == 2 )); then
+        # First argument: service name - no completion, user-specific
+        _message "service name"
+        return 0
+      elif (( CURRENT == 3 )); then
+        # Second argument: environment
+        local -a environments
+        environments=('dev' 'qat' 'uat' 'preprod' 'prod')
+        _describe 'environments' environments
+        return 0
+      elif (( CURRENT == 4 && "$cmd" != "view_kpod_logs" )); then
+        # Third argument for delKDepl/kdscale: deployment name
+        local service="$words[2]"
+        local env="$words[3]"
+        local likely_namespace="${env}-${service}"
+        
+        local -a deployments
+        while IFS= read -r deployment; do
+          [[ -n "$deployment" ]] || continue
+          deployments+=("$deployment")
+        done < <(_kube_comp_deployments "$likely_namespace" 2>/dev/null)
+        
+        if (( ${#deployments[@]} > 0 )); then
+          _describe 'deployments' deployments
+          return 0
+        fi
+      elif (( CURRENT == 4 && "$cmd" == "view_kpod_logs" )); then
+        # Fourth argument for view_kpod_logs: pod name (optional)
+        local service="$words[2]"
+        local env="$words[3]"
+        local likely_namespace="${env}-${service}"
+        
+        local -a pods
+        while IFS= read -r pod; do
+          [[ -n "$pod" ]] || continue
+          pods+=("$pod")
+        done < <(_kube_comp_pods "$likely_namespace" 2>/dev/null)
+        
+        if (( ${#pods[@]} > 0 )); then
+          _describe 'pods' pods
+          return 0
+        fi
+      elif (( CURRENT == 5 && "$cmd" == "view_kpod_logs" )); then
+        # Fifth argument for view_kpod_logs: container name (optional)
+        local service="$words[2]"
+        local env="$words[3]"
+        local pod="$words[4]"
+        local likely_namespace="${env}-${service}"
+        
+        if [[ -n "$pod" ]]; then
+          local -a containers
+          while IFS= read -r container; do
+            [[ -n "$container" ]] || continue
+            containers+=("$container")
+          done < <(_kube_comp_containers "$likely_namespace" "$pod" 2>/dev/null)
+          
+          if (( ${#containers[@]} > 0 )); then
+            _describe 'containers' containers
+            return 0
+          fi
+        fi
+        _message "container name (optional)"
+        return 0
+      fi
+      ;;
+    
+    delKDepl|findAndDelKDepl|kdscale)
+      # Legacy: Direct deployment completion (if not using service/env pattern)
+      if (( CURRENT == 2 )); then
+        local -a deployments
+        while IFS= read -r deployment; do
+          [[ -n "$deployment" ]] || continue
+          deployments+=("$deployment")
+        done < <(_kube_comp_deployments 2>/dev/null)
+        
+        if (( ${#deployments[@]} > 0 )); then
+          _describe 'deployments' deployments
+          return 0
+        fi
+      fi
+      ;;
+    
+    get_pods)
+      # get_pods function takes namespace as argument
+      if (( CURRENT == 2 )); then
+        local -a namespaces
+        while IFS= read -r namespace; do
+          [[ -n "$namespace" ]] || continue
+          namespaces+=("$namespace")
+        done < <(_kube_comp_namespaces 2>/dev/null)
+        
+        if (( ${#namespaces[@]} > 0 )); then
+          _describe 'namespaces' namespaces
+          return 0
+        fi
+      fi
+      ;;
+    
+    kpf)
+      # Port forward - complete with services, then pods
+      if (( CURRENT == 2 )); then
+        local -a services
+        while IFS= read -r service; do
+          [[ -n "$service" ]] || continue
+          services+=("service/$service")
+        done < <(_kube_comp_services 2>/dev/null)
+        
+        local -a pods
+        while IFS= read -r pod; do
+          [[ -n "$pod" ]] || continue
+          pods+=("pod/$pod")
+        done < <(_kube_comp_pods 2>/dev/null)
+        
+        if (( ${#services[@]} > 0 || ${#pods[@]} > 0 )); then
+          _alternative \
+            'services:services:((${services}))' \
+            'pods:pods:((${pods}))'
+          return 0
+        fi
+      fi
+      ;;
+    
+    k)
+      # kubectl alias - handle common subcommands
+      if (( CURRENT == 2 )); then
+        local -a kubectl_commands
+        kubectl_commands=(
+          'get:Display resources'
+          'describe:Show detailed resource info'
+          'logs:Show pod logs'
+          'exec:Execute command in pod'
+          'port-forward:Forward local port to pod'
+          'apply:Apply configuration'
+          'delete:Delete resources'
+          'scale:Scale deployments'
+        )
+        _describe 'kubectl commands' kubectl_commands
+        return 0
+      elif (( CURRENT == 3 )); then
+        # Handle resource types for common commands
+        case "$words[2]" in
+          get|describe|delete)
+            local -a resource_types
+            resource_types=(
+              'pods:Show pods'
+              'services:Show services'
+              'deployments:Show deployments'
+              'namespaces:Show namespaces'
+              'configmaps:Show config maps'
+              'secrets:Show secrets'
+            )
+            _describe 'resource types' resource_types
+            return 0
+            ;;
+          logs|exec)
+            # Complete with pod names
+            local -a pods
+            while IFS= read -r pod; do
+              [[ -n "$pod" ]] || continue
+              pods+=("$pod")
+            done < <(_kube_comp_pods 2>/dev/null)
+            
+            if (( ${#pods[@]} > 0 )); then
+              _describe 'pods' pods
+              return 0
+            fi
+            ;;
+          port-forward)
+            # Complete with services and pods
+            local -a services pods
+            while IFS= read -r service; do
+              [[ -n "$service" ]] || continue
+              services+=("service/$service")
+            done < <(_kube_comp_services 2>/dev/null)
+            
+            while IFS= read -r pod; do
+              [[ -n "$pod" ]] || continue
+              pods+=("pod/$pod")
+            done < <(_kube_comp_pods 2>/dev/null)
+            
+            if (( ${#services[@]} > 0 || ${#pods[@]} > 0 )); then
+              _alternative \
+                'services:services:((${services}))' \
+                'pods:pods:((${pods}))'
+              return 0
+            fi
+            ;;
+        esac
+      elif (( CURRENT == 4 )); then
+        # Handle specific resource names
+        case "$words[2]" in
+          get|describe|delete)
+            case "$words[3]" in
+              pods)
+                local -a pods
+                while IFS= read -r pod; do
+                  [[ -n "$pod" ]] || continue
+                  pods+=("$pod")
+                done < <(_kube_comp_pods 2>/dev/null)
+                
+                if (( ${#pods[@]} > 0 )); then
+                  _describe 'pods' pods
+                  return 0
+                fi
+                ;;
+              services)
+                local -a services
+                while IFS= read -r service; do
+                  [[ -n "$service" ]] || continue
+                  services+=("$service")
+                done < <(_kube_comp_services 2>/dev/null)
+                
+                if (( ${#services[@]} > 0 )); then
+                  _describe 'services' services
+                  return 0
+                fi
+                ;;
+              deployments)
+                local -a deployments
+                while IFS= read -r deployment; do
+                  [[ -n "$deployment" ]] || continue
+                  deployments+=("$deployment")
+                done < <(_kube_comp_deployments 2>/dev/null)
+                
+                if (( ${#deployments[@]} > 0 )); then
+                  _describe 'deployments' deployments
+                  return 0
+                fi
+                ;;
+              namespaces)
+                local -a namespaces
+                while IFS= read -r namespace; do
+                  [[ -n "$namespace" ]] || continue
+                  namespaces+=("$namespace")
+                done < <(_kube_comp_namespaces 2>/dev/null)
+                
+                if (( ${#namespaces[@]} > 0 )); then
+                  _describe 'namespaces' namespaces
+                  return 0
+                fi
+                ;;
+            esac
+            ;;
+        esac
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Main completion function
+function _kube_functions() {
+  local -a kube_commands
+  kube_commands=(
+    'getKDepls:Get kubernetes deployments'
+    'delKDepl:Delete kubernetes deployment'
+    'findAndDelKDepl:Find and delete kubernetes deployment'
+    'kdscale:Scale kubernetes deployment'
+    'get_pods:Get pods in namespace'
+    'view_kpod_logs:View kubernetes pod logs'
+    'k:kubectl alias'
+    'kpf:kubectl port-forward alias'
+  )
+
+  # If no arguments yet, show command descriptions for zh help system
+  if (( CURRENT == 1 )); then
+    _describe 'kubernetes commands' kube_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _kube_functions_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'kubernetes commands' kube_commands
+    fi
+  fi
+}
+
+# The #compdef directive automatically registers this function

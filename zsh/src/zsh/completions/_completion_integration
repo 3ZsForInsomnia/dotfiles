@@ -1,0 +1,187 @@
+# Completion Integration and Enhancements
+# This file provides enhanced completion integrations and fallbacks
+
+# Enhanced completion for processes and ports
+function _enhanced_process_completion() {
+  local -a processes
+  
+  # Get process list with better formatting
+  while IFS= read -r line; do
+    [[ -n "$line" ]] && processes+=("$line")
+  done < <(ps -eo pid,ppid,user,comm,args --no-headers 2>/dev/null | \
+    awk '{printf "%s:%s (%s) %s\n", $1, $4, $3, substr($0, index($0,$5))}' | \
+    head -50)
+  
+  if (( ${#processes[@]} > 0 )); then
+    _describe 'processes' processes
+    return 0
+  fi
+  return 1
+}
+
+# Enhanced completion for ports
+function _enhanced_port_completion() {
+  local -a ports
+  
+  # Get listening ports
+  while IFS= read -r line; do
+    [[ -n "$line" ]] && ports+=("$line")
+  done < <(lsof -iTCP -sTCP:LISTEN -n -P 2>/dev/null | \
+    awk 'NR>1 {print $9}' | \
+    sed 's/.*://' | \
+    sort -n | \
+    uniq)
+  
+  if (( ${#ports[@]} > 0 )); then
+    _describe 'listening ports' ports
+    return 0
+  fi
+  
+  # Fallback to common ports
+  local -a common_ports
+  common_ports=(
+    '22:SSH'
+    '80:HTTP'
+    '443:HTTPS'
+    '3000:Development server'
+    '3001:Development server'
+    '4000:Development server'
+    '5000:Development server'
+    '5432:PostgreSQL'
+    '6379:Redis'
+    '8000:HTTP alternate'
+    '8080:HTTP alternate'
+    '8443:HTTPS alternate'
+    '9000:Development server'
+  )
+  _describe 'common ports' common_ports
+}
+
+# Completion for database-related functions
+function _database_completion() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    psql)
+      # PostgreSQL completion
+      if (( CURRENT == 2 )); then
+        local -a psql_options
+        psql_options=(
+          '-h:hostname'
+          '-p:port'
+          '-U:username'
+          '-d:database'
+          '-c:command'
+          '-f:file'
+        )
+        _describe 'psql options' psql_options
+        return 0
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Completion for development tools
+function _dev_tools_completion() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    npm|yarn|pnpm)
+      # Node.js package managers
+      if (( CURRENT == 2 )); then
+        local -a npm_commands
+        npm_commands=(
+          'install:Install dependencies'
+          'run:Run script from package.json'
+          'start:Start the application'
+          'test:Run tests'
+          'build:Build the project'
+          'dev:Start development server'
+          'lint:Run linter'
+          'format:Format code'
+        )
+        _describe 'npm commands' npm_commands
+        return 0
+      elif (( CURRENT == 3 && "$words[2]" == "run" )); then
+        # Complete with package.json scripts
+        if [[ -f "package.json" ]]; then
+          local -a scripts
+          while IFS= read -r script; do
+            [[ -n "$script" ]] && scripts+=("$script")
+          done < <(jq -r '.scripts | keys[]' package.json 2>/dev/null)
+          
+          if (( ${#scripts[@]} > 0 )); then
+            _describe 'scripts' scripts
+            return 0
+          fi
+        fi
+      fi
+      ;;
+    
+    pip|pip3)
+      # Python package manager
+      if (( CURRENT == 2 )); then
+        local -a pip_commands
+        pip_commands=(
+          'install:Install packages'
+          'uninstall:Uninstall packages'
+          'list:List installed packages'
+          'show:Show package information'
+          'freeze:Output installed packages'
+          'search:Search packages'
+        )
+        _describe 'pip commands' pip_commands
+        return 0
+      fi
+      ;;
+    
+    go)
+      # Go commands
+      if (( CURRENT == 2 )); then
+        local -a go_commands
+        go_commands=(
+          'build:Compile packages and dependencies'
+          'run:Compile and run Go program'
+          'test:Test packages'
+          'get:Add dependencies to current module'
+          'mod:Module maintenance'
+          'fmt:Format Go source code'
+          'vet:Examine Go source code'
+        )
+        _describe 'go commands' go_commands
+        return 0
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Auto-load enhanced completions based on command availability
+function _auto_enhance_completions() {
+  # Only enhance if the command exists
+  local cmd="$1"
+  
+  if command -v "$cmd" >/dev/null 2>&1; then
+    case "$cmd" in
+      npm|yarn|pnpm|pip|pip3|go)
+        _dev_tools_completion "$cmd"
+        ;;
+      psql)
+        _database_completion "$cmd"
+        ;;
+    esac
+  fi
+}
+
+# Note: FZF-based functions (fkill, fkillport, fcdf, etc.) are intentionally 
+# not given completions since they provide their own interactive selection interface
+
+# Register completions for development tools if they exist
+for tool in npm yarn pnpm pip pip3 go psql; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    compdef "_auto_enhance_completions $tool" "$tool"
+  fi
+done

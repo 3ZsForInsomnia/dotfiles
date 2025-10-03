@@ -1,0 +1,109 @@
+#compdef gt gtc gtca gtd gtdr gtp ftag ftagco gtshow gtlog gtdiff gtnext
+
+# Load git completion cache system
+autoload -Uz "${0:h}/_git_cache_system" 2>/dev/null || true
+
+# Function to provide smart argument completion for git tag functions
+function _git_tags_complete_args() {
+  local cmd="$1"
+  
+  # Only provide argument completion if we're in a git repo and beyond the first argument
+  if (( CURRENT > 1 )) && git rev-parse --git-dir &>/dev/null 2>&1; then
+    case "$cmd" in
+      gtc|gtca)
+        # Create tag functions - second argument can be commit hash
+        if (( CURRENT == 2 )); then
+          # First argument: tag name (no completion, user creates it)
+          _message "tag name"
+          return 0
+        elif (( CURRENT == 3 )); then
+          # Second argument: commit hash (optional)
+          local -a commits descriptions
+          local commit desc
+          
+          if (( $+functions[_git_comp_commits] )); then
+            while IFS=':' read -r commit desc; do
+              [[ -n "$commit" ]] || continue
+              descriptions+=("$commit:$desc")
+            done < <(_git_comp_commits 2>/dev/null)
+            
+            if (( ${#descriptions[@]} > 0 )); then
+              _describe 'commits' descriptions
+              return 0
+            fi
+          fi
+        elif (( CURRENT == 4 && "$cmd" == "gtca" )); then
+          # Third argument for gtca: tag message (no completion)
+          _message "tag message"
+          return 0
+        fi
+        ;;
+      gtd|gtdr|gtshow|gtlog|ftagco)
+        # These functions take tag names as arguments
+        local -a tags
+        
+        # Use simple git command for tag completion
+        while IFS= read -r tag; do
+          [[ -n "$tag" ]] || continue
+          tags+=("$tag")
+        done < <(git tag --sort=-version:refname 2>/dev/null)
+        
+        if (( ${#tags[@]} > 0 )); then
+          _describe 'git tags' tags
+          return 0
+        fi
+        ;;
+      gtdiff)
+        # Tag diff can take two tags - complete both
+        local -a tags
+        
+        while IFS= read -r tag; do
+          [[ -n "$tag" ]] || continue
+          tags+=("$tag")
+        done < <(git tag --sort=-version:refname 2>/dev/null)
+        
+        if (( ${#tags[@]} > 0 )); then
+          _describe 'git tags' tags
+          return 0
+        fi
+        ;;
+    esac
+  fi
+  
+  # No specific argument completion available
+  return 1
+}
+
+# Main completion function
+function _git_tags() {
+  local -a git_commands
+  git_commands=(
+    'gt:List all tags'
+    'gtc:Create new tag'
+    'gtca:Create annotated tag'
+    'gtd:Delete local tag'
+    'gtdr:Delete remote tag'
+    'gtp:Push tags to remote'
+    'ftag:Interactive tag browser'
+    'ftagco:Interactive tag checkout'
+    'gtshow:Show tag information'
+    'gtlog:Show commits for tag'
+    'gtdiff:Compare tags'
+    'gtnext:Show next version tag'
+  )
+  
+  # If no arguments yet, show command descriptions for zh help system
+  if (( CURRENT == 1 )); then
+    _describe 'git tag commands' git_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _git_tags_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'git tag commands' git_commands
+    fi
+  fi
+}
+
+# Call the main function
+# The #compdef directive automatically registers this function

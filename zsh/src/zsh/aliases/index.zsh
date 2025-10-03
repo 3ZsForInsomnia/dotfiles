@@ -2,6 +2,7 @@ alias_path="$ZSH_CONFIG_DIR/aliases"
 
 sources=(
   "azure.zsh"
+  "compilation.zsh"
   "dash-g.zsh"
   "db.zsh"
   "docker.zsh"
@@ -33,5 +34,8 @@ for source_file in "${sources[@]}"; do
   fi
 done
 
-lazyLoad directory "$HOME/src" "$alias_path/git/index.zsh"
-lazyLoad directory "$W_PATH" "$alias_path/work/index.zsh" "Lazy load work environment utils"
+lazyLoad directory "$HOME/src" "$alias_path/git/index.zsh" "" true
+lazyLoad directory "$W_PATH" "$alias_path/work/index.zsh" "Lazy load work environment utils" true
+
+# Defer the initial directory check to avoid startup penalty
+zsh-defer lazyLoadDeferredCheck

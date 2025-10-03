@@ -1,0 +1,38 @@
+#compdef gbs gbg gbb gbr gbsk gbst gbsa fbisect gbsl gbsv gbshelp gbsquick gbstag
+
+
+
+# Main completion function
+function _git_bisect() {
+  local -a git_commands
+  git_commands=(
+    'gbs:Start git bisect'
+    'gbg:Mark current commit as good'
+    'gbb:Mark current commit as bad'
+    'gbr:Reset/stop bisect'
+    'gbsk:Skip current commit in bisect'
+    'gbst:Show bisect status'
+    'gbsa:Automated bisect with script'
+    'fbisect:Interactive bisect browser'
+    'gbsl:Show bisect log'
+    'gbsv:Visualize bisect process'
+    'gbshelp:Show bisect help'
+    'gbsquick:Quick bisect setup'
+    'gbstag:Bisect between tags'
+  )
+  
+  # If no arguments yet, show command descriptions for zh help system
+  if (( CURRENT == 1 )); then
+    _describe 'git bisect commands' git_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _git_bisect_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'git bisect commands' git_commands
+    fi
+  fi
+}
+
+# Call the main function
+# The #compdef directive automatically registers this function

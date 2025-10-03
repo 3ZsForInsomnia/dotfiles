@@ -1,0 +1,155 @@
+#compdef getConfigsFor getConfig getConfigGeneric setConfig setConfigGeneric setConfigWithAttributionAndReason
+
+# Azure Key Vault completion system for configuration management functions
+
+# Function to get Azure Key Vault names (if az cli is available)
+function _azure_key_vaults() {
+  if ! command -v az >/dev/null 2>&1; then
+    return 1
+  fi
+  
+  local -a vaults
+  while IFS= read -r vault; do
+    [[ -n "$vault" ]] && vaults+=("$vault")
+  done < <(az keyvault list --query '[].name' -o tsv 2>/dev/null)
+  
+  if (( ${#vaults[@]} > 0 )); then
+    _describe 'key vaults' vaults
+    return 0
+  fi
+  return 1
+}
+
+# Function to get secrets from a specific vault
+function _azure_vault_secrets() {
+  local vault="$1"
+  
+  if [[ -z "$vault" ]] || ! command -v az >/dev/null 2>&1; then
+    return 1
+  fi
+  
+  local -a secrets
+  while IFS= read -r secret; do
+    [[ -n "$secret" ]] && secrets+=("$secret")
+  done < <(az keyvault secret list --vault-name "$vault" --query '[].name' -o tsv 2>/dev/null)
+  
+  if (( ${#secrets[@]} > 0 )); then
+    _describe 'secrets' secrets
+    return 0
+  fi
+  return 1
+}
+
+# Smart argument completion for Azure functions
+function _azure_functions_complete_args() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    getConfigsFor|getConfigGeneric|setConfigGeneric)
+      # These functions take service/env pattern: <service> <env>
+      if (( CURRENT == 2 )); then
+        # First argument: service name - no completion, user-specific
+        _message "service name"
+        return 0
+      elif (( CURRENT == 3 )); then
+        # Second argument: environment
+        local -a environments
+        environments=('dev' 'qat' 'uat' 'preprod' 'prod')
+        _describe 'environments' environments
+        return 0
+      elif (( CURRENT == 4 )); then
+        if [[ "$cmd" == "setConfigGeneric" ]]; then
+          # Third argument for setConfigGeneric: is_fe (boolean)
+          local -a is_fe_options
+          is_fe_options=('true:Frontend configuration' 'false:Backend configuration')
+          _describe 'frontend/backend' is_fe_options
+          return 0
+        fi
+      elif (( CURRENT == 5 )); then
+        if [[ "$cmd" == "setConfigGeneric" ]]; then
+          # Fourth argument for setConfigGeneric: config_type (backend only)
+          if [[ "$words[4]" == "false" ]]; then
+            local -a config_types
+            config_types=(
+              'base:conf.base.<env>.json (default)'
+              'local:conf.local.<env>.json'
+              'default:conf.<env>.json'
+            )
+            _describe 'config types' config_types
+            return 0
+          fi
+        fi
+      fi
+      ;;
+    
+    getConfig|setConfig)
+      # Direct vault/secret functions
+      if (( CURRENT == 2 )); then
+        # First argument: secret name
+        _message "secret name"
+        return 0
+      elif (( CURRENT == 3 )); then
+        # Second argument: vault name
+        _azure_key_vaults
+        return 0
+      elif (( CURRENT == 4 )); then
+        # Third argument: file path
+        _files
+        return 0
+      elif (( CURRENT == 5 && "$cmd" == "setConfig" )); then
+        # Fourth argument for setConfig: reason (optional)
+        _message "reason for change (optional)"
+        return 0
+      fi
+      ;;
+    
+    setConfigWithAttributionAndReason)
+      if (( CURRENT == 2 )); then
+        # First argument: config name
+        _message "config name"
+        return 0
+      elif (( CURRENT == 3 )); then
+        # Second argument: vault name
+        _azure_key_vaults
+        return 0
+      elif (( CURRENT == 4 )); then
+        # Third argument: file path
+        _files
+        return 0
+      elif (( CURRENT == 5 )); then
+        # Fourth argument: reason
+        _message "reason for change"
+        return 0
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Main completion function
+function _azure_functions() {
+  local -a azure_commands
+  azure_commands=(
+    'getConfigsFor:Get configurations with version selection'
+    'getConfig:Download secret from vault to file'
+    'getConfigGeneric:Download configuration (service/env aware)'
+    'setConfig:Upload configuration to vault'
+    'setConfigGeneric:Upload configuration (service/env aware)'
+    'setConfigWithAttributionAndReason:Upload with attribution and reason'
+  )
+
+  # If no arguments yet, show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'azure commands' azure_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _azure_functions_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'azure commands' azure_commands
+    fi
+  fi
+}
+
+# The #compdef directive automatically registers this function

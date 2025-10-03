@@ -1,0 +1,52 @@
+#!/usr/bin/env zsh
+
+# Kubernetes Completion Integration
+# Integrates cache updates with context switching functions
+
+# Load the cache system
+autoload -Uz "${0:h}/_kube_cache_system"
+
+# Function to wrap kubernetes context functions with cache invalidation
+function _integrate_kube_cache() {
+  # Only proceed if we have the cache system and kubectl
+  if ! (( $+functions[_kube_cache_invalidate] )) || ! command -v kubectl >/dev/null 2>&1; then
+    return 0
+  fi
+  
+  # List of functions that should trigger cache updates (context switches)
+  local -a context_functions=(
+    "ksandbox"     # Switch to sandbox cluster
+    "kprod"        # Switch to prod cluster
+    "kns"          # Switch namespace
+    "logIntoSandbox"  # Login and switch to sandbox
+    "logIntoProd"     # Login and switch to prod
+  )
+  
+  for func in "${context_functions[@]}"; do
+    # Only wrap if the function exists and isn't already wrapped
+    if (( $+functions[$func] )) && ! functions[$func] | grep -q "_kube_cache_invalidate"; then
+      eval "
+        # Store original function
+        functions[${func}_original]=\${functions[$func]}
+        
+        # Create new wrapper function
+        function $func() {
+          # Call original function
+          ${func}_original \"\$@\"
+          local exit_code=\$?
+          
+          # If successful and we have cache functions, invalidate and update
+          if (( exit_code == 0 )) && (( \$+functions[_kube_cache_invalidate] )); then
+            _kube_cache_invalidate 2>/dev/null
+            _kube_cache_update_background 2>/dev/null
+          fi
+          
+          return \$exit_code
+        }
+      "
+    fi
+  done
+}
+
+# Initialize kubernetes completion integration when sourced
+_integrate_kube_cache

@@ -1,0 +1,312 @@
+#!/usr/bin/env zsh
+
+# Git Completion Cache System
+# High-performance caching for git completions with smart invalidation
+
+# Cache configuration
+typeset -g GIT_COMP_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh-git-completions"
+typeset -g GIT_COMP_CACHE_TTL_BRANCHES=300    # 5 minutes for branches
+typeset -g GIT_COMP_CACHE_TTL_REMOTES=3600    # 1 hour for remotes  
+typeset -g GIT_COMP_CACHE_TTL_TAGS=7200       # 2 hours for tags
+typeset -g GIT_COMP_CACHE_TTL_COMMITS=1800   # 30 minutes for commits
+typeset -g GIT_COMP_CACHE_COMMIT_LIMIT=1000  # Last 1000 commits
+
+# Ensure cache directory exists
+function _git_cache_ensure_dir() {
+  [[ -d "$GIT_COMP_CACHE_DIR" ]] || mkdir -p "$GIT_COMP_CACHE_DIR"
+}
+
+# Get repository-specific cache key
+function _git_cache_repo_key() {
+  local repo_root
+  repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || return 1
+  echo "${repo_root:t}-$(echo "$repo_root" | shasum -a 256 | cut -d' ' -f1 | head -c 8)"
+}
+
+# Check if cache file is still valid
+function _git_cache_is_valid() {
+  local cache_file="$1"
+  local ttl="$2"
+  
+  [[ -f "$cache_file" ]] || return 1
+  
+  local cache_age
+  if zmodload zsh/stat &>/dev/null; then
+    zstat -A cache_stats "$cache_file" 2>/dev/null || return 1
+    cache_age=$(( $(date +%s) - ${cache_stats[10]} ))
+  else
+    local cache_mtime
+    cache_mtime=$(stat -f%m "$cache_file" 2>/dev/null || stat -c%Y "$cache_file" 2>/dev/null) || return 1
+    cache_age=$(( $(date +%s) - cache_mtime ))
+  fi
+  
+  (( cache_age <= ttl ))
+}
+
+# Cache local branches
+function _git_cache_local_branches() {
+  local repo_key cache_file
+  repo_key=$(_git_cache_repo_key) || return 1
+  cache_file="$GIT_COMP_CACHE_DIR/${repo_key}-branches-local"
+  
+  _git_cache_ensure_dir
+  
+  if _git_cache_is_valid "$cache_file" "$GIT_COMP_CACHE_TTL_BRANCHES"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache local branches
+  {
+    git for-each-ref --format='%(refname:short):%(committerdate:relative):%(subject)' refs/heads/ 2>/dev/null | 
+    while IFS=':' read -r branch date subject; do
+      printf '%s:%s - %s\n' "$branch" "$date" "${subject:0:60}"
+    done
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Cache remote branches  
+function _git_cache_remote_branches() {
+  local repo_key cache_file
+  repo_key=$(_git_cache_repo_key) || return 1
+  cache_file="$GIT_COMP_CACHE_DIR/${repo_key}-branches-remote"
+  
+  _git_cache_ensure_dir
+  
+  if _git_cache_is_valid "$cache_file" "$GIT_COMP_CACHE_TTL_REMOTES"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache remote branches
+  {
+    git for-each-ref --format='%(refname:short):%(committerdate:relative):%(subject)' refs/remotes/ 2>/dev/null |
+    grep -v '/HEAD$' |
+    while IFS=':' read -r branch date subject; do
+      printf '%s:%s - %s\n' "$branch" "$date" "${subject:0:60}"
+    done
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Cache tags
+function _git_cache_tags() {
+  local repo_key cache_file
+  repo_key=$(_git_cache_repo_key) || return 1
+  cache_file="$GIT_COMP_CACHE_DIR/${repo_key}-tags"
+  
+  _git_cache_ensure_dir
+  
+  if _git_cache_is_valid "$cache_file" "$GIT_COMP_CACHE_TTL_TAGS"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache tags
+  {
+    git tag --sort=-version:refname --format='%(refname:short):%(creatordate:short):%(subject)' 2>/dev/null |
+    while IFS=':' read -r tag date subject; do
+      printf '%s:%s - %s\n' "$tag" "$date" "${subject:0:60}"
+    done
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Cache remote names
+function _git_cache_remotes() {
+  local repo_key cache_file
+  repo_key=$(_git_cache_repo_key) || return 1
+  cache_file="$GIT_COMP_CACHE_DIR/${repo_key}-remotes"
+  
+  _git_cache_ensure_dir
+  
+  if _git_cache_is_valid "$cache_file" "$GIT_COMP_CACHE_TTL_REMOTES"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache remotes
+  {
+    git remote -v 2>/dev/null | 
+    awk '{print $1":"$2}' | 
+    sort -u |
+    while IFS=':' read -r remote url; do
+      printf '%s:%s\n' "$remote" "$url"
+    done
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Cache recent commits
+function _git_cache_commits() {
+  local repo_key cache_file
+  repo_key=$(_git_cache_repo_key) || return 1
+  cache_file="$GIT_COMP_CACHE_DIR/${repo_key}-commits"
+  
+  _git_cache_ensure_dir
+  
+  if _git_cache_is_valid "$cache_file" "$GIT_COMP_CACHE_TTL_COMMITS"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache recent commits
+  {
+    git log --oneline -${GIT_COMP_CACHE_COMMIT_LIMIT} --format='%h:%s' 2>/dev/null |
+    while IFS=':' read -r hash message; do
+      printf '%s:%s\n' "$hash" "${message:0:80}"
+    done
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Cache worktree information
+function _git_cache_worktrees() {
+  local repo_key cache_file
+  repo_key=$(_git_cache_repo_key) || return 1
+  cache_file="$GIT_COMP_CACHE_DIR/${repo_key}-worktrees"
+  
+  _git_cache_ensure_dir
+  
+  if _git_cache_is_valid "$cache_file" "$GIT_COMP_CACHE_TTL_BRANCHES"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache worktrees
+  {
+    git worktree list --porcelain 2>/dev/null |
+    awk '/^worktree / { path = substr($0, 10) } /^branch / { branch = substr($0, 8); printf "%s:%s\n", path, branch }'
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Invalidate cache (called after git fetch, etc.)
+function _git_cache_invalidate() {
+  local repo_key
+  repo_key=$(_git_cache_repo_key) || return 1
+  
+  local cache_pattern="$GIT_COMP_CACHE_DIR/${repo_key}-*"
+  rm -f ${~cache_pattern} 2>/dev/null
+}
+
+# Background cache update (non-blocking)
+function _git_cache_update_background() {
+  {
+    _git_cache_local_branches >/dev/null 2>&1
+    _git_cache_remote_branches >/dev/null 2>&1  
+    _git_cache_tags >/dev/null 2>&1
+    _git_cache_remotes >/dev/null 2>&1
+    _git_cache_commits >/dev/null 2>&1
+    _git_cache_worktrees >/dev/null 2>&1
+  } &!
+}
+
+# Get completion data for branches (local first, then remote)
+function _git_comp_branches() {
+  local -a local_branches remote_branches descriptions
+  local branch desc
+  
+  # Get local branches first
+  while IFS=':' read -r branch desc; do
+    [[ -n "$branch" ]] || continue
+    local_branches+=("$branch")
+    descriptions+=("$branch:$desc")
+  done < <(_git_cache_local_branches)
+  
+  # Get remote branches second  
+  while IFS=':' read -r branch desc; do
+    [[ -n "$branch" ]] || continue
+    # Skip if we already have this branch locally
+    [[ " ${local_branches[*]} " =~ " ${branch#*/} " ]] && continue
+    remote_branches+=("$branch")
+    descriptions+=("$branch:$desc")
+  done < <(_git_cache_remote_branches)
+  
+  # Return descriptions for _describe
+  printf '%s\n' "${descriptions[@]}"
+}
+
+# Get completion data for commits
+function _git_comp_commits() {
+  local -a descriptions
+  local commit desc
+  
+  while IFS=':' read -r commit desc; do
+    [[ -n "$commit" ]] || continue
+    descriptions+=("$commit:$desc")
+  done < <(_git_cache_commits)
+  
+  printf '%s\n' "${descriptions[@]}"
+}
+
+# Get completion data for worktrees
+function _git_comp_worktrees() {
+  local -a descriptions
+  local path branch
+  
+  while IFS=':' read -r path branch; do
+    [[ -n "$path" ]] || continue
+    descriptions+=("$path:$branch")
+  done < <(_git_cache_worktrees)
+  
+  printf '%s\n' "${descriptions[@]}"
+}
+
+# Get filesystem path suggestions for worktrees (3-4 levels up from repo)
+function _git_comp_worktree_paths() {
+  local repo_root
+  repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || return 1
+  
+  local parent_dir="${repo_root:h}"
+  local -a path_suggestions
+  
+  # Suggest siblings of current repo
+  if [[ -d "$parent_dir" ]]; then
+    local -a sibling_dirs
+    sibling_dirs=("$parent_dir"/*(N/))
+    
+    for dir in "${sibling_dirs[@]}"; do
+      local dirname="${dir:t}"
+      [[ "$dir" != "$repo_root" ]] && path_suggestions+=("../$dirname:Sibling directory")
+    done
+  fi
+  
+  # Suggest common patterns
+  path_suggestions+=("../worktrees:Common worktree directory")
+  path_suggestions+=("./worktrees:Local worktree directory")
+  
+  printf '%s\n' "${path_suggestions[@]}"
+}
+# Get completion data for tags
+function _git_comp_tags() {
+  local -a descriptions
+  local tag desc
+  
+  while IFS=':' read -r tag desc; do
+    [[ -n "$tag" ]] || continue
+    descriptions+=("$tag:$desc")
+  done < <(_git_cache_tags)
+  
+  printf '%s\n' "${descriptions[@]}"
+}
+
+# Get completion data for remotes
+function _git_comp_remotes() {
+  local -a descriptions
+  local remote url
+  
+  while IFS=':' read -r remote url; do
+    [[ -n "$remote" ]] || continue
+    descriptions+=("$remote:$url")
+  done < <(_git_cache_remotes)
+  
+  printf '%s\n' "${descriptions[@]}"
+}

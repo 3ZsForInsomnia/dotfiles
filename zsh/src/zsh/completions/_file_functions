@@ -1,0 +1,94 @@
+#compdef v openNvim o
+
+# File and directory completion for various utility functions
+
+# Function to provide smart file completion
+function _file_functions_complete_args() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    v|openNvim)
+      # Neovim functions - complete with any files/directories
+      if (( CURRENT == 2 )); then
+        _alternative \
+          'files:files:_files' \
+          'directories:directories:_directories'
+        return 0
+      fi
+      ;;
+    
+    o)
+      # Open function - files, directories, and URLs
+      if (( CURRENT == 2 )); then
+        _alternative \
+          'files:files:_files' \
+          'directories:directories:_directories' \
+          'urls:URLs:(http:// https:// ftp:// file:// www.)'
+        return 0
+      fi
+      ;;
+    
+    fcdf)
+      # fcdf function - handles its own fzf completion, but we can suggest flags
+      if (( CURRENT == 2 )); then
+        local -a fcdf_options
+        fcdf_options=(
+          '--all:Include git-ignored files'
+          '-a:Include git-ignored files'
+        )
+        _describe 'options' fcdf_options
+        return 0
+      elif (( CURRENT == 3 )); then
+        # Second argument is query pattern
+        _message "search query"
+        return 0
+      fi
+      ;;
+    
+    fzv)
+      # fzf + nvim - uses fzf internally, but we can provide file completion as fallback
+      if (( CURRENT == 2 )); then
+        _files
+        return 0
+      fi
+      ;;
+    
+    fzo)
+      # fzf + open - uses fzf internally, but we can provide file completion as fallback
+      if (( CURRENT == 2 )); then
+        _files
+        return 0
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Main completion function
+function _file_functions() {
+  local -a file_commands
+  file_commands=(
+    'v:Open with Neovim'
+    'openNvim:Open with Neovim'
+    'o:Open file/directory/URL with system default'
+    'fcdf:Find and cd to file or directory'
+    'fzv:Find file with fzf and open in Neovim'
+    'fzo:Find file with fzf and open with system default'
+  )
+
+  # If no arguments yet, show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'file commands' file_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _file_functions_complete_args "$cmd"; then
+      # Fallback to file completion
+      _files
+    fi
+  fi
+}
+
+# Register the completion function
+_file_functions

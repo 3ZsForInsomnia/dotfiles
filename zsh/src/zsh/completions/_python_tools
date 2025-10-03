@@ -1,0 +1,189 @@
+#compdef pe pel peg pyenv por porp posh poetry
+
+# Python tools completion system
+
+# Function to get available Python versions from pyenv
+function _get_pyenv_versions() {
+  if ! command -v pyenv >/dev/null 2>&1; then
+    return 1
+  fi
+  
+  local -a versions
+  while IFS= read -r version; do
+    # Skip system and current markers, just get version names
+    version=$(echo "$version" | sed 's/^[* ] //' | sed 's/ .*//')
+    [[ -n "$version" && "$version" != "system" ]] && versions+=("$version")
+  done < <(pyenv versions 2>/dev/null)
+  
+  if (( ${#versions[@]} > 0 )); then
+    _describe 'python versions' versions
+    return 0
+  fi
+  return 1
+}
+
+# Function to get poetry commands
+function _get_poetry_commands() {
+  local -a poetry_commands
+  poetry_commands=(
+    'install:Install dependencies'
+    'add:Add dependencies'
+    'remove:Remove dependencies'
+    'update:Update dependencies'
+    'run:Run commands in virtual environment'
+    'shell:Activate virtual environment'
+    'build:Build package'
+    'publish:Publish package'
+    'init:Initialize new project'
+    'new:Create new project'
+    'show:Show package information'
+    'check:Check pyproject.toml validity'
+    'config:Manage configuration'
+    'env:Manage virtual environments'
+    'cache:Manage cache'
+    'version:Show version or bump version'
+  )
+  _describe 'poetry commands' poetry_commands
+}
+
+# Function to get poetry scripts from pyproject.toml
+function _get_poetry_scripts() {
+  if [[ ! -f "pyproject.toml" ]]; then
+    return 1
+  fi
+  
+  local -a scripts
+  # Basic parsing of pyproject.toml for scripts section
+  local in_scripts=false
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^\[tool\.poetry\.scripts\] ]]; then
+      in_scripts=true
+      continue
+    elif [[ "$line" =~ ^\[.*\] && "$in_scripts" == true ]]; then
+      break
+    elif [[ "$in_scripts" == true && "$line" =~ ^[a-zA-Z0-9_-]+\s*= ]]; then
+      local script_name=$(echo "$line" | cut -d'=' -f1 | tr -d ' ')
+      [[ -n "$script_name" ]] && scripts+=("$script_name")
+    fi
+  done < pyproject.toml
+  
+  if (( ${#scripts[@]} > 0 )); then
+    _describe 'poetry scripts' scripts
+    return 0
+  fi
+  return 1
+}
+
+# Smart argument completion for Python tools
+function _python_tools_complete_args() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    pe|pyenv)
+      # pyenv commands
+      if (( CURRENT == 2 )); then
+        local -a pyenv_commands
+        pyenv_commands=(
+          'versions:List installed versions'
+          'install:Install Python version'
+          'uninstall:Uninstall Python version'
+          'local:Set local Python version'
+          'global:Set global Python version'
+          'shell:Set shell Python version'
+          'which:Show path to executable'
+          'whence:List versions containing command'
+          'rehash:Rehash pyenv shims'
+        )
+        _describe 'pyenv commands' pyenv_commands
+        return 0
+      elif (( CURRENT == 3 )); then
+        case "$words[2]" in
+          local|global|shell|uninstall)
+            _get_pyenv_versions
+            return 0
+            ;;
+        esac
+      fi
+      ;;
+    
+    pel)
+      # pyenv local - complete with available versions
+      if (( CURRENT == 2 )); then
+        _get_pyenv_versions
+        return 0
+      fi
+      ;;
+    
+    peg)
+      # pyenv global - complete with available versions
+      if (( CURRENT == 2 )); then
+        _get_pyenv_versions
+        return 0
+      fi
+      ;;
+    
+    por|poetry)
+      # poetry commands
+      if (( CURRENT == 2 )); then
+        _get_poetry_commands
+        return 0
+      elif (( CURRENT == 3 && "$words[2]" == "run" )); then
+        # poetry run - complete with scripts from pyproject.toml or common commands
+        if ! _get_poetry_scripts; then
+          # Fallback to common commands
+          local -a common_commands
+          common_commands=(
+            'python:Run Python interpreter'
+            'pytest:Run tests'
+            'black:Format code with Black'
+            'flake8:Run flake8 linting'
+            'mypy:Run mypy type checking'
+            'isort:Sort imports'
+            'pre-commit:Run pre-commit hooks'
+          )
+          _describe 'common commands' common_commands
+        fi
+        return 0
+      fi
+      ;;
+    
+    porp)
+      # poetry run python - could complete with Python files
+      if (( CURRENT == 2 )); then
+        _files -g "*.py"
+        return 0
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Main completion function
+function _python_tools() {
+  local -a python_commands
+  python_commands=(
+    'pe:pyenv alias'
+    'pel:pyenv local (set local Python version)'
+    'peg:pyenv global (set global Python version)'
+    'pyenv:Python version manager'
+    'por:poetry run'
+    'porp:poetry run python'
+    'posh:poetry shell'
+    'poetry:Python dependency management'
+  )
+
+  # If no arguments yet, show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'python tools' python_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _python_tools_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'python tools' python_commands
+    fi
+  fi
+}
+
+# The #compdef directive automatically registers this function

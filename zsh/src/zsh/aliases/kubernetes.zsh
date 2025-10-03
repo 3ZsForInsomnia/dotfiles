@@ -1,3 +1,8 @@
+# Load FZF helpers for preview functions
+if [[ -f "$ZSH_CONFIG_DIR/tools/fzf-helpers.zsh" ]]; then
+  source "$ZSH_CONFIG_DIR/tools/fzf-helpers.zsh"
+fi
+
 alias k="kubectl"
 alias kpf="k port-forward"
 
@@ -549,11 +554,11 @@ function fkp() {
     -o "custom-columns=NAME:.metadata.name,STATUS:.status.phase,RESTARTS:.status.containerStatuses[0].restartCount,AGE:.metadata.creationTimestamp" \
     --no-headers --sort-by=.metadata.creationTimestamp | \
     fzf $(fzf_git_opts) \
-        --preview="_fzf_k8s_pod_preview {} $namespace" \
+        --preview="$ZSH_CONFIG_DIR/tools/k8s-preview-wrapper.zsh _fzf_k8s_pod_preview {} $namespace" \
         --bind="ctrl-l:execute(kubectl logs -n $namespace {1} -f)" \
         --bind="ctrl-e:execute(kubectl exec -it -n $namespace {1} -- /bin/bash || kubectl exec -it -n $namespace {1} -- /bin/sh)" \
         --bind="ctrl-r:execute(kubectl delete pod -n $namespace {1})" \
-        --bind="ctrl-s:execute(_fzf_k8s_pod_inspect {} $namespace)" \
+        --bind="ctrl-s:execute($ZSH_CONFIG_DIR/tools/k8s-preview-wrapper.zsh _fzf_k8s_pod_inspect {} $namespace)" \
         --header="Enter=select, Ctrl-L=logs, Ctrl-E=shell, Ctrl-R=restart, Ctrl-S=describe")
   
   if [[ -n "$pod_line" ]]; then
@@ -668,10 +673,10 @@ function fks() {
     -o "custom-columns=NAME:.metadata.name,TYPE:.spec.type,CLUSTER-IP:.spec.clusterIP,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip,PORTS:.spec.ports[*].port" \
     --no-headers | \
     fzf $(fzf_git_opts) \
-        --preview="_fzf_k8s_service_preview {} $namespace" \
+        --preview="$ZSH_CONFIG_DIR/tools/k8s-preview-wrapper.zsh _fzf_k8s_service_preview {} $namespace" \
         --bind="ctrl-p:execute(echo 'Port-forward: kubectl port-forward -n $namespace service/{1} LOCAL_PORT:SERVICE_PORT')" \
         --bind="ctrl-e:execute(kubectl get endpoints -n $namespace {1})" \
-        --bind="ctrl-s:execute(_fzf_k8s_service_inspect {} $namespace)" \
+        --bind="ctrl-s:execute($ZSH_CONFIG_DIR/tools/k8s-preview-wrapper.zsh _fzf_k8s_service_inspect {} $namespace)" \
         --header="Enter=select, Ctrl-P=port-forward info, Ctrl-E=endpoints, Ctrl-S=describe")
   
   if [[ -n "$service_line" ]]; then
@@ -1024,3 +1029,9 @@ function khelp() {
   echo "Example: kplogs my-service dev"
   echo ""
 }
+
+# Initialize kubernetes completion cache integration
+# This integrates cache updates with context switching functions
+if [[ -f "$ZSH_CONFIG_DIR/completions/_kube_integration" ]]; then
+  source "$ZSH_CONFIG_DIR/completions/_kube_integration"
+fi

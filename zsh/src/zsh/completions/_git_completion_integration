@@ -1,0 +1,52 @@
+#!/usr/bin/env zsh
+
+# Git Completion Integration
+# Integrates cache updates with existing git fetch functions
+
+# Load the cache system
+autoload -Uz "${0:h}/_git_cache_system"
+
+# Function to wrap existing git functions with cache invalidation
+function _integrate_git_cache() {
+  # Only proceed if we have the cache system and are in a git repo
+  if ! (( $+functions[_git_cache_invalidate] )) || ! git rev-parse --git-dir &>/dev/null 2>&1; then
+    return 0
+  fi
+  
+  # List of functions that should trigger cache updates
+  local -a fetch_functions=(
+    "gf"     # git fetch --all --prune --prune-tags
+    "gfo"    # git fetch origin --prune --prune-tags  
+    "gu"     # git pull with rebase
+    "gup"    # git pull without rebase
+    "gfapu"  # fetch all and pull with rebase
+  )
+  
+  for func in "${fetch_functions[@]}"; do
+    # Only wrap if the function exists and isn't already wrapped
+    if (( $+functions[$func] )) && ! functions[$func] | grep -q "_git_cache_invalidate"; then
+      eval "
+        # Store original function
+        functions[${func}_original]=\${functions[$func]}
+        
+        # Create new wrapper function
+        function $func() {
+          # Call original function
+          ${func}_original \"\$@\"
+          local exit_code=\$?
+          
+          # If successful and we have cache functions, invalidate and update
+          if (( exit_code == 0 )) && (( \$+functions[_git_cache_invalidate] )); then
+            _git_cache_invalidate 2>/dev/null
+            _git_cache_update_background 2>/dev/null
+          fi
+          
+          return \$exit_code
+        }
+      "
+    fi
+  done
+}
+
+# Initialize git completion integration when sourced
+_integrate_git_cache

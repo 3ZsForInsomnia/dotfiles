@@ -1,21 +1,39 @@
 #compdef gsta gstat gstal gstap gstac gstd gstaa fstash stash_then_run run_then_apply_stash run_then_find_stash run_then_pop_stash gstapu gstacm
 
-local -a commands
-commands=(
-  'gsta:Stash with untracked files'
-  'gstat:Stash tracked files only'
-  'gstal:List all stashes with colors'
-  'gstap:Pop stash by index'
-  'gstac:Clear all stashes'
-  'gstd:Drop stash by index'
-  'gstaa:Browse and apply stashes'
-  'fstash:Interactive stash manager'
-  'stash_then_run:Stash, run command, apply'
-  'run_then_apply_stash:Run command then apply stash'
-  'run_then_find_stash:Run command then browse stashes'
-  'run_then_pop_stash:Run command then pop stash'
-  'gstapu:Stash, pull with rebase, apply'
-  'gstacm:Stash, checkout main, pull, return, apply'
-)
 
-_describe 'git stash commands' commands
+
+# Main completion function
+function _git_stash() {
+  local -a git_commands
+  git_commands=(
+    'gsta:Stash with untracked files'
+    'gstat:Stash tracked files only'
+    'gstal:List all stashes with colors'
+    'gstap:Pop stash by index'
+    'gstac:Clear all stashes'
+    'gstd:Drop stash by index'
+    'gstaa:Browse and apply stashes'
+    'fstash:Interactive stash manager'
+    'stash_then_run:Stash, run command, apply'
+    'run_then_apply_stash:Run command then apply stash'
+    'run_then_find_stash:Run command then browse stashes'
+    'run_then_pop_stash:Run command then pop stash'
+    'gstapu:Stash, pull with rebase, apply'
+    'gstacm:Stash, checkout main, pull, return, apply'
+  )
+  
+  # If no arguments yet, show command descriptions for zh help system
+  if (( CURRENT == 1 )); then
+    _describe 'git stash commands' git_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _git_stash_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'git stash commands' git_commands
+    fi
+  fi
+}
+
+# Call the main function
+# The #compdef directive automatically registers this function

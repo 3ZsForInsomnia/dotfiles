@@ -18,12 +18,6 @@ export PAGER="delta"
 export TZ='America/New_York'
 export TIMEZONE="America/New_York"
 
-ubin="/usr/bin"
-uloc="/usr/local"
-ulobin="/usr/local/bin"
-hloc="$HOME/.local"
-hlobin="$hloc/bin"
-hbin="$hloc/bin"
 
 # Basic PATH (minimal version needed by all shells)
-export PATH="$ubin:$uloc:$ulobin:$hloc:$hlobin:$hbin:$PATH"
+export PATH="/usr/bin:/usr/local:/usr/local/bin:$HOME/.local:$HOME/.local/bin:$HOME/.local/bin:$PATH"

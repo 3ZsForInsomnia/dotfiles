@@ -7,11 +7,17 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-fpath=("$ZSH_CONFIG_DIR/completions" $fpath)
+fpath=("$ZSH_CONFIG_DIR/completions" "~/.zfunc" $fpath)
 zmodload zsh/complist
 skip_global_compinit=1
 autoload -Uz is-at-least
-autoload -Uz compinit && compinit
+
+autoload -Uz compinit
+if [[ -n ${ZSH_COMPDUMP}(#qN.mh+24) ]]; then
+  compinit -d "${ZSH_COMPDUMP}"
+else
+  compinit -C -d "${ZSH_COMPDUMP}"
+fi
 
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export HISTSIZE=1000000000
@@ -40,7 +46,6 @@ function fancy_history_widget() {
   zle reset-prompt
 }
 
-# source "$ZSH_CONFIG_DIR/tools/pretty-hist-preview.zsh"
 zle -N fancy_history_widget
 bindkey '^R' fancy_history_widget
 
@@ -56,19 +61,15 @@ export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 source "$ZSH_CONFIG_DIR/source-things.zsh"
 
-# Compile .zcompdump in the background
+# Initialize compilation cache system early
+# This will handle .zcompdump and other file compilation intelligently
 {
-  local zcompdump="${ZSH_COMPDUMP}"
-  if [[ -s "$zcompdump" && (! -s "${zcompdump}.zwc" || "$zcompdump" -nt "${zcompdump}.zwc") ]]; then
-    zcompile "$zcompdump"
-  fi
+  source "$ZSH_CONFIG_DIR/tools/compilation-cache.zsh"
+  # Compile .zcompdump and other files if needed
+  [[ -f "$ZSH_COMPDUMP" ]] && {
+    [[ ! -f "$ZSH_COMPDUMP.zwc" || "$ZSH_COMPDUMP" -nt "$ZSH_COMPDUMP.zwc" ]] && zcompile "$ZSH_COMPDUMP"
+  }
 } &!
-
-eval "$(zoxide init zsh)"
-
-# zprof
-
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
 zstyle ':completion:*' menu select
 
@@ -88,4 +89,6 @@ zstyle ':completion:*' auto-description 'specify: %d'
 alias reload-completions='autoload -U compinit && compinit'
 
 # Load help system
-source "$ZSH_CONFIG_DIR/tools/help/main.zsh" 2>/dev/null
+zsh-defer source "$ZSH_CONFIG_DIR/tools/help/main.zsh" 2>/dev/null
+
+# zprof

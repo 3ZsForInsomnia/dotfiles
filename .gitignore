@@ -13,3 +13,5 @@ resurrect
 rss/.newsboat/cache.db
 i3wm/.local/share/nvim
 linear-client/config
+
+*.zwc

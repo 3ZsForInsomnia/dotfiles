@@ -1,0 +1,27 @@
+#compdef gprune gprunepr
+
+
+
+# Main completion function
+function _git_prune() {
+  local -a git_commands
+  git_commands=(
+    'gprune:Prune merged/stale branches'
+    'gprunepr:Interactive prune with PR status'
+  )
+  
+  # If no arguments yet, show command descriptions for zh help system
+  if (( CURRENT == 1 )); then
+    _describe 'git prune commands' git_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _git_prune_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'git prune commands' git_commands
+    fi
+  fi
+}
+
+# Call the main function
+# The #compdef directive automatically registers this function

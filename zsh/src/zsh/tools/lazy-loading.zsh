@@ -1,18 +1,18 @@
-typeset -A LAZYLOAD_LOADED
+#!/usr/bin/env zsh
+
+# Optimized lazy loading system
+typeset -gA LAZYLOAD_DIRS LAZYLOAD_CMDS LAZYLOAD_LOADED
 
 # lazyLoad - Conditionally load code based on different triggers
 # Usage:
-#   lazyLoad directory "/path/to/trigger/dir" source_func_or_file "Optional description"
+#   lazyLoad directory "/path/to/trigger/dir" source_func_or_file "Optional description" [no_immediate_check]
 #   lazyLoad command "some_command" source_func_or_file "Optional description"
-#
-# Examples:
-#   lazyLoad directory "$HOME/work" sourceWorkStuff "Work configurations"
-#   lazyLoad command "kubectl" sourceKubeStuff "Kubectl configurations"
 function lazyLoad() {
   local trigger_type="$1"
   local trigger_value="$2"
   local to_load="$3"
   local description="${4:-"Lazy-loaded content"}"
+  local skip_immediate="${5:-false}"
   
   # Initialize the hook system if not done already
   if [[ -z "$LAZYLOAD_HOOKS_INITIALIZED" ]]; then
@@ -20,93 +20,37 @@ function lazyLoad() {
     LAZYLOAD_HOOKS_INITIALIZED=1
   fi
   
-  # Create a unique variable name for this trigger
-  local safe_trigger="${trigger_value//[^a-zA-Z0-9]/_}"
-  local handler_var="LAZYLOAD_HANDLER_${trigger_type}_${safe_trigger}"
-  
-  # Register the file using simple variable append
-  if [[ -z "${(P)handler_var}" ]]; then
-    eval "$handler_var=\"$to_load\""
-  else
-    eval "$handler_var=\"${(P)handler_var}:$to_load\""
-  fi
-  
   case "$trigger_type" in
     directory)
-      local func_name="_check_directory_trigger_${safe_trigger}"
-      
-      # Define or update the function
-      # Use here-document to avoid complex quoting
-      eval "$func_name() {
-$(cat <<EOF
-        if [[ "\$PWD" == "$trigger_value"* ]]; then
-          local file_list="${(P)handler_var}"
-          
-          local IFS=':'
-          for file in \${=file_list}; do
-            local load_key="\${file//[^a-zA-Z0-9]/_}"
-            local loaded_var="LAZYLOAD_LOADED_\$load_key"
-            
-            if [[ -z "\${(P)loaded_var}" ]]; then
-              # echo "🔄 Loading: \$file"
-              if [[ -f "\$file" ]]; then
-                source "\$file"
-                eval "\$loaded_var=1"
-              else
-                echo "⚠️ Error: File doesn't exist: \$file"
-              fi
-            fi
-          done
+      # Store in associative array for O(1) lookup
+      if [[ -n "${LAZYLOAD_DIRS[$trigger_value]}" ]]; then
+        LAZYLOAD_DIRS[$trigger_value]="${LAZYLOAD_DIRS[$trigger_value]}:$to_load"
+      else
+        LAZYLOAD_DIRS[$trigger_value]="$to_load"
+        
+        # Only register the hook once for all directories
+        if [[ ${#LAZYLOAD_DIRS} -eq 1 ]]; then
+          add-zsh-hook chpwd _lazyload_check_directory
         fi
-EOF
-)
-      }"
-      
-      # Register the hook if not already done
-      # Use faster check - avoid array search
-      if [[ ${chpwd_functions[(r)$func_name]} != $func_name ]]; then
-        add-zsh-hook chpwd "$func_name"
       fi
       
-      # Check immediately
-      $func_name
+      # Check immediately unless explicitly skipped
+      if [[ "$skip_immediate" != "true" ]]; then
+        _lazyload_check_directory
+      fi
       ;;
       
     command)
-      local func_name="_check_command_trigger_${safe_trigger}"
-      
-      # Define or update the function
-      # Use here-document to avoid complex quoting
-      eval "$func_name() {
-$(cat <<EOF
-        local cmd="\$1"
-        if [[ "\$cmd" == "$trigger_value"* ]]; then
-          local file_list="${(P)handler_var}"
-          
-          local IFS=':'
-          for file in \${=file_list}; do
-            local load_key="\${file//[^a-zA-Z0-9]/_}"
-            local loaded_var="LAZYLOAD_LOADED_\$load_key"
-            
-            if [[ -z "\${(P)loaded_var}" ]]; then
-              # echo "🔄 Loading: \$file"
-              if [[ -f "\$file" ]]; then
-                source "\$file"
-                eval "\$loaded_var=1"
-              else
-                echo "⚠️ Error: File doesn't exist: \$file"
-              fi
-            fi
-          done
+      # Store in associative array
+      if [[ -n "${LAZYLOAD_CMDS[$trigger_value]}" ]]; then
+        LAZYLOAD_CMDS[$trigger_value]="${LAZYLOAD_CMDS[$trigger_value]}:$to_load"
+      else
+        LAZYLOAD_CMDS[$trigger_value]="$to_load"
+        
+        # Only register the hook once for all commands
+        if [[ ${#LAZYLOAD_CMDS} -eq 1 ]]; then
+          add-zsh-hook preexec _lazyload_check_command
         fi
-EOF
-)
-      }"
-      
-      # Register the hook if not already done
-      # Use faster check - avoid array search  
-      if [[ ${preexec_functions[(r)$func_name]} != $func_name ]]; then
-        add-zsh-hook preexec "$func_name"
       fi
       ;;
       
@@ -118,22 +62,70 @@ EOF
   esac
 }
 
+# Single directory check function for all directories
+function _lazyload_check_directory() {
+  local trigger_dir file_list
+  
+  # Check each registered directory
+  for trigger_dir in "${(@k)LAZYLOAD_DIRS}"; do
+    if [[ "$PWD" == "$trigger_dir"* ]]; then
+      file_list="${LAZYLOAD_DIRS[$trigger_dir]}"
+      _lazyload_source_files "$file_list"
+    fi
+  done
+}
+
+# Single command check function for all commands
+function _lazyload_check_command() {
+  local cmd="$1"
+  local trigger_cmd file_list
+  
+  # Check each registered command
+  for trigger_cmd in "${(@k)LAZYLOAD_CMDS}"; do
+    if [[ "$cmd" == "$trigger_cmd"* ]]; then
+      file_list="${LAZYLOAD_CMDS[$trigger_cmd]}"
+      _lazyload_source_files "$file_list"
+    fi
+  done
+}
+
+# Helper function to source files (reduces code duplication)
+function _lazyload_source_files() {
+  local file_list="$1"
+  local IFS=':'
+  local file load_key
+  
+  for file in ${=file_list}; do
+    load_key="${file//[^a-zA-Z0-9]/_}"
+    
+    if [[ -z "${LAZYLOAD_LOADED[$load_key]}" ]]; then
+      if [[ -f "$file" ]]; then
+        source "$file"
+        LAZYLOAD_LOADED[$load_key]=1
+        # echo "🔄 Loaded: $file"  # Uncomment for debugging
+      else
+        echo "⚠️ Error: File doesn't exist: $file"
+      fi
+    fi
+  done
+}
+
+# Backward compatibility wrapper
 function lazyLoadMulti() {
   local to_load="$1"
   local description="$2"
   shift 2
   
-  # Now $@ contains all the triggers
   for trigger in "$@"; do
-    # Determine if this is a directory or command
     if [[ -d "$trigger" ]]; then
-      # It's a directory
-      lazyLoad "directory" "$trigger" "$to_load" "$description" 
+      lazyLoad "directory" "$trigger" "$to_load" "$description" true  # Skip immediate check
     else
-      # Assume it's a command
       lazyLoad "command" "$trigger" "$to_load" "$description"
     fi
   done
 }
 
-
+# Utility function to defer initial directory check
+function lazyLoadDeferredCheck() {
+  zsh-defer _lazyload_check_directory
+}

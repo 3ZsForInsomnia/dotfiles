@@ -1,0 +1,235 @@
+#!/usr/bin/env zsh
+
+# Kubernetes Completion Cache System
+# Context-aware caching for kubectl completions with environment pattern recognition
+
+# Cache configuration
+typeset -g KUBE_COMP_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh-kube-completions"
+typeset -g KUBE_COMP_CACHE_TTL_NAMESPACES=1800   # 30 minutes
+typeset -g KUBE_COMP_CACHE_TTL_SERVICES=600     # 10 minutes  
+typeset -g KUBE_COMP_CACHE_TTL_DEPLOYMENTS=600  # 10 minutes
+typeset -g KUBE_COMP_CACHE_TTL_PODS=180         # 3 minutes
+typeset -g KUBE_COMP_CACHE_TTL_CONTAINERS=300  # 5 minutes
+
+# Environment patterns for prioritization
+typeset -ga KUBE_ENV_PATTERNS=("dev" "qat" "uat" "preprod" "prod")
+
+# Ensure cache directory exists
+function _kube_cache_ensure_dir() {
+  [[ -d "$KUBE_COMP_CACHE_DIR" ]] || mkdir -p "$KUBE_COMP_CACHE_DIR"
+}
+
+# Get current kubectl context for cache keys
+function _kube_cache_context_key() {
+  local context
+  context=$(kubectl config current-context 2>/dev/null) || return 1
+  # Sanitize context name for filename
+  echo "${context//[^a-zA-Z0-9_-]/_}"
+}
+
+# Get current namespace for context-aware completions
+function _kube_cache_current_namespace() {
+  kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null || echo "default"
+}
+
+# Check if cache file is still valid
+function _kube_cache_is_valid() {
+  local cache_file="$1"
+  local ttl="$2"
+  
+  [[ -f "$cache_file" ]] || return 1
+  
+  local cache_age
+  if zmodload zsh/stat &>/dev/null; then
+    zstat -A cache_stats "$cache_file" 2>/dev/null || return 1
+    cache_age=$(( $(date +%s) - ${cache_stats[10]} ))
+  else
+    local cache_mtime
+    cache_mtime=$(stat -f%m "$cache_file" 2>/dev/null || stat -c%Y "$cache_file" 2>/dev/null) || return 1
+    cache_age=$(( $(date +%s) - cache_mtime ))
+  fi
+  
+  (( cache_age <= ttl ))
+}
+
+# Sort namespaces by environment pattern priority
+function _kube_sort_namespaces() {
+  local -a env_namespaces other_namespaces
+  local namespace
+  
+  while IFS= read -r namespace; do
+    [[ -z "$namespace" ]] && continue
+    
+    local matched_env=false
+    for env in "${KUBE_ENV_PATTERNS[@]}"; do
+      if [[ "$namespace" == ${env}-* ]]; then
+        env_namespaces+=("$namespace")
+        matched_env=true
+        break
+      fi
+    done
+    
+    if [[ "$matched_env" == false ]]; then
+      other_namespaces+=("$namespace")
+    fi
+  done
+  
+  # Output environment namespaces first, then others
+  printf '%s\n' "${env_namespaces[@]}" "${other_namespaces[@]}"
+}
+
+# Cache namespaces
+function _kube_cache_namespaces() {
+  local context_key cache_file
+  context_key=$(_kube_cache_context_key) || return 1
+  cache_file="$KUBE_COMP_CACHE_DIR/${context_key}-namespaces"
+  
+  _kube_cache_ensure_dir
+  
+  if _kube_cache_is_valid "$cache_file" "$KUBE_COMP_CACHE_TTL_NAMESPACES"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache namespaces
+  {
+    kubectl get namespaces -o jsonpath='{.items[*].metadata.name}' 2>/dev/null |
+    tr ' ' '\n' |
+    _kube_sort_namespaces
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Cache pods for a specific namespace
+function _kube_cache_pods() {
+  local namespace="$1"
+  local context_key cache_file
+  context_key=$(_kube_cache_context_key) || return 1
+  cache_file="$KUBE_COMP_CACHE_DIR/${context_key}-pods-${namespace}"
+  
+  _kube_cache_ensure_dir
+  
+  if _kube_cache_is_valid "$cache_file" "$KUBE_COMP_CACHE_TTL_PODS"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache pods
+  {
+    kubectl get pods -n "$namespace" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null |
+    tr ' ' '\n' |
+    grep -v '^$'
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Cache services for a specific namespace
+function _kube_cache_services() {
+  local namespace="$1"
+  local context_key cache_file
+  context_key=$(_kube_cache_context_key) || return 1
+  cache_file="$KUBE_COMP_CACHE_DIR/${context_key}-services-${namespace}"
+  
+  _kube_cache_ensure_dir
+  
+  if _kube_cache_is_valid "$cache_file" "$KUBE_COMP_CACHE_TTL_SERVICES"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache services
+  {
+    kubectl get services -n "$namespace" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null |
+    tr ' ' '\n' |
+    grep -v '^$'
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Cache deployments for a specific namespace
+function _kube_cache_deployments() {
+  local namespace="$1"
+  local context_key cache_file
+  context_key=$(_kube_cache_context_key) || return 1
+  cache_file="$KUBE_COMP_CACHE_DIR/${context_key}-deployments-${namespace}"
+  
+  _kube_cache_ensure_dir
+  
+  if _kube_cache_is_valid "$cache_file" "$KUBE_COMP_CACHE_TTL_DEPLOYMENTS"; then
+    cat "$cache_file" 2>/dev/null
+    return 0
+  fi
+  
+  # Fetch and cache deployments
+  {
+    kubectl get deployments -n "$namespace" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null |
+    tr ' ' '\n' |
+    grep -v '^$'
+  } > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
+  
+  cat "$cache_file" 2>/dev/null
+}
+
+# Get completion data for namespaces
+function _kube_comp_namespaces() {
+  _kube_cache_namespaces
+}
+
+# Get completion data for pods in current or specified namespace
+function _kube_comp_pods() {
+  local namespace="${1:-$(_kube_cache_current_namespace)}"
+  _kube_cache_pods "$namespace"
+}
+
+# Get completion data for services in current or specified namespace
+function _kube_comp_services() {
+  local namespace="${1:-$(_kube_cache_current_namespace)}"
+  _kube_cache_services "$namespace"
+}
+
+# Get completion data for deployments in current or specified namespace
+function _kube_comp_deployments() {
+  local namespace="${1:-$(_kube_cache_current_namespace)}"
+  _kube_cache_deployments "$namespace"
+}
+
+# Invalidate all caches for current context
+function _kube_cache_invalidate() {
+  local context_key
+  context_key=$(_kube_cache_context_key) || return 1
+  
+  local cache_pattern="$KUBE_COMP_CACHE_DIR/${context_key}-*"
+  rm -f ${~cache_pattern} 2>/dev/null
+}
+
+# Background cache update for common resources
+function _kube_cache_update_background() {
+  local current_ns
+  current_ns=$(_kube_cache_current_namespace)
+  
+  {
+    # Update namespaces
+    _kube_cache_namespaces >/dev/null 2>&1
+    
+    # Update resources for current namespace
+    _kube_cache_pods "$current_ns" >/dev/null 2>&1
+    _kube_cache_services "$current_ns" >/dev/null 2>&1
+    _kube_cache_deployments "$current_ns" >/dev/null 2>&1
+    
+    # Update resources for common environment namespaces
+    local -a priority_namespaces
+    while IFS= read -r ns; do
+      [[ -n "$ns" ]] && priority_namespaces+=("$ns")
+    done < <(_kube_cache_namespaces | head -10)
+    
+    for ns in "${priority_namespaces[@]}"; do
+      [[ "$ns" != "$current_ns" ]] || continue
+      _kube_cache_pods "$ns" >/dev/null 2>&1
+      _kube_cache_services "$ns" >/dev/null 2>&1
+      _kube_cache_deployments "$ns" >/dev/null 2>&1
+    done
+  } &!
+}

@@ -1,0 +1,36 @@
+#compdef gcp gcpn gcpx gcpc gcpa gcps gcpq fcpick fcpicklog gcprange gcplast
+
+
+
+# Main completion function
+function _git_cherry_pick() {
+  local -a git_commands
+  git_commands=(
+    'gcp:Cherry-pick commit(s)'
+    'gcpn:Cherry-pick without commit'
+    'gcpx:Cherry-pick with -x flag'
+    'gcpc:Continue cherry-pick'
+    'gcpa:Abort cherry-pick'
+    'gcps:Skip current cherry-pick'
+    'gcpq:Quit cherry-pick'
+    'fcpick:Interactive cherry-pick browser'
+    'fcpicklog:Cherry-pick from commit log'
+    'gcprange:Cherry-pick range of commits'
+    'gcplast:Cherry-pick last N commits'
+  )
+  
+  # If no arguments yet, show command descriptions for zh help system
+  if (( CURRENT == 1 )); then
+    _describe 'git cherry-pick commands' git_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _git_cherry_pick_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'git cherry-pick commands' git_commands
+    fi
+  fi
+}
+
+# Call the main function
+# The #compdef directive automatically registers this function

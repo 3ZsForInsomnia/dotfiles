@@ -1,0 +1,232 @@
+#compdef d dinto dl docker
+
+# Docker completion system for common docker commands and aliases
+
+# Function to get running container names
+function _docker_running_containers() {
+  local -a containers
+  while IFS= read -r container; do
+    [[ -n "$container" ]] && containers+=("$container")
+  done < <(docker ps --format '{{.Names}}' 2>/dev/null)
+  
+  if (( ${#containers[@]} > 0 )); then
+    _describe 'running containers' containers
+    return 0
+  fi
+  return 1
+}
+
+# Function to get all container names (running and stopped)
+function _docker_all_containers() {
+  local -a containers
+  while IFS= read -r container; do
+    [[ -n "$container" ]] && containers+=("$container")
+  done < <(docker ps -a --format '{{.Names}}' 2>/dev/null)
+  
+  if (( ${#containers[@]} > 0 )); then
+    _describe 'containers' containers
+    return 0
+  fi
+  return 1
+}
+
+# Function to get Docker images
+function _docker_images() {
+  local -a images
+  while IFS= read -r image; do
+    [[ -n "$image" ]] && images+=("$image")
+  done < <(docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -v '<none>')
+  
+  if (( ${#images[@]} > 0 )); then
+    _describe 'images' images
+    return 0
+  fi
+  return 1
+}
+
+# Function to get Docker networks
+function _docker_networks() {
+  local -a networks
+  while IFS= read -r network; do
+    [[ -n "$network" ]] && networks+=("$network")
+  done < <(docker network ls --format '{{.Name}}' 2>/dev/null)
+  
+  if (( ${#networks[@]} > 0 )); then
+    _describe 'networks' networks
+    return 0
+  fi
+  return 1
+}
+
+# Function to get Docker volumes
+function _docker_volumes() {
+  local -a volumes
+  while IFS= read -r volume; do
+    [[ -n "$volume" ]] && volumes+=("$volume")
+  done < <(docker volume ls --format '{{.Name}}' 2>/dev/null)
+  
+  if (( ${#volumes[@]} > 0 )); then
+    _describe 'volumes' volumes
+    return 0
+  fi
+  return 1
+}
+
+# Smart argument completion for docker functions
+function _docker_functions_complete_args() {
+  local cmd="$1"
+  
+  # Only provide completion if docker is available
+  if ! command -v docker >/dev/null 2>&1; then
+    return 1
+  fi
+  
+  case "$cmd" in
+    dinto)
+      # dinto - docker exec -it (interactive shell into running container)
+      if (( CURRENT == 2 )); then
+        _docker_running_containers
+        return 0
+      elif (( CURRENT == 3 )); then
+        # Optional: shell command (bash, sh, etc.)
+        local -a shells
+        shells=('bash' 'sh' 'ash' 'zsh' 'fish')
+        _describe 'shells' shells
+        return 0
+      fi
+      ;;
+    
+    dl)
+      # dl - docker logs -f (view container logs)
+      if (( CURRENT == 2 )); then
+        _docker_all_containers
+        return 0
+      fi
+      ;;
+    
+    d|docker)
+      # Handle docker subcommands
+      if (( CURRENT == 2 )); then
+        local -a docker_commands
+        docker_commands=(
+          'run:Create and start a container'
+          'exec:Execute command in running container'
+          'ps:List containers'
+          'images:List images'
+          'pull:Pull image from registry'
+          'push:Push image to registry'
+          'build:Build image from Dockerfile'
+          'logs:Show container logs'
+          'stop:Stop running container'
+          'start:Start stopped container'
+          'restart:Restart container'
+          'rm:Remove container'
+          'rmi:Remove image'
+          'network:Manage networks'
+          'volume:Manage volumes'
+          'compose:Docker Compose commands'
+        )
+        _describe 'docker commands' docker_commands
+        return 0
+      elif (( CURRENT == 3 )); then
+        # Handle specific subcommand completions
+        case "$words[2]" in
+          exec)
+            _docker_running_containers
+            return 0
+            ;;
+          logs|stop|start|restart|rm)
+            _docker_all_containers
+            return 0
+            ;;
+          run|pull|push|rmi)
+            _docker_images
+            return 0
+            ;;
+          network)
+            local -a network_cmds
+            network_cmds=('ls' 'create' 'rm' 'inspect' 'connect' 'disconnect')
+            _describe 'network commands' network_cmds
+            return 0
+            ;;
+          volume)
+            local -a volume_cmds
+            volume_cmds=('ls' 'create' 'rm' 'inspect' 'prune')
+            _describe 'volume commands' volume_cmds
+            return 0
+            ;;
+        esac
+      elif (( CURRENT == 4 )); then
+        # Handle third-level completions
+        case "$words[2]" in
+          exec)
+            if (( CURRENT == 4 )); then
+              # After container name, suggest common commands
+              local -a exec_commands
+              exec_commands=('-it' 'bash' 'sh' '/bin/bash' '/bin/sh')
+              _describe 'exec options' exec_commands
+              return 0
+            fi
+            ;;
+          network)
+            case "$words[3]" in
+              rm|inspect|connect|disconnect)
+                _docker_networks
+                return 0
+                ;;
+            esac
+            ;;
+          volume)
+            case "$words[3]" in
+              rm|inspect)
+                _docker_volumes
+                return 0
+                ;;
+            esac
+            ;;
+        esac
+      elif (( CURRENT == 5 )); then
+        # Handle exec -it container completion
+        if [[ "$words[2]" == "exec" && "$words[3]" == "-it" ]]; then
+          _docker_running_containers
+          return 0
+        fi
+      elif (( CURRENT == 6 )); then
+        # Handle exec -it container command completion
+        if [[ "$words[2]" == "exec" && "$words[3]" == "-it" ]]; then
+          local -a shells
+          shells=('bash' 'sh' 'ash' '/bin/bash' '/bin/sh')
+          _describe 'shells' shells
+          return 0
+        fi
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Main completion function
+function _docker_functions() {
+  local -a docker_commands
+  docker_commands=(
+    'd:Docker alias'
+    'dinto:Interactive shell into running container'
+    'dl:View container logs'
+    'docker:Docker command'
+  )
+
+  # If no arguments yet, show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'docker commands' docker_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _docker_functions_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'docker commands' docker_commands
+    fi
+  fi
+}
+
+# The #compdef directive automatically registers this function

@@ -1,0 +1,232 @@
+#compdef nr n y npm yarn nx nxs
+
+# JavaScript/TypeScript tools completion system
+
+# Function to get npm/yarn scripts from package.json
+function _get_package_scripts() {
+  if [[ ! -f "package.json" ]]; then
+    return 1
+  fi
+  
+  local -a scripts
+  # Parse package.json scripts using jq if available, otherwise awk
+  if command -v jq >/dev/null 2>&1; then
+    while IFS= read -r script; do
+      [[ -n "$script" ]] && scripts+=("$script")
+    done < <(jq -r '.scripts | keys[]' package.json 2>/dev/null)
+  else
+    # Fallback parsing without jq - basic but functional
+    while IFS= read -r script; do
+      [[ -n "$script" ]] && scripts+=("$script")
+    done < <(grep -A 20 '"scripts"' package.json 2>/dev/null | \
+      grep '^\s*"[^"]*"' | \
+      sed 's/^\s*"//' | \
+      sed 's/".*//' | \
+      grep -v '^scripts$')
+  fi
+  
+  if (( ${#scripts[@]} > 0 )); then
+    _describe 'package.json scripts' scripts
+    return 0
+  fi
+  return 1
+}
+
+# Function to get nx projects
+function _get_nx_projects() {
+  # Try nx.json first (modern nx)
+  if [[ -f "nx.json" ]] && command -v jq >/dev/null 2>&1; then
+    local -a projects
+    while IFS= read -r project; do
+      [[ -n "$project" ]] && projects+=("$project")
+    done < <(jq -r '.projects | keys[]' nx.json 2>/dev/null)
+    
+    if (( ${#projects[@]} > 0 )); then
+      _describe 'nx projects' projects
+      return 0
+    fi
+  fi
+  
+  # Try workspace.json (legacy nx)
+  if [[ -f "workspace.json" ]] && command -v jq >/dev/null 2>&1; then
+    local -a projects
+    while IFS= read -r project; do
+      [[ -n "$project" ]] && projects+=("$project")
+    done < <(jq -r '.projects | keys[]' workspace.json 2>/dev/null)
+    
+    if (( ${#projects[@]} > 0 )); then
+      _describe 'nx projects' projects
+      return 0
+    fi
+  fi
+  
+  # Try angular.json (nx with angular)
+  if [[ -f "angular.json" ]] && command -v jq >/dev/null 2>&1; then
+    local -a projects
+    while IFS= read -r project; do
+      [[ -n "$project" ]] && projects+=("$project")
+    done < <(jq -r '.projects | keys[]' angular.json 2>/dev/null)
+    
+    if (( ${#projects[@]} > 0 )); then
+      _describe 'nx projects' projects
+      return 0
+    fi
+  fi
+  
+  # Fallback: try to find project directories
+  if [[ -d "apps" ]] || [[ -d "libs" ]]; then
+    local -a projects
+    for dir in apps/* libs/*; do
+      if [[ -d "$dir" ]]; then
+        local project_name=$(basename "$dir")
+        projects+=("$project_name")
+      fi
+    done
+    
+    if (( ${#projects[@]} > 0 )); then
+      _describe 'nx projects (from directories)' projects
+      return 0
+    fi
+  fi
+  
+  return 1
+}
+
+# Function to get nx targets/commands
+function _get_nx_targets() {
+  local -a targets
+  targets=(
+    'build:Build the project'
+    'serve:Serve the project'
+    'test:Run tests'
+    'lint:Run linting'
+    'e2e:Run e2e tests'
+    'storybook:Run storybook'
+    'build-storybook:Build storybook'
+    'extract-i18n:Extract i18n messages'
+    'generate:Generate code'
+    'dep-graph:Show dependency graph'
+    'affected:Run command on affected projects'
+  )
+  
+  _describe 'nx targets' targets
+}
+
+# Smart argument completion for JS tools
+function _js_tools_complete_args() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    nr)
+      # npm/yarn run - complete with package.json scripts
+      if (( CURRENT == 2 )); then
+        _get_package_scripts
+        return 0
+      fi
+      ;;
+    
+    n|npm)
+      # npm commands
+      if (( CURRENT == 2 )); then
+        local -a npm_commands
+        npm_commands=(
+          'run:Run a script from package.json'
+          'install:Install dependencies'
+          'start:Start the application'
+          'test:Run tests'
+          'build:Build the project'
+          'init:Initialize a new project'
+          'publish:Publish package to registry'
+          'version:Bump package version'
+          'audit:Run security audit'
+          'outdated:Check for outdated packages'
+          'update:Update packages'
+          'cache:Manage npm cache'
+        )
+        _describe 'npm commands' npm_commands
+        return 0
+      elif (( CURRENT == 3 && "$words[2]" == "run" )); then
+        _get_package_scripts
+        return 0
+      fi
+      ;;
+    
+    y|yarn)
+      # yarn commands
+      if (( CURRENT == 2 )); then
+        local -a yarn_commands
+        yarn_commands=(
+          'install:Install dependencies'
+          'add:Add dependencies'
+          'remove:Remove dependencies'
+          'run:Run a script from package.json'
+          'start:Start the application'
+          'test:Run tests'
+          'build:Build the project'
+          'init:Initialize a new project'
+          'publish:Publish package to registry'
+          'version:Bump package version'
+          'audit:Run security audit'
+          'outdated:Check for outdated packages'
+          'upgrade:Upgrade packages'
+          'cache:Manage yarn cache'
+        )
+        _describe 'yarn commands' yarn_commands
+        return 0
+      elif (( CURRENT == 3 && "$words[2]" == "run" )); then
+        _get_package_scripts
+        return 0
+      fi
+      ;;
+    
+    nx)
+      # nx commands
+      if (( CURRENT == 2 )); then
+        _get_nx_targets
+        return 0
+      elif (( CURRENT == 3 )); then
+        # After target, complete with project names
+        _get_nx_projects
+        return 0
+      fi
+      ;;
+    
+    nxs)
+      # nx serve - complete with project names
+      if (( CURRENT == 2 )); then
+        _get_nx_projects
+        return 0
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Main completion function
+function _js_tools() {
+  local -a js_commands
+  js_commands=(
+    'nr:Run npm/yarn script from package.json'
+    'n:npm alias'
+    'y:yarn alias'
+    'npm:Node package manager'
+    'yarn:Yarn package manager'
+    'nx:Nx workspace commands'
+    'nxs:Nx serve (project runner)'
+  )
+
+  # If no arguments yet, show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'js tools' js_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _js_tools_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'js tools' js_commands
+    fi
+  fi
+}
+
+# The #compdef directive automatically registers this function

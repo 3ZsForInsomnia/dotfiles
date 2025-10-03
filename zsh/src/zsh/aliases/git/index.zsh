@@ -20,6 +20,12 @@ source "$git_dir/wtrees.zsh"
 # Set up shared configuration
 export GIT_MAIN_BRANCH="${GIT_MAIN_BRANCH:-main}"
 
+# Initialize git completion cache integration
+# This integrates cache updates with git fetch functions
+if [[ -f "$ZSH_CONFIG_DIR/completions/_git_completion_integration" ]]; then
+  source "$ZSH_CONFIG_DIR/completions/_git_completion_integration"
+fi
+
 # Git help function - shows available commands by category
 function ghelp() {
   if [[ "$1" == "-h" ]]; then

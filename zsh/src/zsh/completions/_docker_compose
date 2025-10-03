@@ -1,0 +1,99 @@
+#compdef dc
+
+# Docker Compose completion for the 'dc' alias
+
+# Function to get services from docker-compose.yml
+function _docker_compose_services() {
+  local compose_file
+  
+  # Look for compose files in current directory
+  for file in docker-compose.yml docker-compose.yaml compose.yml compose.yaml; do
+    if [[ -f "$file" ]]; then
+      compose_file="$file"
+      break
+    fi
+  done
+  
+  if [[ -z "$compose_file" ]]; then
+    return 1
+  fi
+  
+  local -a services
+  # Parse services from compose file using awk to avoid yq dependency
+  while IFS= read -r service; do
+    [[ -n "$service" && "$service" != "services:" ]] && services+=("$service")
+  done < <(awk '/^services:/{f=1;next} f && /^[a-zA-Z]/ && !/^[[:space:]]/{print $1; gsub(/:$/, "", $1)} f && /^[^[:space:]]/ && !/^services:/{f=0}' "$compose_file" 2>/dev/null | sed 's/:$//')
+  
+  if (( ${#services[@]} > 0 )); then
+    _describe 'services' services
+    return 0
+  fi
+  return 1
+}
+
+# Main completion function for docker compose
+function _docker_compose() {
+  local -a compose_commands
+  compose_commands=(
+    'up:Create and start containers'
+    'down:Stop and remove containers'
+    'start:Start services'
+    'stop:Stop services'
+    'restart:Restart services'
+    'build:Build or rebuild services'
+    'pull:Pull service images'
+    'push:Push service images'
+    'logs:View output from containers'
+    'exec:Execute command in running container'
+    'run:Run a one-off command'
+    'ps:List containers'
+    'top:Display running processes'
+    'images:List images'
+    'config:Validate and view compose file'
+    'version:Show version information'
+  )
+
+  if (( CURRENT == 2 )); then
+    _describe 'compose commands' compose_commands
+    return 0
+  elif (( CURRENT == 3 )); then
+    # Handle service-specific completions
+    case "$words[2]" in
+      up|down|start|stop|restart|build|pull|push|logs|exec|run)
+        _docker_compose_services
+        return 0
+        ;;
+      up)
+        # Special flags for up command
+        local -a up_flags
+        up_flags=('-d:Detached mode' '--build:Build images before starting')
+        _alternative \
+          'services:services:_docker_compose_services' \
+          'flags:flags:((${up_flags}))'
+        return 0
+        ;;
+    esac
+  elif (( CURRENT >= 4 )); then
+    # Handle additional service names for multi-service commands
+    case "$words[2]" in
+      up|down|start|stop|restart|build|pull|push|logs)
+        _docker_compose_services
+        return 0
+        ;;
+      exec|run)
+        # After service name, suggest common commands
+        if (( CURRENT == 4 )); then
+          local -a exec_commands
+          exec_commands=('bash' 'sh' '/bin/bash' '/bin/sh')
+          _describe 'commands' exec_commands
+          return 0
+        fi
+        ;;
+    esac
+  fi
+  
+  return 1
+}
+
+# Register the completion function
+_docker_compose

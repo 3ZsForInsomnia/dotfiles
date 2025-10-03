@@ -1,10 +1,6 @@
-# Helpers
-ubin="/usr/bin"
-uloc="/usr/local"
-ulobin="/usr/local/bin"
-hloc="$HOME/.local"
-hlobin="$hloc/bin"
-hbin="$hloc/bin"
+##
+## Helpers
+##
 
 ######################
 # Global variables   #
@@ -46,14 +42,14 @@ export NODE_PATH="$NPM_PACKAGES/lib/node_modules"
 
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 
-export CMAKE_INSTALL_PREFIX=$ulobin
+export CMAKE_INSTALL_PREFIX=/usr/local/bin
 
 # Leaving this where it is since it is currently in use
-export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;$XDG_CONFIG_HOME/luarocks/?.lua;"
+export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;$XDG_CONFIG_HOME/luarocks/?.lua;"
 export LUAROCKS_CONFIG="$XDG_CONFIG_HOME/luarocks/config.lua"
 
 # Dasht config
-export DASHT_DOCSETS_DIR=$hloc/share/Zeal/Zeal/docsets/
+export DASHT_DOCSETS_DIR=$HOME/.local/share/Zeal/Zeal/docsets/
 
 export GOPATH=$XDG_DATA_HOME/go/
 
@@ -70,36 +66,22 @@ export JIRA_BROWSER="google-chrome"
 # Path modifiers     #
 ######################
 
-py3=$ubin/python3
-pybin=$PYENV_ROOT/bin
-nbin=$NPM_PACKAGES/bin
-maven=/opt/apache-maven/bin
-nvim=$XDG_CODE_HOME/neovim/build/bin
-xdgbin=$XDG_BIN_HOME
-cargo=$CARGO_HOME/bin
-wez=/Applications/WezTerm.app/Contents/MacOS
-go=$GOPATH/bin
-brew=/opt/homebrew/bin
-rust="$HOME/.cargo/bin"
-
-# Note that this assumes postgres is installed via homebrew! This must be updated for linux
-psql=/opt/homebrew/opt/postgresql@12/bin
 
 typeset -U path # Ensures unique entries
 path=(
   "$JAVA_HOME"
-  "$rust"
-  "$brew"
-  "$go"
-  "$wez"
-  "$cargo"
-  "$xdgbin"
-  "$py3"
-  "$pybin"
-  "$nbin"
-  "$maven"
-  "$nvim"
-  "$psql"
+  "$HOME/.cargo/bin"
+  "/opt/homebrew/bin"
+  "$GOPATH/bin"
+  "/Applications/WezTerm.app/Contents/MacOS"
+  "$CARGO_HOME/bin"
+  "$XDG_BIN_HOME"
+  "/usr/bin/python3"
+  "$PYENV_ROOT/bin"
+  "$NPM_PACKAGES/bin"
+  "/opt/apache-maven/bin"
+  "$XDG_CODE_HOME/neovim/build/bin"
+  "/opt/homebrew/opt/postgresql@12/bin"
   "$kubediff"
   $path
 )
@@ -126,9 +108,9 @@ function setup_deferred_env() {
 
   # Less commonly used env vars
   export LPASS_HOME="$XDG_DATA_HOME/lpass"
-  export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$uloc/share/lua/5.1/?.lua;$XDG_CONFIG_HOME/luarocks/?.lua;"
+  export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;$XDG_CONFIG_HOME/luarocks/?.lua;"
   export LUAROCKS_CONFIG="$XDG_CONFIG_HOME/luarocks/config.lua"
-  export DASHT_DOCSETS_DIR="$hloc/share/Zeal/Zeal/docsets/"
+  export DASHT_DOCSETS_DIR="$HOME/.local/share/Zeal/Zeal/docsets/"
 
   ######################
   # OS specific items  #
