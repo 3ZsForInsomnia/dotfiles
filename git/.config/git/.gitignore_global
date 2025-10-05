@@ -1,3 +1,4 @@
 tags
 confluence/*.json
 .DS_STORE
+chroma-data

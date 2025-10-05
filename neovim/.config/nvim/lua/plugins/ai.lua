@@ -45,7 +45,7 @@ return {
     event = "VeryLazy",
     config = true,
     opts = {
-      model = "claude-4-sonnet",
+      model = "claude-4.5-sonnet",
     },
   },
   {

@@ -8,18 +8,6 @@ function git_current_branch() {
   git rev-parse --abbrev-ref HEAD 2>/dev/null
 }
 
-function git_main_branch() {
-  command git rev-parse --git-dir &>/dev/null || return
-  local ref
-  for ref in refs/{heads,remotes/{origin,upstream}}/{main,trunk,mainline,default}; do
-    if command git show-ref -q --verify $ref; then
-      echo ${ref:t}
-      return
-    fi
-  done
-  echo master
-}
-
 ### Utility Functions
 
 alias groot="git rev-parse --show-toplevel"
@@ -221,10 +209,12 @@ function gco() {
   git checkout "$@"
 }
 
+alias gcm="git checkout $GIT_MAIN_BRANCH"
+
 function gcb() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gcb <branch>"
-    echo "Create and checkout new branch"
+    echo "Create and checkout new branch, or checkout existing branch"
     echo "Example: gcb feature/new-login"
     return 0
   fi
@@ -233,7 +223,15 @@ function gcb() {
     echo "Error: branch name required"
     return 1
   fi
-  git checkout -b "$1"
+
+  # Check if branch exists locally
+  if git show-ref --verify --quiet "refs/heads/$1"; then
+    echo "Branch '$1' exists, checking out..."
+    git checkout "$1"
+  else
+    echo "Creating new branch '$1'..."
+    git checkout -b "$1"
+  fi
 }
 
 ### Diff
@@ -377,6 +375,9 @@ function gpt() {
 }
 
 ### Branch Management
+
+alias gb="git branch"
+
 function gsup() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gsup"
@@ -730,44 +731,44 @@ function fgdiff() {
 
   local branch1="" branch2=""
   local use_main=false use_current=false
-  
+
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -m|--main)
-        use_main=true
-        shift
-        ;;
-      -c|--current)
-        use_current=true
-        shift
-        ;;
-      *)
-        if [[ -z "$branch1" ]]; then
-          branch1="$1"
-        elif [[ -z "$branch2" ]]; then
-          branch2="$1"
-        else
-          echo "Error: too many branch arguments"
-          return 1
-        fi
-        shift
-        ;;
+    -m | --main)
+      use_main=true
+      shift
+      ;;
+    -c | --current)
+      use_current=true
+      shift
+      ;;
+    *)
+      if [[ -z "$branch1" ]]; then
+        branch1="$1"
+      elif [[ -z "$branch2" ]]; then
+        branch2="$1"
+      else
+        echo "Error: too many branch arguments"
+        return 1
+      fi
+      shift
+      ;;
     esac
   done
-  
+
   # Resolve branch names
   if [[ "$use_main" == true ]]; then
     if [[ -n "$branch1" ]]; then
       # -m was specified with a branch, so main vs branch
       branch2="$branch1"
-      branch1="$(git_main_branch)"
+      branch1="$GIT_MAIN_BRANCH"
     else
       # Just -m specified
-      branch1="$(git_main_branch)"
+      branch1="$GIT_MAIN_BRANCH"
     fi
   fi
-  
+
   if [[ "$use_current" == true ]]; then
     if [[ -n "$branch2" ]]; then
       # We already have branch2 set, current becomes branch1
@@ -777,48 +778,48 @@ function fgdiff() {
       branch2="$(git_current_branch)"
     fi
   fi
-  
+
   # Set defaults if branches not specified
   if [[ -z "$branch1" ]]; then
-    branch1="$(git_main_branch)"
+    branch1="$GIT_MAIN_BRANCH"
   fi
   if [[ -z "$branch2" ]]; then
-    branch2="$(git_current_branch)"
+    branch2="$GIT_MAIN_BRANCH"
   fi
-  
+
   # Validate branches exist
   if ! git show-ref --verify --quiet "refs/heads/$branch1" 2>/dev/null; then
     echo "Error: branch '$branch1' not found"
     return 1
   fi
   if ! git show-ref --verify --quiet "refs/heads/$branch2" 2>/dev/null; then
-    echo "Error: branch '$branch2' not found" 
+    echo "Error: branch '$branch2' not found"
     return 1
   fi
-  
+
   echo "📊 Comparing branches: $branch1 → $branch2"
   echo ""
-  
+
   # Get list of changed files
   local changed_files
   changed_files=$(git diff --name-only "$branch1".."$branch2" 2>/dev/null)
-  
+
   if [[ -z "$changed_files" ]]; then
     echo "No differences found between $branch1 and $branch2"
     return 0
   fi
-  
+
   local file_count=$(echo "$changed_files" | wc -l)
   echo "Found $file_count changed file(s)"
   echo ""
-  
+
   # Interactive file selection with diff preview
   local selected_file
-  selected_file=$(echo "$changed_files" | \
+  selected_file=$(echo "$changed_files" |
     fzf $(fzf_git_opts) \
-        --preview="_fgdiff_preview $branch1 $branch2 {}" \
-        --header="Comparing $branch1 → $branch2 | Enter=view diff, Ctrl-S=inspect, Alt-V=edit")
-  
+      --preview="_fgdiff_preview $branch1 $branch2 {}" \
+      --header="Comparing $branch1 → $branch2 | Enter=view diff, Ctrl-S=inspect, Alt-V=edit")
+
   if [[ -n "$selected_file" ]]; then
     echo "Opening diff for: $selected_file"
     git diff --color=always "$branch1".."$branch2" -- "$selected_file" | less -R
@@ -828,16 +829,16 @@ function fgdiff() {
 # Helper function for branch diff preview
 function _fgdiff_preview() {
   local branch1="$1" branch2="$2" file="$3"
-  
+
   if [[ -z "$file" ]]; then
     echo "No file selected"
     return
   fi
-  
+
   echo "📄 File: $file"
   echo "🔄 Changes: $branch1 → $branch2"
   echo ""
-  
+
   # Show diff stats first
   local stats
   stats=$(git diff --stat "$branch1".."$branch2" -- "$file" 2>/dev/null)
@@ -845,11 +846,11 @@ function _fgdiff_preview() {
     echo "📊 $stats"
     echo ""
   fi
-  
+
   # Show the actual diff (truncated)
   local diff_lines
   diff_lines=$(git diff "$branch1".."$branch2" -- "$file" 2>/dev/null | wc -l)
-  
+
   if [[ "$diff_lines" -gt 100 ]]; then
     echo "📋 Diff preview (first 100 lines of $diff_lines total):"
     echo ""
@@ -897,53 +898,53 @@ function fgsearch() {
   local pickaxe_search=""
   local author_filter=""
   local date_filter=""
-  
+
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -S)
-        pickaxe_search="$2"
-        git_log_args+=("-S" "$2")
-        shift 2
-        ;;
-      -G)
-        pickaxe_search="$2" 
-        git_log_args+=("-G" "$2")
-        shift 2
-        ;;
-      --author)
-        author_filter="$2"
-        git_log_args+=("--author=$2")
-        shift 2
-        ;;
-      --since)
-        date_filter="$2"
-        git_log_args+=("--since=$2")
-        shift 2
-        ;;
-      *)
-        search_term="$1"
-        shift
-        ;;
+    -S)
+      pickaxe_search="$2"
+      git_log_args+=("-S" "$2")
+      shift 2
+      ;;
+    -G)
+      pickaxe_search="$2"
+      git_log_args+=("-G" "$2")
+      shift 2
+      ;;
+    --author)
+      author_filter="$2"
+      git_log_args+=("--author=$2")
+      shift 2
+      ;;
+    --since)
+      date_filter="$2"
+      git_log_args+=("--since=$2")
+      shift 2
+      ;;
+    *)
+      search_term="$1"
+      shift
+      ;;
     esac
   done
-  
+
   # Build the git log command
   local log_cmd="git log --oneline --graph --color=always"
-  
+
   # Add search arguments
   for arg in "${git_log_args[@]}"; do
     log_cmd="$log_cmd '$arg'"
   done
-  
+
   # Add grep for commit message if search term provided
   if [[ -n "$search_term" ]]; then
     log_cmd="$log_cmd --grep='$search_term'"
   fi
-  
+
   # Limit to reasonable number of commits
   log_cmd="$log_cmd -200"
-  
+
   echo "🔍 Searching git commits..."
   if [[ -n "$search_term" ]]; then
     echo "   Message: '$search_term'"
@@ -958,29 +959,29 @@ function fgsearch() {
     echo "   Since: '$date_filter'"
   fi
   echo ""
-  
+
   # Execute search and show results
   local commits
   commits=$(eval "$log_cmd" 2>/dev/null)
-  
+
   if [[ -z "$commits" ]]; then
     echo "No commits found matching criteria"
     return 0
   fi
-  
+
   local commit_count=$(echo "$commits" | wc -l)
   echo "Found $commit_count matching commit(s)"
   echo ""
-  
+
   # Interactive selection
   local selected_commit
-  selected_commit=$(echo "$commits" | \
+  selected_commit=$(echo "$commits" |
     fzf --ansi --no-sort $(fzf_git_opts) \
-        --preview="_fzf_git_commit_preview {1}" \
-        --bind="ctrl-a:execute(_fgsearch_filter_author {})" \
-        --header="Enter=checkout, Ctrl-S=inspect, Ctrl-A=filter by author, Alt-Y=copy hash" |
+      --preview="_fzf_git_commit_preview {1}" \
+      --bind="ctrl-a:execute(_fgsearch_filter_author {})" \
+      --header="Enter=checkout, Ctrl-S=inspect, Ctrl-A=filter by author, Alt-Y=copy hash" |
     awk '{print $1}' | sed 's/[^a-f0-9]//g')
-  
+
   if [[ -n "$selected_commit" ]]; then
     echo "Checking out commit: $selected_commit"
     git checkout "$selected_commit"
@@ -991,7 +992,7 @@ function fgsearch() {
 function _fgsearch_filter_author() {
   local commit_line="$1"
   local commit_hash=$(echo "$commit_line" | awk '{print $1}' | sed 's/[^a-f0-9]//g')
-  
+
   if [[ -n "$commit_hash" ]]; then
     local author=$(git log -1 --format='%an' "$commit_hash" 2>/dev/null)
     if [[ -n "$author" ]]; then

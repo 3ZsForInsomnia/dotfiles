@@ -17,13 +17,15 @@ source "$git_dir/stash.zsh"
 source "$git_dir/tags.zsh"
 source "$git_dir/wtrees.zsh"
 
-# Set up shared configuration
-export GIT_MAIN_BRANCH="${GIT_MAIN_BRANCH:-main}"
-
 # Initialize git completion cache integration
 # This integrates cache updates with git fetch functions
 if [[ -f "$ZSH_CONFIG_DIR/completions/_git_completion_integration" ]]; then
   source "$ZSH_CONFIG_DIR/completions/_git_completion_integration"
+fi
+
+# Initialize git tag completion
+if [[ -f "$ZSH_CONFIG_DIR/completions/_git_tag_completion" ]]; then
+  source "$ZSH_CONFIG_DIR/completions/_git_tag_completion"
 fi
 
 # Git help function - shows available commands by category

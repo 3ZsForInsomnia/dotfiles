@@ -1,0 +1,258 @@
+#!/usr/bin/env zsh
+
+# Git Tag Function Completions
+# Provides autocompletion for custom git tag functions
+
+# Cache for git tags to improve performance
+typeset -g _git_tag_cache_key=""
+typeset -ga _git_tag_cache=()
+
+# Function to get git tags with caching
+function _get_git_tags() {
+  # Generate cache key from git directory and tag refs
+  local current_key
+  if git rev-parse --git-dir >/dev/null 2>&1; then
+    local git_dir=$(git rev-parse --git-dir 2>/dev/null)
+    local tag_refs_mtime=""
+    if [[ -d "$git_dir/refs/tags" ]]; then
+      tag_refs_mtime=$(find "$git_dir/refs/tags" -type f -exec stat -f %m {} \; 2>/dev/null | sort -nr | head -1)
+    fi
+    current_key="${git_dir}:${tag_refs_mtime}"
+  else
+    return 1
+  fi
+  
+  # Use cache if key matches
+  if [[ "$current_key" == "$_git_tag_cache_key" && ${#_git_tag_cache[@]} -gt 0 ]]; then
+    printf '%s\n' "${_git_tag_cache[@]}"
+    return 0
+  fi
+  
+  # Refresh cache
+  local -a tags
+  while IFS= read -r tag; do
+    [[ -n "$tag" ]] && tags+=("$tag")
+  done < <(git tag --sort=-version:refname 2>/dev/null)
+  
+  if (( ${#tags[@]} > 0 )); then
+    _git_tag_cache=("${tags[@]}")
+    _git_tag_cache_key="$current_key"
+    printf '%s\n' "${tags[@]}"
+  fi
+}
+
+# Function to get git remotes
+function _get_git_remotes() {
+  git remote 2>/dev/null
+}
+
+# Completion for gt (list tags)
+function _gt_completion() {
+  case $CURRENT in
+    2)
+      # Complete with tag patterns or existing tags for filtering
+      local -a tags
+      while IFS= read -r tag; do
+        [[ -n "$tag" ]] && tags+=("$tag:tag")
+      done < <(_get_git_tags)
+      
+      if (( ${#tags[@]} > 0 )); then
+        _describe 'git tags' tags
+      fi
+      ;;
+  esac
+}
+
+# Completion for gtc (create tag)
+function _gtc_completion() {
+  case $CURRENT in
+    2)
+      # For new tag creation, don't complete existing tags
+      # but provide helpful message
+      _message "tag name (e.g., v1.0.0)"
+      ;;
+    3)
+      # Complete with commit hashes/refs
+      __git_commits || _message "commit hash or ref"
+      ;;
+  esac
+}
+
+# Completion for gtca (create annotated tag)
+function _gtca_completion() {
+  case $CURRENT in
+    2)
+      _message "tag name (e.g., v1.0.0)"
+      ;;
+    3)
+      _message "tag message"
+      ;;
+    4)
+      # Complete with commit hashes/refs
+      __git_commits || _message "commit hash or ref"
+      ;;
+  esac
+}
+
+# Completion for gtd (delete tag)
+function _gtd_completion() {
+  case $CURRENT in
+    2)
+      local -a tags
+      while IFS= read -r tag; do
+        [[ -n "$tag" ]] && tags+=("$tag")
+      done < <(_get_git_tags)
+      
+      if (( ${#tags[@]} > 0 )); then
+        _describe 'git tags to delete' tags
+      else
+        _message "no tags found"
+      fi
+      ;;
+  esac
+}
+
+# Completion for gtdr (delete remote tag)
+function _gtdr_completion() {
+  case $CURRENT in
+    2)
+      local -a tags
+      while IFS= read -r tag; do
+        [[ -n "$tag" ]] && tags+=("$tag")
+      done < <(_get_git_tags)
+      
+      if (( ${#tags[@]} > 0 )); then
+        _describe 'git tags to delete from remote' tags
+      else
+        _message "no tags found"
+      fi
+      ;;
+    3)
+      local -a remotes
+      while IFS= read -r remote; do
+        [[ -n "$remote" ]] && remotes+=("$remote")
+      done < <(_get_git_remotes)
+      
+      if (( ${#remotes[@]} > 0 )); then
+        _describe 'git remotes' remotes
+      else
+        _message "no remotes found"
+      fi
+      ;;
+  esac
+}
+
+# Completion for gtp (push tag)
+function _gtp_completion() {
+  case $CURRENT in
+    2)
+      # Can push specific tag or all tags (no argument)
+      local -a tags
+      while IFS= read -r tag; do
+        [[ -n "$tag" ]] && tags+=("$tag")
+      done < <(_get_git_tags)
+      
+      if (( ${#tags[@]} > 0 )); then
+        _describe 'git tags to push' tags
+      else
+        _message "no tags found"
+      fi
+      ;;
+    3)
+      local -a remotes
+      while IFS= read -r remote; do
+        [[ -n "$remote" ]] && remotes+=("$remote")
+      done < <(_get_git_remotes)
+      
+      if (( ${#remotes[@]} > 0 )); then
+        _describe 'git remotes' remotes
+      else
+        _message "no remotes found"
+      fi
+      ;;
+  esac
+}
+
+# Completion for gtshow (show tag)
+function _gtshow_completion() {
+  case $CURRENT in
+    2)
+      local -a tags
+      while IFS= read -r tag; do
+        [[ -n "$tag" ]] && tags+=("$tag")
+      done < <(_get_git_tags)
+      
+      if (( ${#tags[@]} > 0 )); then
+        _describe 'git tags' tags
+      else
+        _message "no tags found"
+      fi
+      ;;
+  esac
+}
+
+# Completion for gtlog (log between tags)
+function _gtlog_completion() {
+  case $CURRENT in
+    2|3)
+      local -a tags
+      while IFS= read -r tag; do
+        [[ -n "$tag" ]] && tags+=("$tag")
+      done < <(_get_git_tags)
+      
+      if (( ${#tags[@]} > 0 )); then
+        _describe 'git tags' tags
+      else
+        _message "no tags found"
+      fi
+      ;;
+  esac
+}
+
+# Completion for gtdiff (diff between tags)
+function _gtdiff_completion() {
+  case $CURRENT in
+    2|3)
+      local -a tags
+      while IFS= read -r tag; do
+        [[ -n "$tag" ]] && tags+=("$tag")
+      done < <(_get_git_tags)
+      
+      if (( ${#tags[@]} > 0 )); then
+        _describe 'git tags' tags
+      else
+        _message "no tags found"
+      fi
+      ;;
+  esac
+}
+
+# Completion for gtnext (next semantic version)
+function _gtnext_completion() {
+  case $CURRENT in
+    2)
+      local -a bump_types
+      bump_types=(
+        'major:Increment major version (X.0.0)'
+        'minor:Increment minor version (x.X.0)'
+        'patch:Increment patch version (x.x.X)'
+      )
+      _describe 'version bump type' bump_types
+      ;;
+  esac
+}
+
+# Register completions for all git tag functions
+compdef _gt_completion gt
+compdef _gtc_completion gtc
+compdef _gtca_completion gtca
+compdef _gtd_completion gtd
+compdef _gtdr_completion gtdr
+compdef _gtp_completion gtp
+compdef _gtshow_completion gtshow
+compdef _gtlog_completion gtlog
+compdef _gtdiff_completion gtdiff
+compdef _gtnext_completion gtnext
+
+# Note: ftag and ftagco are intentionally not given completions 
+# since they provide their own interactive FZF interface

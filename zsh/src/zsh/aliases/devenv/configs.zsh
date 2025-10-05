@@ -192,6 +192,10 @@ function getBeConfig() {
   propertyName=".databaseConfig.datasourceName"
   dbUser="$W_DB_BP_USERNAME"
 
+  if [[ "$env" == "qat" ]]; then
+    W_DB_NAME="qat"
+  fi
+
   propertyValue="user=$dbUser dbname=$W_DB_NAME sslmode=require host=$W_DB_HOST port=$port"
   echo "Updating $propertyName in $downloaded_config to $propertyValue for config $new_config"
   jq "$propertyName = \"$propertyValue\"" "$downloaded_config" >"$new_config"
