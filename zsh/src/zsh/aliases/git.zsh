@@ -91,6 +91,7 @@ function grbh() {
 
 alias gfapu='gfa && gup'
 alias gfapm='gfa && gup && gcm'
+alias gfapf="gfa && gup && guf"
 
 function pullBranchThenMergeWithIt() {
   currentBranch=$(git symbolic-ref --short HEAD)

@@ -1,5 +1,47 @@
 #compdef gsta gstat gstal gstap gstac gstd gstaa fstash stash_then_run run_then_apply_stash run_then_find_stash run_then_pop_stash gstapu gstacm
 
+# Function to provide smart argument completion for git stash functions
+function _git_stash_complete_args() {
+  local cmd="$1"
+  
+  # Only provide argument completion if we're in a git repo and beyond the first argument
+  if (( CURRENT > 1 )) && git rev-parse --git-dir &>/dev/null 2>&1; then
+    case "$cmd" in
+      gstap|gstd)
+        # These functions take stash indices as arguments
+        local -a stashes
+        local stash_count=0
+        
+        # Get stash list and create completion entries
+        while IFS= read -r line; do
+          if [[ -n "$line" ]]; then
+            local stash_info="${line#stash@\{}"
+            stash_info="${stash_info%\}*}"
+            local stash_desc="${line#*\} }"
+            stashes+=("${stash_count}:${stash_desc}")
+            ((stash_count++))
+          fi
+        done < <(git stash list 2>/dev/null)
+        
+        if (( ${#stashes[@]} > 0 )); then
+          _describe 'stashes' stashes
+          return 0
+        fi
+        ;;
+      gstaa)
+        # gstaa can take a search term - no specific completion needed
+        return 1
+        ;;
+      stash_then_run|run_then_apply_stash|run_then_find_stash|run_then_pop_stash)
+        # These take shell commands - no specific completion needed
+        return 1
+        ;;
+    esac
+  fi
+  
+  # No specific argument completion available
+  return 1
+}
 
 
 # Main completion function

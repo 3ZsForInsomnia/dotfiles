@@ -10,6 +10,141 @@ function _git_core_complete_args() {
   # Only provide argument completion if we're in a git repo and beyond the first argument
   if (( CURRENT > 1 )) && git rev-parse --git-dir &>/dev/null 2>&1; then
     case "$cmd" in
+      ga|gaa|gac|gacp)
+        # git add commands - complete with modified and untracked files
+        # Handle different argument positions for different functions
+        case "$cmd" in
+          gac|gacp)
+            # gac/gacp <message> [files] - first arg is message, subsequent are files
+            if (( CURRENT == 2 )); then
+              _message "commit message"
+              return 0
+            elif (( CURRENT > 2 )); then
+              # Complete with files for additional arguments
+              local -a modified_files untracked_files all_files
+              
+              # Get modified files (both staged and unstaged)
+              while IFS= read -r file; do
+                [[ -n "$file" ]] || continue
+                modified_files+=("${file}:modified")
+              done < <(git diff --name-only HEAD 2>/dev/null)
+              
+              # Get untracked files
+              while IFS= read -r file; do
+                [[ -n "$file" ]] || continue
+                untracked_files+=("${file}:untracked")
+              done < <(git ls-files --others --exclude-standard 2>/dev/null)
+              
+              # Combine arrays
+              all_files=("${modified_files[@]}" "${untracked_files[@]}")
+              
+              if (( ${#all_files[@]} > 0 )); then
+                _describe 'files' all_files
+              else
+                _files
+              fi
+            fi
+            ;;
+          ga|gaa)
+            # ga/gaa [files] - always file completion
+            local -a modified_files untracked_files all_files
+            
+            # Get modified files (both staged and unstaged)
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+              modified_files+=("${file}:modified")
+            done < <(git diff --name-only HEAD 2>/dev/null)
+            
+            # Get untracked files
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+              untracked_files+=("${file}:untracked")
+            done < <(git ls-files --others --exclude-standard 2>/dev/null)
+            
+            # Combine arrays
+            all_files=("${modified_files[@]}" "${untracked_files[@]}")
+            
+            if (( ${#all_files[@]} > 0 )); then
+              _describe 'files' all_files
+            else
+              # Fallback to regular file completion if no git-specific files
+              _files
+            fi
+            ;;
+        esac
+        return 0
+        ;;
+      gc)
+        # git commit - only takes a commit message
+        if (( CURRENT == 2 )); then
+          _message "commit message"
+          return 0
+        fi
+        ;;
+      gd|gdh)
+        # git diff commands - complete with modified files (working tree)
+        local -a modified_files
+        
+        while IFS= read -r file; do
+          [[ -n "$file" ]] || continue
+          modified_files+=("${file}:modified")
+        done < <(git diff --name-only 2>/dev/null)
+        
+        if (( ${#modified_files[@]} > 0 )); then
+          _describe 'modified files' modified_files
+        else
+          _files
+        fi
+        return 0
+        ;;
+      gds)
+        # git diff --staged - complete with staged files
+        local -a staged_files
+        
+        while IFS= read -r file; do
+          [[ -n "$file" ]] || continue
+          staged_files+=("${file}:staged")
+        done < <(git diff --staged --name-only 2>/dev/null)
+        
+        if (( ${#staged_files[@]} > 0 )); then
+          _describe 'staged files' staged_files
+        else
+          _files
+        fi
+        return 0
+        ;;
+      grs)
+        # git restore - complete with modified files (working tree)
+        local -a modified_files
+        
+        while IFS= read -r file; do
+          [[ -n "$file" ]] || continue
+          modified_files+=("${file}:modified")
+        done < <(git diff --name-only 2>/dev/null)
+        
+        if (( ${#modified_files[@]} > 0 )); then
+          _describe 'modified files' modified_files
+        else
+          _files
+        fi
+        return 0
+        ;;
+      grh)
+        # git reset HEAD - complete with staged files
+        local -a staged_files
+        
+        while IFS= read -r file; do
+          [[ -n "$file" ]] || continue
+          staged_files+=("${file}:staged")
+        done < <(git diff --staged --name-only 2>/dev/null)
+        
+        if (( ${#staged_files[@]} > 0 )); then
+          _describe 'staged files' staged_files
+        else
+          _files
+        fi
+        return 0
+        ;;
       gco|gcb|grb|gm|pullBranchThenRebaseWithIt|gpmm|gprm|pullMasThenRebaseWithIt)
         # These functions take branch names as arguments
         local -a branches

@@ -974,6 +974,7 @@ function kfwd() {
   local ports=$(get_port_for "$app" "$env")
 
   cmd="kubeForwardPorts $namespace $service $ports"
+  echo "$cmd"
   eval "$cmd"
 }
 

@@ -82,6 +82,7 @@ function setBeConfig() {
 
   setConfig "$config" "$vault" "$file"
 }
+
 function commentOutNonLocalFrontendEnvars() {
   local service="$1"
   local env="$2"

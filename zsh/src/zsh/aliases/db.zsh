@@ -60,7 +60,9 @@ function viewDB() {
   local name=$3
   local host=$4
 
-  psql -U "$user" -h "$host" -p "$port" -d "$name"
+  cmd="psql -U $user -h $host -p $port -d $name"
+  # echo "Running: $cmd"
+  eval "$cmd"
 }
 
 #################################

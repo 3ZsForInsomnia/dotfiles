@@ -39,10 +39,12 @@
         "-y",
         "@bytebase/dbhub",
         "--transport",
-        "stdio"
+        "stdio",
+        "--dsn",
+        "postgres://postgres:abc123@localhost:5432/postgres"
       ],
       "command": "npx",
-      "disabled": true
+      "disabled": false
     },
     "dbhub-revman": {
       "args": [

@@ -58,9 +58,9 @@ function _viewAppDb() {
     ;;
   esac
 
-  # cmd="viewDB $username ${W_DB_PORTS[$port_index]} $db $W_DB_HOST"
+  cmd="viewDB $username ${W_DB_PORTS[$port_index]} $db $W_DB_HOST"
   # echo "Running: $cmd"
-  viewDB "$username" "${W_DB_PORTS[$port_index]}" "$db" "$W_DB_HOST"
+  eval "$cmd"
 }
 
 # Single function to access any database

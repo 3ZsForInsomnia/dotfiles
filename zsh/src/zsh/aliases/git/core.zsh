@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+alias g="git"
+
 # Core Git Operations
 # Smart defaults use the shortest names, base versions use longer names
 
@@ -435,6 +437,8 @@ function gl() {
   fi
   git log --oneline --graph --decorate
 }
+
+alias glg="git log"
 
 function glog() {
   if [[ "$1" == "-h" ]]; then

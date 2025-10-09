@@ -60,13 +60,13 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "ravitemer/codecompanion-history.nvim",
       {
-        -- "3ZsForInsomnia/vs-code-companion",
-        dir = "~/src/vs-code-companion",
+        "3ZsForInsomnia/vs-code-companion",
+        -- dir = "~/src/vs-code-companion",
         cmd = "VsccImport",
       },
       {
-        -- "3ZsForInsomnia/code-companion-picker",
-        dir = "~/src/code-companion-picker",
+        "3ZsForInsomnia/code-companion-picker",
+        -- dir = "~/src/code-companion-picker",
         cmd = "CodeCompanionPrompts",
       },
     },
@@ -225,7 +225,6 @@ return {
           adapter = {
             name = "copilot",
             model = "claude-sonnet-4",
-            -- model = "claude-sonnet-4.5",
           },
           keymaps = {
             close = {
@@ -239,7 +238,6 @@ return {
         inline = {
           adapter = {
             name = "copilot",
-            -- model = "claude-sonnet-4.5",
             model = "claude-sonnet-4",
           },
           keymaps = {
