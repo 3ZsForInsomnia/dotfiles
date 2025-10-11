@@ -1,3 +1,5 @@
+local cmd = require("helpers").k_cmd
+
 return {
   {
     "folke/noice.nvim",
@@ -76,6 +78,11 @@ return {
       { "<leader>snh", false },
       { "<leader>snl", false },
       { "<leader>snt", false },
+      cmd({
+        key = "<leader>un",
+        action = "Noice dismiss",
+        desc = "Dismiss all Noice messages",
+      }),
     },
   },
   {

@@ -1,6 +1,0 @@
-argparse
-luacheck
-luafilesystem
---server=https://luarocks.org/dev luaformatter
-luv
-sqlite

@@ -17,6 +17,7 @@ alias peg='pyenv global'
 
 alias ve='venv'
 alias vea='. .venv/bin/activate'
+alias veag="~/.global-py/bin/activate"
 
 function flaskAppStart() {
   flask --app "$1" run --debug

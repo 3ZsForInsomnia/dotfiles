@@ -240,3 +240,6 @@ XTRM
 env
 procfile
 MENA
+commitizen
+ollama
+venv

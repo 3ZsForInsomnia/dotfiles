@@ -1,0 +1,22 @@
+{
+  "db_url": "http://127.0.0.1:8000",
+  "db_path": "~/.local/share/vectorcode/chromadb/",
+  "db_log_path": "~/.local/share/vectorcode/"
+  "embedding_function": "SentenceTransformerEmbeddingFunction",
+  "embedding_params": {
+    "model_name": "nomic-embed-text"
+  }
+  "db_settings": null,
+  "chunk_size": 1200,
+  "overlap_ratio": 0.3,
+  "query_multiplier": 3,
+  "reranker": "CrossEncoderReranker",
+  "reranker_params": {
+    "model_name_or_path": "BAAI/bge-reranker-large"
+  },
+  "hnsw": {
+    "hnsw:M": 64,
+  },
+  "chunk_filters": {},
+  "encoding": "utf8"
+}

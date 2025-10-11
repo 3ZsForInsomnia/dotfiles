@@ -18,3 +18,11 @@ au({ "BufNewFile", "BufRead" }, {
     v.bo.filetype = "sh"
   end,
 })
+
+v.api.nvim_create_autocmd("BufEnter", {
+  pattern = "octo://*",
+  callback = function()
+    v.wo.number = true
+    v.wo.relativenumber = true
+  end,
+})

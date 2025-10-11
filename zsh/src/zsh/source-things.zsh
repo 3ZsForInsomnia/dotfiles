@@ -3,6 +3,7 @@ source "$HOME/src/powerlevel10k/powerlevel10k.zsh-theme"
 source "$ZSH_CONFIG_DIR/.p10k.zsh"
 source "$ZSH_CONFIG_DIR/path-modifiers.zsh"
 source "$ZSH_CONFIG_DIR/.env"
+source "$HOME/.global-py/bin/activate"
 
 source "$ZSH_CONFIG_DIR/tools/lazy-loading.zsh"
 source "$ZSH_CONFIG_DIR/tools/compile-large-files.zsh"

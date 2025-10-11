@@ -15,4 +15,4 @@ export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep
 
 [ -f "$ZSH_CONFIG_DIR/.env" ] && source "$ZSH_CONFIG_DIR/.env"
 
-export PATH="$JAVA_HOME:/opt/homebrew/bin:$GOPATH/bin:/Applications/WezTerm.app/Contents/MacOS:$CARGO_HOME/bin:$XDG_BIN_HOME:$PYENV_ROOT/bin:$NPM_PACKAGES/bin:/opt/apache-maven/bin:$XDG_CODE_HOME/neovim/build/bin:/opt/homebrew/opt/postgresql@12/bin:$PATH"
+export PATH="$JAVA_HOME:/opt/homebrew/bin:$GOPATH/bin:/Applications/WezTerm.app/Contents/MacOS:$CARGO_HOME/bin:$XDG_BIN_HOME:$PYENV_ROOT/bin:$NPM_PACKAGES/bin:$XDG_CODE_HOME/neovim/build/bin:/opt/homebrew/opt/postgresql@12/bin:$PATH"

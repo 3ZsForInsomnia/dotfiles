@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=YourApp
-Exec=~/obsidian.AppImage
-Icon=~/obsidian.jpeg
-comment=app
-Type=Application
-Terminal=false
-Encoding=UTF-8
-Categories=Utility;

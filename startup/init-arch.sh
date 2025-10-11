@@ -5,7 +5,7 @@
 paths_to_check=("$HOME/.cache" "$HOME/.local/state" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.config" "$HOME/.local/bin" "$HOME/src" "$HOME/Downloads/slack" "$HOME/Downloads/postman" "$HOME/Pictures/screenshots" "$HOME/Documents/test data" "$HOME/Documents/sync" "$HOME/.local/state/psql" "$HOME/.cache/zsh" "$HOME/.local/state/zsh" "$HOME/.local/state/python" "$HOME/.local/share/psql" "$HOME/.local/state/less" "$HOME/.local/share/bookmarks" "$HOME/src/work" "$HOME/.local/share/npm" "$HOME/.local/share/pyenv")
 
 # Cross-platform packages available in Arch repos
-pacman_packages=("zsh" "eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "bat" "docker" "kubectl" "github-cli" "imagemagick" "ffmpeg" "yazi" "p7zip" "poppler" "zoxide" "glow" "fx" "nodejs" "npm" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "tokei" "graphviz" "git-delta" "tmux" "hyperfine" "pandoc" "speedtest-cli" "python-pipx" "helm" "yq" "i3-wm" "i3blocks" "i3status" "i3lock" "rofi" "dunst" "xorg-server" "xorg-xinit" "xorg-xmodmap" "alacritty")
+pacman_packages=("zsh" "eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "bat" "docker" "kubectl" "github-cli" "imagemagick" "ffmpeg" "yazi" "p7zip" "poppler" "zoxide" "glow" "fx" "nodejs" "npm" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "tokei" "graphviz" "git-delta" "tmux" "hyperfine" "pandoc" "speedtest-cli" "helm" "yq" "i3-wm" "i3blocks" "i3status" "i3lock" "rofi" "dunst" "xorg-server" "xorg-xinit" "xorg-xmodmap" "alacritty" "ollama")
 
 # AUR packages (will need yay or another AUR helper)
 aur_packages=("luacheck" "powerlevel10k-git" "espanso" "lastpass-cli" "jira-cli" "lazydocker" "overmind")
@@ -15,9 +15,8 @@ gui_applications=("copyq" "obsidian" "google-chrome" "slack-desktop" "postman-bi
 
 npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree")
 
-pip_packages_to_install=("yamllint" "shell-gpt")
-
-uv_packages_to_install=("vectorcode" "basic-memory")
+# All Python packages to install in global venv
+python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh" "$HOME/.config/i3" "$HOME/.config/dunst" "$HOME/.config/rofi" "$HOME/.config/systemd" "$HOME/.icons" "$HOME/.Xmodmap" "$HOME/.XCompose")
 
@@ -373,13 +372,14 @@ run_all_steps() {
   install_pacman_packages
   install_aur_packages
   install_npm_packages
-  install_python_packages
+  create_global_python_venv
   install_misc_dependencies
   generate_ssh_keys
   install_neovim
   unstow_dotfiles
 
   set_arch_settings
+  setup_services
 
   print_manual_steps
   print_arch_steps
@@ -394,12 +394,13 @@ step_functions=(
   install_pacman_packages
   install_aur_packages
   install_npm_packages
-  install_python_packages
+  create_global_python_venv
   install_misc_dependencies
   generate_ssh_keys
   install_neovim
   unstow_dotfiles
   set_arch_settings
+  setup_services
   print_manual_steps
   print_arch_steps
   run_healthcheck
@@ -412,7 +413,7 @@ run_specific_steps() {
   fi
 
   for step_num in "$@"; do
-    if ((step_num >= 1 && step_num <= 15)); then
+    if ((step_num >= 1 && step_num <= 16)); then
       echo "Executing Step $step_num..."
       ${step_functions[step_num - 1]}
     else
@@ -435,19 +436,20 @@ show_steps() {
   echo "Step 4: Installing pacman packages"
   echo "Step 5: Installing AUR packages"
   echo "Step 6: Installing npm packages"
-  echo "Step 7: Installing Python packages (pip/pipx and uv)"
+  echo "Step 7: Creating global Python venv and installing packages"
   echo "Step 8: Installing miscellaneous dependencies"
   echo "Step 9: Creating SSH keys"
   echo "Step 10: Installing Neovim from source"
   echo "Step 11: Cloning dotfiles repo and unstowing dotfiles"
   echo "Step 12: Set Arch/i3wm settings that can be handled via CLI"
+  echo "Step 13: Setup services (ollama, chromadb)"
   echo ""
   echo "At this point, the steps become manual and are broken up into two parts:"
   echo ""
-  echo "Step 13: Manual steps to complete setup"
-  echo "Step 14: Update Arch/i3wm settings (also manual)"
+  echo "Step 14: Manual steps to complete setup"
+  echo "Step 15: Update Arch/i3wm settings (also manual)"
   echo ""
-  echo "Step 15: Run healthcheck to see what failed"
+  echo "Step 16: Run healthcheck to see what failed"
   echo "And then you should be done!"
 
   show_help
@@ -653,28 +655,42 @@ install_npm_packages() {
   echo "Step 6: Finished installing npm packages!"
 }
 
-install_python_packages() {
+create_global_python_venv() {
   ############################
-  # Install Python Deps      #
+  # Create Global Python Venv #
   ############################
 
-  echo "Step 7: Installing Python packages"
+  echo "Step 7: Creating global Python venv and installing packages"
 
-  echo "Step 7a: Installing pip packages via pipx..."
+  echo "Step 7a: Installing uv if not present..."
 
-  if check_command_is_installed pipx; then
-    pipx install "${pip_packages_to_install[@]}"
-    echo "Step 7a: Finished installing pip packages via pipx!"
+  if ! check_command_is_installed uv; then
+    echo "Step 7a: uv is not installed. Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="$HOME/.cargo/bin:$PATH"
   else
-    echo "Step 7a: pipx is not installed. Skipping pip package installation."
+    echo "Step 7a: uv is already installed, continuing."
   fi
 
-  echo "Step 7b: Installing Python uv and packages..."
+  echo "Step 7b: Creating global Python venv..."
 
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  uv tool install "${uv_packages_to_install[@]}"
+  # Create global venv if it doesn't exist
+  if [[ ! -d "$HOME/.global-py" ]]; then
+    echo "Step 7b: Creating ~/.global-py venv..."
+    uv venv "$HOME/.global-py"
+  else
+    echo "Step 7b: ~/.global-py venv already exists, continuing..."
+  fi
 
-  echo "Step 7: Finished installing Python packages!"
+  echo "Step 7c: Installing Python packages in global venv..."
+
+  # Install packages using uv with the global venv
+  for package in "${python_packages_to_install[@]}"; do
+    echo "Installing $package..."
+    uv pip install --python "$HOME/.global-py/bin/python" "$package"
+  done
+
+  echo "Step 7: Finished creating global Python venv and installing packages!"
 }
 
 install_misc_dependencies() {
@@ -841,30 +857,95 @@ set_arch_settings() {
   echo "You may want to reboot after completing all steps."
 }
 
+setup_services() {
+  ############################
+  # Setup Services           #
+  ############################
+
+  echo "Step 13: Setting up services..."
+
+  echo "Step 13a: Starting ollama service..."
+
+  if check_command_is_installed ollama; then
+    echo "Step 13a: Starting and enabling ollama service..."
+    sudo systemctl enable ollama
+    sudo systemctl start ollama
+
+    # Wait a moment for service to start
+    sleep 3
+
+    echo "Step 13a: Downloading nomic-embed-text model..."
+    ollama pull nomic-embed-text
+
+    echo "Step 13a: Finished setting up ollama!"
+  else
+    echo "Step 13a: ollama is not installed. Skipping ollama setup."
+  fi
+
+  echo "Step 13b: Setting up ChromaDB service..."
+
+  if check_command_is_installed docker; then
+    # Create chroma data directory
+    mkdir -p "$HOME/.local/share/chroma-data"
+
+    # Create systemd user service directory if it doesn't exist
+    mkdir -p "$HOME/.config/systemd/user"
+
+    # Create the systemd service file
+    cat >"$HOME/.config/systemd/user/chromadb.service" <<EOF
+[Unit]
+Description=ChromaDB Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/docker run --rm -v $HOME/.local/share/chroma-data:/data -p 8000:8000 chromadb/chroma:0.6.3
+ExecStop=/usr/bin/docker stop chromadb
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
+EOF
+
+    # Reload systemd and enable the service
+    systemctl --user daemon-reload
+    systemctl --user enable chromadb.service
+    systemctl --user start chromadb.service
+
+    echo "Step 13b: Finished setting up ChromaDB service!"
+  else
+    echo "Step 13b: Docker is not installed. Skipping ChromaDB setup."
+  fi
+
+  echo "Step 13: Finished setting up services!"
+}
+
 print_manual_steps() {
   ############################
   # Manual steps             #
   ############################
 
-  echo "Step 13: Manual steps to complete setup:"
-  echo "Step 13a: Log into Github and register ssh keys"
-  echo "Step 13b: Clone learning repo with SSH: cd \$XDG_CODE_HOME && git clone git@github.com:3ZsForInsomnia/learning.git"
-  echo "Step 13c: Log into gh cli and retrieve hidden gists"
+  echo "Step 14: Manual steps to complete setup:"
+  echo "Step 14a: Log into Github and register ssh keys"
+  echo "Step 14b: Clone learning repo with SSH: cd \$XDG_CODE_HOME && git clone git@github.com:3ZsForInsomnia/learning.git"
+  echo "Step 14c: Log into gh cli and retrieve hidden gists"
   echo "To do this, use gh to pull down your gist containing the list of hidden gists, and run \`handle_all_gists <file>\`"
   echo "Or alternatively, run the \`retrieve_hidden_gists\` function after setting up gh auth"
-  echo "Step 13d: Install fonts manually (nerd fonts): pacman -S ttf-fira-code nerd-fonts-fira-code"
-  echo "Step 13e: Install GUI applications via AUR/Flatpak as desired:"
+  echo "Step 14d: Install fonts manually (nerd fonts): pacman -S ttf-fira-code nerd-fonts-fira-code"
+  echo "Step 14e: Install GUI applications via AUR/Flatpak as desired:"
 
   gui_apps=("obsidian" "google-chrome" "slack-desktop" "postman-bin" "copyq")
   echo "        Available in AUR:"
   echo_each_element "${gui_apps[@]}"
 
   echo ""
-  echo "Step 13f: Set up display manager or configure startx"
-  echo "Step 13g: Configure audio (pulseaudio/pipewire)"
+  echo "Step 14f: Set up display manager or configure startx"
+  echo "Step 14g: Configure audio (pulseaudio/pipewire)"
 
   other_apps=("Lastpass" "Browser extensions" "Development tools specific to your workflow")
-  echo "Step 13h: Log into each of these manually: "
+  echo "Step 14h: Log into each of these manually: "
   echo_each_element "${other_apps[@]}"
 }
 
@@ -873,14 +954,14 @@ print_arch_steps() {
   # Arch/i3wm Settings       #
   ############################
 
-  echo "Step 14: Configure the following Arch/i3wm settings:"
-  echo "Step 14a: Configure display settings (xrandr/arandr for multi-monitor)"
-  echo "Step 14b: Set up input remapping (your dotfiles include input-remapper-2 config)"
-  echo "Step 14c: Configure systemd user services (copyq, redshift services are in your dotfiles)"
-  echo "Step 14d: Set up power management (tlp, powertop, or similar)"
-  echo "Step 14e: Configure firewall (ufw or iptables)"
-  echo "Step 14f: Set up backup solutions"
-  echo "Step 14g: Test i3wm keybindings and adjust as needed"
+  echo "Step 15: Configure the following Arch/i3wm settings:"
+  echo "Step 15a: Configure display settings (xrandr/arandr for multi-monitor)"
+  echo "Step 15b: Set up input remapping (your dotfiles include input-remapper-2 config)"
+  echo "Step 15c: Configure systemd user services (copyq, redshift services are in your dotfiles)"
+  echo "Step 15d: Set up power management (tlp, powertop, or similar)"
+  echo "Step 15e: Configure firewall (ufw or iptables)"
+  echo "Step 15f: Set up backup solutions"
+  echo "Step 15g: Test i3wm keybindings and adjust as needed"
   echo ""
   echo "Note: Your i3wm dotfiles should handle most theming, keybindings, and window management settings automatically."
 }
@@ -949,6 +1030,32 @@ healthcheck() {
     ((did_anything_fail++))
   else
     echo_on_success "  All Npm packages were installed successfully!"
+  fi
+
+  echo_on_verbose "Checking if global Python venv exists and packages are installed..."
+  if check_if_file_or_folder_exists "$HOME/.global-py"; then
+    echo_on_success "  Global Python venv exists!"
+
+    # Check if packages are installed in the global venv
+    PYTHON_FAILED_PACKAGES=()
+    for package in "${python_packages_to_install[@]}"; do
+      if ! "$HOME/.global-py/bin/python" -m pip list | grep -q "^$package "; then
+        PYTHON_FAILED_PACKAGES+=("$package")
+      fi
+    done
+
+    if ((${#PYTHON_FAILED_PACKAGES[@]} > 0)); then
+      echo "  These Python packages failed to install in global venv: "
+      echo_each_element "${PYTHON_FAILED_PACKAGES[@]}"
+      echo ""
+      ((did_anything_fail++))
+    else
+      echo_on_success "  All Python packages were installed successfully in global venv!"
+    fi
+  else
+    echo "  Global Python venv does not exist!"
+    echo ""
+    ((did_anything_fail++))
   fi
 
   echo_on_verbose "Checking if Neovim installed..."
@@ -1053,6 +1160,39 @@ healthcheck() {
     echo ""
     ((did_anything_fail++))
   fi
+
+  echo_on_verbose "Checking if services are running..."
+  
+  # Check ollama service
+  if check_command_is_installed ollama; then
+    if systemctl is-active --quiet ollama; then
+      echo_on_success "  Ollama service is running!"
+    else
+      echo "  Ollama service is not running!"
+      echo ""
+      ((did_anything_fail++))
+    fi
+  else
+    echo "  Ollama is not installed!"
+    echo ""
+    ((did_anything_fail++))
+  fi
+  
+  # Check ChromaDB service
+  if check_if_file_or_folder_exists "$HOME/.config/systemd/user/chromadb.service"; then
+    if systemctl --user is-active --quiet chromadb; then
+      echo_on_success "  ChromaDB service is running!"
+    else
+      echo "  ChromaDB service exists but is not running!"
+      echo ""
+      ((did_anything_fail++))
+    fi
+  else
+    echo "  ChromaDB service does not exist!"
+    echo ""
+    ((did_anything_fail++))
+  fi
+
   echo ""
   echo "Healthcheck complete!"
   if [[ $did_anything_fail -gt 0 ]]; then
@@ -1064,9 +1204,9 @@ healthcheck() {
 }
 
 run_healthcheck() {
-  echo "Step 15: Running full health check..."
+  echo "Step 16: Running full health check..."
 
   healthcheck
 
-  echo "Step 15: Finished checking for failed installations!"
+  echo "Step 16: Finished checking for failed installations!"
 }

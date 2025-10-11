@@ -40,8 +40,8 @@ return {
     end,
   },
   {
-    "3ZsForInsomnia/token-count.nvim",
-    -- dir = "~/src/token-count.nvim",
+    -- "3ZsForInsomnia/token-count.nvim",
+    dir = "~/src/token-count.nvim",
     event = "VeryLazy",
     config = true,
     opts = {

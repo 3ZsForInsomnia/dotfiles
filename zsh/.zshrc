@@ -25,6 +25,7 @@ export SAVEHIST=1000000000
 
 setopt EXTENDED_HISTORY
 setopt hist_ignore_dups
+setopt hist_ignore_all_dups
 setopt share_history
 setopt append_history
 

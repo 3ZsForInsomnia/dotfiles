@@ -1,7 +1,0 @@
-corepack@0.17.2
-git-split-diffs@0.15.0
-hostile@1.3.3
-markdownlint@0.28.2
-npm@9.6.4
-trello-cli@0.6.3
-

@@ -58,11 +58,91 @@ function vcq() {
 
 # takes a list of filetypes and runs `vectorcode vectorise` on them
 function vca() {
-  filetypes=("$@")
-  source_path="./**/*."
+  # Show help if -h is passed
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: vca [options] <filetype1> [filetype2] [filetype3] ..."
+    echo "  Vectorises files of the specified types (recursive by default)."
+    echo "  Each filetype should be the file extension without the dot."
+    echo ""
+    echo "Options:"
+    echo "  -h                Show this help message"
+    echo "  -R, --no-recursive    Disable recursive search (default: recursive enabled)"
+    echo "  -i                Include hidden files"
+    echo "  -p <path>         Set project root path"
+    echo ""
+    echo "Examples:"
+    echo "  vca js ts                    # Vectorise all .js and .ts files (recursive)"
+    echo "  vca -R py                    # Vectorise .py files in current dir only"
+    echo "  vca -i js                    # Include hidden .js files"
+    echo "  vca -p /path/to/root go      # Set project root and vectorise .go files"
+    return
+  fi
 
-  for filetype in "${filetypes[@]}"; do
-    echo "Vectorising $filetype files..."
-    vectorcode vectorise "$source_path$filetype"
+  # Parse arguments
+  local recursive=true
+  local include_hidden=false
+  local project_root=""
+  local filetypes=()
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -R|--no-recursive)
+      recursive=false
+      shift
+      ;;
+    -i)
+      include_hidden=true
+      shift
+      ;;
+    -p)
+      if [[ -n "$2" ]]; then
+        project_root="$2"
+        shift 2
+      else
+        echo "Error: -p requires a path argument" >&2
+        return 1
+      fi
+      ;;
+    -*)
+      echo "Error: Unknown option '$1'. Use 'vca -h' for help." >&2
+      return 1
+      ;;
+    *)
+      filetypes+=("$1")
+      shift
+      ;;
+    esac
   done
+
+  if [[ ${#filetypes[@]} -eq 0 ]]; then
+    echo "Error: No filetypes specified. Use 'vca -h' for help." >&2
+    return 1
+  fi
+
+  local file_patterns=()
+
+  # Build file patterns for all filetypes
+  for filetype in "${filetypes[@]}"; do
+    file_patterns+=("*.$filetype")
+  done
+
+  # Build vectorcode command with options
+  local cmd_args=("vectorcode" "vectorise")
+
+  if [[ "$recursive" == "true" ]]; then
+    cmd_args+=("-r")
+  fi
+
+  if [[ "$include_hidden" == "true" ]]; then
+    cmd_args+=("--include-hidden")
+  fi
+
+  if [[ -n "$project_root" ]]; then
+    cmd_args+=("--project_root" "$project_root")
+  fi
+
+  cmd_args+=("${file_patterns[@]}")
+
+  echo "Vectorising files: ${file_patterns[*]} (recursive: $recursive, hidden: $include_hidden)"
+  "${cmd_args[@]}"
 }

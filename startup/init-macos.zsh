@@ -5,14 +5,13 @@
 paths_to_check=("$HOME/.cache" "$HOME/.local/state" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.config" "$HOME/.local/bin" "$HOME/src" "$HOME/Downloads/slack" "$HOME/Downloads/postman" "$HOME/Pictures/screenshots" "$HOME/Documents/test data" "$HOME/Documents/sync" "$HOME/.local/state/psql" "$HOME/.cache/zsh" "$HOME/.local/state/zsh" "$HOME/.local/state/python" "$HOME/.local/share/psql" "$HOME/.local/state/less" "$HOME/.local/share/bookmarks" "$HOME/src/work" "$HOME/.local/share/npm" "$HOME/.local/share/pyenv")
 
 brew_taps="espanso/espanso ankitpokhrel/jira-cli"
-brew_packages=("eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei" "graphviz" "git-delta" "tmux" "overmind" "pngpaste" "hyperfine" "pandoc" "speedtest-cli" "zoxide" "pipx" "helm" "yq")
+brew_packages=("eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei" "graphviz" "git-delta" "tmux" "overmind" "pngpaste" "hyperfine" "pandoc" "speedtest-cli" "zoxide" "helm" "yq" "ollama")
 brew_packages_with_cask=("copyq" "witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass-cli" "rectangle")
 
 npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree")
 
-pip_packages_to_install=("yamllint" "shell-gpt")
-
-uv_packages_to_install=("vectorcode" "basic-memory")
+# All Python packages to install in global venv
+python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh")
 
@@ -313,7 +312,7 @@ run_all_steps() {
   install_homebrew;
   install_homebrew_packages;
   install_npm_packages;
-  install_python_packages;
+  create_global_python_venv;
   install_misc_dependencies;
   generate_ssh_keys;
 
@@ -321,6 +320,7 @@ run_all_steps() {
   unstow_dotfiles;
 
   set_macos_settings;
+  setup_services;
 
   print_manual_steps;
   print_macos_steps;
@@ -333,12 +333,13 @@ step_functions=(
   install_homebrew
   install_homebrew_packages
   install_npm_packages
-  install_python_packages
+  create_global_python_venv
   install_misc_dependencies
   generate_ssh_keys
   install_neovim
   unstow_dotfiles
   set_macos_settings
+  setup_services
   print_manual_steps
   print_macos_steps
   run_healthcheck
@@ -351,7 +352,7 @@ if [ $# -eq 0 ]; then
   fi
 
   for step_num in "$@"; do
-    if (( step_num >= 1 && step_num <= 13 )); then
+    if (( step_num >= 1 && step_num <= 14 )); then
       echo "Executing Step $step_num..."
       ${step_functions[step_num-1]}
     else
@@ -372,19 +373,20 @@ show_steps() {
   echo "Step 2: Installing Homebrew package manager"
   echo "Step 3: Installing Homebrew packages and casks"
   echo "Step 4: Installing npm packages"
-  echo "Step 5: Installing Python packages (pip/pipx and uv)"
+  echo "Step 5: Creating global Python venv and installing packages"
   echo "Step 6: Installing miscellaneous dependencies"
   echo "Step 7: Creating SSH keys"
   echo "Step 8: Installing Neovim from source"
   echo "Step 9: Cloning dotfiles repo and unstowing dotfiles"
   echo "Step 10: Set MacOS settings that can be handled via CLI"
+  echo "Step 11: Setup services (ollama, chromadb)"
   echo ""
   echo "At this point, the steps become manual and are broken up into two parts:"
   echo ""
-  echo "Step 11: Manual steps to complete setup"
-  echo "Step 12: Update MacOS settings (also manual)"
+  echo "Step 12: Manual steps to complete setup"
+  echo "Step 13: Update MacOS settings (also manual)"
   echo ""
-  echo "Step 13: Run healthcheck to see what failed"
+  echo "Step 14: Run healthcheck to see what failed"
   echo "And then you should be done!"
 
   show_help;
@@ -567,28 +569,42 @@ install_npm_packages() {
   echo "Step 4: Finished installing npm packages!"
 }
 
-install_python_packages() {
+create_global_python_venv() {
   ############################
-  # Install Python Deps      #
+  # Create Global Python Venv #
   ############################
 
-  echo "Step 5: Installing Python packages"
+  echo "Step 5: Creating global Python venv and installing packages"
 
-  echo "Step 5a: Installing pip packages via pipx..."
+  echo "Step 5a: Installing uv if not present..."
 
-  if check_command_is_installed pipx; then
-    pipx install "${pip_packages_to_install[@]}"
-    echo "Step 5a: Finished installing pip packages via pipx!"
+  if ! check_command_is_installed uv; then
+    echo "Step 5a: uv is not installed. Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="$HOME/.cargo/bin:$PATH"
   else
-    echo "Step 5a: pipx is not installed. Skipping pip package installation."
+    echo "Step 5a: uv is already installed, continuing."
   fi
 
-  echo "Step 5b: Installing Python uv and packages..."
+  echo "Step 5b: Creating global Python venv..."
 
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  uv tool install "${uv_packages_to_install[@]}"
+  # Create global venv if it doesn't exist
+  if [[ ! -d "$HOME/.global-py" ]]; then
+    echo "Step 5b: Creating ~/.global-py venv..."
+    uv venv "$HOME/.global-py"
+  else
+    echo "Step 5b: ~/.global-py venv already exists, continuing..."
+  fi
 
-  echo "Step 5: Finished installing Python packages!"
+  echo "Step 5c: Installing Python packages in global venv..."
+
+  # Install packages using uv with the global venv
+  for package in "${python_packages_to_install[@]}"; do
+    echo "Installing $package..."
+    uv pip install --python "$HOME/.global-py/bin/python" "$package"
+  done
+
+  echo "Step 5: Finished creating global Python venv and installing packages!"
 }
 
 install_misc_dependencies() {
@@ -762,23 +778,105 @@ set_macos_settings() {
   echo "Note, you should probably restart your laptop after running this step."
 }
 
+setup_services() {
+  ############################
+  # Setup Services           #
+  ############################
+
+  echo "Step 11: Setting up services..."
+
+  echo "Step 11a: Starting ollama service..."
+
+  if check_command_is_installed ollama; then
+    echo "Step 11a: Starting ollama via brew services..."
+    brew services start ollama
+    
+    # Wait a moment for service to start
+    sleep 3
+    
+    echo "Step 11a: Downloading nomic-embed-text model..."
+    ollama pull nomic-embed-text
+    
+    echo "Step 11a: Finished setting up ollama!"
+  else
+    echo "Step 11a: ollama is not installed. Skipping ollama setup."
+  fi
+
+  echo "Step 11b: Setting up ChromaDB service..."
+
+  if check_command_is_installed docker; then
+    # Create chroma data directory
+    mkdir -p "$HOME/.local/share/chroma-data"
+    
+    # Create LaunchAgent directory if it doesn't exist
+    mkdir -p "$HOME/Library/LaunchAgents"
+    
+    # Check if plist already exists
+    if [[ -f "$HOME/Library/LaunchAgents/com.user.chromadb.plist" ]]; then
+      echo "Step 11b: ChromaDB plist already exists, updating if needed..."
+      # Unload existing service
+      launchctl unload "$HOME/Library/LaunchAgents/com.user.chromadb.plist" 2>/dev/null || true
+    fi
+    
+    # Create the plist file
+    cat > "$HOME/Library/LaunchAgents/com.user.chromadb.plist" << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.user.chromadb</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/docker</string>
+    <string>run</string>
+    <string>--rm</string>
+    <string>-v</string>
+    <string>$HOME/.local/share/chroma-data:/data</string>
+    <string>-p</string>
+    <string>8000:8000</string>
+    <string>chromadb/chroma:0.6.3</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/tmp/chromadb.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/chromadb.err</string>
+</dict>
+</plist>
+EOF
+    
+    # Load the service
+    launchctl load "$HOME/Library/LaunchAgents/com.user.chromadb.plist"
+    
+    echo "Step 11b: Finished setting up ChromaDB service!"
+  else
+    echo "Step 11b: Docker is not installed. Skipping ChromaDB setup."
+  fi
+
+  echo "Step 11: Finished setting up services!"
+}
+
 print_manual_steps() {
   ############################
   # Manual steps             #
   ############################
 
-  echo "Step 11: Manual steps to complete setup:"
-  echo "Step 11a: Log into Github and register ssh keys"
-  echo "Step 11b: Clone learning repo with SSH: cd \$XDG_CODE_HOME && git clone git@github.com:3ZsForInsomnia/learning.git"
-  echo "Step 11c: Log into gh cli and run script to pull hidden gists. There is a bash function included in this file that you can run to do this automatically once you have logged into gh"
+  echo "Step 12: Manual steps to complete setup:"
+  echo "Step 12a: Log into Github and register ssh keys"
+  echo "Step 12b: Clone learning repo with SSH: cd \$XDG_CODE_HOME && git clone git@github.com:3ZsForInsomnia/learning.git"
+  echo "Step 12c: Log into gh cli and run script to pull hidden gists. There is a bash function included in this file that you can run to do this automatically once you have logged into gh"
   echo "To do this, use gh to pull down your gist containing the list of hidden gists, and run \`handle_all_gists <file>\`"
   echo "Or alternatively, run the \`retrieve_hidden_gists\` function after setting up gh auth"
   echo ""
-  echo "Step 11d: Setup Obsidian sync"
-  echo "Step 11e: Log into Chrome, make it default web browser"
+  echo "Step 12d: Setup Obsidian sync"
+  echo "Step 12e: Log into Chrome, make it default web browser"
 
   other_apps=("Slack" "Postman" "Lastpass" "Lastpass Cli" "Tidal" "Copilot in Neovim")
-  echo "Step 11f: Log into each of these manually: "
+  echo "Step 12f: Log into each of these manually: "
   echo_each_element "${other_apps[@]}"
 }
 
@@ -787,13 +885,13 @@ print_macos_steps() {
   # MacOS Settings           #
   ############################
 
-  echo "Step 12: Update the following MacOS settings:"
-  echo "Step 12a: Set caps-lock to act as escape"
-  echo "Step 12b: Add Hebrew keyboard layout"
-  echo "Step 12c: Hide spotlight and siri from top bar"
-  echo "Step 12d: Turn off automatic display brightness"
-  echo "Step 12e: Turn off startup and interface sounds"
-  echo "Step 12f: Turn on Night shift and configure schedule"
+  echo "Step 13: Update the following MacOS settings:"
+  echo "Step 13a: Set caps-lock to act as escape"
+  echo "Step 13b: Add Hebrew keyboard layout"
+  echo "Step 13c: Hide spotlight and siri from top bar"
+  echo "Step 13d: Turn off automatic display brightness"
+  echo "Step 13e: Turn off startup and interface sounds"
+  echo "Step 13f: Turn on Night shift and configure schedule"
 }
 
 ############################
@@ -890,6 +988,32 @@ healthcheck() {
     (( did_anything_fail++ ))
   else
     echo_on_success "  All Npm packages were installed successfully!"
+  fi
+
+  echo_on_verbose "Checking if global Python venv exists and packages are installed..."
+  if check_if_file_or_folder_exists "$HOME/.global-py"; then
+    echo_on_success "  Global Python venv exists!"
+    
+    # Check if packages are installed in the global venv
+    PYTHON_FAILED_PACKAGES=()
+    for package in "${python_packages_to_install[@]}"; do
+      if ! "$HOME/.global-py/bin/python" -m pip list | grep -q "^$package "; then
+        PYTHON_FAILED_PACKAGES+=("$package")
+      fi
+    done
+    
+    if (( ${#PYTHON_FAILED_PACKAGES[@]} > 0 )); then
+      echo "  These Python packages failed to install in global venv: "
+      echo_each_element "${PYTHON_FAILED_PACKAGES[@]}";
+      echo ""
+      (( did_anything_fail++ ))
+    else
+      echo_on_success "  All Python packages were installed successfully in global venv!"
+    fi
+  else
+    echo "  Global Python venv does not exist!"
+    echo ""
+    (( did_anything_fail++ ))
   fi
 
   echo_on_verbose "Checking if Neovim installed..."
@@ -1084,6 +1208,37 @@ healthcheck() {
     (( did_anything_fail++ ))
   fi
 
+  echo_on_verbose "Checking if services are running..."
+  
+  # Check ollama service
+  if check_command_is_installed ollama; then
+    if brew services list | grep -q "ollama.*started"; then
+      echo_on_success "  Ollama service is running!"
+    else
+      echo "  Ollama service is not running!"
+      echo ""
+      (( did_anything_fail++ ))
+    fi
+  else
+    echo "  Ollama is not installed!"
+    echo ""
+    (( did_anything_fail++ ))
+  fi
+  
+  # Check ChromaDB service
+  if check_if_file_or_folder_exists "$HOME/Library/LaunchAgents/com.user.chromadb.plist"; then
+    if launchctl list | grep -q "com.user.chromadb"; then
+      echo_on_success "  ChromaDB service is loaded!"
+    else
+      echo "  ChromaDB service plist exists but is not loaded!"
+      echo ""
+      (( did_anything_fail++ ))
+    fi
+  else
+    echo "  ChromaDB service plist does not exist!"
+    echo ""
+    (( did_anything_fail++ ))
+  fi
   echo ""
   echo "Healthcheck complete!"
   if [[ $did_anything_fail -gt 0 ]]; then
@@ -1095,9 +1250,9 @@ healthcheck() {
 }
 
 run_healthcheck() {
-  echo "Step 13: Running full health check..."
+  echo "Step 14: Running full health check..."
 
   healthcheck;
 
-  echo "Step 13: Finished checking for failed installations!"
+  echo "Step 14: Finished checking for failed installations!"
 }
