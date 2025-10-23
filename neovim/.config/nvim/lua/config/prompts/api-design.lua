@@ -35,6 +35,11 @@ Critical guidelines:
 - CONSIDER FRONTEND IMPACT of API design (TypeScript types, component data needs, state management)
 - DESIGN CONSISTENT DATA MODELS that work well across both REST and gRPC interfaces
 
+#{vccharter}#{vccurrproj}#{vcnotes}#{vcwork}
+
+Additional context tools:
+]] .. require("config.prompts.shared").confluence_jira_tools .. [[
+
 Note: I may not have full context about existing systems, so ask detailed questions about current architecture, existing code, and constraints before making suggestions.
 
 Focus on helping me design cohesive full-stack architecture that supports backend modernization (REST + gRPC), frontend organization goals, and consistent data modeling across all interfaces.
@@ -44,6 +49,7 @@ return {
   strategy = "chat",
   description = "Let's design APIs, gRPC services, and frontend architecture for a modern full-stack app.",
   opts = {
+    adapter = { name = "default_copilot", model = "o4-mini" },
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "api_design",

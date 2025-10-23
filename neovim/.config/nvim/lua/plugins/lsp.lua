@@ -110,7 +110,7 @@ return {
       auto_install = true,
       highlight = {
         enable = true, -- false will disable the whole extension
-        additional_vim_regex_highlighting = { "markdown" },
+        -- additional_vim_regex_highlighting = { "markdown" },
         disable = {}, -- list of language that will be disabled
       },
       textsubjects = {

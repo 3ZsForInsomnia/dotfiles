@@ -61,8 +61,12 @@ function vca() {
   # Show help if -h is passed
   if [[ "$1" == "-h" ]]; then
     echo "Usage: vca [options] <filetype1> [filetype2] [filetype3] ..."
-    echo "  Vectorises files of the specified types (recursive by default)."
-    echo "  Each filetype should be the file extension without the dot."
+    echo "  Vectorises files of the specified types or exact filenames (recursive by default)."
+    echo "  Arguments can be:"
+    echo "    - File extensions without the dot (e.g., js, py, ts)"
+    echo "    - Exact filenames starting with . (e.g., .env, .gitignore)"
+    echo "    - Common extensionless files (e.g., Dockerfile, Makefile, Caddyfile)"
+    echo "    - Path patterns with / or * (e.g., src/*.js, **/*.md)"
     echo ""
     echo "Options:"
     echo "  -h                Show this help message"
@@ -72,6 +76,8 @@ function vca() {
     echo ""
     echo "Examples:"
     echo "  vca js ts                    # Vectorise all .js and .ts files (recursive)"
+    echo "  vca .env Dockerfile          # Vectorise .env and Dockerfile files"
+    echo "  vca js .gitignore Makefile   # Mix extensions and exact filenames"
     echo "  vca -R py                    # Vectorise .py files in current dir only"
     echo "  vca -i js                    # Include hidden .js files"
     echo "  vca -p /path/to/root go      # Set project root and vectorise .go files"
@@ -83,10 +89,11 @@ function vca() {
   local include_hidden=false
   local project_root=""
   local filetypes=()
+  local patterns=()
 
   while [[ $# -gt 0 ]]; do
     case $1 in
-    -R|--no-recursive)
+    -R | --no-recursive)
       recursive=false
       shift
       ;;
@@ -108,23 +115,25 @@ function vca() {
       return 1
       ;;
     *)
-      filetypes+=("$1")
+      # Check if argument looks like a path pattern (contains / or *)
+      if [[ "$1" == *"/"* || "$1" == *"*"* ]]; then
+        patterns+=("$1")
+      # Check if it's likely an exact filename (starts with . or common no-extension files)
+      elif [[ "$1" == .* ]] || [[ "$1" =~ ^[A-Z][a-z]*file$ ]]; then
+        patterns+=("$1")
+      else
+        # Treat as file extension
+        filetypes+=("$1")
+      fi
       shift
       ;;
     esac
   done
 
-  if [[ ${#filetypes[@]} -eq 0 ]]; then
-    echo "Error: No filetypes specified. Use 'vca -h' for help." >&2
+  if [[ ${#filetypes[@]} -eq 0 && ${#patterns[@]} -eq 0 ]]; then
+    echo "Error: No filetypes or patterns specified. Use 'vca -h' for help." >&2
     return 1
   fi
-
-  local file_patterns=()
-
-  # Build file patterns for all filetypes
-  for filetype in "${filetypes[@]}"; do
-    file_patterns+=("*.$filetype")
-  done
 
   # Build vectorcode command with options
   local cmd_args=("vectorcode" "vectorise")
@@ -141,8 +150,19 @@ function vca() {
     cmd_args+=("--project_root" "$project_root")
   fi
 
-  cmd_args+=("${file_patterns[@]}")
+  # Add file extensions first, then patterns
+  # Convert filetypes to appropriate patterns
+  for filetype in "${filetypes[@]}"; do
+    if [[ "$recursive" == "true" ]]; then
+      cmd_args+=("**/*.$filetype")
+    else
+      cmd_args+=("*.$filetype")
+    fi
+  done
+  cmd_args+=("${patterns[@]}")
 
-  echo "Vectorising files: ${file_patterns[*]} (recursive: $recursive, hidden: $include_hidden)"
+  local all_args=("${filetypes[@]}" "${patterns[@]}")
+  echo "Vectorising files: ${all_args[*]} (recursive: $recursive, hidden: $include_hidden)"
+  echo "Executing command: ${cmd_args[*]}"
   "${cmd_args[@]}"
 }

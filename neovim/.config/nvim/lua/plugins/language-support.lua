@@ -19,9 +19,10 @@ return {
     cmd = { "RunCode", "RunFile" },
     config = true,
   },
+  "Myzel394/easytables.nvim",
   {
     "olrtg/nvim-emmet",
-    ft = { "html", "css", "javascript", "typescript", "vue", "svelte", "markdown" },
+    ft = { "html", "css", "javascript", "typescript", "markdown" },
     keys = {
       cmd({
         key = l .. "e",

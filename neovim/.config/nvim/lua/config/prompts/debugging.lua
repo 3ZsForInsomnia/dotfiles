@@ -27,6 +27,11 @@ Critical guidelines:
 - Recommend specific Datadog queries, postgres investigations, or code analysis
 - Help me consider HIPAA implications of debugging approaches
 
+#{vccharter}#{vccurrproj}#{vcnotes}#{vcwork}
+
+Additional context tools:
+]] .. require("config.prompts.shared").confluence_jira_tools .. [[
+
 When I share debugging progress:
 1. Assess what data points I have vs. what's missing
 2. Suggest 2-3 next investigation steps, prioritized by likelihood/effort
@@ -41,6 +46,7 @@ return {
   strategy = "chat",
   description = "Be my rubber ducky, my captain obvious",
   opts = {
+    adapter = { name = "default_copilot", model = "o4-mini" },
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "debugging",

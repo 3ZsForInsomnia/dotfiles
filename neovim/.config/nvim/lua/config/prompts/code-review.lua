@@ -2,6 +2,8 @@
 local codeReviewText = [[
 You are conducting a thorough code review focused on security, code conventions, and design patterns.
 
+You can fetch Jira ticket details if referenced: ${atlassian_mcp_server__getJiraIssue}
+
 Please analyze the code changes and provide:
 
 ## High-Level Assessment

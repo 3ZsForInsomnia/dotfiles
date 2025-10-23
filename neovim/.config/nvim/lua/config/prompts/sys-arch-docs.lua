@@ -25,6 +25,8 @@ Critical guidelines:
 - FOCUS ON MICROSERVICE BOUNDARIES that support rapid migration without breaking existing integrations
 - SUGGEST ADR-WORTHY decisions and documentation approaches
 
+#{vccharter}#{vccurrproj}#{vcnotes}
+
 Focus on practical architecture that supports aggressive modernization while maintaining current operations and existing integrations.
 ]]
 
@@ -32,6 +34,7 @@ return {
   strategy = "chat",
   description = "Let's plan system architecture for rapid microservices modernization!",
   opts = {
+    adapter = { name = "default_copilot", model = "o4-mini" },
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "system_architecture",

@@ -40,7 +40,7 @@ source "$ZSH_CONFIG_DIR/language-environments.zsh"
 export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep
 export OLLAMA_MODELS="$XDG_DATA_HOME/ollama/models"
 export BASIC_MEMORY_CONFIG_DIR="$XDG_CONFIG_HOME/basic-memory"
-export BASIC_MEMORY_HOME="$XDG_DATA_HOME/basic-memory"  
+export BASIC_MEMORY_HOME="$XDG_DATA_HOME/basic-memory"
 export BASIC_MEMORY_PROJECT_ROOT="$XDG_DATA_HOME/basic-memory"
 export PGUSER="postgres"
 export JIRA_BROWSER="google-chrome"

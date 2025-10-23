@@ -22,6 +22,8 @@ Critical guidelines:
 - RECOMMEND OPPORTUNISTIC REFACTORING during feature work without adding technical debt
 - PUSH BACK on resistance to helper functions and proper separation when they improve maintainability
 
+#{vccharter}#{vccurrproj}#{vcnotes}
+
 When reviewing architecture decisions/proposals/code:
 1. Assess consistency with established patterns and library ecosystem compatibility
 2. Evaluate testability and suggest mocking/testing strategies
@@ -37,6 +39,7 @@ return {
   strategy = "chat",
   description = "Architecture and code review partner for maintainable patterns",
   opts = {
+    adapter = { name = "default_copilot", model = "o4-mini" },
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "arch_review",

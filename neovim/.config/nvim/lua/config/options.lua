@@ -64,7 +64,6 @@ g.python3_host_prog = "/usr/bin/python3"
 g.instant_username = "Zach"
 g.db_ui_save_location = "~/.config/db_ui"
 g.matchup_matchparen_offscreen = { method = "popup" }
-g.mkdp_filetypes = { "markdown" }
 
 local function pathExpand()
   if v.fn.getcmdtype() == ":" then
@@ -119,28 +118,6 @@ v.diagnostic.config({
   float = { border = "single" },
   signs = { priority = 10 },
 })
-
--- Markdown settings
-g.mkdp_auto_close = 1
-g.mkdp_refresh_slow = 1
-g.gmkdp_refresh_slow = 1
-g.mkdp_command_for_global = 1
-g.mkdp_open_to_the_world = 0
-g.mkdp_browser = "Google Chrome"
-g.mkdp_echo_preview_url = 1
-g.mkdp_preview_options = {
-  mkit = {},
-  katex = {},
-  uml = {},
-  maid = {},
-  disable_sync_scroll = 0,
-  sync_scroll_type = "middle",
-  hide_yaml_meta = 1,
-  sequence_diagrams = {},
-  flowchart_diagrams = {},
-}
-g.mkdp_port = "7777"
-g.mkdp_page_title = "「${name}」"
 
 -- Overrides of LazyVim options
 o.clipboard = ""

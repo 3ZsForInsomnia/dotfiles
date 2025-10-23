@@ -51,10 +51,10 @@ return {
           lua = { "luacheck" },
           python = { "flake8" },
           scss = { "stylelint" },
-          sh = { "shfmt" },
+          -- sh = { "shfmt" },
           typescript = { "eslint_d" },
           typescriptreact = { "eslint_d" },
-          yaml = { "yamllint" },
+          -- yaml = { "yamllint" },
           zsh = { "shfmt" },
         },
         format_on_save = {

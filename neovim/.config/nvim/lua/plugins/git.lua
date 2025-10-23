@@ -346,8 +346,8 @@ return {
     },
   },
   {
-    "3ZsForInsomnia/revman.nvim",
-    -- dir = "~/src/revman.nvim",
+    -- "3ZsForInsomnia/revman.nvim",
+    dir = "~/src/revman.nvim",
     event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",

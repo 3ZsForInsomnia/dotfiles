@@ -9,7 +9,8 @@
         "basic-memory",
         "mcp"
       ],
-      "command": "uvx"
+      "command": "uvx",
+      "disabled": false
     },
     "dbhub-demo": {
       "args": [
@@ -32,7 +33,7 @@
         "sqlite:///Users/zacharylevinw/.local/share/nvim/jira-ai/jira_ai.db"
       ],
       "command": "npx",
-      "disabled": false
+      "disabled": true
     },
     "dbhub-plat": {
       "args": [
@@ -44,7 +45,7 @@
         "postgres://postgres:abc123@localhost:5432/postgres"
       ],
       "command": "npx",
-      "disabled": false
+      "disabled": true
     },
     "dbhub-revman": {
       "args": [
@@ -56,7 +57,12 @@
         "sqlite:///Users/zacharylevinw/.local/state/nvim/revman/revman.db"
       ],
       "command": "npx",
-      "disabled": false
+      "disabled": true
+    },
+    "figma": {
+      "disabled": false,
+      "type": "http",
+      "url": "http://127.0.0.1:3845/mcp"
     },
     "github": {
       "args": [
@@ -78,7 +84,8 @@
       "args": [
         "mcp-server-kubernetes"
       ],
-      "command": "npx"
+      "command": "npx",
+      "disabled": false
     },
     "mcp-obsidian": {
       "args": [

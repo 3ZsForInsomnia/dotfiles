@@ -214,7 +214,6 @@ return {
   },
   { "andymass/vim-matchup" },
   { "winston0410/range-highlight.nvim", event = "VeryLazy" },
-  { "godlygeek/tabular", ft = "markdown" },
   {
     "kylechui/nvim-surround",
     event = "VeryLazy",

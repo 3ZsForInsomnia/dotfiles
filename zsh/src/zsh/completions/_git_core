@@ -1,4 +1,4 @@
-#compdef groot goToGroot cst gibid gibidp gignore searchGitLogs gst gstat ga gaa gc gci gempty gca gcan gcaa gco gcb gd gds gdh gf gfo gu gup gp gpf gpff gpt gsup grh grhh grs gsh gl glog gac gacp gfapu gcbft gcbfx gcbch gcbrf gcbdc gcbst gcbts gr gra grr grs fcom fgdiff fgsearch grsu
+#compdef groot goToGroot cst gibid gibidp gignore searchGitLogs gst gstat ga gaa gc gci gempty gca gcan gcaa gco gcb gbd gbD gd gds gdh gf gfo gu gup gp gpf gpff gpt gsup grh grhh grs gsh gl glog gac gacp gfapu gcbft gcbfx gcbch gcbrf gcbdc gcbst gcbts gr gra grr grs fcom fgdiff fgsearch grsu
 
 # Load git completion cache system
 autoload -Uz "${0:h}/_git_cache_system" 2>/dev/null || true
@@ -160,6 +160,23 @@ function _git_core_complete_args() {
           return 0
         fi
         ;;
+      gbd|gbD)
+        # Branch deletion functions - complete with local branches only
+        local -a branches current_branch
+        current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+        
+        # Get local branches, excluding current branch for safety
+        while IFS= read -r branch; do
+          [[ -n "$branch" ]] || continue
+          # Skip current branch to prevent accidental deletion
+          [[ "$branch" != "$current_branch" ]] && branches+=("$branch")
+        done < <(git branch --format='%(refname:short)' 2>/dev/null)
+        
+        if (( ${#branches[@]} > 0 )); then
+          _describe 'local branches (excluding current)' branches
+          return 0
+        fi
+        ;;
       gsup)
         # Set upstream - suggest remote/branch format
         local current_branch
@@ -239,6 +256,8 @@ function _git_core() {
     'gcaa:Amend last commit with all changes'
     'gco:Checkout branch or commit'
     'gcb:Create and checkout new branch'
+    'gbd:Delete merged branch (safe)'
+    'gbD:Force delete branch (dangerous)'
     'gcbft:Create feat/ branch'
     'gcbfx:Create fix/ branch'
     'gcbch:Create chore/ branch'

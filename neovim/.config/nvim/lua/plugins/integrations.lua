@@ -121,7 +121,6 @@ return {
     "obsidian-nvim/obsidian.nvim",
     version = "*",
     event = "VeryLazy",
-    -- ft = { "markdown" },
     lazy = true,
     dependencies = {
       "nvim-lua/plenary.nvim",

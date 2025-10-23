@@ -20,8 +20,18 @@ Critical guidelines:
 - EXHAUSTIVELY ANALYZE the epic for missing states, edge cases, error scenarios, integration points
 - VERIFY PREFACTORING SCOPE - don't just suggest "clean up X", help me understand what X actually entails
 - STRONGLY RECOMMEND PRODUCT REVIEW before grooming when there are multiple uncertainties or complex features
-- SUGGEST STORY SEQUENCING to handle dependencies logically
+- SUGGEST STORY SEQUENCING to handle dependencies logically (backend before frontend, migrations before features)
 - RECOMMEND "PREFACTORING" TICKETS but only after exploring their true scope and complexity
+- SPECIFY TECHNICAL DETAILS for each story:
+  * API endpoints: method, path, parameters, response schema, sync vs async (workers/batch jobs)
+  * DB: schemas, migrations, indexes, data relationships
+  * Frontend: components (reusable vs one-off, design system usage), state management, routing, validation
+  * Service integration points, error handling, testing strategy
+
+#{vccharter}#{vccurrproj}#{vcnotes}#{vcwork}
+
+Additional context tools:
+]] .. require("config.prompts.shared").confluence_jira_tools .. [[
 
 When I share an epic:
 1. ASK DETAILED QUESTIONS about every aspect - user flows, edge cases, error states, integrations
@@ -29,10 +39,12 @@ When I share an epic:
 3. Suggest logical breakdown into frontend and backend stories
 4. Deep-dive into proposed prefactoring work - what's really involved? What might it touch?
 5. Recommend API endpoints, DB schema considerations, and RESTful improvements
-6. Flag stories that might be larger than 3 days or have hidden complexity
-7. Propose QA testing strategies and mock data needs
-8. STRONGLY suggest product review if there are significant gaps or complexity
-9. Suggest dependencies and sequencing using issue links
+6. Specify async work (workers/batch jobs) vs synchronous API calls
+7. Flag opportunities for reusable components vs one-off implementations
+8. Flag stories that might be larger than 3 days or have hidden complexity
+9. Propose QA testing strategies and mock data needs
+10. STRONGLY suggest product review if there are significant gaps or complexity
+11. Suggest dependencies and sequencing using issue links
 
 Focus on being thorough and questioning everything to prevent gaps, ambiguities, and underestimated prefactoring work from causing problems during development.
 ]]
@@ -41,6 +53,7 @@ return {
   strategy = "chat",
   description = "Let's tell a fantastic and wonderful story together",
   opts = {
+    adapter = { name = "default_copilot", model = "o4-mini" },
     index = 2,
     is_slash_cmd = true,
     auto_submit = false,

@@ -267,11 +267,17 @@ function gdh() {
 ### Fetch
 function gf() {
   if [[ "$1" == "-h" ]]; then
-    echo "Usage: gf"
+    echo "Usage: gf [-f]"
     echo "Git fetch --all --prune --prune-tags (smart default)"
+    echo "  -f: force update moved tags"
     return 0
   fi
-  git fetch --all --prune --prune-tags
+
+  if [[ "$1" == "-f" ]]; then
+    git fetch --all --prune --force --tags
+  else
+    git fetch --all --prune --prune-tags
+  fi
 }
 
 function gfo() {
@@ -379,6 +385,38 @@ function gpt() {
 ### Branch Management
 
 alias gb="git branch"
+
+function gbd() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: gbd <branch>"
+    echo "Delete merged branch (safe delete)"
+    echo "Example: gbd feature/old-feature"
+    return 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "Error: branch name required"
+    return 1
+  fi
+
+  git branch -d "$1"
+}
+
+function gbD() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: gbD <branch>"
+    echo "Force delete branch (DANGEROUS: deletes unmerged branches)"
+    echo "Example: gbD feature/abandoned-work"
+    return 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "Error: branch name required"
+    return 1
+  fi
+
+  git branch -D "$1"
+}
 
 function gsup() {
   if [[ "$1" == "-h" ]]; then
@@ -501,10 +539,10 @@ function gacp() {
 function gfapu() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gfapu"
-    echo "Git fetch all + pull with rebase"
+    echo "Git fetch all + pull with rebase (force-updates tags)"
     return 0
   fi
-  gf
+  gf -f
   gu
 }
 

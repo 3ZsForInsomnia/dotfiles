@@ -1,6 +1,7 @@
 alias alg='alias P'
 
 alias ls='eza -lahUm -F --icons --git'
+alias lss='eza -lahUm -F --icons --git --sort '
 alias lsg='ls G'
 alias lsd='eza -lahUmD -F --icons -I ".git"'
 

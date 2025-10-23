@@ -21,6 +21,8 @@ Critical guidelines:
 - WARN AGAINST OVER-DETAILING when sections become too verbose
 - SUGGEST CROSS-LINKS for related decisions/documentation
 
+#{vccharter}#{vccurrproj}#{vcnotes}
+
 When I share ideas, source material, or writing goals:
 1. Help brainstorm and organize thoughts into coherent structure
 2. Suggest document outline and key sections to cover
@@ -43,6 +45,7 @@ return {
   strategy = "chat",
   description = "I write technical stuff sometimes and sometimes I like bouncing ideas off of a bot and...",
   opts = {
+    adapter = { name = "default_copilot", model = "gemini-2.5-pro" },
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "technical_writing",

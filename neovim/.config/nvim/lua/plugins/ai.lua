@@ -1,5 +1,6 @@
 local k_cmd = require("helpers").k_cmd
 local k = require("helpers").k
+local cc_vars = require("config.codecompanion-variables")
 
 local a = "<leader>a"
 
@@ -9,6 +10,7 @@ return {
     event = "InsertEnter",
     config = true,
     opts = {
+      copilot_model = "gpt-5",
       filetypes = {
         ["*"] = true,
       },
@@ -20,6 +22,10 @@ return {
     build = "uv tool upgrade vectorcode",
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = "VectorCode",
+    opts = {
+      async_backend = "lsp",
+      on_setup = { lsp = true },
+    },
   },
   {
     "ravitemer/mcphub.nvim",
@@ -40,12 +46,13 @@ return {
     end,
   },
   {
-    -- "3ZsForInsomnia/token-count.nvim",
-    dir = "~/src/token-count.nvim",
+    "3ZsForInsomnia/token-count.nvim",
+    -- dir = "~/src/token-count.nvim",
     event = "VeryLazy",
     config = true,
     opts = {
       model = "claude-4.5-sonnet",
+      -- model = "gpt-5",
     },
   },
   {
@@ -95,23 +102,42 @@ return {
         ["System: Daily Planning"] = require("config.prompts.daily-weekly").dailyPlanning,
         ["System: Review Notes Daily"] = require("config.prompts.daily-weekly").dailyReview,
         ["System: Review Notes Weekly"] = require("config.prompts.daily-weekly").weeklyReview,
+        ["AI Rabbi"] = require("config.prompts.ai-rabbi"),
         ["Debugging"] = require("config.prompts.debugging"),
         ["Story Writing"] = require("config.prompts.stories"),
         ["Api Design"] = require("config.prompts.api-design"),
         ["System Architecture"] = require("config.prompts.sys-arch-docs"),
         ["Architecture Review"] = require("config.prompts.arch-review"),
         ["Technical Writing"] = require("config.prompts.technical-writing"),
-        ["Meeting Prep"] = require("config.prompts.meeting-prep"),
         ["Process Improvements"] = require("config.prompts.process-retros"),
         ["Code Review"] = require("config.prompts.code-review"),
+
+        -- Meeting prompts
+        ["Meeting: Prep"] = require("config.prompts.meetings").meeting_prep,
+        ["Meeting: Cleanup"] = require("config.prompts.meetings").meeting_cleanup,
+
+        -- Note filing prompts
+        ["Notes: File (Remote)"] = require("config.prompts.note-filing").note_file_remote,
+        ["Notes: File (Local)"] = require("config.prompts.note-filing").note_file_local,
+
+        -- VectorCode search prompts
+        ["VC: Extract Keywords & Query"] = require("config.prompts.vectorcode").vc_extract_keywords,
+        ["VC: Search with Summary"] = require("config.prompts.vectorcode").vc_search_summary,
+        ["VC: Raw File List"] = require("config.prompts.vectorcode").vc_search_raw,
+
+        -- Code examples
+        ["Code: Snippet"] = require("config.prompts.coding-examples").snippet,
+        ["Code: Good vs Bad"] = require("config.prompts.coding-examples").good_bad_example,
+
+        -- Web retrieval
+        ["Web: Fetch & Summarize"] = require("config.prompts.retrieval").web_fetch,
       },
       extensions = {
         vectorcode = {
-          ---@type VectorCode.CodeCompanion.ExtensionOpts
           opts = {
             tool_group = {
               -- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
-              enabled = true,
+              enabled = false,
               -- a list of extra tools that you want to include in `@vectorcode_toolbox`.
               -- if you use @vectorcode_vectorise, it'll be very handy to include
               -- `file_search` here.
@@ -119,23 +145,17 @@ return {
               collapse = false, -- whether the individual tools should be shown in the chat
             },
             tool_opts = {
-              ---@type VectorCode.CodeCompanion.ToolOpts
               ["*"] = {},
-              ---@type VectorCode.CodeCompanion.LsToolOpts
               ls = {},
-              ---@type VectorCode.CodeCompanion.VectoriseToolOpts
               vectorise = {},
-              ---@type VectorCode.CodeCompanion.QueryToolOpts
               query = {
-                max_num = { chunk = -1, document = -1 },
+                max_num = { chunk = 80, document = 20 },
                 default_num = { chunk = 50, document = 10 },
                 include_stderr = false,
-                use_lsp = false,
+                use_lsp = true,
                 no_duplicate = true,
                 chunk_mode = false,
-                ---@type VectorCode.CodeCompanion.SummariseOpts
                 summarise = {
-                  ---@type boolean|(fun(chat: CodeCompanion.Chat, results: VectorCode.QueryResult[]):boolean)|nil
                   enabled = false,
                   adapter = nil,
                   query_augmented = true,
@@ -224,7 +244,17 @@ return {
           },
           adapter = {
             name = "copilot",
-            model = "claude-sonnet-4",
+            model = "claude-sonnet-4.5",
+            -- model = "gpt-5",
+          },
+          variables = {
+            date = cc_vars.date,
+            vccharter = cc_vars.vccharter,
+            vccurrproj = cc_vars.vccurrproj,
+            vcnotes = cc_vars.vcnotes,
+            vcwork = cc_vars.vcwork,
+            qnotes = cc_vars.qnotes,
+            qwork = cc_vars.qwork,
           },
           keymaps = {
             close = {
@@ -236,9 +266,15 @@ return {
           },
         },
         inline = {
-          adapter = {
-            name = "copilot",
-            model = "claude-sonnet-4",
+          adapter = "qwen25_7b",
+          variables = {
+            date = cc_vars.date,
+            vccharter = cc_vars.vccharter,
+            vccurrproj = cc_vars.vccurrproj,
+            vcnotes = cc_vars.vcnotes,
+            vcwork = cc_vars.vcwork,
+            qnotes = cc_vars.qnotes,
+            qwork = cc_vars.qwork,
           },
           keymaps = {
             accept_change = {
@@ -247,20 +283,63 @@ return {
             },
             reject_change = {
               modes = { n = "gr" },
+              opts = { nowait = true },
               description = "Reject the suggested change",
             },
           },
         },
       },
-      memory = {
-        opts = {
-          chat = {
-            enabled = true,
-          },
-        },
-        default = {
-          description = "Common memory files",
-          files = {},
+      -- memory = {
+      --   opts = {
+      --     chat = {
+      --       enabled = true,
+      --     },
+      --   },
+      --   default = {
+      --     description = "Common memory files",
+      --     files = {},
+      --   },
+      -- },
+      adapters = {
+        http = {
+          default_copilot = function()
+            require("codecompanion.adapters").extend("copilot", {
+              schema = {
+                model = {
+                  order = 1,
+                  type = "enum",
+                  desc = "Select one of your curated Copilot-backed models",
+                  -- default = "claude-sonnet-4",
+                  default = "claude-sonnet-4.5",
+                  choices = {
+                    ["claude-sonnet-4.5"] = { opts = { provider = "anthropic" } },
+                    ["gpt-5-2025-08-07"] = { opts = { provider = "openai", tier = "flagship" } },
+                    ["o4-mini"] = { opts = { provider = "openai", can_reason = true, reasoning_tier = "mini" } },
+                    ["gemini-2.5-pro"] = { opts = { provider = "google", multimodal = true } },
+                  },
+                },
+              },
+            })
+          end,
+          qwen25_7b = function()
+            return require("codecompanion.adapters").extend("ollama", {
+              name = "qwen25_7b",
+              schema = {
+                model = {
+                  default = "qwen2.5:7b-instruct",
+                  choices = {
+                    "qwen2.5:7b-instruct",
+                    "qwen2.5:7b",
+                  },
+                },
+                num_ctx = { default = 16384 },
+                temperature = { default = 0.2 }, -- lower for deterministic inline transformations
+                keep_alive = { default = "1h" }, -- keep model in memory for responsiveness
+                -- 'think' only if your build advertises reasoning capability; leave false otherwise
+                think = { default = false },
+              },
+            })
+          end,
         },
       },
     },
@@ -268,7 +347,6 @@ return {
       opts.strategies.chat.slash_commands = {
         prompts = require("code-companion-picker").select_slash_command,
         tools = require("code-companion-picker").select_tool_slash_command,
-        -- import = ...
       }
 
       require("codecompanion").setup(opts)
@@ -316,13 +394,13 @@ return {
       k_cmd({
         key = a .. "a",
         action = "CodeCompanionChat Add",
-        desc = "add visual selection",
+        desc = "Add visual selection to chat",
         mode = "v",
       }),
-      k_cmd({
-        key = a .. "i",
-        action = "CodeCompanionChat Inline",
-        desc = "inline visual selection",
+      k({
+        key = a .. "c",
+        action = ":CodeCompanion ",
+        desc = "Chat about visual selection",
         mode = "v",
       }),
       k_cmd({
@@ -334,6 +412,12 @@ return {
         key = a .. "f",
         action = "'<,'>CodeCompanionChat /fix",
         desc = "Fix visual selection",
+      }),
+      k_cmd({
+        key = a .. "i",
+        action = "CodeCompanionChat Inline",
+        desc = "inline visual selection",
+        mode = "v",
       }),
       k_cmd({
         key = a .. "l",

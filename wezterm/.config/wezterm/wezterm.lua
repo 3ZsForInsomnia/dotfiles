@@ -36,6 +36,5 @@ return {
 		saturation = 0.6,
 		brightness = 0.4,
 	},
-	bidi_enabled = true,
 	-- wsl_domains = wslconfig.config,
 }

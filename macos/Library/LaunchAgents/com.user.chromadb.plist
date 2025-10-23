@@ -10,7 +10,7 @@
     <string>run</string>
     <string>--rm</string>
     <string>-v</string>
-    <string>/Users/zacharylevinw/.local/share/chroma-data:/data</string>
+    <string>/Users/zacharylevinw/.local/share/chromadb:/data</string>
     <string>-p</string>
     <string>8000:8000</string>
     <string>chromadb/chroma:0.6.3</string>
