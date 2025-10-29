@@ -2,6 +2,7 @@ alias_path="$ZSH_CONFIG_DIR/aliases"
 
 sources=(
   "compilation.zsh"
+  "config-utils.zsh"
   "sgpt.zsh"
   "utils.zsh"
 )

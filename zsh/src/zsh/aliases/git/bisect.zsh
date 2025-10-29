@@ -169,7 +169,7 @@ function fbisect() {
   local bad_commit
   bad_commit=$(git log --oneline --graph -100 | \
     fzf $(fzf_git_opts) \
-        --preview="_fzf_git_commit_preview {1}" \
+        --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {1}" \
         --header="🚫 Select BAD commit (has the problem)" |
     awk '{print $1}' | sed 's/[^a-f0-9]//g')
   
@@ -186,7 +186,7 @@ function fbisect() {
   local good_commit
   good_commit=$(git log --oneline --graph -100 | \
     fzf $(fzf_git_opts) \
-        --preview="_fzf_git_commit_preview {1}" \
+        --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {1}" \
         --header="✅ Select GOOD commit (known working)" |
     awk '{print $1}' | sed 's/[^a-f0-9]//g')
   

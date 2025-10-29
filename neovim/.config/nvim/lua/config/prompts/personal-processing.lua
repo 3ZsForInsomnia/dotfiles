@@ -28,7 +28,7 @@ end
 return {
   strategy = "chat",
   description = "Help me process difficult feelings and situations with honesty and nuance",
-  opts = { index = 4, is_slash_cmd = true, auto_submit = false, short_name = "process_emotions" },
+  opts = { is_slash_cmd = true, auto_submit = false, short_name = "process_emotions" },
   prompts = {
     {
       role = "system",

@@ -76,7 +76,7 @@ function fcdf() {
 
   local target
   target=$(eval "$fd_cmd" 2>/dev/null |
-    fzf --preview="_fzf_file_preview {}" \
+    fzf --preview="$ZSH_PREVIEWS_DIR/file.zsh {}" \
       --preview-window="right:60%:wrap" \
       --header="Enter=cd to file/dir, Ctrl-S=inspect, Alt-V=open in nvim")
 
@@ -126,13 +126,13 @@ function fkill() {
   local pid
   if [ "$UID" != "0" ]; then
     pid=$(ps -f -u $UID | sed 1d |
-      fzf -m --preview="_fzf_process_preview {}" \
+      fzf -m --preview="$ZSH_PREVIEWS_DIR/process.zsh {}" \
         --preview-window="right:60%:wrap" \
         --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" |
       awk '{print $2}')
   else
     pid=$(ps -ef | sed 1d |
-      fzf -m --preview="_fzf_process_preview {}" \
+      fzf -m --preview="$ZSH_PREVIEWS_DIR/process.zsh {}" \
         --preview-window="right:60%:wrap" \
         --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" |
       awk '{print $2}')
@@ -167,7 +167,7 @@ function fkillport() {
   fi
 
   pid=$(echo "$procs" | sed 1d |
-    fzf -m --preview="_fzf_process_preview {}" \
+    fzf -m --preview="$ZSH_PREVIEWS_DIR/process.zsh {}" \
       --preview-window="right:60%:wrap" \
       --header="Enter=kill, Ctrl-S=inspect, Tab=multi-select" \
       --prompt="Select process to kill: " |

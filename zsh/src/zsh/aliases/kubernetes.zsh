@@ -554,11 +554,11 @@ function fkp() {
     -o "custom-columns=NAME:.metadata.name,STATUS:.status.phase,RESTARTS:.status.containerStatuses[0].restartCount,AGE:.metadata.creationTimestamp" \
     --no-headers --sort-by=.metadata.creationTimestamp | \
     fzf $(fzf_git_opts) \
-        --preview="$ZSH_CONFIG_DIR/tools/k8s-preview-wrapper.zsh _fzf_k8s_pod_preview {} $namespace" \
+        --preview="$ZSH_PREVIEWS_DIR/k8s-pod.zsh {} $namespace" \
         --bind="ctrl-l:execute(kubectl logs -n $namespace {1} -f)" \
         --bind="ctrl-e:execute(kubectl exec -it -n $namespace {1} -- /bin/bash || kubectl exec -it -n $namespace {1} -- /bin/sh)" \
         --bind="ctrl-r:execute(kubectl delete pod -n $namespace {1})" \
-        --bind="ctrl-s:execute($ZSH_CONFIG_DIR/tools/k8s-preview-wrapper.zsh _fzf_k8s_pod_inspect {} $namespace)" \
+        --bind="ctrl-s:execute(kubectl describe pod -n $namespace {1} | less -R)" \
         --header="Enter=select, Ctrl-L=logs, Ctrl-E=shell, Ctrl-R=restart, Ctrl-S=describe")
   
   if [[ -n "$pod_line" ]]; then
@@ -673,10 +673,10 @@ function fks() {
     -o "custom-columns=NAME:.metadata.name,TYPE:.spec.type,CLUSTER-IP:.spec.clusterIP,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip,PORTS:.spec.ports[*].port" \
     --no-headers | \
     fzf $(fzf_git_opts) \
-        --preview="$ZSH_CONFIG_DIR/tools/k8s-preview-wrapper.zsh _fzf_k8s_service_preview {} $namespace" \
+        --preview="$ZSH_PREVIEWS_DIR/k8s-service.zsh {} $namespace" \
         --bind="ctrl-p:execute(echo 'Port-forward: kubectl port-forward -n $namespace service/{1} LOCAL_PORT:SERVICE_PORT')" \
         --bind="ctrl-e:execute(kubectl get endpoints -n $namespace {1})" \
-        --bind="ctrl-s:execute($ZSH_CONFIG_DIR/tools/k8s-preview-wrapper.zsh _fzf_k8s_service_inspect {} $namespace)" \
+        --bind="ctrl-s:execute(kubectl describe service -n $namespace {1} | less -R)" \
         --header="Enter=select, Ctrl-P=port-forward info, Ctrl-E=endpoints, Ctrl-S=describe")
   
   if [[ -n "$service_line" ]]; then

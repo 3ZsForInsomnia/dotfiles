@@ -377,6 +377,7 @@ run_all_steps() {
   generate_ssh_keys
   install_neovim
   unstow_dotfiles
+  retrieve_hidden_gists
 
   set_arch_settings
   setup_services
@@ -399,6 +400,7 @@ step_functions=(
   generate_ssh_keys
   install_neovim
   unstow_dotfiles
+  retrieve_hidden_gists
   set_arch_settings
   setup_services
   print_manual_steps
@@ -413,7 +415,7 @@ run_specific_steps() {
   fi
 
   for step_num in "$@"; do
-    if ((step_num >= 1 && step_num <= 16)); then
+    if ((step_num >= 1 && step_num <= 17)); then
       echo "Executing Step $step_num..."
       ${step_functions[step_num - 1]}
     else
@@ -441,15 +443,16 @@ show_steps() {
   echo "Step 9: Creating SSH keys"
   echo "Step 10: Installing Neovim from source"
   echo "Step 11: Cloning dotfiles repo and unstowing dotfiles"
-  echo "Step 12: Set Arch/i3wm settings that can be handled via CLI"
-  echo "Step 13: Setup services (ollama, chromadb)"
+  echo "Step 12: Retrieving hidden gists"
+  echo "Step 13: Set Arch/i3wm settings that can be handled via CLI"
+  echo "Step 14: Setup services (ollama, chromadb)"
   echo ""
   echo "At this point, the steps become manual and are broken up into two parts:"
   echo ""
-  echo "Step 14: Manual steps to complete setup"
-  echo "Step 15: Update Arch/i3wm settings (also manual)"
+  echo "Step 15: Manual steps to complete setup"
+  echo "Step 16: Update Arch/i3wm settings (also manual)"
   echo ""
-  echo "Step 16: Run healthcheck to see what failed"
+  echo "Step 17: Run healthcheck to see what failed"
   echo "And then you should be done!"
 
   show_help
@@ -809,18 +812,44 @@ unstow_dotfiles() {
   cd "$HOME"
 }
 
+retrieve_hidden_gists() {
+  ############################
+  # Retrieve hidden gists    #
+  ############################
+
+  echo "Step 12: Retrieving hidden gists..."
+
+  if check_command_is_installed gh; then
+    echo "gh CLI is installed, you will be able to load your hidden gists"
+  else
+    echo "gh CLI is not installed. Please install it or manually place your gists to complete this step"
+    return 1
+  fi
+
+  if check_if_file_or_folder_exists "$HOME/hidden-gists.txt"; then
+    echo "Hidden gists file exists, continuing..."
+  else
+    echo "The hidden gists file does not exist. Please create it and run this script again. It must live at \"$HOME/hidden-gists.txt\""
+    return 1
+  fi
+
+  handle_all_gists "$HOME/hidden-gists.txt"
+
+  echo "Step 12: Finished retrieving hidden gists!"
+}
+
 set_arch_settings() {
   ############################
   # Set Arch/i3wm settings   #
   ############################
 
-  echo "Step 12: Setting Arch/i3wm settings that can be handled via CLI..."
+  echo "Step 13: Setting Arch/i3wm settings that can be handled via CLI..."
 
-  echo "Step 12a: Setting timezone..."
+  echo "Step 13a: Setting timezone..."
 
   sudo timedatectl set-timezone "$TIMEZONE"
 
-  echo "Step 12b: Enabling systemd services..."
+  echo "Step 13b: Enabling systemd services..."
 
   # Enable time synchronization
   sudo systemctl enable systemd-timesyncd
@@ -830,19 +859,19 @@ set_arch_settings() {
     sudo systemctl enable NetworkManager
   fi
 
-  echo "Step 12c: Setting screenshot save location..."
+  echo "Step 13c: Setting screenshot save location..."
 
   # Ensure screenshots directory exists
   mkdir -p "$SCREENSHOTS_DIR"
 
-  echo "Step 12d: Setting up xorg configuration..."
+  echo "Step 13d: Setting up xorg configuration..."
 
   # Create basic .xinitrc if it doesn't exist
   if [[ ! -f "$HOME/.xinitrc" ]]; then
     echo "exec i3" >"$HOME/.xinitrc"
   fi
 
-  echo "Step 12e: Setting zsh as default shell..."
+  echo "Step 13e: Setting zsh as default shell..."
 
   # Check if zsh is installed and set as default shell
   if command -v zsh >/dev/null 2>&1; then
@@ -852,7 +881,7 @@ set_arch_settings() {
   else
     echo "zsh is not installed. Skipping shell change."
   fi
-  echo "Step 12: Finished setting Arch/i3wm settings!"
+  echo "Step 13: Finished setting Arch/i3wm settings!"
   echo "Note: Most i3wm settings are handled by your dotfiles configuration."
   echo "You may want to reboot after completing all steps."
 }
@@ -862,27 +891,27 @@ setup_services() {
   # Setup Services           #
   ############################
 
-  echo "Step 13: Setting up services..."
+  echo "Step 14: Setting up services..."
 
-  echo "Step 13a: Starting ollama service..."
+  echo "Step 14a: Starting ollama service..."
 
   if check_command_is_installed ollama; then
-    echo "Step 13a: Starting and enabling ollama service..."
+    echo "Step 14a: Starting and enabling ollama service..."
     sudo systemctl enable ollama
     sudo systemctl start ollama
 
     # Wait a moment for service to start
     sleep 3
 
-    echo "Step 13a: Downloading nomic-embed-text model..."
+    echo "Step 14a: Downloading nomic-embed-text model..."
     ollama pull nomic-embed-text
 
-    echo "Step 13a: Finished setting up ollama!"
+    echo "Step 14a: Finished setting up ollama!"
   else
-    echo "Step 13a: ollama is not installed. Skipping ollama setup."
+    echo "Step 14a: ollama is not installed. Skipping ollama setup."
   fi
 
-  echo "Step 13b: Setting up ChromaDB service..."
+  echo "Step 14b: Setting up ChromaDB service..."
 
   if check_command_is_installed docker; then
     # Create chroma data directory
@@ -914,12 +943,12 @@ EOF
     systemctl --user enable chromadb.service
     systemctl --user start chromadb.service
 
-    echo "Step 13b: Finished setting up ChromaDB service!"
+    echo "Step 14b: Finished setting up ChromaDB service!"
   else
-    echo "Step 13b: Docker is not installed. Skipping ChromaDB setup."
+    echo "Step 14b: Docker is not installed. Skipping ChromaDB setup."
   fi
 
-  echo "Step 13: Finished setting up services!"
+  echo "Step 14: Finished setting up services!"
 }
 
 print_manual_steps() {
@@ -927,25 +956,25 @@ print_manual_steps() {
   # Manual steps             #
   ############################
 
-  echo "Step 14: Manual steps to complete setup:"
-  echo "Step 14a: Log into Github and register ssh keys"
-  echo "Step 14b: Clone learning repo with SSH: cd \$XDG_CODE_HOME && git clone git@github.com:3ZsForInsomnia/learning.git"
-  echo "Step 14c: Log into gh cli and retrieve hidden gists"
+  echo "Step 15: Manual steps to complete setup:"
+  echo "Step 15a: Log into Github and register ssh keys"
+  echo "Step 15b: Clone learning repo with SSH: cd \$XDG_CODE_HOME && git clone git@github.com:3ZsForInsomnia/learning.git"
+  echo "Step 15c: Log into gh cli and retrieve hidden gists"
   echo "To do this, use gh to pull down your gist containing the list of hidden gists, and run \`handle_all_gists <file>\`"
   echo "Or alternatively, run the \`retrieve_hidden_gists\` function after setting up gh auth"
-  echo "Step 14d: Install fonts manually (nerd fonts): pacman -S ttf-fira-code nerd-fonts-fira-code"
-  echo "Step 14e: Install GUI applications via AUR/Flatpak as desired:"
+  echo "Step 15d: Install fonts manually (nerd fonts): pacman -S ttf-fira-code nerd-fonts-fira-code"
+  echo "Step 15e: Install GUI applications via AUR/Flatpak as desired:"
 
   gui_apps=("obsidian" "google-chrome" "slack-desktop" "postman-bin" "copyq")
   echo "        Available in AUR:"
   echo_each_element "${gui_apps[@]}"
 
   echo ""
-  echo "Step 14f: Set up display manager or configure startx"
-  echo "Step 14g: Configure audio (pulseaudio/pipewire)"
+  echo "Step 15f: Set up display manager or configure startx"
+  echo "Step 15g: Configure audio (pulseaudio/pipewire)"
 
   other_apps=("Lastpass" "Browser extensions" "Development tools specific to your workflow")
-  echo "Step 14h: Log into each of these manually: "
+  echo "Step 15h: Log into each of these manually: "
   echo_each_element "${other_apps[@]}"
 }
 
@@ -954,14 +983,14 @@ print_arch_steps() {
   # Arch/i3wm Settings       #
   ############################
 
-  echo "Step 15: Configure the following Arch/i3wm settings:"
-  echo "Step 15a: Configure display settings (xrandr/arandr for multi-monitor)"
-  echo "Step 15b: Set up input remapping (your dotfiles include input-remapper-2 config)"
-  echo "Step 15c: Configure systemd user services (copyq, redshift services are in your dotfiles)"
-  echo "Step 15d: Set up power management (tlp, powertop, or similar)"
-  echo "Step 15e: Configure firewall (ufw or iptables)"
-  echo "Step 15f: Set up backup solutions"
-  echo "Step 15g: Test i3wm keybindings and adjust as needed"
+  echo "Step 16: Configure the following Arch/i3wm settings:"
+  echo "Step 16a: Configure display settings (xrandr/arandr for multi-monitor)"
+  echo "Step 16b: Set up input remapping (your dotfiles include input-remapper-2 config)"
+  echo "Step 16c: Configure systemd user services (copyq, redshift services are in your dotfiles)"
+  echo "Step 16d: Set up power management (tlp, powertop, or similar)"
+  echo "Step 16e: Configure firewall (ufw or iptables)"
+  echo "Step 16f: Set up backup solutions"
+  echo "Step 16g: Test i3wm keybindings and adjust as needed"
   echo ""
   echo "Note: Your i3wm dotfiles should handle most theming, keybindings, and window management settings automatically."
 }
@@ -1106,6 +1135,34 @@ healthcheck() {
     ((did_anything_fail++))
   fi
 
+  echo_on_verbose "Checking if Notes repo was retrieved..."
+  if check_if_file_or_folder_exists "$HOME/Documents/sync"; then
+    echo_on_success "  Notes repo exists!"
+  else
+    echo "  Notes repo does not exist!"
+    echo ""
+    ((did_anything_fail++))
+  fi
+
+  echo_on_verbose "Checking if screenshots directory exists..."
+  if check_if_file_or_folder_exists "$SCREENSHOTS_DIR"; then
+    echo_on_success "  Screenshots directory exists!"
+  else
+    echo "  Screenshots directory does not exist at $SCREENSHOTS_DIR!"
+    echo ""
+    ((did_anything_fail++))
+  fi
+
+  echo_on_verbose "Checking if i3wm wallpaper file exists..."
+  if check_if_file_or_folder_exists "/usr/share/endeavouros/backgrounds/endeavouros-wallpaper.png"; then
+    echo_on_success "  i3wm wallpaper file exists!"
+  else
+    echo "  i3wm wallpaper file does not exist (referenced in i3 theming.conf)!"
+    echo "  You may need to update the wallpaper path in ~/.config/i3/theming.conf"
+    echo ""
+    ((did_anything_fail++))
+  fi
+
   echo_on_verbose "Checking ssh keys..."
   for key_name in "${ssh_keys_to_create[@]}"; do
     # Convert key name to lowercase
@@ -1204,9 +1261,9 @@ healthcheck() {
 }
 
 run_healthcheck() {
-  echo "Step 16: Running full health check..."
+  echo "Step 17: Running full health check..."
 
   healthcheck
 
-  echo "Step 16: Finished checking for failed installations!"
+  echo "Step 17: Finished checking for failed installations!"
 }

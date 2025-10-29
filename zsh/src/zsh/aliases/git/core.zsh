@@ -735,7 +735,7 @@ function fcom() {
   local commit
   commit=$(git log --oneline --graph --color=always -100 |
     fzf --ansi --no-sort $(fzf_git_opts) \
-      --preview="_fzf_git_commit_preview {1}" \
+      --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {1}" \
       --header="Enter=checkout, Ctrl-S=inspect diff, Alt-Y=copy hash, Ctrl-C=cancel" |
     awk '{print $1}' | sed 's/[^a-f0-9]//g')
 
@@ -1019,7 +1019,7 @@ function fgsearch() {
   local selected_commit
   selected_commit=$(echo "$commits" |
     fzf --ansi --no-sort $(fzf_git_opts) \
-      --preview="_fzf_git_commit_preview {1}" \
+      --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {1}" \
       --bind="ctrl-a:execute(_fgsearch_filter_author {})" \
       --header="Enter=checkout, Ctrl-S=inspect, Ctrl-A=filter by author, Alt-Y=copy hash" |
     awk '{print $1}' | sed 's/[^a-f0-9]//g')

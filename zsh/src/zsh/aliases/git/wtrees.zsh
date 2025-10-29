@@ -188,7 +188,7 @@ function fwt() {
   local selected
   while selected=$(printf '%s\n' "${display_lines[@]}" | \
     fzf $(fzf_git_opts) \
-        --preview="_show_worktree_preview {}" \
+        --preview="$ZSH_PREVIEWS_DIR/git-worktree.zsh {}" \
         --bind="enter:accept" \
         --bind="ctrl-r:accept" \
         --bind="ctrl-m:accept" \
@@ -255,36 +255,6 @@ function fwt() {
     esac
   done
 }
-
-function _show_worktree_preview() {
-  local worktree_line="$1"
-  local path=$(echo "$worktree_line" | awk '{print $1}')
-  
-  if [[ ! -d "$path" ]]; then
-    echo "Directory not found: $path"
-    return
-  fi
-  
-  echo "📁 Worktree: $path"
-  echo ""
-  
-  # Show git status
-  echo "📊 Status:"
-  (cd "$path" && git status --short --branch 2>/dev/null) || echo "Not a git repository"
-  echo ""
-  
-  # Show recent commits
-  echo "📋 Recent commits:"
-  (cd "$path" && git log --oneline -5 2>/dev/null) || echo "No commits"
-  echo ""
-  
-  # Show disk usage
-  echo "💾 Disk usage:"
-  du -sh "$path" 2>/dev/null || echo "Unknown"
-}
-
-# Export for FZF
-# export -f _show_worktree_preview
 
 ### Branch-Based Worktree Operations
 

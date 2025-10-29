@@ -35,7 +35,7 @@ Ready to discuss any aspect of Jewish life, learning, and practice. What would y
 return {
   strategy = "chat",
   description = "Ask questions about Judaism, Jewish life, and Jewish thought",
-  opts = { index = 6, is_slash_cmd = true, auto_submit = false, short_name = "ai_rabbi" },
+  opts = { is_slash_cmd = true, auto_submit = false, short_name = "ai_rabbi" },
   prompts = {
     {
       role = "system",

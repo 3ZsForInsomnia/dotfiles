@@ -31,7 +31,7 @@ function fbr() {
 
   branch=$(echo "$branches" |
     fzf $(fzf_git_opts) \
-      --preview="_fzf_git_branch_preview {1}" \
+      --preview="$ZSH_PREVIEWS_DIR/git-branch.zsh {1}" \
       --bind="ctrl-d:execute(git branch -d {1})+reload(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format='%(refname:short) %(committerdate:relative) %(authorname)')" \
       --header="Enter=checkout, Ctrl-D=delete, Ctrl-S=inspect, Ctrl-C=cancel")
 
@@ -68,7 +68,7 @@ function fcoc() {
 
   commit=$(echo "$commits" |
     fzf --tac --no-sort $(fzf_git_opts) \
-      --preview="_fzf_git_commit_preview {1}" \
+      --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {1}" \
       --header="Enter=checkout, Ctrl-S=inspect diff, Ctrl-C=cancel" |
     awk '{print $1}')
 
@@ -105,7 +105,7 @@ function ftco() {
   local selected
   selected=$(echo "$tags" |
     fzf $(fzf_git_opts) \
-      --preview="_fzf_git_commit_preview {}" \
+      --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {}" \
       --header="Enter=checkout tag, Ctrl-S=inspect, Ctrl-C=cancel")
 
   if [[ -n "$selected" ]]; then
@@ -140,7 +140,7 @@ function fbremote() {
   selected=$(echo "$remote_branches" |
     sed 's/origin\///' |
     fzf $(fzf_git_opts) \
-      --preview="_fzf_git_branch_preview origin/{}" \
+      --preview="$ZSH_PREVIEWS_DIR/git-branch.zsh origin/{}" \
       --header="Enter=checkout remote branch, Ctrl-S=inspect, Ctrl-C=cancel")
 
   if [[ -n "$selected" ]]; then

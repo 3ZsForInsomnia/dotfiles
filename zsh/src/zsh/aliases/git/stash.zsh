@@ -83,7 +83,7 @@ function gstac() {
     echo "Clear all stashes (DANGEROUS)"
     return 0
   fi
-  
+
   echo "This will delete ALL stashes. Are you sure? (y/N)"
   read -r response
   if [[ "$response" =~ ^[Yy]$ ]]; then
@@ -103,7 +103,7 @@ function gstd() {
     echo "Example: gstd 1  # Drop stash@{1}"
     return 0
   fi
-  
+
   if [[ -n "$1" ]]; then
     git stash drop "stash@{$1}"
   else
@@ -113,7 +113,7 @@ function gstd() {
       echo "No stashes to drop"
       return 0
     fi
-    
+
     echo "Drop latest stash: $latest? (y/N)"
     read -r response
     if [[ "$response" =~ ^[Yy]$ ]]; then
@@ -143,29 +143,31 @@ function gstaa() {
 
   local stashes
   stashes=$(git stash list --pretty="%C(yellow)%gd%C(reset) %C(green)(%cr)%C(reset) %gs" 2>/dev/null)
-  
+
   if [[ -z "$stashes" ]]; then
     echo "No stashes found"
     return 0
   fi
 
   local selected
-  selected=$(echo "$stashes" | \
+  selected=$(echo "$stashes" |
     fzf --ansi \
-        --reverse \
-        --query="${1:-}" \
-        --preview="_fzf_git_stash_preview {1}" \
-        --preview-window="right:65%:wrap" \
-        --bind="ctrl-d:execute(git diff {1} | less -R)" \
-        --bind="ctrl-m:execute(git diff {1}..HEAD | less -R)" \
-        --header="Enter=apply, Ctrl-S=inspect, Ctrl-D=diff vs HEAD, Ctrl-M=diff vs main")
-  
+      --reverse \
+      --query="${1:-}" \
+      --preview='git stash show -p --color=always {1} | delta' \
+      --preview-window="right:65%:wrap" \
+      --bind="ctrl-d:execute(git diff {1} | less -R)" \
+      --bind="ctrl-m:execute(git diff {1}..HEAD | less -R)" \
+      --header="Enter=apply, Ctrl-S=inspect, Ctrl-D=diff vs HEAD, Ctrl-M=diff vs main")
+
   if [[ -n "$selected" ]]; then
     local stash_id=$(echo "$selected" | awk '{print $1}')
     git stash apply "$stash_id"
     echo "Applied $stash_id"
   fi
 }
+
+alias gstp="git stash pop"
 
 function fstash() {
   if [[ "$1" == "-h" ]]; then
@@ -183,69 +185,72 @@ function fstash() {
 
   local stashes
   stashes=$(git stash list --pretty="%C(yellow)%gd%C(reset) %C(green)(%cr)%C(reset) %gs" 2>/dev/null)
-  
+
   if [[ -z "$stashes" ]]; then
     echo "No stashes found"
     return 0
   fi
 
   local out q k sha
-  while out=$(echo "$stashes" | \
+  while out=$(echo "$stashes" |
     fzf --ansi \
-        --reverse \
-        --no-sort \
-        --query="$q" \
-        --print-query \
-        --expect=ctrl-a,ctrl-p,ctrl-d,ctrl-b,ctrl-h \
-        --preview="_fzf_git_stash_preview {1}" \
-        --preview-window="right:65%:wrap" \
-        --header="Enter=show, Ctrl-A=apply, Ctrl-P=pop, Ctrl-D=drop, Ctrl-B=branch, Ctrl-S=inspect"); do
-    
+      --reverse \
+      --no-sort \
+      --query="$q" \
+      --print-query \
+      --expect=ctrl-a,ctrl-p,ctrl-d,ctrl-b,ctrl-h \
+      --preview='git stash show -p --color=always {1} | delta' \
+      --preview-window="right:65%:wrap" \
+      --header="Enter=show, Ctrl-A=apply, Ctrl-P=pop, Ctrl-D=drop, Ctrl-B=branch, Ctrl-S=inspect"); do
+
     mapfile -t out <<<"$out"
     q="${out[0]}"
     k="${out[1]}"
     sha="${out[-1]}"
-    
+
     [[ -z "$sha" ]] && continue
-    
+
     local stash_id=$(echo "$sha" | awk '{print $1}')
-    
+
     case "$k" in
-      ctrl-a)
-        git stash apply "$stash_id"
-        echo "Applied $stash_id"
-        break
-        ;;
-      ctrl-p)
-        git stash pop "$stash_id"
-        echo "Popped $stash_id"
-        break
-        ;;
-      ctrl-d)
-        echo "Drop $stash_id? (y/N)"
-        read -r response
-        if [[ "$response" =~ ^[Yy]$ ]]; then
-          git stash drop "$stash_id"
-          echo "Dropped $stash_id"
-          stashes=$(git stash list --pretty="%C(yellow)%gd%C(reset) %C(green)(%cr)%C(reset) %gs" 2>/dev/null)
-          [[ -z "$stashes" ]] && { echo "No more stashes"; break; }
-        fi
-        ;;
-      ctrl-b)
-        echo "Enter branch name:"
-        read -r branch_name
-        if [[ -n "$branch_name" ]]; then
-          git stash branch "$branch_name" "$stash_id"
-          echo "Created branch '$branch_name' from $stash_id"
+    ctrl-a)
+      git stash apply "$stash_id"
+      echo "Applied $stash_id"
+      break
+      ;;
+    ctrl-p)
+      git stash pop "$stash_id"
+      echo "Popped $stash_id"
+      break
+      ;;
+    ctrl-d)
+      echo "Drop $stash_id? (y/N)"
+      read -r response
+      if [[ "$response" =~ ^[Yy]$ ]]; then
+        git stash drop "$stash_id"
+        echo "Dropped $stash_id"
+        stashes=$(git stash list --pretty="%C(yellow)%gd%C(reset) %C(green)(%cr)%C(reset) %gs" 2>/dev/null)
+        [[ -z "$stashes" ]] && {
+          echo "No more stashes"
           break
-        fi
-        ;;
-      ctrl-h)
-        git diff "$stash_id" | less -R
-        ;;
-      "")
-        git stash show -p "$stash_id" | less -R
-        ;;
+        }
+      fi
+      ;;
+    ctrl-b)
+      echo "Enter branch name:"
+      read -r branch_name
+      if [[ -n "$branch_name" ]]; then
+        git stash branch "$branch_name" "$stash_id"
+        echo "Created branch '$branch_name' from $stash_id"
+        break
+      fi
+      ;;
+    ctrl-h)
+      git diff "$stash_id" | less -R
+      ;;
+    "")
+      git stash show -p "$stash_id" | less -R
+      ;;
     esac
   done
 }
@@ -259,29 +264,29 @@ function stash_then_run() {
     echo "Example: stash_then_run 'git pull --rebase'"
     return 0
   fi
-  
+
   if [[ -z "$1" ]]; then
     echo "Error: command required"
     return 1
   fi
-  
+
   # Check if there are changes to stash
   if git diff-index --quiet HEAD -- && git ls-files --others --exclude-standard | head -1 | grep -q .; then
     echo "No changes to stash"
     eval "$1"
     return $?
   fi
-  
+
   echo "Stashing changes..."
   gsta "auto-stash before: $1"
-  
+
   echo "Running: $1"
   eval "$1"
   local exit_code=$?
-  
+
   echo "Applying latest stash..."
   git stash pop
-  
+
   return $exit_code
 }
 
@@ -292,16 +297,16 @@ function run_then_apply_stash() {
     echo "Example: run_then_apply_stash 'git pull --rebase'"
     return 0
   fi
-  
+
   if [[ -z "$1" ]]; then
     echo "Error: command required"
     return 1
   fi
-  
+
   echo "Running: $1"
   eval "$1"
   local exit_code=$?
-  
+
   if [[ $exit_code -eq 0 ]]; then
     echo "Command succeeded. Apply a stash?"
     gstaa
@@ -318,16 +323,16 @@ function run_then_find_stash() {
     echo "Example: run_then_find_stash 'git pull --rebase'"
     return 0
   fi
-  
+
   if [[ -z "$1" ]]; then
     echo "Error: command required"
     return 1
   fi
-  
+
   echo "Running: $1"
   eval "$1"
   local exit_code=$?
-  
+
   if [[ $exit_code -eq 0 ]]; then
     echo "Command succeeded. Opening stash browser..."
     fstash
@@ -344,16 +349,16 @@ function run_then_pop_stash() {
     echo "Example: run_then_pop_stash 'git checkout main'"
     return 0
   fi
-  
+
   if [[ -z "$1" ]]; then
     echo "Error: command required"
     return 1
   fi
-  
+
   echo "Running: $1"
   eval "$1"
   local exit_code=$?
-  
+
   if [[ $exit_code -eq 0 ]]; then
     echo "Popping latest stash..."
     gstap
@@ -380,9 +385,9 @@ function gstacm() {
     echo "Stash + checkout main + pull + return to branch + apply stash"
     return 0
   fi
-  
+
   local current_branch=$(git rev-parse --abbrev-ref HEAD)
   local main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@' 2>/dev/null || echo "main")
-  
+
   stash_then_run "git checkout $main_branch && git pull --rebase && git checkout $current_branch"
 }

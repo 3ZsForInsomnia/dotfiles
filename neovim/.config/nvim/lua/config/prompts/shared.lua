@@ -60,12 +60,11 @@ When querying VectorCode, prefer recent context:
 
 -- Confluence/Jira search tools availability
 local confluence_jira_tools = [[
-You have access to Atlassian tools for additional context:
-- ${atlassian_mcp_server__searchConfluenceUsingCql} - Search Confluence documentation
-- ${atlassian_mcp_server__searchJiraIssuesUsingJql} - Search Jira tickets/issues
-- ${atlassian_mcp_server__getJiraIssue} - Get specific Jira ticket details
-
-Use these tools when relevant to gather context beyond notes.
+Atlassian tools available:
+- ${atlassian_mcp_server__getJiraIssue}
+- ${atlassian_mcp_server__searchJiraIssuesUsingJql}
+- ${atlassian_mcp_server__getConfluencePage}
+- ${atlassian_mcp_server__searchConfluenceUsingCql}
 ]]
 
 return {

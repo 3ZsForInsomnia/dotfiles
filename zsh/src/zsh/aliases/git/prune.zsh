@@ -1,8 +1,3 @@
-#!/usr/bin/env zsh
-
-# Git Branch Pruning Based on PR Status
-# Requires: gh CLI, jq
-
 ### Main Pruning Commands
 
 function gprune() {
@@ -20,15 +15,15 @@ function gprune() {
     return 0
   fi
 
-  local merged_prs_with_branches
-  merged_prs_with_branches=$(_get_prs_with_local_branches "merged")
+  local prs_with_branches
+  prs_with_branches=$(_get_prs_with_local_branches)
 
-  if [[ -z "$merged_prs_with_branches" ]]; then
-    echo "No local branches found for merged PRs."
+  if [[ -z "$prs_with_branches" ]]; then
+    echo "No local branches found for merged or closed PRs."
     return 0
   fi
 
-  _interactive_prune_workflow "$merged_prs_with_branches" "merged"
+  _interactive_prune_workflow "$prs_with_branches"
 }
 
 function gprunepr() {
@@ -92,11 +87,11 @@ function gprunepr() {
 ### Helper Functions
 
 function _get_prs_with_local_branches() {
-  local state="$1"
-
-  # Get PRs with specified state that have local branches
-  gh pr list --state "$state" --json number,title,headRefName,author,mergedAt,createdAt --limit 200 |
-    jq -r '.[] | select(.headRefName != null) | @json' |
+  # Get both merged and closed PRs that have local branches
+  # Get all PRs (merged and closed, but not open)
+  # Using jq to combine and deduplicate by PR number
+  gh pr list --state all --json number,title,headRefName,author,mergedAt,createdAt,state --limit 500 2>/dev/null |
+    jq -r '.[] | select(.state == "MERGED" or .state == "CLOSED") | select(.headRefName != null) | @json' |
     while IFS= read -r pr_json; do
       local branch=$(echo "$pr_json" | jq -r '.headRefName')
       # Check if branch exists locally and isn't main
@@ -113,67 +108,29 @@ function _format_pr_for_fzf() {
   local title=$(echo "$pr_json" | jq -r '.title')
   local author=$(echo "$pr_json" | jq -r '.author.login')
   local branch=$(echo "$pr_json" | jq -r '.headRefName')
+  local state=$(echo "$pr_json" | jq -r '.state')
   local merged_at=$(echo "$pr_json" | jq -r '.mergedAt // .createdAt')
 
   # Format date
   local date_formatted=""
   if [[ "$merged_at" != "null" ]]; then
-    date_formatted=$(date -d "$merged_at" "+%Y-%m-%d" 2>/dev/null || echo "$merged_at")
+    # macOS date format
+    date_formatted=$(echo "$merged_at" | cut -d'T' -f1)
   fi
 
-  printf "#%d %s (%s) [%s] %s\n" "$number" "$title" "$author" "$date_formatted" "$branch"
-}
-
-function _generate_pr_preview() {
-  local pr_line="$1"
-  local pr_number=$(echo "$pr_line" | grep -o '#[0-9]\+' | cut -c2-)
-
-  # Get comprehensive PR info
-  local pr_info
-  pr_info=$(gh pr view "$pr_number" --json number,title,state,author,mergedAt,createdAt,headRefName,body 2>/dev/null)
-
-  if [[ -z "$pr_info" ]]; then
-    echo "Could not load PR #$pr_number"
-    return
+  # Add state prefix
+  local state_prefix=""
+  if [[ "$state" == "MERGED" ]]; then
+    state_prefix="[MERGED] "
+  elif [[ "$state" == "CLOSED" ]]; then
+    state_prefix="[CLOSED] "
   fi
 
-  local title=$(echo "$pr_info" | jq -r '.title')
-  local state=$(echo "$pr_info" | jq -r '.state')
-  local author=$(echo "$pr_info" | jq -r '.author.login')
-  local branch=$(echo "$pr_info" | jq -r '.headRefName')
-  local body=$(echo "$pr_info" | jq -r '.body // "No description"')
-  local merged_at=$(echo "$pr_info" | jq -r '.mergedAt')
-  local created_at=$(echo "$pr_info" | jq -r '.createdAt')
-
-  # Header
-  echo "🔀 PR #$pr_number: $title"
-  echo "👤 Author: $author"
-  echo "📊 State: $state"
-  echo "🌿 Branch: $branch"
-  echo "📅 Created: $(date -d "$created_at" "+%Y-%m-%d %H:%M" 2>/dev/null || echo "$created_at")"
-
-  if [[ "$merged_at" != "null" ]]; then
-    echo "✅ Merged: $(date -d "$merged_at" "+%Y-%m-%d %H:%M" 2>/dev/null || echo "$merged_at")"
-  fi
-
-  echo ""
-  echo "📝 Description:"
-  echo "$body" | head -10
-  echo ""
-
-  # Show commits
-  echo "📋 Commits:"
-  git log --oneline "$GIT_MAIN_BRANCH..$branch" 2>/dev/null | head -10 || echo "No commits found"
-  echo ""
-
-  # Show diff summary
-  echo "📊 Changes:"
-  git diff --stat "$GIT_MAIN_BRANCH..$branch" 2>/dev/null | head -20 || echo "No changes found"
+  printf "%s#%d %s (%s) [%s] %s\n" "$state_prefix" "$number" "$title" "$author" "$date_formatted" "$branch"
 }
 
 function _interactive_prune_workflow() {
   local prs_json="$1"
-  local state="$2"
 
   while true; do
     # Format PRs for FZF
@@ -189,14 +146,14 @@ function _interactive_prune_workflow() {
       return 0
     fi
 
-    echo "Found ${#fzf_options[@]} local branch(es) for $state PRs"
+    echo "Found ${#fzf_options[@]} local branch(es) for merged/closed PRs"
 
     # FZF selection
     local selected
     selected=$(printf '%s\n' "${fzf_options[@]}" |
       fzf --multi \
         --reverse \
-        --preview="_generate_pr_preview {}" \
+        --preview='gh pr view $(echo {} | sed "s/^\[MERGED\] \|^\[CLOSED\] //" | grep -o "#[0-9]\+" | head -1 | cut -c2-)' \
         --preview-window="right:60%" \
         --bind="ctrl-a:select-all" \
         --bind="ctrl-d:deselect-all" \
@@ -211,7 +168,8 @@ function _interactive_prune_workflow() {
     local branches_to_delete=()
     while IFS= read -r line; do
       if [[ -n "$line" ]]; then
-        local branch=$(echo "$line" | grep -o '\[[^]]*\]' | tail -1 | tr -d '[]' | awk '{print $NF}')
+        # Extract the branch name - it's the last space-separated field after the date
+        local branch=$(echo "$line" | awk '{print $NF}')
         branches_to_delete+=("$branch")
       fi
     done <<<"$selected"
@@ -259,6 +217,3 @@ function _interactive_prune_workflow() {
     esac
   done
 }
-
-# Export the preview function so FZF can use it
-# export -f _generate_pr_preview

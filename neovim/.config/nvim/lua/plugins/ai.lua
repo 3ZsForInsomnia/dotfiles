@@ -96,41 +96,46 @@ return {
         },
       },
       prompt_library = {
+        -- System Prompts
         ["System: Personal Programming"] = require("config.prompts.personal-programming").selectable_prompt,
         ["System: Hobbies"] = require("config.prompts.hobbies"),
         ["System: Emotional Processing"] = require("config.prompts.personal-processing"),
         ["System: Daily Planning"] = require("config.prompts.daily-weekly").dailyPlanning,
         ["System: Review Notes Daily"] = require("config.prompts.daily-weekly").dailyReview,
         ["System: Review Notes Weekly"] = require("config.prompts.daily-weekly").weeklyReview,
+
+        -- Specialized Assistants
         ["AI Rabbi"] = require("config.prompts.ai-rabbi"),
+
+        -- Software Development
         ["Debugging"] = require("config.prompts.debugging"),
-        ["Story Writing"] = require("config.prompts.stories"),
+        ["Code Review"] = require("config.prompts.code-review"),
         ["Api Design"] = require("config.prompts.api-design"),
         ["System Architecture"] = require("config.prompts.sys-arch-docs"),
         ["Architecture Review"] = require("config.prompts.arch-review"),
         ["Technical Writing"] = require("config.prompts.technical-writing"),
-        ["Process Improvements"] = require("config.prompts.process-retros"),
-        ["Code Review"] = require("config.prompts.code-review"),
 
-        -- Meeting prompts
+        -- Project Management
+        ["Story Writing"] = require("config.prompts.stories"),
+        ["Process Improvements"] = require("config.prompts.process-retros"),
         ["Meeting: Prep"] = require("config.prompts.meetings").meeting_prep,
         ["Meeting: Cleanup"] = require("config.prompts.meetings").meeting_cleanup,
 
-        -- Note filing prompts
+        -- Knowledge Management
         ["Notes: File (Remote)"] = require("config.prompts.note-filing").note_file_remote,
         ["Notes: File (Local)"] = require("config.prompts.note-filing").note_file_local,
+        ["AI Review: Biweekly"] = require("config.prompts.ai-usage-review").biweekly,
+        ["AI Review: Quarterly"] = require("config.prompts.ai-usage-review").quarterly,
 
-        -- VectorCode search prompts
-        ["VC: Extract Keywords & Query"] = require("config.prompts.vectorcode").vc_extract_keywords,
-        ["VC: Search with Summary"] = require("config.prompts.vectorcode").vc_search_summary,
-        ["VC: Raw File List"] = require("config.prompts.vectorcode").vc_search_raw,
-
-        -- Code examples
+        -- Code Examples
         ["Code: Snippet"] = require("config.prompts.coding-examples").snippet,
         ["Code: Good vs Bad"] = require("config.prompts.coding-examples").good_bad_example,
 
-        -- Web retrieval
+        -- Tools & Retrieval
         ["Web: Fetch & Summarize"] = require("config.prompts.retrieval").web_fetch,
+        ["VC: Extract Keywords & Query"] = require("config.prompts.vectorcode").vc_extract_keywords,
+        ["VC: Search with Summary"] = require("config.prompts.vectorcode").vc_search_summary,
+        ["VC: Raw File List"] = require("config.prompts.vectorcode").vc_search_raw,
       },
       extensions = {
         vectorcode = {

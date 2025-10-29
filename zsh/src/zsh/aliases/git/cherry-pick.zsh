@@ -144,7 +144,7 @@ function fcpick() {
     fzf --ansi \
         --reverse \
         --multi \
-        --preview="_fzf_git_commit_preview {1}" \
+        --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {1}" \
         --preview-window="right:65%:wrap" \
         --bind="enter:accept" \
         --bind="ctrl-x:accept" \
@@ -212,7 +212,7 @@ function fcpicklog() {
   local selected
   selected=$(echo "$commits" | \
     fzf --ansi --multi $(fzf_git_opts) \
-        --preview="_fzf_git_commit_preview {1}" \
+        --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {1}" \
         --header="Enter=cherry-pick, Tab=multi-select, Ctrl-S=inspect, Ctrl-C=cancel")
   
   if [[ -z "$selected" ]]; then

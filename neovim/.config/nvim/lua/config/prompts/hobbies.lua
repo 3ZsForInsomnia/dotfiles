@@ -50,7 +50,7 @@ Learning philosophy:
 return {
   strategy = "chat",
   description = "Get help with my hobbies",
-  opts = { index = 4, is_slash_cmd = true, auto_submit = false, short_name = "system_hobbies" },
+  opts = { is_slash_cmd = true, auto_submit = false, short_name = "system_hobbies" },
   prompts = {
     {
       role = "system",

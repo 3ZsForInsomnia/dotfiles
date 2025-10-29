@@ -116,6 +116,16 @@ _G.openNote = function(noteType)
   end
 end
 
+_G.searchTagUnderCursor = function()
+  local word = v.fn.expand("<cWORD>")
+  local tag = word:match("#([%w%-_/]+)")
+  if tag then
+    c("ObsidianTags " .. tag)
+  else
+    v.notify("No tag under cursor", v.log.levels.WARN)
+  end
+end
+
 return {
   {
     "obsidian-nvim/obsidian.nvim",
@@ -163,7 +173,7 @@ return {
       {
         open = {
           func = function(uri)
-            vim.ui.open(uri, { cmd = { "open", "-a", "/Applications/Obsidian.app" } })
+            v.ui.open(uri, { cmd = { "open", "-a", "/Applications/Obsidian.app" } })
           end,
         },
       },
@@ -275,6 +285,11 @@ return {
         desc = "Pick tags",
       }),
       cmd({
+        key = o .. "T",
+        action = "lua searchTagUnderCursor()",
+        desc = "Search for tag under cursor",
+      }),
+      cmd({
         key = o .. "P",
         action = "Obsidian paste_img",
         desc = "Paste image from clipboard with name",
@@ -376,7 +391,7 @@ return {
                 return name
               end
 
-              local tags = vim.tbl_map(get_icon, db:get_tags(id))
+              local tags = v.tbl_map(get_icon, db:get_tags(id))
               table.sort(tags)
 
               return "[" .. table.concat(tags, ", ") .. "]"

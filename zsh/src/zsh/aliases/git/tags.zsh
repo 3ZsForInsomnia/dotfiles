@@ -149,7 +149,7 @@ function ftag() {
   local selected
   while selected=$(echo "$tags" | \
     fzf $(fzf_git_opts) \
-        --preview="_fzf_git_commit_preview {}" \
+        --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {}" \
         --bind="enter:accept" \
         --bind="ctrl-d:accept" \
         --bind="ctrl-p:accept" \
@@ -220,7 +220,7 @@ function ftagco() {
   local selected
   selected=$(echo "$tags" | \
     fzf $(fzf_git_opts) \
-        --preview="_fzf_git_commit_preview {}" \
+        --preview="$ZSH_PREVIEWS_DIR/git-commit.zsh {}" \
         --header="Enter=checkout tag, Ctrl-S=inspect")
   
   if [[ -n "$selected" ]]; then
