@@ -1,4 +1,4 @@
-#compdef groot goToGroot cst gibid gibidp gignore searchGitLogs gst gstat ga gaa gc gci gempty gca gcan gcaa gco gcb gbd gbD gd gds gdh gf gfo gu gup gp gpf gpff gpt gsup grh grhh grs gsh gl glog gac gacp gfapu gcbft gcbfx gcbch gcbrf gcbdc gcbst gcbts gr gra grr grs fcom fgdiff fgsearch grsu
+#compdef groot goToGroot cst gibid gibidp gignore searchGitLogs gst gstat ga gaa gc gci gempty gca gcan gcaa gco gcb gbd gbD gd gds gdh gf gfo gu gup gp gpf gpff gpt gsup grh grhh grs gsh gl glog gac gacp gaczp gfapu gcbft gcbfx gcbch gcbrf gcbdc gcbst gcbts gr gra grr grs fcom fgdiff fgsearch grsu
 
 # Load git completion cache system
 autoload -Uz "${0:h}/_git_cache_system" 2>/dev/null || true
@@ -10,12 +10,12 @@ function _git_core_complete_args() {
   # Only provide argument completion if we're in a git repo and beyond the first argument
   if (( CURRENT > 1 )) && git rev-parse --git-dir &>/dev/null 2>&1; then
     case "$cmd" in
-      ga|gaa|gac|gacp)
+      ga|gaa|gac|gacp|gaczp)
         # git add commands - complete with modified and untracked files
         # Handle different argument positions for different functions
         case "$cmd" in
-          gac|gacp)
-            # gac/gacp <message> [files] - first arg is message, subsequent are files
+          gac)
+            # gac <message> [files] - first arg is message, subsequent are files
             if (( CURRENT == 2 )); then
               _message "commit message"
               return 0
@@ -43,6 +43,62 @@ function _git_core_complete_args() {
               else
                 _files
               fi
+            fi
+            ;;
+          gacp)
+            # gacp <message> [files] - first arg is message, subsequent are files
+            if (( CURRENT == 2 )); then
+              _message "commit message"
+              return 0
+            elif (( CURRENT > 2 )); then
+              # Complete with files for additional arguments
+              local -a modified_files untracked_files all_files
+              
+              # Get modified files (both staged and unstaged)
+              while IFS= read -r file; do
+                [[ -n "$file" ]] || continue
+                modified_files+=("${file}:modified")
+              done < <(git diff --name-only HEAD 2>/dev/null)
+              
+              # Get untracked files
+              while IFS= read -r file; do
+                [[ -n "$file" ]] || continue
+                untracked_files+=("${file}:untracked")
+              done < <(git ls-files --others --exclude-standard 2>/dev/null)
+              
+              # Combine arrays
+              all_files=("${modified_files[@]}" "${untracked_files[@]}")
+              
+              if (( ${#all_files[@]} > 0 )); then
+                _describe 'files' all_files
+              else
+                _files
+              fi
+            fi
+            ;;
+          gaczp)
+            # gaczp [-r] [-n] [files] - complete with files
+            local -a modified_files untracked_files all_files
+            
+            # Get modified files (both staged and unstaged)
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+              modified_files+=("${file}:modified")
+            done < <(git diff --name-only HEAD 2>/dev/null)
+            
+            # Get untracked files
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+              untracked_files+=("${file}:untracked")
+            done < <(git ls-files --others --exclude-standard 2>/dev/null)
+            
+            # Combine arrays
+            all_files=("${modified_files[@]}" "${untracked_files[@]}")
+            
+            if (( ${#all_files[@]} > 0 )); then
+              _describe 'files' all_files
+            else
+              _files
             fi
             ;;
           ga|gaa)
@@ -286,6 +342,7 @@ function _git_core() {
     'grr:Remove remote'
     'gac:Add and commit'
     'gacp:Add, commit, and push'
+    'gaczp:Add, commitizen, and push'
     'gfapu:Fetch all and pull with rebase'
     'fcom:Browse and checkout commits'
     'fgdiff:Compare branches with file diffs'

@@ -536,6 +536,67 @@ function gacp() {
   gp
 }
 
+function gaczp() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: gaczp [-r] [-n] [files]"
+    echo "Git add + commitizen + push"
+    echo "Options:"
+    echo "  -r  Pass --retry to commitizen"
+    echo "  -n  Pass --no-verify to commitizen"
+    echo "Examples:"
+    echo "  gaczp                # Add all, cz commit, push"
+    echo "  gaczp file.js        # Add file.js, cz commit, push"
+    echo "  gaczp -r             # Add all, cz commit with retry, push"
+    echo "  gaczp -n file.js     # Add file.js, cz commit with no-verify, push"
+    echo "  gaczp -r -n          # Add all, cz commit with retry and no-verify, push"
+    return 0
+  fi
+
+  local retry=false
+  local no_verify=false
+  local files=()
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+    -r)
+      retry=true
+      shift
+      ;;
+    -n)
+      no_verify=true
+      shift
+      ;;
+    *)
+      files+=("$1")
+      shift
+      ;;
+    esac
+  done
+
+  # Git add
+  if [[ ${#files[@]} -eq 0 ]]; then
+    ga
+  else
+    ga "${files[@]}"
+  fi
+
+  # Build cz command
+  local cz_cmd="cz"
+  if [[ "$retry" == true ]]; then
+    cz_cmd="$cz_cmd --retry"
+  fi
+  if [[ "$no_verify" == true ]]; then
+    cz_cmd="$cz_cmd --no-verify"
+  fi
+
+  # Run commitizen
+  eval "$cz_cmd" || return 1
+
+  # Push
+  gp
+}
+
 function gfapu() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gfapu"
