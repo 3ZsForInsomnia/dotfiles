@@ -13,7 +13,7 @@ aur_packages=("luacheck" "powerlevel10k-git" "espanso" "lastpass-cli" "jira-cli"
 # Cross-platform GUI applications (some available as Flatpak/AUR)
 gui_applications=("copyq" "obsidian" "google-chrome" "slack-desktop" "postman-bin")
 
-npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree")
+npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http")
 
 # All Python packages to install in global venv
 python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory")
@@ -1219,7 +1219,7 @@ healthcheck() {
   fi
 
   echo_on_verbose "Checking if services are running..."
-  
+
   # Check ollama service
   if check_command_is_installed ollama; then
     if systemctl is-active --quiet ollama; then
@@ -1234,7 +1234,7 @@ healthcheck() {
     echo ""
     ((did_anything_fail++))
   fi
-  
+
   # Check ChromaDB service
   if check_if_file_or_folder_exists "$HOME/.config/systemd/user/chromadb.service"; then
     if systemctl --user is-active --quiet chromadb; then

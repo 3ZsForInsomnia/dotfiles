@@ -18,7 +18,7 @@ alias src='j src'
 alias dots='j dots'
 alias dotsv='dots; renameTab "dots"; v'
 alias shots='j shots'
-alias notes='j notes';
+alias notes='j notes'
 alias notesv='notes; renameTab "notes"; v'
 alias work='j plat; renameTab "work";'
 alias workv='work; v'
@@ -46,12 +46,7 @@ function wttrpng() {
 
 function fup() {
   result=$(fuckitup -f "$@")
-  echo "$result" PC
-  echo "$result"
-}
-function fupc() {
-  result=$(fuckitup -c "$@")
-  echo "$result" PC
+  echo "$result" | copy
   echo "$result"
 }
 
@@ -65,23 +60,23 @@ alias unstow='stow --target=$HOME'
 function unstowAll() {
   cd "$HOME/src/dotfiles/"
 
-  unstow alacritty;
-  unstow ctags;
-  unstow espanso;
-  unstow git;
-  unstow neovim;
-  unstow notes;
-  unstow personal-scripts;
-  unstow rss;
-  unstow wezterm;
-  unstow zsh;
+  unstow alacritty
+  unstow ctags
+  unstow espanso
+  unstow git
+  unstow neovim
+  unstow notes
+  unstow personal-scripts
+  unstow rss
+  unstow wezterm
+  unstow zsh
 
   if [[ "$MY_SYSTEM" == "mac" ]]; then
-    unstow macos;
+    unstow macos
   elif [[ "$MY_SYSTEM" == "linux" ]]; then
-    unstow i3wm;
+    unstow i3wm
   elif [[ "$MY_SYSTEM" == "windows" ]]; then
-    unstow windows;
+    unstow windows
   fi
 }
 
@@ -93,10 +88,10 @@ function updateInitScriptGist() {
 
   if [[ -z "$gistId" ]]; then
     echo "No gistId found for system $MY_SYSTEM! Exiting."
-    exit 1;
+    exit 1
   fi
 
-  gh gist edit "$gistId" "$XDG_CODE_HOME"/dotfiles/startup/.startup-new/init-macos.zsh;
+  gh gist edit "$gistId" "$XDG_CODE_HOME"/dotfiles/startup/.startup-new/init-macos.zsh
 }
 
 # alias lcli="linear-client"

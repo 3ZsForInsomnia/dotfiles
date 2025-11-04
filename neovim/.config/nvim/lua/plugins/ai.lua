@@ -127,6 +127,11 @@ return {
         ["AI Review: Biweekly"] = require("config.prompts.ai-usage-review").biweekly,
         ["AI Review: Quarterly"] = require("config.prompts.ai-usage-review").quarterly,
 
+        -- Hebrew Learning
+        ["Hebrew: Vocab Cards"] = require("config.prompts.hebrew-cards").vocab,
+        ["Hebrew: Grammar Cards"] = require("config.prompts.hebrew-cards").grammar,
+        ["Hebrew: Function Words"] = require("config.prompts.hebrew-cards").function_words,
+
         -- Code Examples
         ["Code: Snippet"] = require("config.prompts.coding-examples").snippet,
         ["Code: Good vs Bad"] = require("config.prompts.coding-examples").good_bad_example,

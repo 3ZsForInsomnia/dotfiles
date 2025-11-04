@@ -1,5 +1,14 @@
 {
   "mcpServers": {
+    "anki-mcp": {
+      "args": [
+        "--stdio"
+      ],
+      "command": "anki-mcp-http",
+      "env": {
+        "ANKI_CONNECT_URL": "http://localhost:8765"
+      }
+    },
     "atlassian-mcp-server": {
       "type": "http",
       "url": "https://mcp.atlassian.com/v1/sse"
@@ -94,12 +103,28 @@
       "command": "uvx",
       "disabled": true
     },
+    "mui-mcp": {
+      "args": [
+        "-y",
+        "@mui/mcp@latest"
+      ],
+      "command": "npx",
+      "type": "stdio"
+    },
     "nx-mcp": {
       "args": [
         "nx-mcp@latest"
       ],
       "command": "npx",
       "type": "stdio"
+    },
+    "tavily": {
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.tavily.com/mcp/?tavilyApiKey=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"
+      ],
+      "command": "npx"
     }
   }
 }

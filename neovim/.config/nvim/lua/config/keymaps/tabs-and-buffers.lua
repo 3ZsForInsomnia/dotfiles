@@ -124,6 +124,7 @@ k({
 })
 
 local v = b .. "v"
+
 cmd({
   key = v .. "n",
   action = "vsplit",

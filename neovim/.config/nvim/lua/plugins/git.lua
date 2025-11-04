@@ -153,8 +153,8 @@ return {
     },
   },
   {
-    dir = "~/src/octo.nvim",
-    -- "pwntester/octo.nvim",
+    -- dir = "~/src/octo.nvim",
+    "pwntester/octo.nvim",
     cmd = {
       "Octo",
       -- "OctoSearch",

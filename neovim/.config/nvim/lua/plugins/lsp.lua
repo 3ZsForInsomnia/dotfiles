@@ -9,26 +9,31 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile", "BufWritePre" },
-    opts = function()
-      local keys = require("lazyvim.plugins.lsp.keymaps").get()
-      keys[#keys + 1] = { "<leader>ca", false }
-      keys[#keys + 1] = { "<leader>cA", false }
-      keys[#keys + 1] = { "<leader>cr", false }
-      keys[#keys + 1] = { "<leader>ub", false }
-      keys[#keys + 1] = { "<leader>ud", false }
-      keys[#keys + 1] = { "<leader>uf", false }
-      keys[#keys + 1] = { "<leader>uF", false }
-      keys[#keys + 1] = { "<leader>ug", false }
-      keys[#keys + 1] = { "<leader>uh", false }
-      keys[#keys + 1] = { "<leader>uH", false }
-      keys[#keys + 1] = { "<leader>ui", false }
-      keys[#keys + 1] = { "<leader>uI", false }
-      keys[#keys + 1] = { "<leader>ul", false }
-      keys[#keys + 1] = { "<leader>uL", false }
-      keys[#keys + 1] = { "<leader>us", false }
-      keys[#keys + 1] = { "<leader>ut", false }
-      keys[#keys + 1] = { "<leader>uT", false }
-    end,
+    opts = {
+      servers = {
+        ["*"] = {
+          keys = {
+            { "<leader>ca", false },
+            { "<leader>cA", false },
+            { "<leader>cr", false },
+            { "<leader>ub", false },
+            { "<leader>ud", false },
+            { "<leader>uf", false },
+            { "<leader>uF", false },
+            { "<leader>ug", false },
+            { "<leader>uh", false },
+            { "<leader>uH", false },
+            { "<leader>ui", false },
+            { "<leader>uI", false },
+            { "<leader>ul", false },
+            { "<leader>uL", false },
+            { "<leader>us", false },
+            { "<leader>ut", false },
+            { "<leader>uT", false },
+          },
+        },
+      },
+    },
   },
   {
     "folke/trouble.nvim",
