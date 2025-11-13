@@ -8,7 +8,6 @@
   <array>
     <string>/usr/local/bin/docker</string>
     <string>run</string>
-    <string>--rm</string>
     <string>-v</string>
     <string>/Users/zacharylevinw/.local/share/chromadb:/data</string>
     <string>-p</string>

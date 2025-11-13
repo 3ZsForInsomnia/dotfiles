@@ -22,6 +22,11 @@ return {
   {
     "mistweaverco/kulala.nvim",
     ft = { "http", "rest", "gql", "graphql" },
+    opts = {
+      ui = {
+        split_direction = "horizontal",
+      },
+    },
     keys = {
       cmd({
         key = h .. "a",

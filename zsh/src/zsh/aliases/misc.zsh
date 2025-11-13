@@ -17,11 +17,19 @@ alias cls='c; ls'
 alias src='j src'
 alias dots='j dots'
 alias dotsv='dots; renameTab "dots"; v'
-alias shots='j shots'
 alias notes='j notes'
 alias notesv='notes; renameTab "notes"; v'
 alias work='j plat; renameTab "work";'
 alias workv='work; v'
+
+alias tdata='j tdata'
+alias xconf='j xconf'
+alias xconvim='j xconf-nvim'
+alias xstate='j xstate'
+alias docs='j docs'
+alias shots='j shots'
+alias dls='j dls'
+alias dlslack='j dlslack'
 
 alias zshrc="v $HOME/src/dotfiles/zsh/.zshrc"
 alias allZsh="v $HOME/src/dotfiles/zsh"

@@ -357,6 +357,8 @@ return {
     config = true,
     opts = {
       picker = "snacks",
+      -- log_level = "info",
+      data_retention_days = 0,
     },
     keys = {
       cmd({

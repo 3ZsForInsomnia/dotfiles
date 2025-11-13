@@ -2,7 +2,6 @@ function sourceDevEnvStuff() {
   local alias_path="$ZSH_CONFIG_DIR/aliases/devenv"
 
   sources=(
-    "ai.zsh"
     "backend.zsh"
     "configs.zsh"
     "database.zsh"

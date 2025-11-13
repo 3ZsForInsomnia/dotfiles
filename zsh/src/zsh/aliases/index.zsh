@@ -5,6 +5,7 @@ sources=(
   "config-utils.zsh"
   "sgpt.zsh"
   "utils.zsh"
+  "vectorcode.zsh"
 )
 
 for source_file in "${sources[@]}"; do

@@ -1,0 +1,28 @@
+[2025-11-12 02:14:21] [INFO] No tracked projects
+[2025-11-12 02:14:21] [WARN] 2 project(s) have invalid paths
+[2025-11-12 02:14:21] [WARN] Run `vcp edit` to remove them
+[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661071-6z53c2omv2d
+[2025-11-12 02:14:21] [INFO] No tracked projects
+[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661077-v8gae9hl6q
+[2025-11-12 02:14:21] [INFO] Initializing VectorCode project at /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661078-846qv69xdoo...
+[2025-11-12 02:14:21] [INFO] VectorCode project initialized
+[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661078-846qv69xdoo
+[2025-11-12 02:14:21] [WARN] Project already tracked: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661080-fftfrge3w9l
+[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661080-fftfrge3w9l
+[2025-11-12 02:14:21] [ERROR] Not in a git repository. Use -p to specify project path.
+[2025-11-12 02:14:21] [ERROR] Project path does not exist: undefined
+[2025-11-12 02:14:21] [ERROR] Not a directory: undefined
+[2025-11-12 02:14:21] [ERROR] Failed to add project: The "path" argument must be of type string. Received undefined
+[2025-11-12 02:14:21] [ERROR] Project path does not exist: /nonexistent/path
+[2025-11-12 02:14:21] [ERROR] Not a directory: /nonexistent/path
+[2025-11-12 02:14:21] [INFO] Initializing VectorCode project at /nonexistent/path...
+[2025-11-12 02:14:21] [ERROR] Failed to initialize VectorCode project: Path does not exist or is not a directory: /nonexistent/path
+[2025-11-12 02:14:21] [ERROR] Is vectorcode installed?
+[2025-11-12 02:14:21] [INFO] VectorCode project initialized
+[2025-11-12 02:14:21] [INFO] Added project: /nonexistent/path
+[2025-11-12 02:14:21] [ERROR] Not a directory: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661087-6pdugtf1obn/file.txt
+[2025-11-12 02:14:21] [INFO] Initializing VectorCode project at /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661087-6pdugtf1obn/file.txt...
+[2025-11-12 02:14:21] [ERROR] Failed to initialize VectorCode project: Path does not exist or is not a directory: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661087-6pdugtf1obn/file.txt
+[2025-11-12 02:14:21] [ERROR] Is vectorcode installed?
+[2025-11-12 02:14:21] [INFO] VectorCode project initialized
+[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661087-6pdugtf1obn/file.txt
