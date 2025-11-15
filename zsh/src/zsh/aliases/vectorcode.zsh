@@ -12,10 +12,6 @@ _vcp_ensure_config() {
   fi
   if [[ ! -f "$VECTORCODE_PROJECTS_FILE" ]]; then
     cat >"$VECTORCODE_PROJECTS_FILE" <<EOF
-# VectorCode Projects
-# Add one project root path per line
-# Lines starting with # are ignored
-# Paths will be expanded (e.g., ~ becomes \$HOME)
 EOF
   fi
 }

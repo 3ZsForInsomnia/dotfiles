@@ -1,28 +1,63 @@
-[2025-11-12 02:14:21] [INFO] No tracked projects
-[2025-11-12 02:14:21] [WARN] 2 project(s) have invalid paths
-[2025-11-12 02:14:21] [WARN] Run `vcp edit` to remove them
-[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661071-6z53c2omv2d
-[2025-11-12 02:14:21] [INFO] No tracked projects
-[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661077-v8gae9hl6q
-[2025-11-12 02:14:21] [INFO] Initializing VectorCode project at /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661078-846qv69xdoo...
-[2025-11-12 02:14:21] [INFO] VectorCode project initialized
-[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661078-846qv69xdoo
-[2025-11-12 02:14:21] [WARN] Project already tracked: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661080-fftfrge3w9l
-[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661080-fftfrge3w9l
-[2025-11-12 02:14:21] [ERROR] Not in a git repository. Use -p to specify project path.
-[2025-11-12 02:14:21] [ERROR] Project path does not exist: undefined
-[2025-11-12 02:14:21] [ERROR] Not a directory: undefined
-[2025-11-12 02:14:21] [ERROR] Failed to add project: The "path" argument must be of type string. Received undefined
-[2025-11-12 02:14:21] [ERROR] Project path does not exist: /nonexistent/path
-[2025-11-12 02:14:21] [ERROR] Not a directory: /nonexistent/path
-[2025-11-12 02:14:21] [INFO] Initializing VectorCode project at /nonexistent/path...
-[2025-11-12 02:14:21] [ERROR] Failed to initialize VectorCode project: Path does not exist or is not a directory: /nonexistent/path
-[2025-11-12 02:14:21] [ERROR] Is vectorcode installed?
-[2025-11-12 02:14:21] [INFO] VectorCode project initialized
-[2025-11-12 02:14:21] [INFO] Added project: /nonexistent/path
-[2025-11-12 02:14:21] [ERROR] Not a directory: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661087-6pdugtf1obn/file.txt
-[2025-11-12 02:14:21] [INFO] Initializing VectorCode project at /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661087-6pdugtf1obn/file.txt...
-[2025-11-12 02:14:21] [ERROR] Failed to initialize VectorCode project: Path does not exist or is not a directory: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661087-6pdugtf1obn/file.txt
-[2025-11-12 02:14:21] [ERROR] Is vectorcode installed?
-[2025-11-12 02:14:21] [INFO] VectorCode project initialized
-[2025-11-12 02:14:21] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1762913661087-6pdugtf1obn/file.txt
+[2025-11-15 16:35:43] [INFO] No tracked projects
+[2025-11-15 16:35:43] [WARN] 2 project(s) have invalid paths
+[2025-11-15 16:35:43] [WARN] Run `vcp edit` to remove them
+[2025-11-15 16:35:43] [WARN] 1 project(s) have invalid paths
+[2025-11-15 16:35:43] [WARN] Run `vcp edit` to remove them
+[2025-11-15 16:35:43] [INFO] Added to include patterns: *.py, *.js, *.ts
+[2025-11-15 16:35:43] [INFO] Added to include patterns: *.py, *.js
+[2025-11-15 16:35:43] [INFO] Added to include patterns: *.py, *.js
+[2025-11-15 16:35:43] [INFO] Added to include patterns: *.js, *.ts
+[2025-11-15 16:35:43] [INFO] Added to include patterns: *.py
+[2025-11-15 16:35:43] [INFO] Added to include patterns: *.py, *.js, *.ts, *.md
+[2025-11-15 16:35:43] [INFO] Removed from include patterns: *.js, *.md
+[2025-11-15 16:35:43] [INFO] Added to exclude patterns: node_modules, dist
+[2025-11-15 16:35:43] [INFO] Added to exclude patterns: test, build
+[2025-11-15 16:35:43] [INFO] Added to exclude patterns: **/__pycache__/**, **/node_modules/**
+[2025-11-15 16:35:43] [INFO] Added to exclude patterns: node_modules, dist, build
+[2025-11-15 16:35:43] [INFO] Removed from exclude patterns: dist
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543592-u94xis0501a...
+[2025-11-15 16:35:43] [INFO] ✓ Synced /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543592-u94xis0501a (0ms)
+[2025-11-15 16:35:43] [INFO] Added to include patterns: *.py, *.js
+[2025-11-15 16:35:43] [INFO] Added to exclude patterns: node_modules
+[2025-11-15 16:35:43] [ERROR] Not in a git repository. Use -p to specify project path or --all to sync all tracked projects.
+[2025-11-15 16:35:43] [ERROR] Failed to sync: Process.exit called with 1
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543596-qjdq6dswou9...
+[2025-11-15 16:35:43] [INFO] ✓ Synced /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543596-qjdq6dswou9 (0ms)
+[2025-11-15 16:35:43] [ERROR] Project path does not exist: /nonexistent/path
+[2025-11-15 16:35:43] [ERROR] Failed to sync: Process.exit called with 1
+[2025-11-15 16:35:43] [ERROR] Not in a git repository. Use -p to specify project path.
+[2025-11-15 16:35:43] [ERROR] Failed to manage patterns: Process.exit called with 1
+[2025-11-15 16:35:43] [ERROR] Project path does not exist: /nonexistent
+[2025-11-15 16:35:43] [ERROR] Failed to manage patterns: Process.exit called with 1
+[2025-11-15 16:35:43] [ERROR] No patterns specified. Use --view to display current patterns.
+[2025-11-15 16:35:43] [ERROR] Failed to manage patterns: Process.exit called with 1
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543598-kdc37xnecrp...
+[2025-11-15 16:35:43] [INFO] ✓ Synced /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543598-kdc37xnecrp (0ms)
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543598-wlpnu5acaj...
+[2025-11-15 16:35:43] [INFO] ✓ Synced /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543598-wlpnu5acaj (0ms)
+[2025-11-15 16:35:43] [WARN] No tracked projects found
+[2025-11-15 16:35:43] [ERROR] Failed to sync: Process.exit called with 0
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543607-8g9qxl8u9wt...
+[2025-11-15 16:35:43] [INFO] ✓ Synced /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543607-8g9qxl8u9wt (0ms)
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543607-ei43u8oo4eg...
+[2025-11-15 16:35:43] [ERROR] ✗ Failed to sync /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543607-ei43u8oo4eg: Error occurred
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543607-uc0vcoxq7fa...
+[2025-11-15 16:35:43] [INFO] ✓ Synced /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543607-uc0vcoxq7fa (0ms)
+[2025-11-15 16:35:43] [ERROR] Failed to sync: Process.exit called with 1
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543610-nnuq74hvfce...
+[2025-11-15 16:35:43] [INFO] ✓ Synced /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543610-nnuq74hvfce (0ms)
+[2025-11-15 16:35:43] [INFO] Syncing /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543611-cvl6gvd6iia...
+[2025-11-15 16:35:43] [INFO] ✓ Synced /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543611-cvl6gvd6iia (1ms)
+[2025-11-15 16:35:43] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543631-bozrzpffitl (with hooks)
+[2025-11-15 16:35:43] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543636-wan9on1x3ih (with hooks)
+[2025-11-15 16:35:43] [INFO] Initializing VectorCode project at /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543638-dzwmqo1v8xt (with git hooks)...
+[2025-11-15 16:35:43] [INFO] VectorCode project initialized
+[2025-11-15 16:35:43] [INFO] Added project: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543638-dzwmqo1v8xt (with hooks)
+[2025-11-15 16:35:43] [WARN] Project already tracked: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543639-1t9yxbk1rcx
+[2025-11-15 16:35:43] [ERROR] Failed to add project: Process.exit called with 0
+[2025-11-15 16:35:43] [ERROR] Not in a git repository. Use -p to specify project path.
+[2025-11-15 16:35:43] [ERROR] Failed to add project: Process.exit called with 1
+[2025-11-15 16:35:43] [ERROR] Project path does not exist: /nonexistent/path
+[2025-11-15 16:35:43] [ERROR] Failed to add project: Process.exit called with 1
+[2025-11-15 16:35:43] [ERROR] Not a directory: /var/folders/ht/z9tb9vq568d_p6h4q3t6ncdc0000gp/T/vcp-test-1763224543642-95thg5tyndc/file.txt
+[2025-11-15 16:35:43] [ERROR] Failed to add project: Process.exit called with 1

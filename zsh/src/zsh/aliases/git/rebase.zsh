@@ -44,32 +44,11 @@ function grbi() {
   fi
 }
 
-function grbc() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: grbc"
-    echo "Continue rebase after resolving conflicts"
-    return 0
-  fi
-  git rebase --continue
-}
+alias grbc='git rebase --continue'
 
-function grba() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: grba"
-    echo "Abort current rebase"
-    return 0
-  fi
-  git rebase --abort
-}
+alias grba='git rebase --abort'
 
-function grbs() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: grbs"
-    echo "Skip current commit during rebase"
-    return 0
-  fi
-  git rebase --skip
-}
+alias grbs='git rebase --skip'
 
 ### Branch Pull and Rebase Operations
 
@@ -127,23 +106,9 @@ function gm() {
   git merge "$source_branch"
 }
 
-function gma() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gma"
-    echo "Abort current merge"
-    return 0
-  fi
-  git merge --abort
-}
+alias gma='git merge --abort'
 
-function gmc() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gmc"
-    echo "Continue merge after resolving conflicts"
-    return 0
-  fi
-  git merge --continue
-}
+alias gmc='git merge --continue'
 
 function pullBranchThenMergeWithIt() {
   if [[ "$1" == "-h" ]]; then
@@ -202,15 +167,7 @@ function grbo() {
   git rebase --onto "$1" "$2"
 }
 
-function grbas() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: grbas"
-    echo "Interactive rebase with autosquash (useful with fixup commits)"
-    echo "Rebases since main branch with autosquash enabled"
-    return 0
-  fi
-  git rebase --interactive --autosquash "$GIT_MAIN_BRANCH"
-}
+alias grbas='git rebase --interactive --autosquash "$GIT_MAIN_BRANCH"'
 
 ### Stash + Rebase Compound Operations
 
@@ -245,3 +202,19 @@ alias grbh='grbi'                                                           # In
 alias gpmm='grb'                                                            # Pull main and rebase (your current alias)
 alias gprm='grb'                                                            # Alternative name for same operation
 alias pullMasThenRebaseWithIt='pullBranchThenRebaseWithIt $GIT_MAIN_BRANCH' # Compatibility
+
+### Git Add + Rebase Continue
+
+function garbc() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: garbc [path]"
+    echo "Add files and continue rebase"
+    echo "Examples:"
+    echo "  garbc        # Add all changes (.) and continue rebase"
+    echo "  garbc file.txt # Add specific file and continue rebase"
+    return 0
+  fi
+
+  local path="${1:-.}"
+  git add "$path" && git rebase --continue
+}

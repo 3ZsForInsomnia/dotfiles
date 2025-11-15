@@ -1,4 +1,4 @@
-#compdef grb grbi grbc grba grbs pullBranchThenRebaseWithIt gm gma gmc pullBranchThenMergeWithIt grbo grbas gstarbm gstarb grbh gpmm gprm pullMasThenRebaseWithIt
+#compdef grb grbi grbc grba grbs garbc pullBranchThenRebaseWithIt gm gma gmc pullBranchThenMergeWithIt grbo grbas gstarbm gstarb grbh gpmm gprm pullMasThenRebaseWithIt
 
 # Load git completion cache system
 autoload -Uz "${0:h}/_git_cache_system" 2>/dev/null || true
@@ -27,9 +27,22 @@ function _git_rebase_complete_args() {
             return 0
           fi
         fi
+        ;;
+      garbc)
+        # Takes file paths as arguments - complete with git modified files
+        local -a modified_files
+        modified_files=($(git diff --name-only HEAD 2>/dev/null))
+        
+        if (( ${#modified_files[@]} > 0 )); then
+          _describe 'modified files' modified_files
+        fi
+        
+        # Also allow general file completion
+        _files
+        return 0
         
 # Register completions even if functions aren't loaded yet
-compdef _git_rebase_complete grb grbi grbc grba grbs pullBranchThenRebaseWithIt gm gma gmc pullBranchThenMergeWithIt grbo grbas gstarbm gstarb grbh gpmm gprm pullMasThenRebaseWithIt 2>/dev/null
+compdef _git_rebase_complete grb grbi grbc grba grbs garbc pullBranchThenRebaseWithIt gm gma gmc pullBranchThenMergeWithIt grbo grbas gstarbm gstarb grbh gpmm gprm pullMasThenRebaseWithIt 2>/dev/null
 
 # Main completion function that handles both help and arguments
 function _git_rebase_complete() {
@@ -42,6 +55,7 @@ function _git_rebase_complete() {
       'grbc:Continue rebase'
       'grba:Abort rebase'
       'grbs:Skip rebase'
+      'garbc:Add files and continue rebase'
       'pullBranchThenRebaseWithIt:Pull branch then rebase'
       'gm:Merge branch'
       'gma:Abort merge'
@@ -170,6 +184,7 @@ function _git_rebase() {
     'grbc:Continue rebase'
     'grba:Abort rebase'
     'grbs:Skip rebase'
+    'garbc:Add files and continue rebase'
     'pullBranchThenRebaseWithIt:Pull branch then rebase'
     'gm:Merge branch'
     'gma:Abort merge'

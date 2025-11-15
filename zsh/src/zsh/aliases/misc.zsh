@@ -54,7 +54,6 @@ function wttrpng() {
 
 function fup() {
   result=$(fuckitup -f "$@")
-  echo "$result" | copy
   echo "$result"
 }
 
