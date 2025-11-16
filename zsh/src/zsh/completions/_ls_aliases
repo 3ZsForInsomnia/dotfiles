@@ -1,0 +1,88 @@
+#compdef ls lss lsg lsd lsr lsrg
+
+# Completion for ls aliases that use eza under the hood
+# Since ls is aliased to eza, we need to provide proper file/directory completion
+
+function _ls_aliases() {
+  local cmd="$words[1]"
+  
+  case "$cmd" in
+    ls)
+      # ls='eza -lahUm -F --icons --git'
+      # Standard ls - complete files and directories
+      _files
+      ;;
+    
+    lss)
+      # lss='eza -lahUm -F --icons --git --sort '
+      # Needs a sort option after the command
+      if (( CURRENT == 2 )); then
+        local -a sort_options
+        sort_options=(
+          'name:Sort by name'
+          'Name:Sort by name (case-sensitive)'
+          'size:Sort by file size'
+          'extension:Sort by file extension'
+          'Extension:Sort by file extension (case-sensitive)'
+          'modified:Sort by modification time'
+          'changed:Sort by changed time'
+          'accessed:Sort by access time'
+          'created:Sort by creation time'
+          'inode:Sort by inode number'
+          'type:Sort by file type'
+          'none:No sorting'
+        )
+        _describe 'sort options' sort_options
+        return 0
+      else
+        # After sort option, complete files/directories
+        _files
+      fi
+      ;;
+    
+    lsg)
+      # lsg='ls G' (ls | grep pattern)
+      # First arg is grep pattern, no file completion needed
+      if (( CURRENT == 2 )); then
+        _message "grep pattern"
+        return 0
+      fi
+      ;;
+    
+    lsd)
+      # lsd='eza -lahUmD -F --icons -I ".git"'
+      # Directories only - should complete directories
+      _directories
+      ;;
+    
+    lsr)
+      # lsr='lsrFunc' - recursive ls with optional depth
+      # lsrFunc accepts optional depth as first argument
+      if (( CURRENT == 2 )); then
+        _message "optional depth (number)"
+        return 0
+      else
+        _files
+      fi
+      ;;
+    
+    lsrg)
+      # lsrg='eza -lahRTUm -F --git -I ".git" --icons G'
+      # Recursive ls with grep pattern
+      if (( CURRENT == 2 )); then
+        _message "grep pattern"
+        return 0
+      fi
+      ;;
+  esac
+}
+
+# Try to use eza's native completion if available, otherwise use our custom one
+if (( $+functions[_eza] )); then
+  # If eza completion exists, we can try to leverage it
+  # But we still need to handle our aliases specially
+  _ls_aliases
+else
+  # Fallback to our custom completion
+  _ls_aliases
+fi

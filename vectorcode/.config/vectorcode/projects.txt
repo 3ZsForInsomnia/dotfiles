@@ -1,19 +1,4 @@
-/Users/zacharylevinw/Documents/sync
+/path/to/project1
 
-/Users/zacharylevinw/src/dotfiles
-/Users/zacharylevinw/src/jira-ai
-/Users/zacharylevinw/src/learning
-/Users/zacharylevinw/src/octo.nvim
-/Users/zacharylevinw/src/pacer.nvim
-/Users/zacharylevinw/src/powerlevel10k
-/Users/zacharylevinw/src/revman.nvim
-/Users/zacharylevinw/src/throttle-me-bananas
-/Users/zacharylevinw/src/token-count.nvim
-/Users/zacharylevinw/src/vcp
-/Users/zacharylevinw/src/vectorcode-prs.nvim
-/Users/zacharylevinw/src/vs-code-companion
 
-/Users/zacharylevinw/src/work/infrastructure
-/Users/zacharylevinw/src/work/platform
-/Users/zacharylevinw/src/work/qa
-/Users/zacharylevinw/src/work/specification
+/path/to/project2 --hooks
