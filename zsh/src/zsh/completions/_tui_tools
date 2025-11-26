@@ -1,0 +1,41 @@
+#compdef y lzd rss cat lpa lpas gogh ogogh
+
+# Completion for TUI application shortcuts
+
+_tui_tools_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    y)
+      _message 'Yazi file manager'
+      _directories
+      ;;
+    lzd)
+      _message 'LazyDocker TUI'
+      ;;
+    rss)
+      _message 'Newsboat RSS reader'
+      ;;
+    cat)
+      _message 'bat - cat with syntax highlighting'
+      _files
+      ;;
+    lpa)
+      _message 'LastPass CLI'
+      ;;
+    lpas)
+      _arguments \
+        '1:entry name:' \
+        && return 0
+      ;;
+    gogh)
+      _message 'Install Gogh terminal color schemes'
+      ;;
+    ogogh)
+      _message 'Open Gogh website in browser'
+      ;;
+  esac
+}
+
+_tui_tools_completion "$@"

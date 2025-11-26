@@ -1,0 +1,64 @@
+#compdef setSlack clearSlackStatus slackClear setSlackToAvailable slackAvailable setSlackToBusy slackBusy setSlackToSmallTask slackSmall setSlackToLargeTask slackLarge setSlackToPRs
+
+# Completion for Slack status helper functions
+
+_slack_emojis() {
+  local -a emojis
+  emojis=(
+    'tomato:Pomodoro/busy'
+    'calendar:Meeting/event'
+    'large_green_circle:Available'
+    'red_circle:Busy/do not disturb'
+    'coffee:Break time'
+    'computer:Working/coding'
+    'books:Learning/reading'
+    'speech_balloon:In discussion'
+  )
+  _describe 'emoji' emojis
+}
+
+_slack_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    setSlack)
+      _arguments \
+        '1:status message:' \
+        '2:emoji:_slack_emojis' \
+        '3:time in minutes:(15 25 30 45 60 90 120)' \
+        && return 0
+      ;;
+    clearSlackStatus|slackClear)
+      _message 'Clear Slack status'
+      ;;
+    setSlackToAvailable|slackAvailable)
+      _arguments \
+        '1:status message:(Available "Back at desk" "Ready to work")' \
+        && return 0
+      ;;
+    setSlackToBusy|slackBusy)
+      _arguments \
+        '1:status message:("In a meeting" "Deep work" "Focus time" "Do not disturb")' \
+        '2:time in minutes:(15 25 30 45 60 90 120)' \
+        && return 0
+      ;;
+    setSlackToSmallTask|slackSmall)
+      _arguments \
+        '1:status message:("Code review" "Quick fix" "Testing" "Documentation")' \
+        '2:time in minutes:(15 25 30)' \
+        && return 0
+      ;;
+    setSlackToLargeTask|slackLarge)
+      _arguments \
+        '1:status message:("Feature development" "Writing docs" "Refactoring" "Investigation")' \
+        '2:time in minutes:(45 60 90 120)' \
+        && return 0
+      ;;
+    setSlackToPRs)
+      _message 'Set Slack status to reviewing PRs (30 min)'
+      ;;
+  esac
+}
+
+_slack_completion "$@"

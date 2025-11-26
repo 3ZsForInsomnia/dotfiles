@@ -1,4 +1,4 @@
-#compdef v openNvim o
+#compdef v openNvim o genTags goToPlugins
 
 # File and directory completion for various utility functions
 
@@ -72,6 +72,8 @@ function _file_functions() {
     'v:Open with Neovim'
     'openNvim:Open with Neovim'
     'o:Open file/directory/URL with system default'
+    'genTags:Generate ctags for current directory'
+    'goToPlugins:cd to Neovim plugins directory'
     'fcdf:Find and cd to file or directory'
     'fzv:Find file with fzf and open in Neovim'
     'fzo:Find file with fzf and open with system default'

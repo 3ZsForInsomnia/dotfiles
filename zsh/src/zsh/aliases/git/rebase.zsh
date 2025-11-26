@@ -25,6 +25,7 @@ function grbi() {
     echo "Interactive rebase"
     echo "Examples:"
     echo "  grbi 3       # Interactive rebase last 3 commits"
+    echo "  grbi h5      # Shorthand for HEAD~5 (h + number)"
     echo "  grbi HEAD~5  # Interactive rebase last 5 commits"
     echo "  grbi main    # Interactive rebase since main"
     return 0
@@ -32,12 +33,15 @@ function grbi() {
 
   if [[ -z "$1" ]]; then
     echo "Error: number of commits or branch required"
-    echo "Examples: grbi 3, grbi HEAD~5, grbi main"
+    echo "Examples: grbi 3, grbi h5, grbi HEAD~5, grbi main"
     return 1
   fi
 
-  # If it's a number, use HEAD~n format
-  if [[ "$1" =~ ^[0-9]+$ ]]; then
+  # If it's h followed by a number, translate to HEAD~n
+  if [[ "$1" =~ ^h([0-9]+)$ ]]; then
+    git rebase --interactive "HEAD~${match[1]}"
+  # If it's a plain number, use HEAD~n format
+  elif [[ "$1" =~ ^[0-9]+$ ]]; then
     git rebase --interactive "HEAD~$1"
   else
     git rebase --interactive "$1"

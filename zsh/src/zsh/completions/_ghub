@@ -1,0 +1,52 @@
+#compdef ghs ghe ghen select_run_for_workflow viewGhubPrChecks
+
+# Completion for GitHub CLI helper functions
+
+_ghub_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    ghs)
+      _message 'GitHub Copilot shell command suggestion'
+      ;;
+    ghe)
+      _message 'GitHub Copilot explain command'
+      ;;
+    ghen)
+      _arguments \
+        '1:clipboard entry number:(0 1 2 3 4 5 6 7 8 9)' \
+        && return 0
+      ;;
+    select_run_for_workflow)
+      _arguments \
+        '1:workflow file:_files -g "*.yml *.yaml"' \
+        '2:number of runs:(5 10 20 50 100)' \
+        && return 0
+      ;;
+    viewGhubPrChecks)
+      _arguments \
+        '1:PR number:->pr_numbers' \
+        && return 0
+
+      case $state in
+        pr_numbers)
+          # Get open PRs
+          local -a prs
+          if (( $+commands[gh] )); then
+            prs=(${(f)"$(gh pr list --json number,title --jq '.[] | "\(.number):\(.title)"' 2>/dev/null)"})
+            if (( ${#prs[@]} )); then
+              _describe 'pull request' prs
+            else
+              _message 'PR number'
+            fi
+          else
+            _message 'PR number'
+          fi
+          ;;
+      esac
+      ;;
+  esac
+}
+
+_ghub_completion "$@"

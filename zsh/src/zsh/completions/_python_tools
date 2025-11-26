@@ -1,4 +1,4 @@
-#compdef pe pel peg pyenv por porp posh poetry
+#compdef p p3 pe pel peg pyenv por porp posh poetry ve vea veag httpServe olo curlJSON flaskAppStart fas
 
 # Python tools completion system
 
@@ -163,6 +163,8 @@ function _python_tools_complete_args() {
 function _python_tools() {
   local -a python_commands
   python_commands=(
+    'p:python3 alias'
+    'p3:python3 alias'
     'pe:pyenv alias'
     'pel:pyenv local (set local Python version)'
     'peg:pyenv global (set global Python version)'
@@ -171,6 +173,14 @@ function _python_tools() {
     'porp:poetry run python'
     'posh:poetry shell'
     'poetry:Python dependency management'
+    've:Create virtual environment'
+    'vea:Activate .venv virtual environment'
+    'veag:Activate global virtual environment'
+    'httpServe:Start simple HTTP server'
+    'olo:Start Python HTTP server on port 8000'
+    'curlJSON:POST JSON file to localhost:8000'
+    'flaskAppStart:Start Flask app in debug mode'
+    'fas:Start Flask app (alias)'
   )
 
   # If no arguments yet, show command descriptions

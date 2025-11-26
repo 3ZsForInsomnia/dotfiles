@@ -1,0 +1,61 @@
+#compdef zcomp-check zcomp zcomp-force zcomp-fg zcomp-stats zcomp-clean zcomp-clean-dry zcomp-invalidate zcomp-rebuild zcomp-info
+
+# Completion for ZSH compilation cache management commands
+
+_zsh_compilation() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    zcomp-check)
+      _message 'Check if compilation cache is working'
+      ;;
+    zcomp)
+      _message 'Compile ZSH files with cache (verbose)'
+      ;;
+    zcomp-force)
+      _message 'Force rebuild all cached files'
+      ;;
+    zcomp-fg)
+      _message 'Run compilation in foreground'
+      ;;
+    zcomp-stats)
+      _message 'Show cache statistics and status'
+      ;;
+    zcomp-clean)
+      _arguments \
+        '--dry-run[Preview cleanup without making changes]' \
+        && return 0
+      ;;
+    zcomp-clean-dry)
+      _message 'Preview cleanup of orphaned files'
+      ;;
+    zcomp-invalidate)
+      _arguments \
+        '1:pattern:->patterns' \
+        && return 0
+      
+      case $state in
+        patterns)
+          local -a suggestions
+          suggestions=(
+            'aliases/*:Recompile all alias files'
+            'tools/*:Recompile all tool files'
+            'completions/*:Recompile all completion files'
+            'plugins/*:Recompile all plugin files'
+            '*.zsh:Recompile all .zsh files'
+          )
+          _describe 'file patterns' suggestions
+          ;;
+      esac
+      ;;
+    zcomp-rebuild)
+      _message 'Force rebuild all files'
+      ;;
+    zcomp-info)
+      _message 'Show compilation cache help and statistics'
+      ;;
+  esac
+}
+
+_zsh_compilation "$@"

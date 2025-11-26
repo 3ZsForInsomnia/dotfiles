@@ -1,0 +1,89 @@
+#compdef pullDb loadDb refreshDb pullQuotesDb loadQuotesDb refreshQuotesDb viewDb viewLocalBpDb viewDevBpDb viewQatBpDb viewUatBpDb viewPreprodBpDb viewProdBpDb viewDevCtDb viewQatCtDb viewUatCtDb viewProdCtDb
+
+# Completion for development environment database functions
+
+_devenv_services() {
+  local -a services
+  services=(
+    'bp:Broker Portal'
+    'ct:Carrier Tracker'
+  )
+  _describe 'service' services
+}
+
+_devenv_envs() {
+  local -a envs
+  envs=(
+    'local:Local environment'
+    'dev:Development environment'
+    'qat:QAT environment'
+    'uat:UAT environment'
+    'preprod:Pre-production environment'
+    'prod:Production environment'
+  )
+  _describe 'environment' envs
+}
+
+_devenv_database_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    pullDb)
+      _message 'Pull broker portal database from dev'
+      ;;
+    loadDb)
+      _message 'Load broker portal database locally'
+      ;;
+    refreshDb)
+      _message 'Pull and load broker portal database'
+      ;;
+    pullQuotesDb)
+      _message 'Pull carrier tracker database from dev'
+      ;;
+    loadQuotesDb)
+      _message 'Load carrier tracker database locally'
+      ;;
+    refreshQuotesDb)
+      _message 'Pull and load carrier tracker database'
+      ;;
+    viewDb)
+      _arguments \
+        '1:service:_devenv_services' \
+        '2:environment:_devenv_envs' \
+        && return 0
+      ;;
+    viewLocalBpDb)
+      _message 'View local broker portal database'
+      ;;
+    viewDevBpDb)
+      _message 'View dev broker portal database'
+      ;;
+    viewQatBpDb)
+      _message 'View QAT broker portal database'
+      ;;
+    viewUatBpDb)
+      _message 'View UAT broker portal database'
+      ;;
+    viewPreprodBpDb)
+      _message 'View preprod broker portal database'
+      ;;
+    viewProdBpDb)
+      _message 'View prod broker portal database'
+      ;;
+    viewDevCtDb)
+      _message 'View dev carrier tracker database'
+      ;;
+    viewQatCtDb)
+      _message 'View QAT carrier tracker database'
+      ;;
+    viewUatCtDb)
+      _message 'View UAT carrier tracker database'
+      ;;
+    viewProdCtDb)
+      _message 'View prod carrier tracker database'
+      ;;
+  esac
+}
+
+_devenv_database_completion "$@"

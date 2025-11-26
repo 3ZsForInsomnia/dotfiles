@@ -1,144 +1,154 @@
-# Git Completions & Help System TODO
+# ZSH Completions & Help System TODO
 
-## Context
-- Auditing git alias completions after extracting merge functions into separate file
-- Currently at 55%+ context usage, so documenting action items
-- User has zsh-syntax-highlighting, zsh-autosuggestions, zsh-autocomplete
-- File completions are automatic/default in zsh
-- Aliases don't need completions (they expand to underlying commands)
+## Status Summary
 
----
+**Completion Verification Progress**: ~70% Complete
 
-## HIGH PRIORITY - Broken/Corrupted Files
+### ✅ Completed Alias Files (Verified & Updated)
 
-### 1. Fix `_git_rebase` completion file
-**Status**: ✅ COMPLETE
+All functions and aliases from these files have been verified against their completion files, with descriptions added for the help system (`zh`/`zhelp`):
 
-**Actions**:
-- [x] Restructure file with proper function structure
-- [x] Remove merge command references from #compdef line
-- [x] Remove merge-related case statements from `_git_rebase_complete_args()`
-- [x] Verify all braces/blocks are properly closed
-- [x] Test that rebase completions work after fix
+- **Git** (11 files): All `git/*.zsh` files → corresponding `_git_*` completions
+- **Docker/Kubernetes**: `docker.zsh`, `kubernetes.zsh` → `_docker_functions`, `_docker_compose`, `_kubernetes`, `_kube_functions`
+- **Cloud**: `azure.zsh` → `_azure_functions`
+- **Languages**: `python.zsh` → `_python_tools`, `js-ts.zsh` → `_js_tools`
+- **Tools**: `dates.zsh` → `_dates`, `nvim.zsh` → `_file_functions`
+- **Utilities**: `misc.zsh` → `_misc_aliases`, `utils.zsh` → `_utils_functions`, `config-utils.zsh` → `_config_utils`
+- **Search**: `searching.zsh` → `_search_fzf_individual`, `_ls_aliases`
+- **Meta**: `_f`, `_fk`, `_fx` (FZF function prefix completions)
 
----
-
-### 2. Fix `_git_bisect` completion file
-**Status**: ✅ COMPLETE
-
-**Actions**:
-- [x] Implement `_git_bisect_complete_args()` function with:
-  - Commit hash completion for `gbs`, `gbsa`
-  - Tag completion for `gbstag`
-- [x] Add `fbisect-next` to #compdef line
-- [x] Test bisect completions
+**What was done:**
+- Fixed corrupted completion files (`_git_rebase`, `_git_bisect`)
+- Added missing functions/aliases to completion files
+- Created new completion files where missing
+- Added descriptions for ALL functions/aliases
+- Added argument completions where appropriate
+- Verified every alias file against its completion file
 
 ---
 
-## MEDIUM PRIORITY - Missing Completions
+## NEXT STEPS - Remaining Alias Files to Verify
 
-### 3. Add descriptions to all completion files
-**Rationale**: User wants descriptions for everything (aliases and functions) to aid discoverability
+**Goal**: Verify remaining alias files against completion files, ensure all functions/aliases have descriptions and appropriate argument completions.
 
-**Current state**: Some completion files have good descriptions, others are minimal
+**Process for each file:**
+1. Check if completion file exists for the alias file
+2. Extract all functions/aliases from `zsh/src/zsh/aliases/FILENAME.zsh`
+3. Compare against completion file's `#compdef` line
+4. Add missing functions/aliases with descriptions
+5. Add argument completions where appropriate (use existing helpers or inline logic)
+6. Verify zsh syntax with `zsh -n`
+7. Mark as complete in this document
 
-#### Git Completions
-- [x] `_git_core` - Audit and add descriptions
-- [x] `_git_branch` - Audit and add descriptions
-- [x] `_git_stash` - Audit and add descriptions
-- [x] `_git_tags` - Audit and add descriptions
-- [x] `_git_merge` - Audit and add descriptions
-- [x] `_git_cherry_pick` - Audit and add descriptions
-- [x] `_git_worktree` - Audit and add descriptions
-- [x] `_git_prune` - Audit and add descriptions
-- [x] `_git_fzf` - Audit and add descriptions
-- [x] `_git_rebase` - Audit and add descriptions (already fixed structure)
-- [x] `_git_bisect` - Audit and add descriptions (already fixed structure)
+### Remaining Top-Level Alias Files
 
-#### Dev Environment Completions
-- [ ] `_dev_env_completion` - Audit and add descriptions
+- [x] `compilation.zsh` - Build/compilation related aliases
+- [x] `dash-g.zsh` - Dash documentation shortcuts
+- [x] `db.zsh` - Database utilities
+- [x] `ghub.zsh` - GitHub CLI shortcuts
+- [x] `golang.zsh` - Go language tools
+- [x] `jira.zsh` - Jira integration
+- [x] `lua.zsh` - Lua language tools
+- [x] `sgpt.zsh` - Shell GPT integration
+- [x] `slack.zsh` - Slack CLI tools
+- [x] `tui-tools.zsh` - TUI application shortcuts
+- [x] `vectorcode.zsh` - VectorCode wrappers (completion exists, verified completeness)
+- [x] `wezterm.zsh` - Wezterm terminal config shortcuts
 
-#### Docker & Kubernetes Completions
-- [x] `_docker` - Audit and add descriptions
-- [x] `_docker_compose` - Audit and add descriptions
-- [x] `_docker_functions` - Audit and add descriptions
-- [x] `_kubernetes` - Audit and add descriptions
-- [x] `_kube_functions` - Audit and add descriptions
-- [x] `_kube_work_aliases` - Audit and add descriptions
+### Subdirectory Alias Files
 
-#### Cloud & Services Completions
-- [x] `_azure_functions` - Audit and add descriptions
+#### `devenv/` - Development Environment
+- [x] `devenv/backend.zsh`
+- [x] `devenv/configs.zsh` (deprecated - empty file)
+- [x] `devenv/database.zsh`
+- [x] `devenv/frontend.zsh`
+- [x] `devenv/locations.zsh`
+- [x] `devenv/misc.zsh`
+- [x] `devenv/procfiles.zsh`
 
-#### Tool-Specific Completions
-- [ ] `_dates` - Audit and add descriptions
-- [ ] `_file_functions` - Audit and add descriptions
-- [ ] `_js_tools` - Audit and add descriptions
-- [ ] `_python_tools` - Audit and add descriptions
-- [ ] `_nvim-update` - Audit and add descriptions
-- [ ] `_vectorcode` - Audit and add descriptions
-- [ ] `_ls_aliases` - Audit and add descriptions
-- [ ] `_help` - Audit and add descriptions
+**Note**: Check if `_dev_env_completion` covers all devenv aliases or if additional files needed.
 
-#### Search & FZF Completions
-- [ ] `_search_fzf_individual` - Audit and add descriptions
-- [ ] `_git_fzf_individual` - Audit and add descriptions
-- [ ] `_kubernetes_fzf_individual` - Audit and add descriptions
+#### `work/` - Work-Specific
+- [x] `work/config-management.zsh`
+- [x] `work/kube.zsh` (covered by `_kube_work_aliases` - verified and enhanced)
+- [x] `work/special.zsh`
+- [x] `work/variables.zsh`
 
-#### Utility & Misc Completions
-- [ ] `_f` - Audit and add descriptions
-- [ ] `_fk` - Audit and add descriptions
-- [ ] `_fx` - Audit and add descriptions
-
-**Actions for each file**:
-- Audit all commands in #compdef line
-- Ensure each has a helpful description in the commands array
-- Consider adding alias expansions in descriptions (e.g., `glg:git log (alias)`)
-- Verify descriptions match actual function behavior
+**Note**: Check `_kube_work_aliases` and see if other completion files needed.
 
 ---
 
-### 4. Document simple aliases - do they need completions?
-**Question to resolve**: Should simple aliases (no arguments) be in #compdef lines?
+## COMPLETION ENHANCEMENTS - Future Work
 
-**Examples**:
-- `gstuno`, `currBranch`, `gback`, `gpause`, `gundo`, `grhhm`
-- `glg`, `lgl`, `lg`, `localGitIgnore`, `gb`
+**Note**: This is OPTIONAL enhancement work for later. The priority is completing verification of all alias files above.
 
-**User's environment**: Has zsh-syntax-highlighting, zsh-autosuggestions, zsh-autocomplete
-- May not need explicit completions for command name recognition
-- These plugins likely handle alias awareness already
+### Context
+- Current completions mix inline logic with helper functions
+- Many completion patterns are repeated across files
+- Could benefit from shared helper functions for common operations
 
-**Actions**:
-- [ ] Test if aliases work without being in #compdef
-- [ ] Document decision (include or exclude simple aliases)
-- [ ] If including, add to appropriate completion files
+### Potential Shared Completion Helpers
 
----
+#### Process/System Helpers
+- [ ] `_comp_running_processes` - Get running processes with PIDs and names
+- [ ] `_comp_process_by_port` - Get process using specific port
+- [ ] `_comp_port_numbers` - Common port numbers (3000, 8000, 8080, etc.)
+- [ ] `_comp_system_type` - Detect mac/linux/windows
 
-## LOW PRIORITY - Nice to Have
+#### File/Directory Helpers
+- [ ] `_comp_project_roots` - Find project roots (git repos, package.json, etc.)
+- [ ] `_comp_config_files` - Common config file patterns
+- [ ] `_comp_archive_files` - Archive file extensions (.zip, .tar.gz, etc.)
 
-### 5. Add HEAD~N translation helper for `grbi`
-**Context**: User suggested making it easier to type `grbi h3` → `HEAD~3`
+#### Development Tool Helpers
+- [ ] `_comp_package_json_scripts` - Extract npm/yarn scripts (currently inline in multiple places)
+- [ ] `_comp_pyenv_versions` - Get Python versions (currently in _python_tools)
+- [ ] `_comp_node_versions` - Get Node versions (if using nvm/n)
 
-**Current state**: `grbi` takes number or branch name
+#### Container/Orchestration Helpers
+- [ ] `_comp_docker_containers` - Consolidate running/stopped container logic
+- [ ] `_comp_docker_images` - Get Docker images
+- [ ] `_comp_k8s_namespaces` - Get Kubernetes namespaces
+- [ ] `_comp_k8s_pods` - Get pods in namespace
 
-**Proposed enhancement**:
-- Add logic to `grbi` function itself to translate:
-  - `h3` → `HEAD~3`
-  - `h5` → `HEAD~5`
-  - `h10` → `HEAD~10`
-  - etc.
+### File-Specific Completion Improvements
 
-**Actions**:
-- [ ] Add translation logic to `grbi` function in `rebase.zsh`
-- [ ] Update `-h` help text to document the shorthand
-- [ ] Test that it works with both old and new syntax
+#### High Priority
+- [ ] `_docker_functions` - Extract container/image helpers into shared functions
+- [ ] `_kubernetes` - Extract k8s resource helpers into shared functions
+- [ ] `_python_tools` - Make pyenv/poetry helpers reusable
+- [ ] `_js_tools` - Extract package.json parsing into shared function
+
+#### Medium Priority
+- [ ] `_utils_functions` - Improve process/port completion logic
+- [ ] `_git_core` - Consider adding more intelligent branch/commit completion
+- [ ] `_azure_functions` - Add vault/secret caching
+
+#### Low Priority
+- [ ] `_misc_aliases` - Add smart completion for directory shortcuts (cd completion)
+- [ ] `_search_fzf_individual` - Consider adding preview patterns
+
+### Shared Completion Library Structure
+
+**Proposed location**: `zsh/src/zsh/completions/_completion_helpers`
+
+Or break into categories:
+- `zsh/src/zsh/completions/_system_helpers` - Process, port, system detection
+- `zsh/src/zsh/completions/_dev_helpers` - Package managers, languages, tools
+- `zsh/src/zsh/completions/_container_helpers` - Docker, Kubernetes
+- `zsh/src/zsh/completions/_file_helpers` - Files, directories, projects
+
+### Benefits
+- **Consistency** - Same completion behavior across similar commands
+- **Performance** - Shared caching for expensive operations
+- **Maintainability** - Fix once, applies everywhere
+- **Discoverability** - Easy to see what completion helpers are available
 
 ---
 
 ## FUTURE ENHANCEMENTS - Help System
 
-### 6. Consolidate and Expand Help Systems
+### Consolidate and Expand Help Systems
 **Context**: Currently have TWO parallel help systems loaded:
 
 **Current State**:
@@ -158,7 +168,7 @@
 
 **Decision: Consolidate into `zh` ecosystem**
 
-### 6a. Enhance `zh` to include `zhelp` features
+### Enhance `zh` to include `zhelp` features
 **Goal**: Make `zh` the primary CLI help system with all features from both systems
 
 **Features to add to `zh`**:
@@ -170,7 +180,7 @@
 - [ ] Remove `zhelp` once `zh` has all features
 - [ ] Update `.zshrc` to only load `zh`
 
-### 6b. Create `zhi` - Interactive FZF Help Browser
+### Create `zhi` - Interactive FZF Help Browser
 **Goal**: Interactive version of `zh` with rich previews
 
 **Proposed: `zhi` (zh interactive)**
@@ -219,6 +229,7 @@ zsh/src/zsh/tools/help/
 1. **Do simple aliases need to be in #compdef lines?**
    - Test with user's zsh plugins
    - Document decision
+   - **Current approach**: Including all aliases/functions for help system (`zh`)
 
 2. **Commitizen completions - needed?**
    - `cz` command flags are handled by alias expansion
@@ -248,32 +259,10 @@ After making changes:
 
 ---
 
-## FILES TO MODIFY
-
-### Completion Files
-- `zsh/src/zsh/completions/_git_rebase` - FIX CRITICAL
-- `zsh/src/zsh/completions/_git_bisect` - FIX CRITICAL
-- `zsh/src/zsh/completions/_git_core` - ADD DESCRIPTIONS
-- `zsh/src/zsh/completions/_git_branch` - ADD DESCRIPTIONS
-- `zsh/src/zsh/completions/_git_stash` - ADD DESCRIPTIONS
-- `zsh/src/zsh/completions/_git_tags` - ADD DESCRIPTIONS
-- `zsh/src/zsh/completions/_git_merge` - ADD DESCRIPTIONS
-- `zsh/src/zsh/completions/_git_cherry_pick` - ADD DESCRIPTIONS
-- `zsh/src/zsh/completions/_git_worktree` - ADD DESCRIPTIONS
-- `zsh/src/zsh/completions/_git_prune` - ADD DESCRIPTIONS
-- `zsh/src/zsh/completions/_git_fzf` - ADD DESCRIPTIONS (if needed)
-
-### Alias Files
-- `zsh/src/zsh/aliases/git/rebase.zsh` - ADD `h3` → `HEAD~3` translation to `grbi`
-
-### Help System (Future)
-- Create new `zsh/src/zsh/tools/help/fhelp.zsh` or similar
-
----
-
 ## NOTES
 
 - Keep completion files focused on **non-file arguments** (branches, commits, tags, etc.)
 - File/path completion is automatic in zsh
-- Descriptions are valuable even for simple commands (aids discovery)
+- Descriptions are valuable even for simple commands (aids discovery via `zh`/`zhelp`)
 - Test thoroughly after changes to avoid breaking existing workflows
+- All functions and aliases should have descriptions for the help system, even if they don't take arguments

@@ -1,0 +1,11 @@
+#compdef lua
+
+# Completion for Lua alias
+# Note: lua is aliased to luajit
+
+_lua_completion() {
+  _message 'Run LuaJIT interpreter'
+  _files -g "*.lua"
+}
+
+_lua_completion "$@"

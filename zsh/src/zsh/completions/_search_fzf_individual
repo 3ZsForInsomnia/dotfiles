@@ -1,6 +1,40 @@
-#compdef fef ftags fcdf fda fbm fkill fkillport flp fenv frg
+#compdef fef ftags fcdf fda fbm fkill fkillport flp fenv frg alg f ff fzp fzv fzo fzz find grep
 
-# Individual search FZF functions - no parameter completion needed  
-# These functions are interactive and don't take meaningful parameters
+# Search and FZF functions completion
+# Most of these are interactive FZF functions that don't take arguments
 
-return 0
+# Main completion function
+function _search_fzf() {
+  local -a search_commands
+  search_commands=(
+    'fef:Find and edit file (FZF + Neovim)'
+    'ftags:Find and jump to ctags with FZF'
+    'fcdf:Find and cd to file/directory location'
+    'fda:Find all files (including hidden)'
+    'fbm:Find and jump to bookmark directory'
+    'fkill:Find and kill process with FZF'
+    'fkillport:Find and kill process by port'
+    'flp:Find and list processes'
+    'fenv:Find and show environment variable'
+    'frg:Find with ripgrep and FZF'
+    'alg:Alias for ripgrep'
+    'find:Find files with fd (overrides built-in find)'
+    'f:Find files with fd'
+    'ff:Find files recursively'
+    'grep:Search with ripgrep (overrides built-in grep)'
+    'fzp:FZF file preview'
+    'fzv:Find file with FZF and open in Neovim'
+    'fzo:Find file with FZF and open with default app'
+    'fzz:FZF with z (directory jumper)'
+  )
+
+  # Show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'search commands' search_commands
+  else
+    # Most of these don't take arguments, but show descriptions anyway
+    _describe 'search commands' search_commands
+  fi
+}
+
+_search_fzf

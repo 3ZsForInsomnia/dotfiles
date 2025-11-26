@@ -1,0 +1,31 @@
+#compdef gob got gotc gocov gocov_open
+
+# Completion for Go language helper functions
+
+_golang_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    gob)
+      _message 'Build Go package'
+      _files
+      ;;
+    got)
+      _message 'Run Go tests with verbose output'
+      _files
+      ;;
+    gotc)
+      _message 'Run Go tests with coverage'
+      _files
+      ;;
+    gocov)
+      _message 'Generate coverage report for all packages'
+      ;;
+    gocov_open)
+      _message 'Open coverage report in browser'
+      ;;
+  esac
+}
+
+_golang_completion "$@"

@@ -1,0 +1,59 @@
+#compdef dots dotsv notes notesv work workv src c q :q rezsh zshrc wezrc xconf xconvim xstate allZsh allWez rmrf mkcd cls .. ... .... ..... ~ shots tdata docs http http-server addcreds sudo oreg wttr wttr1 wttr3 wttrpng unstow unstowAll updateInitScriptGist dlslack dls fup
+
+# Miscellaneous aliases and shortcuts completion
+
+# Main completion function
+function _misc_aliases() {
+  local -a misc_commands
+  misc_commands=(
+    'dots:cd to dotfiles directory'
+    'dotsv:Open dotfiles in Neovim'
+    'notes:cd to notes directory'
+    'notesv:Open notes in Neovim'
+    'work:cd to work directory'
+    'workv:Open work directory in Neovim'
+    'src:cd to src directory'
+    'c:Clear terminal'
+    'q:Exit shell'
+    ':q:Exit shell (vim-style)'
+    'rezsh:Reload zsh configuration'
+    'zshrc:Edit .zshrc'
+    'wezrc:Edit wezterm config'
+    'xconf:cd to xstate config directory'
+    'xconvim:Open xstate config in Neovim'
+    'xstate:cd to xstate directory'
+    'allZsh:Open all zsh configs in Neovim'
+    'allWez:Open all wezterm configs in Neovim'
+    'rmrf:Remove files/directories recursively'
+    'mkcd:Make directory and cd into it'
+    'cls:Clear terminal'
+    '..:cd up one directory'
+    '...:cd up two directories'
+    '....:cd up three directories'
+    '.....:cd up four directories'
+    '~:cd to home directory'
+    'shots:cd to screenshots directory'
+    'tdata:cd to terminal data directory'
+    'docs:cd to documents directory'
+    'http:Start HTTP server'
+    'http-server:Start HTTP server'
+    'addcreds:Add SSH credentials'
+    'sudo:Sudo with alias expansion'
+    'oreg:Open in registry/system'
+    'wttr:Get weather report'
+    'wttr1:Get 1-day weather forecast'
+    'wttr3:Get 3-day weather forecast'
+    'wttrpng:Get weather PNG'
+    'unstow:Unstow dotfiles'
+    'unstowAll:Unstow all dotfiles'
+    'updateInitScriptGist:Update init script gist'
+    'dlslack:Download from Slack'
+    'dls:cd to downloads directory'
+    'fup:Find and move up directories'
+  )
+
+  # Show command descriptions
+  _describe 'misc commands' misc_commands
+}
+
+_misc_aliases

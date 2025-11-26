@@ -1,4 +1,4 @@
-#compdef nr n y npm yarn nx nxs
+#compdef nr n y npm yarn nx nxs nrd nrb nrt nrl nrsto ni niglobal ng nin nins http shadadd jup watch cleanAndInstall cleanDeps installDeps detectNpmOrYarn getLockfile version
 
 # JavaScript/TypeScript tools completion system
 
@@ -208,12 +208,32 @@ function _js_tools() {
   local -a js_commands
   js_commands=(
     'nr:Run npm/yarn script from package.json'
+    'nrd:Run dev script'
+    'nrb:Run build script'
+    'nrt:Run test script'
+    'nrl:Run lint script'
+    'nrsto:Run storybook script'
     'n:npm alias'
     'y:yarn alias'
     'npm:Node package manager'
     'yarn:Yarn package manager'
     'nx:Nx workspace commands'
     'nxs:Nx serve (project runner)'
+    'ni:Install package (npm/yarn auto-detect)'
+    'niglobal:Install package globally'
+    'ng:Install package globally (alias)'
+    'nin:Install package as dependency'
+    'nins:Install package as dev dependency'
+    'http:Start HTTP server'
+    'shadadd:Add shadcn component'
+    'jup:Jest update snapshots'
+    'watch:Watch folder and run command on changes'
+    'cleanAndInstall:Clean deps and reinstall'
+    'cleanDeps:Remove node_modules and lockfile'
+    'installDeps:Install dependencies (auto-detect npm/yarn)'
+    'detectNpmOrYarn:Detect package manager'
+    'getLockfile:Get lockfile name'
+    'version:Show package version'
   )
 
   # If no arguments yet, show command descriptions

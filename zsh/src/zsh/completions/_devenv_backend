@@ -1,0 +1,101 @@
+#compdef gotoBpBe runBpBe goToCtBe runCtBe goToAuth runAuth runBeWith runBeWithLocal runBeDebugWith runBpMigrations useLocalCt useNonLocalCt useLocalBpAuth useNonLocalBpAuth getBpBeConfig updateBpBeConfig updateAquariumUrl
+
+# Completion for development environment backend functions
+
+_devenv_envs() {
+  local -a envs
+  envs=(
+    'local:Local environment'
+    'dev:Development environment'
+    'qat:QAT environment'
+    'uat:UAT environment'
+    'preprod:Pre-production environment'
+    'prod:Production environment'
+  )
+  _describe 'environment' envs
+}
+
+_devenv_backend_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    gotoBpBe)
+      _message 'Navigate to Broker Portal backend directory'
+      ;;
+    runBpBe)
+      _message 'Build and run Broker Portal backend'
+      ;;
+    goToCtBe)
+      _message 'Navigate to Carrier Tracker backend directory'
+      ;;
+    runCtBe)
+      _message 'Build and run Carrier Tracker backend'
+      ;;
+    goToAuth)
+      _message 'Navigate to Auth service directory'
+      ;;
+    runAuth)
+      _message 'Build and run Auth service (requires Caddy)'
+      ;;
+    runBeWith|runBeDebugWith)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        && return 0
+      ;;
+    runBeWithLocal)
+      _arguments \
+        '1:base environment:_devenv_envs' \
+        && return 0
+      ;;
+    runBpMigrations)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        && return 0
+      ;;
+    useLocalCt)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        '2:is local:(true false)' \
+        && return 0
+      ;;
+    useNonLocalCt)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        '2:target environment:_devenv_envs' \
+        && return 0
+      ;;
+    useLocalBpAuth)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        && return 0
+      ;;
+    useNonLocalBpAuth)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        '2:target environment:_devenv_envs' \
+        && return 0
+      ;;
+    getBpBeConfig)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        && return 0
+      ;;
+    updateBpBeConfig)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        '2:JSON path (e.g. .httpPort):' \
+        '3:new value:' \
+        '4:is local:(true false)' \
+        && return 0
+      ;;
+    updateAquariumUrl)
+      _arguments \
+        '1:environment:_devenv_envs' \
+        '2:config name:_devenv_envs' \
+        && return 0
+      ;;
+  esac
+}
+
+_devenv_backend_completion "$@"

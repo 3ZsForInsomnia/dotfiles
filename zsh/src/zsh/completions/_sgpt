@@ -1,0 +1,43 @@
+#compdef ai ais aip aic ail aih air aipy
+
+# Completion for Shell-GPT helper aliases
+
+_sgpt_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    ai)
+      _message 'ShellGPT - AI assistant'
+      ;;
+    ais)
+      _message 'ShellGPT - Generate shell commands'
+      ;;
+    aip)
+      _message 'ShellGPT - Generate code'
+      ;;
+    aic)
+      _arguments \
+        '1:chat name:' \
+        && return 0
+      ;;
+    ail)
+      _message 'ShellGPT - List all chats'
+      ;;
+    aih)
+      _arguments \
+        '1:chat name:' \
+        && return 0
+      ;;
+    air)
+      _message 'ShellGPT - Start REPL mode'
+      ;;
+    aipy)
+      _arguments \
+        '1:prompt:' \
+        && return 0
+      ;;
+  esac
+}
+
+_sgpt_completion "$@"

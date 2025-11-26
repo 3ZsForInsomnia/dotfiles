@@ -1,0 +1,19 @@
+#compdef plat platTab
+
+# Completion for development environment location shortcuts
+
+_devenv_locations_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    plat)
+      _message 'Jump to platform directory (autojump)'
+      ;;
+    platTab)
+      _message 'Jump to platform and rename tab'
+      ;;
+  esac
+}
+
+_devenv_locations_completion "$@"

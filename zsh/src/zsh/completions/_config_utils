@@ -1,0 +1,79 @@
+#compdef update_json_property update_yaml_property update_env_var comment_out_env_vars
+
+# Configuration file utility functions completion
+
+# Function to provide smart argument completion
+function _config_utils_complete_args() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    update_json_property)
+      # update_json_property <file> <key> <value>
+      if (( CURRENT == 2 )); then
+        _files -g '*.json'
+        return 0
+      elif (( CURRENT == 3 )); then
+        _message "JSON property key (e.g., .config.setting)"
+        return 0
+      elif (( CURRENT == 4 )); then
+        _message "new value"
+        return 0
+      fi
+      ;;
+    
+    update_yaml_property)
+      # update_yaml_property <file> <key> <value>
+      if (( CURRENT == 2 )); then
+        _files -g '*.(*yaml|yml)'
+        return 0
+      elif (( CURRENT == 3 )); then
+        _message "YAML property key"
+        return 0
+      elif (( CURRENT == 4 )); then
+        _message "new value"
+        return 0
+      fi
+      ;;
+    
+    update_env_var|comment_out_env_vars)
+      # These take .env files
+      if (( CURRENT == 2 )); then
+        _files -g '.env*'
+        return 0
+      elif (( CURRENT == 3 )); then
+        _message "variable name"
+        return 0
+      elif (( CURRENT == 4 && "$cmd" == "update_env_var" )); then
+        _message "new value"
+        return 0
+      fi
+      ;;
+  esac
+  
+  return 1
+}
+
+# Main completion function
+function _config_utils() {
+  local -a config_commands
+  config_commands=(
+    'update_json_property:Update property in JSON file'
+    'update_yaml_property:Update property in YAML file'
+    'update_env_var:Update variable in .env file'
+    'comment_out_env_vars:Comment out variables in .env file'
+  )
+
+  # If no arguments yet, show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'config utils' config_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _config_utils_complete_args "$cmd"; then
+      # Fallback to showing commands
+      _describe 'config utils' config_commands
+    fi
+  fi
+}
+
+_config_utils

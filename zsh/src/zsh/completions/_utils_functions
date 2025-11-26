@@ -1,0 +1,114 @@
+#compdef backup extract mkcd killPort killProcess kp getProcessUsingPort isMacLinuxOrWin makeExecutable checkArgument default runThenReturn o b j lc lineCountForFolder seeCpu seeMemory shm sortProcsByFilesOpen toUpper createNotification
+
+# Utility functions completion
+
+# Function to provide smart argument completion
+function _utils_complete_args() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    backup)
+      # backup takes files/directories as arguments
+      _files
+      return 0
+      ;;
+    
+    extract)
+      # extract takes archive files
+      _files -g '*.(*zip|tar|tar.gz|tgz|tar.bz2|tbz2|tar.xz|txz|rar|7z|gz|bz2|xz)'
+      return 0
+      ;;
+    
+    mkcd)
+      # mkcd takes directory name
+      _message "directory name"
+      return 0
+      ;;
+    
+    killPort|getProcessUsingPort)
+      # These take port numbers
+      _message "port number"
+      return 0
+      ;;
+    
+    killProcess|kp)
+      # killProcess can complete with running processes
+      if (( CURRENT == 2 )); then
+        local -a processes
+        processes=($(ps aux | awk 'NR>1 {print $2":"$11}' | head -50))
+        _describe 'processes' processes
+        return 0
+      fi
+      ;;
+    
+    makeExecutable)
+      # makeExecutable takes files
+      _files
+      return 0
+      ;;
+    
+    o|b)
+      # open/back - files and directories
+      _files
+      return 0
+      ;;
+    
+    j)
+      # j (jump) - likely directory names for z/zoxide
+      _directories
+      return 0
+      ;;
+    
+    lc|lineCountForFolder)
+      # Line count - directories
+      _directories
+      return 0
+      ;;
+  esac
+  
+  return 1
+}
+
+# Main completion function
+function _utils_functions() {
+  local -a utils_commands
+  utils_commands=(
+    'backup:Create backup of file/directory'
+    'extract:Extract various archive formats'
+    'mkcd:Make directory and cd into it'
+    'killPort:Kill process using specified port'
+    'killProcess:Kill process by name or PID'
+    'kp:Kill process (alias)'
+    'getProcessUsingPort:Find process using port'
+    'isMacLinuxOrWin:Detect operating system'
+    'makeExecutable:Make file executable'
+    'checkArgument:Validate argument exists'
+    'default:Set default value if empty'
+    'runThenReturn:Run command and return to original directory'
+    'o:Open file/directory'
+    'b:Go back to previous directory'
+    'j:Jump to directory (z/zoxide)'
+    'lc:Count lines in folder'
+    'lineCountForFolder:Count lines in folder'
+    'seeCpu:Show CPU usage'
+    'seeMemory:Show memory usage'
+    'shm:Show memory usage (alias)'
+    'sortProcsByFilesOpen:Sort processes by open files'
+    'toUpper:Convert string to uppercase'
+    'createNotification:Create system notification'
+  )
+
+  # If no arguments yet, show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'utils commands' utils_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _utils_complete_args "$cmd"; then
+      # Fallback to showing commands
+      _describe 'utils commands' utils_commands
+    fi
+  fi
+}
+
+_utils_functions

@@ -1,0 +1,16 @@
+#compdef gq
+
+# Completion for development environment miscellaneous functions
+
+_devenv_misc_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    gq)
+      _message 'Run graphite CLI'
+      ;;
+  esac
+}
+
+_devenv_misc_completion "$@"

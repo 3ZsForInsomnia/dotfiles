@@ -1,0 +1,40 @@
+#compdef get_pg_password create_db_schema_diagram viewDB generateDbDiagramFor
+
+# Completion for database utility functions
+
+_db_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    get_pg_password)
+      _arguments \
+        '1:port number:_ports' \
+        '2:username:_users' \
+        && return 0
+      ;;
+    create_db_schema_diagram)
+      _arguments \
+        '1:port number:_ports' \
+        '2:database name:' \
+        '3:username:_users' \
+        '4:output directory:_directories' \
+        && return 0
+      ;;
+    viewDB)
+      _arguments \
+        '1:username:_users' \
+        '2:port number:_ports' \
+        '3:database name:' \
+        '4:host:(localhost)' \
+        && return 0
+      ;;
+    generateDbDiagramFor)
+      _arguments \
+        '1:environment:(dev qat uat)' \
+        && return 0
+      ;;
+  esac
+}
+
+_db_completion "$@"

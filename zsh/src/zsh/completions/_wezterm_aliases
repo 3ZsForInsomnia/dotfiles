@@ -1,0 +1,34 @@
+#compdef img wezKeys renameTab dotsTab notestab upgradeWezterm
+
+# Completion for Wezterm helper aliases
+
+_wezterm_aliases_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    img)
+      _message 'Display image in terminal with wezterm imgcat'
+      _files
+      ;;
+    wezKeys)
+      _message 'Show Wezterm key bindings'
+      ;;
+    renameTab)
+      _arguments \
+        '1:tab title:' \
+        && return 0
+      ;;
+    dotsTab)
+      _message 'Rename current tab to "dots"'
+      ;;
+    notestab)
+      _message 'Rename current tab to "notes"'
+      ;;
+    upgradeWezterm)
+      _message 'Upgrade Wezterm nightly via Homebrew'
+      ;;
+  esac
+}
+
+_wezterm_aliases_completion "$@"

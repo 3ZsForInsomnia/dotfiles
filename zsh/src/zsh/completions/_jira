@@ -1,0 +1,92 @@
+#compdef myJira jiraopen viewJiraTicket viewCurrentTicket viewUsersTickets assignTicket assignMe watchTicket commentOn moveTicketTo moveCurrentTicketTo moveCurrTicketToReview moveCurrTicketToQA moveCurrTicketToInProgress getConfluenceDoc
+
+# Completion for Jira CLI helper functions
+
+_jira_statuses() {
+  local -a statuses
+  statuses=(
+    'Open:Open status'
+    'Blocked:Blocked status'
+    'In\ Progress:In Progress status'
+    'Code\ Review:Code Review status'
+    'QA\ Review:QA Review status'
+    'Done:Done status'
+  )
+  _describe 'jira status' statuses
+}
+
+_jira_completion() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  case "$service" in
+    myJira)
+      _message 'List my open Jira issues'
+      ;;
+    jiraopen)
+      _message 'List open Jira issues'
+      ;;
+    viewJiraTicket)
+      _arguments \
+        '1:issue ID:' \
+        && return 0
+      ;;
+    viewCurrentTicket)
+      _message 'View Jira ticket for current git branch'
+      ;;
+    viewUsersTickets)
+      _arguments \
+        '1:username:_users' \
+        && return 0
+      ;;
+    assignTicket)
+      _arguments \
+        '1:issue ID:' \
+        '2:assignee:_users' \
+        && return 0
+      ;;
+    assignMe)
+      _arguments \
+        '1:issue ID:' \
+        && return 0
+      ;;
+    watchTicket)
+      _arguments \
+        '1:issue ID:' \
+        && return 0
+      ;;
+    commentOn)
+      _arguments \
+        '1:issue ID:' \
+        '2:comment text:' \
+        && return 0
+      ;;
+    moveTicketTo)
+      _arguments \
+        '1:issue ID:' \
+        '2:status:_jira_statuses' \
+        && return 0
+      ;;
+    moveCurrentTicketTo)
+      _arguments \
+        '1:status:_jira_statuses' \
+        && return 0
+      ;;
+    moveCurrTicketToReview)
+      _message 'Move current ticket to Code Review'
+      ;;
+    moveCurrTicketToQA)
+      _message 'Move current ticket to QA Review'
+      ;;
+    moveCurrTicketToInProgress)
+      _message 'Move current ticket to In Progress'
+      ;;
+    getConfluenceDoc)
+      _arguments \
+        '1:confluence document ID:' \
+        && return 0
+      ;;
+  esac
+}
+
+_jira_completion "$@"
