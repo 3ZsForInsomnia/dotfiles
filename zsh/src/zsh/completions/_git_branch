@@ -1,0 +1,129 @@
+#compdef gbd gbD deleteMerged gdm gsup grsu gcbft gcbfx gcbch gcbrf gcbdc gcbst gcbts gbl
+
+# Load git completion cache system
+autoload -Uz "${0:h}/_git_cache_system" 2>/dev/null || true
+
+# Function to provide smart argument completion for git branch functions
+function _git_branch_complete_args() {
+  local cmd="$1"
+  
+  # Only provide argument completion if we're in a git repo and beyond the first argument
+  if (( CURRENT > 1 )) && git rev-parse --git-dir &>/dev/null 2>&1; then
+    case "$cmd" in
+      gbd|gbD)
+        # Branch deletion - complete with local branches
+        local -a branches descriptions
+        local branch desc
+        
+        # Load cache system if available
+        if (( $+functions[_git_comp_branches] )); then
+          while IFS=':' read -r branch desc; do
+            [[ -n "$branch" ]] || continue
+            # Only show local branches for deletion
+            [[ "$branch" != *"/"* ]] && descriptions+=("$branch:$desc")
+          done < <(_git_comp_branches 2>/dev/null)
+          
+          if (( ${#descriptions[@]} > 0 )); then
+            _describe 'local branches' descriptions
+            return 0
+          fi
+        fi
+        
+        # Fallback to basic branch completion
+        local -a fallback_branches
+        fallback_branches=($(git branch --format='%(refname:short)' 2>/dev/null))
+        if (( ${#fallback_branches[@]} > 0 )); then
+          _describe 'local branches' fallback_branches
+          return 0
+        fi
+        ;;
+      grsu)
+        # Set upstream with optional remote - complete with remotes
+        if (( CURRENT == 2 )); then
+          local -a remotes descriptions
+          local remote url
+          
+          if (( $+functions[_git_comp_remotes] )); then
+            while IFS=':' read -r remote url; do
+              [[ -n "$remote" ]] || continue
+              descriptions+=("$remote:$url")
+            done < <(_git_comp_remotes 2>/dev/null)
+            
+            if (( ${#descriptions[@]} > 0 )); then
+              _describe 'remotes' descriptions
+              return 0
+            fi
+          fi
+          
+          # Fallback
+          local -a fallback_remotes
+          fallback_remotes=($(git remote 2>/dev/null))
+          if (( ${#fallback_remotes[@]} > 0 )); then
+            _describe 'remotes' fallback_remotes
+            return 0
+          fi
+        fi
+        ;;
+      gbl)
+        # List branches - complete with git branch options
+        if (( CURRENT == 2 )); then
+          local -a options
+          options=(
+            '-a:show all branches (local and remote)'
+            '-r:show remote branches only'
+            '-v:show verbose output'
+            '-vv:show very verbose output with upstream'
+          )
+          _describe 'options' options
+          return 0
+        fi
+        ;;
+      gcbft|gcbfx|gcbch|gcbrf|gcbdc|gcbst|gcbts)
+        # Branch creation - just need a name, no completion
+        if (( CURRENT == 2 )); then
+          _message "branch name (without prefix)"
+          return 0
+        fi
+        ;;
+    esac
+  fi
+  
+  # No specific argument completion available
+  return 1
+}
+
+# Main completion entry point
+function _git_branch() {
+  local -a git_commands
+  git_commands=(
+    'gbd:Delete merged branch (safe)'
+    'gbD:Force delete branch (dangerous)'
+    'deleteMerged:Delete all merged branches'
+    'gdm:Delete all merged branches (alias)'
+    'gsup:Set upstream for current branch'
+    'grsu:Set upstream to remote'
+    'gcbft:Create feat/ branch'
+    'gcbfx:Create fix/ branch'
+    'gcbch:Create chore/ branch'
+    'gcbrf:Create refactor/ branch'
+    'gcbdc:Create docs/ branch'
+    'gcbst:Create style/ branch'
+    'gcbts:Create test/ branch'
+    'gbl:List branches with info'
+  )
+
+  # If no arguments yet, show command descriptions
+  if (( CURRENT == 1 )); then
+    _describe 'git branch commands' git_commands
+  else
+    # Try to provide smart argument completion
+    local cmd="$words[1]"
+    if ! _git_branch_complete_args "$cmd"; then
+      # Fallback to showing commands if no specific completion available
+      _describe 'git branch commands' git_commands
+    fi
+  fi
+}
+
+# The #compdef directive at the top automatically registers this function
+# No need to call it explicitly - zsh will call _git_branch when needed

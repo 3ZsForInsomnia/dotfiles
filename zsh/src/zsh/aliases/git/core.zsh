@@ -32,6 +32,9 @@ function cst() {
   clear && gst
 }
 
+alias gstuno='gst -uno'                            # Status without untracked files (faster for large repos)
+alias currBranch='git rev-parse --abbrev-ref HEAD' # Get current branch name
+
 function gibid() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gibid"
@@ -98,15 +101,6 @@ function gst() {
     return 0
   fi
   git status --short --branch
-}
-
-function gstat() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gstat"
-    echo "Git status (base version, no flags)"
-    return 0
-  fi
-  git status
 }
 
 ### Add
@@ -239,10 +233,16 @@ function gcb() {
 ### Diff
 function gd() {
   if [[ "$1" == "-h" ]]; then
-    echo "Usage: gd [files]"
+    echo "Usage: gd [files...]"
     echo "Git diff (working tree vs index)"
+    echo "Examples:"
+    echo "  gd                  # Diff all changes"
+    echo "  gd file.js          # Diff specific file"
+    echo "  gd src/ test/       # Diff specific directories"
+    echo "  gd '*.js'           # Diff files matching pattern"
     return 0
   fi
+
   git diff "$@"
 }
 
@@ -382,52 +382,6 @@ function gpt() {
   git push --tags
 }
 
-### Branch Management
-
-alias gb="git branch"
-
-function gbd() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gbd <branch>"
-    echo "Delete merged branch (safe delete)"
-    echo "Example: gbd feature/old-feature"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-
-  git branch -d "$1"
-}
-
-function gbD() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gbD <branch>"
-    echo "Force delete branch (DANGEROUS: deletes unmerged branches)"
-    echo "Example: gbD feature/abandoned-work"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-
-  git branch -D "$1"
-}
-
-function gsup() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gsup"
-    echo "Set upstream for current branch to origin"
-    return 0
-  fi
-  local branch="$(git_current_branch)"
-  git branch --set-upstream-to="origin/$branch"
-}
-
 ### Reset/Restore
 function grh() {
   if [[ "$1" == "-h" ]]; then
@@ -446,6 +400,11 @@ function grhh() {
   fi
   git reset --hard HEAD
 }
+
+alias grhhm='grhh origin/$GIT_MAIN_BRANCH'                     # Reset hard to origin/main
+alias gundo='git revert'                                       # Revert commit
+alias gpause='git add . && git commit -m "<back>" --no-verify' # Quick pause point
+alias gback='git reset HEAD~1'                                 # Undo last commit, keep changes
 
 function grs() {
   if [[ "$1" == "-h" ]]; then
@@ -486,6 +445,10 @@ function glog() {
   fi
   git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
 }
+
+alias lgl='glog --color=always | less -R'                              # Detailed log in pager
+alias lg='glg --color=always | less -R'                                # Basic log in pager
+alias localGitIgnore='${EDITOR:-nvim} ~/.config/git/.gitignore_global' # Edit global gitignore
 
 ### Compound Operations
 function gac() {
@@ -536,67 +499,6 @@ function gacp() {
   gp
 }
 
-function gaczp() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gaczp [-r] [-n] [files]"
-    echo "Git add + commitizen + push"
-    echo "Options:"
-    echo "  -r  Pass --retry to commitizen"
-    echo "  -n  Pass --no-verify to commitizen"
-    echo "Examples:"
-    echo "  gaczp                # Add all, cz commit, push"
-    echo "  gaczp file.js        # Add file.js, cz commit, push"
-    echo "  gaczp -r             # Add all, cz commit with retry, push"
-    echo "  gaczp -n file.js     # Add file.js, cz commit with no-verify, push"
-    echo "  gaczp -r -n          # Add all, cz commit with retry and no-verify, push"
-    return 0
-  fi
-
-  local retry=false
-  local no_verify=false
-  local files=()
-
-  # Parse arguments
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-    -r)
-      retry=true
-      shift
-      ;;
-    -n)
-      no_verify=true
-      shift
-      ;;
-    *)
-      files+=("$1")
-      shift
-      ;;
-    esac
-  done
-
-  # Git add
-  if [[ ${#files[@]} -eq 0 ]]; then
-    ga
-  else
-    ga "${files[@]}"
-  fi
-
-  # Build cz command
-  local cz_cmd="cz"
-  if [[ "$retry" == true ]]; then
-    cz_cmd="$cz_cmd --retry"
-  fi
-  if [[ "$no_verify" == true ]]; then
-    cz_cmd="$cz_cmd --no-verify"
-  fi
-
-  # Run commitizen
-  eval "$cz_cmd" || return 1
-
-  # Push
-  gp
-}
-
 function gfapu() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gfapu"
@@ -607,111 +509,8 @@ function gfapu() {
   gu
 }
 
-### Branch Creation (Conventional Commits)
-function gcbft() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gcbft <name>"
-    echo "Create feat/ branch"
-    echo "Example: gcbft login"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-  gcb "feat/$1"
-}
-
-function gcbfx() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gcbfx <name>"
-    echo "Create fix/ branch"
-    echo "Example: gcbfx auth-bug"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-  gcb "fix/$1"
-}
-
-function gcbch() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gcbch <name>"
-    echo "Create chore/ branch"
-    echo "Example: gcbch update-deps"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-  gcb "chore/$1"
-}
-
-function gcbrf() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gcbrf <name>"
-    echo "Create refactor/ branch"
-    echo "Example: gcbrf user-service"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-  gcb "refactor/$1"
-}
-
-function gcbdc() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gcbdc <name>"
-    echo "Create docs/ branch"
-    echo "Example: gcbdc api-guide"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-  gcb "docs/$1"
-}
-
-function gcbst() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gcbst <name>"
-    echo "Create style/ branch"
-    echo "Example: gcbst button-colors"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-  gcb "style/$1"
-}
-
-function gcbts() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gcbts <name>"
-    echo "Create test/ branch"
-    echo "Example: gcbts user-auth"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-  gcb "test/$1"
-}
+alias gfapm='gf -f && gu && gcm' # Fetch all, pull, checkout main
+alias gfapf='gf -f && gu'        # Fetch all, pull (alias for gfapu)
 
 ### Remote Management
 
@@ -759,17 +558,17 @@ function grr() {
   git remote remove "$1"
 }
 
-function grs() {
+function grurl() {
   if [[ "$1" == "-h" ]]; then
-    echo "Usage: grs <name> <url>"
+    echo "Usage: grurl <name> <url>"
     echo "Set URL for existing remote"
-    echo "Example: grs origin https://github.com/newuser/repo.git"
+    echo "Example: grurl origin https://github.com/newuser/repo.git"
     return 0
   fi
 
   if [[ -z "$1" || -z "$2" ]]; then
     echo "Error: remote name and URL required"
-    echo "Usage: grs <name> <url>"
+    echo "Usage: grurl <name> <url>"
     return 1
   fi
 
@@ -1103,26 +902,4 @@ function _fgsearch_filter_author() {
       fgsearch --author "$author"
     fi
   fi
-}
-
-function grsu() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: grsu [remote]"
-    echo "Set upstream for current branch (defaults to origin)"
-    echo "Examples:"
-    echo "  grsu          # Set upstream to origin/current-branch"
-    echo "  grsu upstream # Set upstream to upstream/current-branch"
-    return 0
-  fi
-
-  local remote="${1:-origin}"
-  local branch="$(git_current_branch)"
-
-  if [[ -z "$branch" ]]; then
-    echo "Error: not in a git repository or no current branch"
-    return 1
-  fi
-
-  git branch --set-upstream-to="$remote/$branch"
-  echo "Set upstream for '$branch' to '$remote/$branch'"
 }

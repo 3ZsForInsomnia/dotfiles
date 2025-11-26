@@ -1,4 +1,4 @@
-#compdef grb grbi grbc grba grbs garbc pullBranchThenRebaseWithIt gm gma gmc pullBranchThenMergeWithIt grbo grbas gstarbm gstarb grbh gpmm gprm pullMasThenRebaseWithIt
+#compdef grb grbi grbc grba grbs garbc pullBranchThenRebaseWithIt grbo grbas gstarbm gstarb grbh gpmm gprm pullMasThenRebaseWithIt
 
 # Load git completion cache system
 autoload -Uz "${0:h}/_git_cache_system" 2>/dev/null || true
@@ -10,7 +10,7 @@ function _git_rebase_complete_args() {
   # Only provide argument completion if we're in a git repo and beyond the first argument
   if (( CURRENT > 1 )) && git rev-parse --git-dir &>/dev/null 2>&1; then
     case "$cmd" in
-      grb|pullBranchThenRebaseWithIt|gm|gma|pullBranchThenMergeWithIt|gpmm|gprm|pullMasThenRebaseWithIt)
+      grb|pullBranchThenRebaseWithIt|gpmm|gprm|pullMasThenRebaseWithIt)
         # These functions take branch names as arguments
         local -a branches descriptions
         local branch desc
@@ -27,80 +27,7 @@ function _git_rebase_complete_args() {
             return 0
           fi
         fi
-        ;;
-      garbc)
-        # Takes file paths as arguments - complete with git modified files
-        local -a modified_files
-        modified_files=($(git diff --name-only HEAD 2>/dev/null))
         
-        if (( ${#modified_files[@]} > 0 )); then
-          _describe 'modified files' modified_files
-        fi
-        
-        # Also allow general file completion
-        _files
-        return 0
-        
-# Register completions even if functions aren't loaded yet
-compdef _git_rebase_complete grb grbi grbc grba grbs garbc pullBranchThenRebaseWithIt gm gma gmc pullBranchThenMergeWithIt grbo grbas gstarbm gstarb grbh gpmm gprm pullMasThenRebaseWithIt 2>/dev/null
-
-# Main completion function that handles both help and arguments
-function _git_rebase_complete() {
-  # If no arguments yet, show command descriptions for zh help system
-  if (( CURRENT == 1 )); then
-    local -a commands
-    commands=(
-      'grb:Rebase onto branch'
-      'grbi:Interactive rebase'
-      'grbc:Continue rebase'
-      'grba:Abort rebase'
-      'grbs:Skip rebase'
-      'garbc:Add files and continue rebase'
-      'pullBranchThenRebaseWithIt:Pull branch then rebase'
-      'gm:Merge branch'
-      'gma:Abort merge'
-      'gmc:Continue merge'
-      'pullBranchThenMergeWithIt:Pull branch then merge'
-      'grbo:Rebase onto (advanced)'
-      'grbas:Rebase autosquash'
-      'gstarbm:Stash and rebase main'
-      'gstarb:Stash and rebase branch'
-      'grbh:Interactive rebase HEAD'
-      'gpmm:Pull main and rebase (alias)'
-      'gprm:Pull main and rebase (alias)'
-      'pullMasThenRebaseWithIt:Pull main then rebase (alias)'
-    )
-    _describe 'git rebase/merge commands' commands
-  else
-    # Try to provide smart argument completion
-    local cmd="$words[1]"
-    if ! _git_rebase_complete_args "$cmd"; then
-      # Fallback to showing commands if no specific completion available
-      local -a commands
-      commands=(
-        'grb:Rebase onto branch'
-        'grbi:Interactive rebase'
-        'grbc:Continue rebase'
-        'grba:Abort rebase'
-        'grbs:Skip rebase'
-        'pullBranchThenRebaseWithIt:Pull branch then rebase'
-        'gm:Merge branch'
-        'gma:Abort merge'
-        'gmc:Continue merge'
-        'pullBranchThenMergeWithIt:Pull branch then merge'
-        'grbo:Rebase onto (advanced)'
-        'grbas:Rebase autosquash'
-        'gstarbm:Stash and rebase main'
-        'gstarb:Stash and rebase branch'
-        'grbh:Interactive rebase HEAD'
-        'gpmm:Pull main and rebase (alias)'
-        'gprm:Pull main and rebase (alias)'
-        'pullMasThenRebaseWithIt:Pull main then rebase (alias)'
-      )
-      _describe 'git rebase/merge commands' commands
-    fi
-  fi
-}
         # Fallback to basic branch completion
         local -a fallback_branches
         fallback_branches=($(git branch --format='%(refname:short)' 2>/dev/null))
@@ -109,7 +36,31 @@ function _git_rebase_complete() {
           return 0
         fi
         ;;
-      grbi)
+      gstarb)
+        # Takes branch name as argument
+        local -a branches descriptions
+        local branch desc
+        
+        if (( $+functions[_git_comp_branches] )); then
+          while IFS=':' read -r branch desc; do
+            [[ -n "$branch" ]] || continue
+            descriptions+=("$branch:$desc")
+          done < <(_git_comp_branches 2>/dev/null)
+          
+          if (( ${#descriptions[@]} > 0 )); then
+            _describe 'git branches' descriptions
+            return 0
+          fi
+        fi
+        
+        local -a fallback_branches
+        fallback_branches=($(git branch --format='%(refname:short)' 2>/dev/null))
+        if (( ${#fallback_branches[@]} > 0 )); then
+          _describe 'git branches' fallback_branches
+          return 0
+        fi
+        ;;
+      grbi|grbh)
         # Interactive rebase - can take branch name or HEAD~N
         local -a options descriptions
         local branch desc
@@ -139,7 +90,7 @@ function _git_rebase_complete() {
         # Rebase onto - takes two arguments: onto_branch source_branch
         local -a branch_names
         
-        # Get branches - avoid the colon syntax that's causing corruption
+        # Get branches
         while IFS= read -r branch; do
           [[ -n "$branch" ]] || continue
           branch_names+=("$branch")
@@ -168,6 +119,19 @@ function _git_rebase_complete() {
           fi
         fi
         ;;
+      garbc)
+        # Takes file paths as arguments - complete with git modified files
+        local -a modified_files
+        modified_files=($(git diff --name-only HEAD 2>/dev/null))
+        
+        if (( ${#modified_files[@]} > 0 )); then
+          _describe 'modified files' modified_files
+        fi
+        
+        # Also allow general file completion
+        _files
+        return 0
+        ;;
     esac
   fi
   
@@ -175,7 +139,7 @@ function _git_rebase_complete() {
   return 1
 }
 
-# Main completion entry point (only runs when called by zsh completion system)
+# Main completion entry point
 function _git_rebase() {
   local -a git_commands
   git_commands=(
@@ -186,10 +150,6 @@ function _git_rebase() {
     'grbs:Skip rebase'
     'garbc:Add files and continue rebase'
     'pullBranchThenRebaseWithIt:Pull branch then rebase'
-    'gm:Merge branch'
-    'gma:Abort merge'
-    'gmc:Continue merge'
-    'pullBranchThenMergeWithIt:Pull branch then merge'
     'grbo:Rebase onto (advanced)'
     'grbas:Rebase autosquash'
     'gstarbm:Stash and rebase main'
@@ -200,15 +160,15 @@ function _git_rebase() {
     'pullMasThenRebaseWithIt:Pull main then rebase (alias)'
   )
 
-  # If no arguments yet, show command descriptions for zh help system
+  # If no arguments yet, show command descriptions
   if (( CURRENT == 1 )); then
-    _describe 'git rebase/merge commands' git_commands
+    _describe 'git rebase commands' git_commands
   else
     # Try to provide smart argument completion
     local cmd="$words[1]"
     if ! _git_rebase_complete_args "$cmd"; then
       # Fallback to showing commands if no specific completion available
-      _describe 'git rebase/merge commands' git_commands
+      _describe 'git rebase commands' git_commands
     fi
   fi
 }

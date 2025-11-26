@@ -8,9 +8,12 @@ source "$git_dir/../../tools/fzf-helpers.zsh"
 
 # Source all git modules
 source "$git_dir/bisect.zsh"
+source "$git_dir/branch.zsh"
 source "$git_dir/cherry-pick.zsh"
+source "$git_dir/commitizen.zsh"
 source "$git_dir/core.zsh"
 source "$git_dir/fzf.zsh"
+source "$git_dir/merge.zsh"
 source "$git_dir/prune.zsh"
 source "$git_dir/rebase.zsh"
 source "$git_dir/stash.zsh"
@@ -36,9 +39,12 @@ function ghelp() {
     echo ""
     echo "Categories:"
     echo "  core     - Basic operations (status, add, commit, etc.)"
+    echo "  branch   - Branch creation, deletion, and management"
     echo "  stash    - Stashing operations with FZF"
-    echo "  rebase   - Rebase and merge operations"
+    echo "  rebase   - Rebase operations"
+    echo "  merge    - Merge operations and strategies"
     echo "  cherry   - Cherry-pick operations"
+    echo "  commitizen - Commitizen conventional commits"
     echo "  prune    - Branch pruning based on PR status"
     echo "  tags     - Tag management and semantic versioning"
     echo "  bisect   - Find problematic commits"
@@ -57,14 +63,23 @@ function ghelp() {
   "core")
     _show_core_help
     ;;
+  "branch")
+    _show_branch_help
+    ;;
   "stash")
     _show_stash_help
     ;;
   "rebase")
     _show_rebase_help
     ;;
+  "merge")
+    _show_merge_help
+    ;;
   "cherry")
     _show_cherry_help
+    ;;
+  "commitizen")
+    _show_commitizen_help
     ;;
   "prune")
     _show_prune_help
@@ -94,7 +109,6 @@ function _show_core_help() {
 
 Status & Info:
   gst          - Git status --short --branch (smart default)
-  gstat        - Git status (base version)
   gl           - Git log --oneline --graph --decorate
   glog         - Git log with detailed format
   gsh [commit] - Git show
@@ -114,16 +128,7 @@ Amending:
 Checkout & Branches:
   gco <branch> - Git checkout (local branch completion)
   gcb <branch> - Create and checkout new branch
-  gsup         - Set upstream for current branch
-
-Branch Creation (Conventional):
-  gcbft <name> - Create feat/ branch
-  gcbfx <name> - Create fix/ branch
-  gcbch <name> - Create chore/ branch
-  gcbrf <name> - Create refactor/ branch
-  gcbdc <name> - Create docs/ branch
-  gcbst <name> - Create style/ branch
-  gcbts <name> - Create test/ branch
+  gcm          - Checkout main branch
 
 Diff:
   gd [files]   - Git diff (working tree vs index)
@@ -151,13 +156,49 @@ Remote Management:
   gr           - List remotes with URLs
   gra <name> <url> - Add remote
   grr <name>   - Remove remote
-  grs <name> <url> - Set remote URL
-  grsu [remote] - Set upstream (defaults to origin)
+  grurl <name> <url> - Set remote URL
 
 Compound Operations:
   gac <msg> [files]  - Add + commit
   gacp <msg> [files] - Add + commit + push
   gfapu        - Fetch all + pull with rebase
+
+Use 'function_name -h' for detailed help on any command.
+EOF
+}
+
+function _show_branch_help() {
+  cat <<'EOF'
+🌿 Branch Management:
+
+Branch Listing:
+  gb           - List branches
+  gbl [opts]   - List branches with options (-a for all, -r for remote)
+
+Branch Creation (Conventional):
+  gcbft <name> - Create feat/ branch
+  gcbfx <name> - Create fix/ branch
+  gcbch <name> - Create chore/ branch
+  gcbrf <name> - Create refactor/ branch
+  gcbdc <name> - Create docs/ branch
+  gcbst <name> - Create style/ branch
+  gcbts <name> - Create test/ branch
+
+Branch Deletion:
+  gbd <branch> - Delete merged branch (safe)
+  gbD <branch> - Force delete branch (DANGEROUS)
+  deleteMerged - Delete all merged branches
+  gdm          - Alias for deleteMerged
+
+Upstream Management:
+  gsup         - Set upstream for current branch to origin
+  grsu [remote] - Set upstream (defaults to origin)
+
+Examples:
+  gcbft login          # Creates feat/login
+  gcbfx auth-bug       # Creates fix/auth-bug
+  deleteMerged         # Clean up merged branches
+  grsu upstream        # Set upstream to upstream/current-branch
 
 Use 'function_name -h' for detailed help on any command.
 EOF
@@ -198,7 +239,7 @@ EOF
 
 function _show_rebase_help() {
   cat <<'EOF'
-🔄 Rebase & Merge Operations:
+🔄 Rebase Operations:
 
 Core Rebase:
   grb [branch] - Rebase onto branch (defaults to main)
@@ -213,12 +254,6 @@ Advanced Rebase:
 
 Branch Operations:
   pullBranchThenRebaseWithIt <branch> - Checkout → pull → return → rebase
-  pullBranchThenMergeWithIt <branch>  - Checkout → pull → return → merge
-
-Merge Operations:
-  gm [branch]  - Merge branch (defaults to main)
-  gma          - Abort merge
-  gmc          - Continue merge
 
 Stash Integration:
   gstarbm      - Stash → rebase main → browse stashes
@@ -228,8 +263,71 @@ Aliases:
   grbh         - Interactive rebase (same as grbi)
   gpmm         - Pull main and rebase (same as grb)
   gprm         - Pull main and rebase (same as grb)
+  garbc [path] - Add files and continue rebase
 
 Environment: Set GIT_MAIN_BRANCH=master if needed (defaults to main)
+
+Use 'function_name -h' for detailed help on any command.
+EOF
+}
+
+function _show_merge_help() {
+  cat <<'EOF'
+🤝 Merge Operations:
+
+Core Merge:
+  gm [branch]  - Merge branch (defaults to main)
+  gma          - Abort merge
+  gmc          - Continue merge
+  gamc [path]  - Add files and continue merge
+
+Merge Strategies:
+  gmff [branch] - Merge with fast-forward only
+  gmnf [branch] - Merge with no fast-forward (always creates merge commit)
+  gmsq <branch> - Squash merge (combine all commits into one)
+
+Branch Operations:
+  pullBranchThenMergeWithIt <branch> - Checkout → pull → return → merge
+
+Examples:
+  gm dev           # Merge dev into current branch
+  gmff             # Fast-forward merge main (fails if not possible)
+  gmnf feature     # Merge feature with explicit merge commit
+  gmsq feature     # Squash all feature commits into one
+
+Use 'function_name -h' for detailed help on any command.
+EOF
+}
+
+function _show_commitizen_help() {
+  cat <<'EOF'
+✨ Commitizen (Conventional Commits):
+
+Basic:
+  cz           - Run commitizen
+  czr          - Retry last commitizen commit
+
+Git Add + Commitizen:
+  gacz [files] - Add + commitizen
+  gaczr [files] - Add + commitizen --retry
+
+Git Add + Commitizen + Push:
+  gaczp [-r] [-n] [files] - Add + commitizen + push
+    -r: Use --retry flag
+    -n: Use --no-verify flag
+  gaczrp [files] - Add + commitizen --retry + push
+
+Commitizen + Push (no add):
+  czp          - Commitizen + push (files already staged)
+  czrp         - Commitizen --retry + push
+
+Examples:
+  gacz file.js     # Add file.js and run commitizen
+  gaczp -r         # Add all, retry cz, push
+  gaczp -n file.js # Add file.js, cz with no-verify, push
+  czrp             # Retry last commit and push
+
+Requires: commitizen CLI (cz)
 
 Use 'function_name -h' for detailed help on any command.
 EOF
@@ -418,14 +516,17 @@ function _show_all_help() {
   cat <<'EOF'
 🚀 Git Command Categories:
 
-📋 ghelp core     - Basic operations (status, add, commit, push, pull)
-📦 ghelp stash    - Stashing with FZF (interactive, named stashes)  
-🔄 ghelp rebase   - Rebase and merge operations
-🍒 ghelp cherry   - Cherry-pick operations with FZF
-🌿 ghelp prune    - PR-based branch pruning (requires gh CLI)
-🏷️  ghelp tags     - Tag management and semantic versioning
-🔍 ghelp bisect   - Find problematic commits
-🌳 ghelp worktree - Multiple working directories
+📋 ghelp core      - Basic operations (status, add, commit, push, pull)
+🌿 ghelp branch    - Branch creation, deletion, and management
+📦 ghelp stash     - Stashing with FZF (interactive, named stashes)  
+🔄 ghelp rebase    - Rebase operations
+🤝 ghelp merge     - Merge operations and strategies
+🍒 ghelp cherry    - Cherry-pick operations with FZF
+✨ ghelp commitizen - Commitizen conventional commits
+🌿 ghelp prune     - PR-based branch pruning (requires gh CLI)
+🏷️  ghelp tags      - Tag management and semantic versioning
+🔍 ghelp bisect    - Find problematic commits
+🌳 ghelp worktree  - Multiple working directories
 
 💡 Tips:
 - Add '-h' to any command for detailed help

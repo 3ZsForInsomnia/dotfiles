@@ -89,11 +89,13 @@ return {
       "nvim-treesitter/nvim-treesitter",
 
       "nvim-neotest/neotest-jest",
+      "marilari88/neotest-vitest",
     },
     opts = {
       adapters = {
         ["neotest-golang"] = go_config,
         ["neotest-jest"] = js_config,
+        ["neotest-vitest"] = {},
       },
       diagnostic = {
         enabled = true,

@@ -90,64 +90,6 @@ function pullBranchThenRebaseWithIt() {
   git rebase "$target_branch"
 }
 
-### Merge Operations (less common but useful)
-
-function gm() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: gm [branch]"
-    echo "Merge branch into current branch (defaults to main)"
-    echo "Examples:"
-    echo "  gm        # Merge main into current branch"
-    echo "  gm dev    # Merge dev into current branch"
-    return 0
-  fi
-
-  local source_branch="${1:-$GIT_MAIN_BRANCH}"
-  git merge "$source_branch"
-}
-
-alias gma='git merge --abort'
-
-alias gmc='git merge --continue'
-
-function pullBranchThenMergeWithIt() {
-  if [[ "$1" == "-h" ]]; then
-    echo "Usage: pullBranchThenMergeWithIt <branch>"
-    echo "Checkout branch, pull latest, return to current branch, merge it"
-    echo "Example: pullBranchThenMergeWithIt dev"
-    return 0
-  fi
-
-  if [[ -z "$1" ]]; then
-    echo "Error: branch name required"
-    return 1
-  fi
-
-  local target_branch="$1"
-  local current_branch=$(git rev-parse --abbrev-ref HEAD)
-
-  if [[ "$current_branch" == "$target_branch" ]]; then
-    echo "Error: already on target branch '$target_branch'"
-    return 1
-  fi
-
-  echo "Switching to $target_branch..."
-  git checkout "$target_branch" || return 1
-
-  echo "Pulling latest changes..."
-  git pull --rebase || {
-    echo "Failed to pull $target_branch"
-    git checkout "$current_branch"
-    return 1
-  }
-
-  echo "Returning to $current_branch..."
-  git checkout "$current_branch" || return 1
-
-  echo "Merging $target_branch into $current_branch..."
-  git merge "$target_branch"
-}
-
 ### Advanced Rebase Helpers
 
 function grbo() {
@@ -197,14 +139,12 @@ function gstarb() {
 }
 
 ### Quick Rebase Shortcuts
-
 alias grbh='grbi'                                                           # Interactive rebase (h for HEAD)
 alias gpmm='grb'                                                            # Pull main and rebase (your current alias)
 alias gprm='grb'                                                            # Alternative name for same operation
 alias pullMasThenRebaseWithIt='pullBranchThenRebaseWithIt $GIT_MAIN_BRANCH' # Compatibility
 
 ### Git Add + Rebase Continue
-
 function garbc() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: garbc [path]"
@@ -216,5 +156,6 @@ function garbc() {
   fi
 
   local path="${1:-.}"
-  git add "$path" && git rebase --continue
+  git add "$path"
+  git rebase --continue
 }

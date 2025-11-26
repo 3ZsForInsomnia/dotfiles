@@ -164,7 +164,7 @@ return {
                 include_stderr = false,
                 use_lsp = true,
                 no_duplicate = true,
-                chunk_mode = false,
+                chunk_mode = true,
                 summarise = {
                   enabled = false,
                   adapter = nil,
@@ -254,6 +254,7 @@ return {
           },
           adapter = {
             name = "copilot",
+            -- model = "gemini-2.5-pro",
             model = "claude-sonnet-4.5",
             -- model = "gpt-5",
           },

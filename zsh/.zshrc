@@ -47,6 +47,7 @@ setopt auto_cd
 
 export CORRECT_IGNORE_FILE='.*|test'
 setopt correct_all
+alias git='nocorrect git'
 setopt no_beep
 ZSH_DISABLE_COMPFIX=true
 

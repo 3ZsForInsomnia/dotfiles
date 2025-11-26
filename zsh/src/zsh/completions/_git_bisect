@@ -1,27 +1,156 @@
-#compdef gbs gbg gbb gbr gbsk gbst gbsa fbisect gbsl gbsv gbshelp gbsquick gbstag
+#compdef gbs gbg gbb gbr gbsk gbst gbsa fbisect fbisect-next gbsl gbsv gbshelp gbsquick gbstag
 
+# Load git completion cache system
+autoload -Uz "${0:h}/_git_cache_system" 2>/dev/null || true
 
+# Function to provide smart argument completion for git bisect functions
+function _git_bisect_complete_args() {
+  local cmd="$1"
+  
+  # Only provide argument completion if we're in a git repo and beyond the first argument
+  if (( CURRENT > 1 )) && git rev-parse --git-dir &>/dev/null 2>&1; then
+    case "$cmd" in
+      gbs)
+        # Takes <bad-commit> [good-commit]
+        # Complete with commits and tags
+        local -a options
+        local commit desc tag
+        
+        # Add HEAD options
+        options=(
+          'HEAD:Current commit'
+          'HEAD~5:5 commits back'
+          'HEAD~10:10 commits back'
+          'HEAD~20:20 commits back'
+        )
+        
+        # Add recent commits
+        if (( $+functions[_git_comp_commits] )); then
+          while IFS=':' read -r commit desc; do
+            [[ -n "$commit" ]] || continue
+            options+=("$commit:$desc")
+          done < <(_git_comp_commits 2>/dev/null)
+        fi
+        
+        # Add tags
+        if (( $+functions[_git_comp_tags] )); then
+          while IFS=':' read -r tag desc; do
+            [[ -n "$tag" ]] || continue
+            options+=("$tag:$desc")
+          done < <(_git_comp_tags 2>/dev/null)
+        fi
+        
+        if (( ${#options[@]} > 0 )); then
+          _describe 'commits and tags' options
+          return 0
+        fi
+        ;;
+      gbsa)
+        # Takes <bad-commit> <good-commit> <test-command>
+        if (( CURRENT == 2 || CURRENT == 3 )); then
+          # First two arguments: commits/tags
+          local -a options
+          local commit desc tag
+          
+          options=(
+            'HEAD:Current commit'
+            'HEAD~5:5 commits back'
+            'HEAD~10:10 commits back'
+            'HEAD~20:20 commits back'
+          )
+          
+          if (( $+functions[_git_comp_commits] )); then
+            while IFS=':' read -r commit desc; do
+              [[ -n "$commit" ]] || continue
+              options+=("$commit:$desc")
+            done < <(_git_comp_commits 2>/dev/null)
+          fi
+          
+          if (( $+functions[_git_comp_tags] )); then
+            while IFS=':' read -r tag desc; do
+              [[ -n "$tag" ]] || continue
+              options+=("$tag:$desc")
+            done < <(_git_comp_tags 2>/dev/null)
+          fi
+          
+          if (( ${#options[@]} > 0 )); then
+            _describe 'commits and tags' options
+            return 0
+          fi
+        elif (( CURRENT == 4 )); then
+          # Third argument: test command - just show a message
+          _message "test command (e.g., 'make test', 'npm test')"
+          return 0
+        fi
+        ;;
+      gbstag)
+        # Takes <bad-tag> [good-tag]
+        # Complete with tags only
+        local -a tags
+        local tag desc
+        
+        if (( $+functions[_git_comp_tags] )); then
+          while IFS=':' read -r tag desc; do
+            [[ -n "$tag" ]] || continue
+            tags+=("$tag:$desc")
+          done < <(_git_comp_tags 2>/dev/null)
+          
+          if (( ${#tags[@]} > 0 )); then
+            _describe 'tags' tags
+            return 0
+          fi
+        fi
+        
+        # Fallback to basic tag listing
+        local -a fallback_tags
+        fallback_tags=($(git tag --sort=-version:refname 2>/dev/null))
+        if (( ${#fallback_tags[@]} > 0 )); then
+          _describe 'tags' fallback_tags
+          return 0
+        fi
+        ;;
+      gbsquick)
+        # Takes optional [commits-back] number
+        if (( CURRENT == 2 )); then
+          local -a numbers
+          numbers=(
+            '10:Last 10 commits'
+            '20:Last 20 commits (default)'
+            '50:Last 50 commits'
+            '100:Last 100 commits'
+          )
+          _describe 'commits back' numbers
+          return 0
+        fi
+        ;;
+    esac
+  fi
+  
+  # No specific argument completion available
+  return 1
+}
 
-# Main completion function
+# Main completion entry point
 function _git_bisect() {
   local -a git_commands
   git_commands=(
-    'gbs:Start git bisect'
+    'gbs:Start git bisect (bad [good])'
     'gbg:Mark current commit as good'
     'gbb:Mark current commit as bad'
     'gbr:Reset/stop bisect'
     'gbsk:Skip current commit in bisect'
     'gbst:Show bisect status'
-    'gbsa:Automated bisect with script'
-    'fbisect:Interactive bisect browser'
+    'gbsa:Automated bisect with test command'
+    'fbisect:Interactive bisect browser (FZF)'
+    'fbisect-next:Interactive commit marking during bisect'
     'gbsl:Show bisect log'
     'gbsv:Visualize bisect process'
     'gbshelp:Show bisect help'
-    'gbsquick:Quick bisect setup'
+    'gbsquick:Quick bisect last N commits'
     'gbstag:Bisect between tags'
   )
   
-  # If no arguments yet, show command descriptions for zh help system
+  # If no arguments yet, show command descriptions
   if (( CURRENT == 1 )); then
     _describe 'git bisect commands' git_commands
   else
@@ -34,5 +163,5 @@ function _git_bisect() {
   fi
 }
 
-# Call the main function
-# The #compdef directive automatically registers this function
+# The #compdef directive at the top automatically registers this function
+# No need to call it explicitly - zsh will call _git_bisect when needed

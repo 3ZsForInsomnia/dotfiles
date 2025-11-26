@@ -1,4 +1,4 @@
-#compdef d dinto dl docker
+#compdef d dinto dl dk dps dc dpr juiceShop docker
 
 # Docker completion system for common docker commands and aliases
 
@@ -213,6 +213,11 @@ function _docker_functions() {
     'd:Docker alias'
     'dinto:Interactive shell into running container'
     'dl:View container logs'
+    'dk:Kill running container'
+    'dps:List all containers'
+    'dc:Docker compose'
+    'dpr:Prune stopped containers'
+    'juiceShop:Run OWASP Juice Shop container'
     'docker:Docker command'
   )
 

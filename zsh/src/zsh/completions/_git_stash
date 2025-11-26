@@ -1,4 +1,4 @@
-#compdef gsta gstat gstal gstap gstac gstd gstaa fstash stash_then_run run_then_apply_stash run_then_find_stash run_then_pop_stash gstapu gstacm
+#compdef gsta gstat gstal gstap gstp gstac gstd gstaa fstash stash_then_run run_then_apply_stash run_then_find_stash run_then_pop_stash gstapu gstacm
 
 # Function to provide smart argument completion for git stash functions
 function _git_stash_complete_args() {
@@ -52,6 +52,7 @@ function _git_stash() {
     'gstat:Stash tracked files only'
     'gstal:List all stashes with colors'
     'gstap:Pop stash by index'
+    'gstp:Pop stash (apply and drop)'
     'gstac:Clear all stashes'
     'gstd:Drop stash by index'
     'gstaa:Browse and apply stashes'

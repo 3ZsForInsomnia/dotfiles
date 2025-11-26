@@ -149,3 +149,48 @@ function fbremote() {
     git checkout -b "$branch_name" "origin/$branch_name"
   fi
 }
+
+### Enhanced FZF Preview Functions
+
+function fco_preview() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: fco_preview"
+    echo "Checkout git branch/tag with enhanced preview"
+    echo "Shows commits between the tag/branch and HEAD"
+    return 0
+  fi
+
+  local tags branches target
+  branches=$(
+    git --no-pager branch --all \
+      --format="%(if)%(HEAD)%(then)%(else)%(if:equals=HEAD)%(refname:strip=3)%(then)%(else)%1B[0;34;1mbranch%09%1B[m%(refname:short)%(end)%(end)" |
+      sed '/^$/d'
+  ) || return
+  tags=$(
+    git --no-pager tag | awk '{print "\x1b[35;1mtag\x1b[m\t" $1}'
+  ) || return
+  target=$(
+    (
+      echo "$branches"
+      echo "$tags"
+    ) |
+      fzf --no-hscroll --no-multi -n 2 \
+        --ansi --preview="git --no-pager log -150 --pretty=format:%s '..{2}'"
+  ) || return
+  git checkout $(awk '{print $2}' <<<"$target")
+}
+
+function fcoc_preview() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: fcoc_preview"
+    echo "Checkout git commit with enhanced preview"
+    echo "Interactive commit browser with detailed preview"
+    return 0
+  fi
+
+  local commit
+  commit=$(git log --oneline --graph --color=always | \
+    fzf --no-sort --reverse --tiebreak=index --no-multi \
+      --ansi --preview="git show --color=always {1} | head -50") &&
+    git checkout $(echo "$commit" | awk '{print $1}' | sed 's/[^a-f0-9]//')
+}

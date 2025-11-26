@@ -10,7 +10,7 @@ brew_packages_with_cask=("witch" "obsidian" "google-chrome" "slack" "postman" "f
 # copyq is replaced by maccy
 # rectangle's functionality is now part of MacOS
 
-npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "git-split-diffs" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http")
+npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http")
 
 # All Python packages to install in global venv
 python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory")

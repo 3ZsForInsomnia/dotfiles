@@ -1,7 +1,10 @@
-#compdef view_kpod_logs get_latest_version_row view_kpod_log_latest getKDepls delKDepl findAndDelKDepl getKPodStatus restartKPod kns kpsh kdrst kdscale kspf ksview kpods_check kctx kplogs kjlogs kdesc kevents kgetall kwho_am_i kubeForwardPorts kfwd khelp
+#compdef k kpf get_pods view_kpod_logs get_latest_version_row view_kpod_log_latest getKDepls delKDepl findAndDelKDepl getKPodStatus restartKPod kns kpsh kdrst kdscale kspf ksview kpods_check kctx kplogs kjlogs kdesc kevents kgetall kwho_am_i kubeForwardPorts kfwd khelp fkns fkctx fkp fks fkd fksvc fkcm fksecret fkjob
 
 local -a commands
 commands=(
+  'k:Kubectl alias'
+  'kpf:Port forward to pod/service'
+  'get_pods:Get pods in namespace'
   'kplogs:View pod logs with options'
   'view_kpod_logs:View specific pod logs'
   'view_kpod_log_latest:View latest pod logs'
@@ -26,6 +29,15 @@ commands=(
   'kubeForwardPorts:Forward multiple ports'
   'kfwd:Port forward with selection'
   'khelp:Show kubernetes command help'
+  'fkns:Interactive namespace selection (FZF)'
+  'fkctx:Interactive context selection (FZF)'
+  'fkp:Interactive pod selection (FZF)'
+  'fks:Interactive service browser (FZF)'
+  'fkd:Interactive deployment selection (FZF)'
+  'fksvc:Interactive service selection (FZF)'
+  'fkcm:Interactive ConfigMap selection (FZF)'
+  'fksecret:Interactive Secret selection (FZF)'
+  'fkjob:Interactive Job selection (FZF)'
 )
 
 _describe 'kubernetes commands' commands
