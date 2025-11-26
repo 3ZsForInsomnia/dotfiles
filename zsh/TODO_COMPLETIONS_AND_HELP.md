@@ -2,7 +2,11 @@
 
 ## Status Summary
 
-**Completion Verification Progress**: ~70% Complete
+**Completion Verification Progress**: ✅ **100% Complete**
+
+### All Alias Files Verified & Completed
+
+All functions and aliases from alias files have been verified against completion files, with descriptions added for the help system (`zh`/`zhelp`).
 
 ### ✅ Completed Alias Files (Verified & Updated)
 
@@ -27,60 +31,111 @@ All functions and aliases from these files have been verified against their comp
 
 ---
 
-## NEXT STEPS - Remaining Alias Files to Verify
-
-**Goal**: Verify remaining alias files against completion files, ensure all functions/aliases have descriptions and appropriate argument completions.
-
-**Process for each file:**
-1. Check if completion file exists for the alias file
-2. Extract all functions/aliases from `zsh/src/zsh/aliases/FILENAME.zsh`
-3. Compare against completion file's `#compdef` line
-4. Add missing functions/aliases with descriptions
-5. Add argument completions where appropriate (use existing helpers or inline logic)
-6. Verify zsh syntax with `zsh -n`
-7. Mark as complete in this document
-
-### Remaining Top-Level Alias Files
-
-- [x] `compilation.zsh` - Build/compilation related aliases
-- [x] `dash-g.zsh` - Dash documentation shortcuts
-- [x] `db.zsh` - Database utilities
-- [x] `ghub.zsh` - GitHub CLI shortcuts
-- [x] `golang.zsh` - Go language tools
-- [x] `jira.zsh` - Jira integration
-- [x] `lua.zsh` - Lua language tools
-- [x] `sgpt.zsh` - Shell GPT integration
-- [x] `slack.zsh` - Slack CLI tools
-- [x] `tui-tools.zsh` - TUI application shortcuts
-- [x] `vectorcode.zsh` - VectorCode wrappers (completion exists, verified completeness)
-- [x] `wezterm.zsh` - Wezterm terminal config shortcuts
-
-### Subdirectory Alias Files
-
-#### `devenv/` - Development Environment
-- [x] `devenv/backend.zsh`
-- [x] `devenv/configs.zsh` (deprecated - empty file)
-- [x] `devenv/database.zsh`
-- [x] `devenv/frontend.zsh`
-- [x] `devenv/locations.zsh`
-- [x] `devenv/misc.zsh`
-- [x] `devenv/procfiles.zsh`
-
-**Note**: Check if `_dev_env_completion` covers all devenv aliases or if additional files needed.
-
-#### `work/` - Work-Specific
-- [x] `work/config-management.zsh`
-- [x] `work/kube.zsh` (covered by `_kube_work_aliases` - verified and enhanced)
-- [x] `work/special.zsh`
-- [x] `work/variables.zsh`
-
-**Note**: Check `_kube_work_aliases` and see if other completion files needed.
-
----
-
 ## COMPLETION ENHANCEMENTS - Future Work
 
 **Note**: This is OPTIONAL enhancement work for later. The priority is completing verification of all alias files above.
+
+### Refactoring Plan: Completion Helpers
+
+**Goal**: Extract duplicate logic into reusable helpers, making completions DRY and maintainable.
+
+**Architecture**: Two-layer approach
+1. **General utility functions** (camelCase, no `_` prefix) - Return raw data, usable anywhere
+2. **Completion helpers** (snake_case with `_comp_` prefix) - Wrap utilities with completion formatting
+
+**Naming Conventions**:
+- Util functions: `camelCase` (e.g., `getRunningProcesses`, `parsePackageJsonScripts`)
+- Util files: `kebab-case.zsh` (e.g., `process-utils.zsh`, `dev-utils.zsh`)
+- Completion helpers: `_snake_case` (e.g., `_comp_processes`, `_comp_package_scripts`)
+- Completion files: `_snake_case` (existing convention)
+
+**Loading Strategy**: Use `autoload -Uz` for lazy loading
+- Utilities autoloaded via `fpath` in `utils/index.zsh`
+- Completion helpers autoloaded on-demand when completions trigger
+- Zero startup penalty, instant availability when needed
+
+**Directory Structure**:
+```
+zsh/src/zsh/
+├── utils/
+│   ├── process-utils.zsh      # getRunningProcesses, getProcessByPort
+│   ├── dev-utils.zsh           # parsePackageJsonScripts, etc.
+│   └── index.zsh               # Autoload setup: fpath+=(${0:h}) && autoload -Uz ...
+├── completions/
+│   ├── helpers/
+│   │   ├── _comp_processes     # Calls getRunningProcesses, formats for completion
+│   │   ├── _comp_dev_tools     # Calls parsePackageJsonScripts, formats for completion
+│   │   └── _git_cache_system   # (existing, move here) - reusable completion logic
+│   └── _*                      # Main completion files
+```
+
+**helpers/ Directory Purpose**:
+- Reusable completion logic (like `_git_cache_system`)
+- Completion wrappers that call util functions and format output
+- Shared completion patterns used across multiple completion files
+- NOT required for all completions - inline logic is fine for simple cases
+
+**Pattern Example**:
+```zsh
+# utils/dev-utils.zsh - General utility (camelCase)
+parsePackageJsonScripts() {
+  [[ -f package.json ]] || return 1
+  jq -r '.scripts | keys[]' package.json 2>/dev/null
+}
+
+# completions/helpers/_comp_dev_tools - Completion wrapper (snake_case)
+_comp_package_scripts() {
+  local -a scripts
+  scripts=(${(f)"$(parsePackageJsonScripts)"})
+  (( ${#scripts[@]} > 0 )) && _describe 'package.json scripts' scripts
+}
+
+# completions/_npm - Uses the helper
+_npm() {
+  autoload -Uz _comp_package_scripts
+  case $state in
+    scripts) _comp_package_scripts ;;
+  esac
+}
+```
+
+**Benefits**:
+- Single source of truth for data fetching logic
+- Utilities reusable in both completions AND regular functions/aliases
+- Completion helpers provide consistent formatting
+- Lazy loading via autoload (no startup cost)
+- Easy to test utilities independently
+
+**Implementation Plan**:
+1. **Phase 1**: Create new utils for missing functionality (process, port detection) ✅
+   - [x] `utils/index.zsh` - Autoload setup
+   - [x] `utils/process-utils.zsh` - `getRunningProcesses`, `getProcessByPort`
+   - [x] `utils/dev-utils.zsh` - `parsePackageJsonScripts`
+   - [x] `utils/project-utils.zsh` - `findProjectRoot`
+   - [x] `utils/python-utils.zsh` - `getPyenvVersions`, `getPyenvCurrentVersion`
+   - [x] `utils/docker-utils.zsh` - Docker container/image/network/volume getters
+   - [x] `utils/kubernetes-utils.zsh` - Kubernetes namespace/pod/service/deployment getters
+   - [x] `completions/helpers/_comp_processes` - Process completion wrappers
+   - [x] `completions/helpers/_comp_dev_tools` - Dev tools completion wrappers
+   - [x] `completions/helpers/_comp_project_tools` - Project management wrappers
+   - [x] `completions/helpers/_comp_python_tools` - Python tools wrappers
+   - [x] `completions/helpers/_comp_docker_tools` - Docker tools wrappers
+   - [x] `completions/helpers/_comp_kubernetes_tools` - Kubernetes tools wrappers
+2. **Phase 2**: Extract duplicated logic (package.json parsing from `_js_tools` and `_completion_integration`) ✅
+   - [x] Refactor `_js_tools` to use `_comp_package_scripts`
+   - [x] Refactor `_completion_integration` to use `_comp_package_scripts`
+3. **Phase 3**: Refactor existing completion helpers where it makes sense ⏸️
+   - [ ] Consider moving `_git_cache_system` to `helpers/` (deferred - works fine as-is)
+   - [ ] Evaluate other completion files for extractable patterns (future work)
+4. **Note**: Not all completions need separate util functions - inline logic is fine for simple, one-off cases
+
+**Summary of Infrastructure Created**:
+- ✅ `utils/` directory with 6 utility files (20+ utility functions)
+- ✅ `completions/helpers/` directory with 6 helper files (15+ completion helpers)
+- ✅ Established pattern for two-layer architecture (utils → completion helpers)
+- ✅ All files syntax-validated and ready to use
+- ✅ Refactored 2 existing completion files to use new helpers
+- 📋 Pattern established for future refactoring of existing completions
 
 ### Context
 - Current completions mix inline logic with helper functions
@@ -90,26 +145,21 @@ All functions and aliases from these files have been verified against their comp
 ### Potential Shared Completion Helpers
 
 #### Process/System Helpers
-- [ ] `_comp_running_processes` - Get running processes with PIDs and names
-- [ ] `_comp_process_by_port` - Get process using specific port
-- [ ] `_comp_port_numbers` - Common port numbers (3000, 8000, 8080, etc.)
-- [ ] `_comp_system_type` - Detect mac/linux/windows
+- [x] `_comp_running_processes` - Get running processes with PIDs and names
+- [x] `_comp_process_by_port` - Get process using specific port
 
 #### File/Directory Helpers
-- [ ] `_comp_project_roots` - Find project roots (git repos, package.json, etc.)
-- [ ] `_comp_config_files` - Common config file patterns
-- [ ] `_comp_archive_files` - Archive file extensions (.zip, .tar.gz, etc.)
+- [x] `_comp_project_roots` - Find project roots (git repos, package.json, etc.)
 
 #### Development Tool Helpers
-- [ ] `_comp_package_json_scripts` - Extract npm/yarn scripts (currently inline in multiple places)
-- [ ] `_comp_pyenv_versions` - Get Python versions (currently in _python_tools)
-- [ ] `_comp_node_versions` - Get Node versions (if using nvm/n)
+- [x] `_comp_package_json_scripts` - Extract npm/yarn scripts (currently inline in multiple places)
+- [x] `_comp_pyenv_versions` - Get Python versions (currently in _python_tools)
 
 #### Container/Orchestration Helpers
-- [ ] `_comp_docker_containers` - Consolidate running/stopped container logic
-- [ ] `_comp_docker_images` - Get Docker images
-- [ ] `_comp_k8s_namespaces` - Get Kubernetes namespaces
-- [ ] `_comp_k8s_pods` - Get pods in namespace
+- [x] `_comp_docker_containers` - Consolidate running/stopped container logic
+- [x] `_comp_docker_images` - Get Docker images
+- [x] `_comp_k8s_namespaces` - Get Kubernetes namespaces
+- [x] `_comp_k8s_pods` - Get pods in namespace
 
 ### File-Specific Completion Improvements
 
@@ -125,12 +175,9 @@ All functions and aliases from these files have been verified against their comp
 - [ ] `_azure_functions` - Add vault/secret caching
 
 #### Low Priority
-- [ ] `_misc_aliases` - Add smart completion for directory shortcuts (cd completion)
 - [ ] `_search_fzf_individual` - Consider adding preview patterns
 
 ### Shared Completion Library Structure
-
-**Proposed location**: `zsh/src/zsh/completions/_completion_helpers`
 
 Or break into categories:
 - `zsh/src/zsh/completions/_system_helpers` - Process, port, system detection

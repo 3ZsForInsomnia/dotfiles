@@ -1,0 +1,47 @@
+#!/usr/bin/env zsh
+
+# Completion helpers for process-related completions
+# Wraps process-utils.zsh functions with completion formatting
+
+# Complete with running processes (PID and name)
+_comp_running_processes() {
+  autoload -Uz getRunningProcesses
+  
+  local -a procs
+  local line pid proc
+  
+  while IFS=: read -r pid proc; do
+    procs+=("${pid}:${proc}")
+  done < <(getRunningProcesses)
+  
+  if (( ${#procs[@]} > 0 )); then
+    _describe 'running processes' procs
+    return 0
+  fi
+  return 1
+}
+
+# Complete with process by port
+_comp_process_by_port() {
+  local port="$1"
+  
+  if [[ -z "$port" ]]; then
+    _message 'port number required'
+    return 1
+  fi
+  
+  autoload -Uz getProcessByPort
+  
+  local result
+  result=$(getProcessByPort "$port")
+  
+  if [[ -n "$result" ]]; then
+    local pid proc
+    IFS=: read -r pid proc _ <<< "$result"
+    _message "Process on port ${port}: ${proc} (PID: ${pid})"
+    return 0
+  else
+    _message "No process found on port ${port}"
+    return 1
+  fi
+}

@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+# Completion helpers for development tools
+# Wraps dev-utils.zsh functions with completion formatting
+
+# Complete with package.json scripts
+_comp_package_scripts() {
+  autoload -Uz parsePackageJsonScripts
+  
+  local -a scripts
+  
+  while IFS= read -r script; do
+    [[ -n "$script" ]] && scripts+=("$script")
+  done < <(parsePackageJsonScripts)
+  
+  if (( ${#scripts[@]} > 0 )); then
+    _describe 'package.json scripts' scripts
+    return 0
+  fi
+  return 1
+}

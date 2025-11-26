@@ -1,0 +1,89 @@
+#!/usr/bin/env zsh
+
+# Completion helpers for Docker tools
+# Wraps docker-utils.zsh functions with completion formatting
+
+# Complete with running Docker containers
+_comp_docker_running_containers() {
+  autoload -Uz getDockerRunningContainers
+  
+  local -a containers
+  
+  while IFS= read -r container; do
+    [[ -n "$container" ]] && containers+=("$container")
+  done < <(getDockerRunningContainers)
+  
+  if (( ${#containers[@]} > 0 )); then
+    _describe 'running containers' containers
+    return 0
+  fi
+  return 1
+}
+
+# Complete with all Docker containers
+_comp_docker_all_containers() {
+  autoload -Uz getDockerAllContainers
+  
+  local -a containers
+  
+  while IFS= read -r container; do
+    [[ -n "$container" ]] && containers+=("$container")
+  done < <(getDockerAllContainers)
+  
+  if (( ${#containers[@]} > 0 )); then
+    _describe 'containers' containers
+    return 0
+  fi
+  return 1
+}
+
+# Complete with Docker images
+_comp_docker_images() {
+  autoload -Uz getDockerImages
+  
+  local -a images
+  
+  while IFS= read -r image; do
+    [[ -n "$image" ]] && images+=("$image")
+  done < <(getDockerImages)
+  
+  if (( ${#images[@]} > 0 )); then
+    _describe 'docker images' images
+    return 0
+  fi
+  return 1
+}
+
+# Complete with Docker networks
+_comp_docker_networks() {
+  autoload -Uz getDockerNetworks
+  
+  local -a networks
+  
+  while IFS= read -r network; do
+    [[ -n "$network" ]] && networks+=("$network")
+  done < <(getDockerNetworks)
+  
+  if (( ${#networks[@]} > 0 )); then
+    _describe 'docker networks' networks
+    return 0
+  fi
+  return 1
+}
+
+# Complete with Docker volumes
+_comp_docker_volumes() {
+  autoload -Uz getDockerVolumes
+  
+  local -a volumes
+  
+  while IFS= read -r volume; do
+    [[ -n "$volume" ]] && volumes+=("$volume")
+  done < <(getDockerVolumes)
+  
+  if (( ${#volumes[@]} > 0 )); then
+    _describe 'docker volumes' volumes
+    return 0
+  fi
+  return 1
+}

@@ -4,32 +4,9 @@
 
 # Function to get npm/yarn scripts from package.json
 function _get_package_scripts() {
-  if [[ ! -f "package.json" ]]; then
-    return 1
-  fi
-  
-  local -a scripts
-  # Parse package.json scripts using jq if available, otherwise awk
-  if command -v jq >/dev/null 2>&1; then
-    while IFS= read -r script; do
-      [[ -n "$script" ]] && scripts+=("$script")
-    done < <(jq -r '.scripts | keys[]' package.json 2>/dev/null)
-  else
-    # Fallback parsing without jq - basic but functional
-    while IFS= read -r script; do
-      [[ -n "$script" ]] && scripts+=("$script")
-    done < <(grep -A 20 '"scripts"' package.json 2>/dev/null | \
-      grep '^\s*"[^"]*"' | \
-      sed 's/^\s*"//' | \
-      sed 's/".*//' | \
-      grep -v '^scripts$')
-  fi
-  
-  if (( ${#scripts[@]} > 0 )); then
-    _describe 'package.json scripts' scripts
-    return 0
-  fi
-  return 1
+  # Use shared completion helper
+  autoload -Uz _comp_package_scripts
+  _comp_package_scripts
 }
 
 # Function to get nx projects

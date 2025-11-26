@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+
+# Completion helpers for project management
+# Wraps project-utils.zsh functions with completion formatting
+
+# Complete with project root directories
+_comp_project_roots() {
+  autoload -Uz findProjectRoot
+  
+  local root
+  root=$(findProjectRoot)
+  
+  if [[ -n "$root" ]]; then
+    _message "Project root: $root"
+    return 0
+  else
+    _message 'No project root found'
+    return 1
+  fi
+}

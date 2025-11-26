@@ -105,18 +105,9 @@ function _dev_tools_completion() {
         _describe 'npm commands' npm_commands
         return 0
       elif (( CURRENT == 3 && "$words[2]" == "run" )); then
-        # Complete with package.json scripts
-        if [[ -f "package.json" ]]; then
-          local -a scripts
-          while IFS= read -r script; do
-            [[ -n "$script" ]] && scripts+=("$script")
-          done < <(jq -r '.scripts | keys[]' package.json 2>/dev/null)
-          
-          if (( ${#scripts[@]} > 0 )); then
-            _describe 'scripts' scripts
-            return 0
-          fi
-        fi
+        # Complete with package.json scripts using shared helper
+        autoload -Uz _comp_package_scripts
+        _comp_package_scripts && return 0
       fi
       ;;
     

@@ -1,0 +1,78 @@
+#!/usr/bin/env zsh
+
+# Completion helpers for Kubernetes tools
+# Wraps kubernetes-utils.zsh functions with completion formatting
+
+# Complete with Kubernetes namespaces
+_comp_k8s_namespaces() {
+  autoload -Uz getKubernetesNamespaces
+  
+  local -a namespaces
+  
+  while IFS= read -r namespace; do
+    [[ -n "$namespace" ]] && namespaces+=("$namespace")
+  done < <(getKubernetesNamespaces)
+  
+  if (( ${#namespaces[@]} > 0 )); then
+    _describe 'kubernetes namespaces' namespaces
+    return 0
+  fi
+  return 1
+}
+
+# Complete with Kubernetes pods in a namespace
+_comp_k8s_pods() {
+  local namespace="${1:-default}"
+  
+  autoload -Uz getKubernetesPods
+  
+  local -a pods
+  
+  while IFS= read -r pod; do
+    [[ -n "$pod" ]] && pods+=("$pod")
+  done < <(getKubernetesPods "$namespace")
+  
+  if (( ${#pods[@]} > 0 )); then
+    _describe 'kubernetes pods' pods
+    return 0
+  fi
+  return 1
+}
+
+# Complete with Kubernetes services in a namespace
+_comp_k8s_services() {
+  local namespace="${1:-default}"
+  
+  autoload -Uz getKubernetesServices
+  
+  local -a services
+  
+  while IFS= read -r service; do
+    [[ -n "$service" ]] && services+=("$service")
+  done < <(getKubernetesServices "$namespace")
+  
+  if (( ${#services[@]} > 0 )); then
+    _describe 'kubernetes services' services
+    return 0
+  fi
+  return 1
+}
+
+# Complete with Kubernetes deployments in a namespace
+_comp_k8s_deployments() {
+  local namespace="${1:-default}"
+  
+  autoload -Uz getKubernetesDeployments
+  
+  local -a deployments
+  
+  while IFS= read -r deployment; do
+    [[ -n "$deployment" ]] && deployments+=("$deployment")
+  done < <(getKubernetesDeployments "$namespace")
+  
+  if (( ${#deployments[@]} > 0 )); then
+    _describe 'kubernetes deployments' deployments
+    return 0
+  fi
+  return 1
+}
