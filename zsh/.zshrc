@@ -43,9 +43,17 @@ setopt hist_ignore_all_dups
 setopt share_history
 setopt append_history
 
+setopt auto_pushd
+setopt pushd_ignore_dups
 setopt auto_cd
 
-export CORRECT_IGNORE_FILE='.*|test'
+setopt noflowcontrol
+setopt longlistjobs
+setopt notify
+setopt completeinword
+setopt extended_glob
+
+export CORRECT_IGNORE_FILE='dotfiles|.*|test'
 setopt correct_all
 alias git='nocorrect git'
 setopt no_beep
@@ -65,12 +73,17 @@ function fancy_history_widget() {
 zle -N fancy_history_widget
 bindkey '^R' fancy_history_widget
 
-bindkey "^[[H" beginning-of-line
-bindkey "^[[F" end-of-line
-bindkey "^[[1;3D" backward-word
-bindkey "^[[1;3C" forward-word
-bindkey "^[d" backward-delete-word
-bindkey "^[c" delete-word
+# Bind Home/End keys
+bindkey "^[[H" beginning-of-line # Home
+bindkey "^[[F" end-of-line       # End
+
+# Bind Alt + Arrow keys for word-wise navigation
+bindkey "^[[1;3D" backward-word  # Alt+LeftArrow
+bindkey "^[[1;3C" forward-word   # Alt+RightArrow
+
+# Custom word-wise deletion
+bindkey "^[d" backward-delete-word # Alt+d (deletes word backward)
+bindkey "^[c" delete-word          # Alt+c (deletes word forward)
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)

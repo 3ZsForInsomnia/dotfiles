@@ -33,8 +33,8 @@
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     os_icon                 # os identifier
     dir                     # current directory
-    # vcs                     # git status
-    # prompt_char           # prompt symbol
+    vcs                     # git status
+    prompt_char           # prompt symbol
   )
 
   # The list of segments shown on the right. Fill it with less important segments.
@@ -50,7 +50,7 @@
     virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
     # anaconda                # conda environment (https://conda.io/)
     pyenv                   # python environment (https://github.com/pyenv/pyenv)
-    # goenv                   # go environment (https://github.com/syndbg/goenv)
+    goenv                   # go environment (https://github.com/syndbg/goenv)
     # nodenv                  # node.js version from nodenv (https://github.com/nodenv/nodenv)
     # nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
     # nodeenv                 # node.js environment (https://github.com/ekalinin/nodeenv)
@@ -110,7 +110,7 @@
     # battery               # internal battery
     # wifi                  # wifi speed
     # example               # example user-defined segment (see prompt_example function below)
-    vcs                     # git status
+    # vcs                     # git status
   )
 
   # Defines character set used by powerlevel10k. It's best to let `p10k configure` set it for you.
@@ -287,7 +287,7 @@
   # opening a directory in the file manager simply by clicking the link.
   # Can also be handy when the directory is shortened, as it allows you to see
   # the full directory that was used in previous commands.
-  typeset -g POWERLEVEL9K_DIR_HYPERLINK=false
+  typeset -g POWERLEVEL9K_DIR_HYPERLINK=true
 
   # Enable special styling for non-writable and non-existent directories. See POWERLEVEL9K_LOCK_ICON
   # and POWERLEVEL9K_DIR_CLASSES below.
@@ -385,7 +385,7 @@
       # gitstatus plugin). VCS_STATUS_* parameters are not available in this case.
       typeset -g my_git_format=$P9K_CONTENT
 
-      typeset -g POWERLEVEL9K_VCS_MAX_INDEX_SIZE_DIRTY=1000
+      typeset -g POWERLEVEL9K_VCS_MAX_INDEX_SIZE_DIRTY=100000
 
       return
     fi

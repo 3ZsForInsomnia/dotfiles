@@ -1,6 +1,31 @@
 alias ghs="gh copilot suggest -t shell"
 alias ghe="gh copilot explain"
 
+alias ghpn="gh pr create"
+alias ghps="gh pr status"
+alias ghpc="gh pr checks"
+alias ghpm="gh pr merge"
+
+alias ghwr="gh workflow run"
+alias ghwv="gh workflow view"
+alias ghwl="gh workflow list"
+
+alias ghrv="gh run view"
+alias ghrl="gh run list"
+alias ghrd="gh run download"
+alias ghrc="gh run cancel"
+alias ghrw="gh run watch"
+
+alias ghrr="gh run rerun"
+alias ghrrf="gh run rerun --failed"
+alias ghrrj="gh run rerun --job-id"
+
+alias ghge="gh gist edit"
+alias ghgl="gh gist list"
+alias ghgc="gh gist create"
+alias ghgd="gh gist delete"
+alias ghgv="gh gist view"
+
 function ghen() {
   if [[ -z "$1" ]]; then
     echo "Usage: cop_explain <entry-number>"

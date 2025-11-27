@@ -254,9 +254,10 @@ return {
           },
           adapter = {
             name = "copilot",
+            -- model = "gemini-3-pro-preview",
             -- model = "gemini-2.5-pro",
-            model = "claude-sonnet-4.5",
-            -- model = "gpt-5",
+            -- model = "claude-sonnet-4.5",
+            model = "gpt-5",
           },
           variables = {
             date = cc_vars.date,
@@ -313,6 +314,9 @@ return {
       -- },
       adapters = {
         http = {
+          opts = {
+            show_model_choices = true,
+          },
           default_copilot = function()
             require("codecompanion.adapters").extend("copilot", {
               schema = {
@@ -320,13 +324,13 @@ return {
                   order = 1,
                   type = "enum",
                   desc = "Select one of your curated Copilot-backed models",
-                  -- default = "claude-sonnet-4",
                   default = "claude-sonnet-4.5",
                   choices = {
                     ["claude-sonnet-4.5"] = { opts = { provider = "anthropic" } },
                     ["gpt-5-2025-08-07"] = { opts = { provider = "openai", tier = "flagship" } },
                     ["o4-mini"] = { opts = { provider = "openai", can_reason = true, reasoning_tier = "mini" } },
                     ["gemini-2.5-pro"] = { opts = { provider = "google", multimodal = true } },
+                    -- ["gemini-3-pro-preview"] = { opts = { provider = "google", multimodal = true } },
                   },
                 },
               },

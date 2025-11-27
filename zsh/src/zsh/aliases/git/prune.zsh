@@ -1,3 +1,5 @@
+source "$ZSH_CONFIG_DIR/utils/git-pr-utils.zsh"
+
 ### Main Pruning Commands
 
 function gprune() {
@@ -10,20 +12,19 @@ function gprune() {
     echo "2. FZF selection with PR preview"
     echo "3. Confirmation before deletion"
     echo "4. Option to edit selection or cancel"
-    echo ""
-    echo "Requires: gh CLI, jq"
     return 0
   fi
 
-  local prs_with_branches
-  prs_with_branches=$(_get_prs_with_local_branches)
+  echo "Fetching PR data for local branches..."
+  local prs_json
+  prs_json=$(_get_merged_closed_prs_with_local_branches_json)
 
-  if [[ -z "$prs_with_branches" ]]; then
+  if [[ -z "$prs_json" || "$prs_json" == "[]" ]]; then
     echo "No local branches found for merged or closed PRs."
     return 0
   fi
 
-  _interactive_prune_workflow "$prs_with_branches"
+  _interactive_prune_workflow "$prs_json"
 }
 
 function gprunepr() {
@@ -87,6 +88,9 @@ function gprunepr() {
 ### Helper Functions
 
 function _get_prs_with_local_branches() {
+  # This function is deprecated and is kept here for reference during the refactor.
+  # The new logic is in `zsh/src/zsh/utils/git-pr-utils.zsh`.
+  #
   # Get both merged and closed PRs that have local branches
   # Get all PRs (merged and closed, but not open)
   # Using jq to combine and deduplicate by PR number
@@ -131,29 +135,35 @@ function _format_pr_for_fzf() {
 
 function _interactive_prune_workflow() {
   local prs_json="$1"
+  local preview_script_path="$ZSH_CONFIG_DIR/previews/git-prune-preview.zsh"
+
+  # Make sure the preview script is executable
+  if [[ ! -x "$preview_script_path" ]]; then
+    chmod +x "$preview_script_path"
+  fi
 
   while true; do
-    # Format PRs for FZF
+    # Format PRs for FZF using the rich JSON data
     local fzf_options=()
-    while IFS= read -r pr_json; do
-      if [[ -n "$pr_json" ]]; then
-        fzf_options+=("$(_format_pr_for_fzf "$pr_json")")
-      fi
-    done <<<"$prs_json"
+    # Use jq to parse the JSON array and format each PR
+    local formatted_list
+    formatted_list=$(echo "$prs_json" | jq -r '.[] | 
+      "\(if .state == "MERGED" then "[MERGED]" else "[CLOSED]" end) #\(.number) \(.title) (\(.author.login)) [\(.mergedAt // .createdAt | split("T")[0])] \(.headRefName)"
+    ')
 
-    if [[ ${#fzf_options[@]} -eq 0 ]]; then
+    if [[ -z "$formatted_list" ]]; then
       echo "No PRs available for pruning."
       return 0
     fi
 
-    echo "Found ${#fzf_options[@]} local branch(es) for merged/closed PRs"
+    echo "Found $(echo "$formatted_list" | wc -l | tr -d ' ') local branch(es) for merged/closed PRs"
 
     # FZF selection
     local selected
-    selected=$(printf '%s\n' "${fzf_options[@]}" |
+    selected=$(echo "$formatted_list" |
       fzf --multi \
         --reverse \
-        --preview='gh pr view $(echo {} | sed "s/^\[MERGED\] \|^\[CLOSED\] //" | grep -o "#[0-9]\+" | head -1 | cut -c2-)' \
+        --preview="$preview_script_path {2} {NF} '$prs_json'" \
         --preview-window="right:60%" \
         --bind="ctrl-a:select-all" \
         --bind="ctrl-d:deselect-all" \
@@ -168,7 +178,7 @@ function _interactive_prune_workflow() {
     local branches_to_delete=()
     while IFS= read -r line; do
       if [[ -n "$line" ]]; then
-        # Extract the branch name - it's the last space-separated field after the date
+        # Extract the branch name - it's the last space-separated field
         local branch=$(echo "$line" | awk '{print $NF}')
         branches_to_delete+=("$branch")
       fi
