@@ -453,4 +453,16 @@ return {
       }),
     },
   },
+  {
+    "topaxi/pipeline.nvim",
+    keys = {
+      cmd({ key = g .. "P", action = "Pipeline", desc = "Open pipeline.nvim" }),
+    },
+    build = "make",
+    opts = {
+      split = {
+        position = "left",
+      },
+    },
+  },
 }

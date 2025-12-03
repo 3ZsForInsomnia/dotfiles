@@ -159,7 +159,7 @@ return {
     "lewis6991/hover.nvim",
     event = "VeryLazy",
     config = function()
-      require("hover").setup({
+      return {
         init = function()
           require("hover.providers.lsp")
           require("hover.providers.gh")
@@ -178,7 +178,7 @@ return {
         },
         preview_window = true,
         title = true,
-      })
+      }
     end,
     keys = {
       cmd({
@@ -310,6 +310,17 @@ return {
         action = "PasteImage",
         desc = "Paste image form clipboard into buffer",
       }),
+    },
+  },
+  {
+    "kawre/leetcode.nvim",
+    build = ":TSUpdate html",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+    },
+    opts = {
+      lang = "typescript",
     },
   },
 }

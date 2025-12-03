@@ -256,8 +256,8 @@ return {
             name = "copilot",
             -- model = "gemini-3-pro-preview",
             -- model = "gemini-2.5-pro",
-            -- model = "claude-sonnet-4.5",
-            model = "gpt-5",
+            model = "claude-sonnet-4.5",
+            -- model = "gpt-5",
           },
           variables = {
             date = cc_vars.date,

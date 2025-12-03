@@ -6,9 +6,9 @@
 function _get_merged_closed_prs_with_local_branches_json() {
   # 1. Get the current repository owner and name
   local repo
-  echo "1 is dumb"
+
   repo=$(gh repo view --json owner,name --jq '.owner.login + "/" + .name' 2>/dev/null)
-  echo "$repo"
+
   if [[ -z "$repo" ]]; then
     echo "Error: Could not determine GitHub repository." >&2
     return 1
@@ -31,8 +31,8 @@ function _get_merged_closed_prs_with_local_branches_json() {
     local graphql_alias
     graphql_alias=$(echo "$branch" | tr -c 'a-zA-Z0-9_' '_')
     # Each part of the query finds the first merged or closed PR for that head branch
-    graphql_query+="
-      ${graphql_alias}: search(query: \"repo:${repo} is:pr head:\\\"${branch}\\\" states:merged,closed\", type: ISSUE, first: 1) {
+      graphql_query+="
+        ${graphql_alias}: search(query: \"repo:${repo} is:pr head:\\\"${branch}\\\" is:merged,closed\", type: ISSUE, first: 1) {
         nodes {
           ... on PullRequest {
             number
@@ -62,15 +62,24 @@ function _get_merged_closed_prs_with_local_branches_json() {
 
   # 4. Execute the GraphQL query using gh api
   local result_json
-  echo "wtf"
+
   result_json=$(gh api graphql -f query="$graphql_query" 2>/dev/null)
 
-  echo "$result_json"
 
   if [[ -z "$result_json" ]]; then
+    echo "[]"
     return 0
   fi
 
   # 5. Process the results: flatten the aliased structure into a single JSON array
-  echo "$result_json" | jq -c '[(.data // {}) | to_entries[] | .value.nodes[] | select(. != null)]'
+  # The `jq` command now ensures that if the result of the filtering is empty,
+  # it outputs an empty array `[]` instead of `null` or an empty string.
+  local final_json
+  final_json=$(echo "$result_json" | jq -c '[(.data // {}) | to_entries[] | .value.nodes[] | select(. != null)]')
+
+  if [[ -z "$final_json" || "$final_json" == "null" ]]; then
+    echo "[]"
+  else
+    echo "$final_json"
+  fi
 }

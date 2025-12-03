@@ -126,7 +126,7 @@ function gamc() {
     return 0
   fi
 
-  local path="${1:-.}"
-  git add "$path"
+  local pathes="${1:-.}"
+  git add "$pathes"
   git merge --continue
 }

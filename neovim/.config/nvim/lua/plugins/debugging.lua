@@ -110,6 +110,32 @@ return {
         "microsoft/vscode-js-debug",
         run = "npm install --legacy-peer-deps && npm run compile",
       },
+      -- {
+      --   "ofirgall/goto-breakpoints.nvim",
+      --   keys = {
+      --     k({
+      --       key = "]p",
+      --       action = function()
+      --         require("goto-breakpoints").next()
+      --       end,
+      --       desc = "Go to next breakpoint",
+      --     }),
+      --     k({
+      --       key = "[p",
+      --       action = function()
+      --         require("goto-breakpoints").prev()
+      --       end,
+      --       desc = "Go to previous breakpoint",
+      --     }),
+      --     k({
+      --       key = "]P",
+      --       action = function()
+      --         require("goto-breakpoints").stopped()
+      --       end,
+      --       desc = "Go to last stopped breakpoint",
+      --     }),
+      --   },
+      -- },
     },
     config = function()
       v("DapBreakpoint", { text = "🟥", texthl = "DiagnosticSignError", priority = 15 })

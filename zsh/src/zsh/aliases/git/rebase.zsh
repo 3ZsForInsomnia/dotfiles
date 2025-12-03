@@ -80,9 +80,9 @@ function pullBranchThenRebaseWithIt() {
   echo "Switching to $target_branch..."
   git checkout "$target_branch" || return 1
 
-  echo "Pulling latest changes..."
-  git pull --rebase || {
-    echo "Failed to pull $target_branch"
+  echo "Pulling latest changes for $target_branch..."
+  git pull --rebase --no-tags origin "$target_branch" || {
+    echo "Failed to pull $target_branch. Returning to $current_branch."
     git checkout "$current_branch"
     return 1
   }
@@ -142,11 +142,7 @@ function gstarb() {
   run_then_find_stash "grb $1"
 }
 
-### Quick Rebase Shortcuts
-alias grbh='grbi'                                                           # Interactive rebase (h for HEAD)
-alias gpmm='grb'                                                            # Pull main and rebase (your current alias)
-alias gprm='grb'                                                            # Alternative name for same operation
-alias pullMasThenRebaseWithIt='pullBranchThenRebaseWithIt $GIT_MAIN_BRANCH' # Compatibility
+alias pullMasThenRebaseWithIt='pullBranchThenRebaseWithIt $GIT_MAIN_BRANCH'
 
 ### Git Add + Rebase Continue
 function garbc() {
@@ -159,7 +155,7 @@ function garbc() {
     return 0
   fi
 
-  local path="${1:-.}"
-  git add "$path"
+  local pathes="${1:-.}"
+  git add "$pathes"
   git rebase --continue
 }
