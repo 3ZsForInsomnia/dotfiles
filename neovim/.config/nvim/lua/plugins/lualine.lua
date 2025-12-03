@@ -50,8 +50,8 @@ return {
         options = {
           theme = "catppuccin",
           icons_enabled = true,
-          component_separators = { left = "", right = "" },
-          section_separators = { left = "", right = "" },
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
           disabled_filetypes = { statusline = {}, winbar = {} },
           ignore_focus = {},
           always_divide_middle = true,
@@ -98,7 +98,7 @@ return {
           },
           lualine_y = { "progress" },
           lualine_z = {
-            { "location", separator = { right = "" }, left_padding = 2 },
+            { "location", separator = { right = "" }, left_padding = 2 },
           },
         },
         winbar = {
@@ -119,6 +119,28 @@ return {
         inactive_winbar = {},
         extensions = { "neo-tree", "quickfix", "nvim-dap-ui" },
       })
+
+      -- Add overseer integration after lualine is set up
+      vim.schedule(function()
+        local ok, overseer = pcall(require, "overseer")
+        if ok then
+          local lualine = require("lualine")
+          local config = lualine.get_config()
+          table.insert(config.sections.lualine_x, 1, {
+            "overseer",
+            label = "",
+            colored = true,
+            symbols = {
+              [overseer.STATUS.FAILURE] = "✗ ",
+              [overseer.STATUS.CANCELED] = "⊘ ",
+              [overseer.STATUS.SUCCESS] = "✓ ",
+              [overseer.STATUS.RUNNING] = "⟳ ",
+            },
+            unique = false,
+          })
+          lualine.setup(config)
+        end
+      end)
     end,
   },
 }

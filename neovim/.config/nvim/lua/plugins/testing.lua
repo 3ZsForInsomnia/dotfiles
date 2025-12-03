@@ -97,6 +97,14 @@ return {
         ["neotest-jest"] = js_config,
         ["neotest-vitest"] = {},
       },
+      -- Overseer integration
+      consumers = {
+        overseer = require("neotest.consumers.overseer"),
+      },
+      overseer = {
+        enabled = true,
+        force_default = false, -- Don't force all runs through overseer by default
+      },
       diagnostic = {
         enabled = true,
         severity = v.diagnostic.severity.ERROR,
@@ -240,19 +248,47 @@ return {
         end,
         desc = "Stop",
       },
+      -- Native neotest watch (now replaced by overseer versions below)
+      -- {
+      --   l .. "w",
+      --   function()
+      --     require("neotest").watch.toggle(v.fn.expand("%"))
+      --   end,
+      --   desc = "Toggle Watch (Neotest)",
+      -- },
+      -- Native jest watch (now replaced by overseer version below)
+      -- {
+      --   l .. "j",
+      --   function()
+      --     require("neotest").run.run({ jestCommand = "jest --watch" })
+      --   end,
+      --   desc = "Run Jest Watch (Neotest)",
+      -- },
+
+      -- Overseer-powered watch (moved from native neotest)
       {
         l .. "w",
         function()
-          require("neotest").watch.toggle(v.fn.expand("%"))
+          require("neotest").overseer.run({ suite = false })
         end,
-        desc = "Toggle Watch",
+        desc = "Watch Current File (Overseer)",
+      },
+      {
+        l .. "W",
+        function()
+          require("neotest").overseer.run({ suite = true })
+        end,
+        desc = "Watch All Tests (Overseer)",
       },
       {
         l .. "j",
         function()
-          require("neotest").run.run({ jestCommand = "jest --watch" })
+          require("neotest").overseer.run({
+            suite = false,
+            extra_args = { "--watch" },
+          })
         end,
-        desc = "Run Jest Watch",
+        desc = "Jest Watch (Overseer)",
       },
 
       {
