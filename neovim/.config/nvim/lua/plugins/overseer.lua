@@ -1,20 +1,23 @@
-local k = require("helpers").k
 local k_cmd = require("helpers").k_cmd
+local k = require("helpers").k
 local o = "<leader>o"
 
--- Helper to create overseer command keybinds
-local function oc(suffix, command, desc)
-  return k_cmd({
-    key = o .. suffix,
-    action = "Overseer" .. command,
-    desc = desc or command,
-  })
+-- Helper functions to DRY up repeated overseer calls
+local function run_template(opts)
+  return function()
+    require("overseer").run_template(opts)
+  end
 end
 
--- Helper to run overseer with tag filter
-local function run_with_tags(tags)
+local function with_last_task(callback)
   return function()
-    require("overseer").run_template({ tags = tags })
+    local overseer = require("overseer")
+    local tasks = overseer.list_tasks({ recent_first = true })
+    if vim.tbl_isempty(tasks) then
+      vim.notify("No tasks found", vim.log.levels.WARN)
+    else
+      callback(overseer, tasks[1])
+    end
   end
 end
 
@@ -50,133 +53,81 @@ return {
       -- Additional task management
       k({
         key = o .. "R",
-        action = function()
-          local overseer = require("overseer")
-          local tasks = overseer.list_tasks({ recent_first = true })
-          if vim.tbl_isempty(tasks) then
-            vim.notify("No tasks found", vim.log.levels.WARN)
-          else
-            overseer.run_action(tasks[1], "restart")
-          end
-        end,
+        action = with_last_task(function(overseer, task)
+          overseer.run_action(task, "restart")
+        end),
         desc = "Restart last task",
       }),
 
       -- Shell command (like :! but as overseer task)
-      oc("s", "Shell", "Run shell command"),
+      k_cmd({ key = o .. "s", action = "OverseerShell", desc = "Run shell command" }),
 
       -- Output management
       k({
         key = o .. "O",
-        action = function()
-          local overseer = require("overseer")
-          local tasks = overseer.list_tasks({ recent_first = true })
-          if vim.tbl_isempty(tasks) then
-            vim.notify("No tasks found", vim.log.levels.WARN)
-          else
-            tasks[1]:open_output({ direction = "float" })
-          end
-        end,
+        action = with_last_task(function(_, task)
+          task:open_output({ direction = "float" })
+        end),
         desc = "Open last task output",
       }),
 
       -- Task runner filters (unique prefix <leader>or)
-      k({ key = o .. "ra", action = run_with_tags({}), desc = "All tasks" }),
-      k({ key = o .. "rx", action = run_with_tags({ "NX" }), desc = "Nx tasks" }),
-      k({ key = o .. "rn", action = run_with_tags({ "NPM" }), desc = "npm tasks" }),
-      k({ key = o .. "rg", action = run_with_tags({ "GO" }), desc = "Go tasks" }),
-      k({ key = o .. "rp", action = run_with_tags({ "PYTHON" }), desc = "Python tasks" }),
-      k({ key = o .. "rk", action = run_with_tags({ "K8S" }), desc = "kubectl tasks" }),
-      k({ key = o .. "rt", action = run_with_tags({ "TILT" }), desc = "Tilt workflow" }),
-      k({ key = o .. "rf", action = run_with_tags({ "FULLSTACK" }), desc = "Fullstack workflow" }),
+      k({ key = o .. "ra", action = run_template({ tags = {} }), desc = "All tasks" }),
+      k({ key = o .. "rx", action = run_template({ tags = { "NX" } }), desc = "Nx tasks" }),
+      k({ key = o .. "rn", action = run_template({ tags = { "NPM" } }), desc = "npm tasks" }),
+      k({ key = o .. "rg", action = run_template({ tags = { "GO" } }), desc = "Go tasks" }),
+      k({ key = o .. "rp", action = run_template({ tags = { "PYTHON" } }), desc = "Python tasks" }),
+      k({ key = o .. "rk", action = run_template({ tags = { "K8S" } }), desc = "kubectl tasks" }),
+      k({ key = o .. "rt", action = run_template({ tags = { "TILT" } }), desc = "Tilt workflow" }),
+      k({ key = o .. "rf", action = run_template({ tags = { "FULLSTACK" } }), desc = "Fullstack workflow" }),
 
       -- Nx sub-commands (unique prefix <leader>ox)
       k({
         key = o .. "xb",
-        action = function()
-          require("overseer").run_template({ name = "nx", params = { subcommand = "build" } })
-        end,
+        action = run_template({ name = "nx", params = { subcommand = "build" } }),
         desc = "Nx build",
       }),
-      k({
-        key = o .. "xt",
-        action = function()
-          require("overseer").run_template({ name = "nx", params = { subcommand = "test" } })
-        end,
-        desc = "Nx test",
-      }),
-      k({
-        key = o .. "xl",
-        action = function()
-          require("overseer").run_template({ name = "nx", params = { subcommand = "lint" } })
-        end,
-        desc = "Nx lint",
-      }),
+      k({ key = o .. "xt", action = run_template({ name = "nx", params = { subcommand = "test" } }), desc = "Nx test" }),
+      k({ key = o .. "xl", action = run_template({ name = "nx", params = { subcommand = "lint" } }), desc = "Nx lint" }),
       k({
         key = o .. "xs",
-        action = function()
-          require("overseer").run_template({ name = "nx", params = { subcommand = "serve" } })
-        end,
+        action = run_template({ name = "nx", params = { subcommand = "serve" } }),
         desc = "Nx serve",
       }),
 
       -- npm sub-commands (unique prefix <leader>on)
       k({
         key = o .. "ni",
-        action = function()
-          require("overseer").run_template({ name = "npm", params = { subcommand = "install" } })
-        end,
+        action = run_template({ name = "npm", params = { subcommand = "install" } }),
         desc = "npm install",
       }),
       k({
         key = o .. "nt",
-        action = function()
-          require("overseer").run_template({ name = "npm", params = { subcommand = "test" } })
-        end,
+        action = run_template({ name = "npm", params = { subcommand = "test" } }),
         desc = "npm test",
       }),
       k({
         key = o .. "nb",
-        action = function()
-          require("overseer").run_template({ name = "npm", params = { subcommand = "build" } })
-        end,
+        action = run_template({ name = "npm", params = { subcommand = "build" } }),
         desc = "npm build",
       }),
       k({
         key = o .. "ns",
-        action = function()
-          require("overseer").run_template({ name = "npm", params = { script = "storybook" } })
-        end,
+        action = run_template({ name = "npm", params = { script = "storybook" } }),
         desc = "npm run storybook",
       }),
 
       -- Go sub-commands (unique prefix <leader>og)
       k({
         key = o .. "gb",
-        action = function()
-          require("overseer").run_template({ name = "go", params = { subcommand = "build" } })
-        end,
+        action = run_template({ name = "go", params = { subcommand = "build" } }),
         desc = "Go build",
       }),
-      k({
-        key = o .. "gt",
-        action = function()
-          require("overseer").run_template({ name = "go", params = { subcommand = "test" } })
-        end,
-        desc = "Go test",
-      }),
-      k({
-        key = o .. "gr",
-        action = function()
-          require("overseer").run_template({ name = "go", params = { subcommand = "run" } })
-        end,
-        desc = "Go run",
-      }),
+      k({ key = o .. "gt", action = run_template({ name = "go", params = { subcommand = "test" } }), desc = "Go test" }),
+      k({ key = o .. "gr", action = run_template({ name = "go", params = { subcommand = "run" } }), desc = "Go run" }),
       k({
         key = o .. "gc",
-        action = function()
-          require("overseer").run_template({ name = "go", params = { subcommand = "test", coverage = true } })
-        end,
+        action = run_template({ name = "go", params = { subcommand = "test", coverage = true } }),
         desc = "Go test with coverage",
       }),
     },
@@ -312,10 +263,18 @@ return {
       overseer.setup(opts)
 
       -- Background cache initialization (don't block startup)
+      -- Only preload cache in project directories (where task definitions exist)
       vim.defer_fn(function()
-        overseer.preload_task_cache({}, function()
-          -- Cache loaded silently
-        end)
+        local cwd = vim.fn.getcwd()
+        local is_project = vim.fn.isdirectory(cwd .. "/.git") == 1
+          or vim.fn.filereadable(cwd .. "/package.json") == 1
+          or vim.fn.filereadable(cwd .. "/project.json") == 1
+
+        if is_project then
+          overseer.preload_task_cache({ dir = cwd }, function()
+            -- Cache loaded silently
+          end)
+        end
       end, 2000) -- Wait 2 seconds after startup
 
       -- Custom user command for quick shell execution

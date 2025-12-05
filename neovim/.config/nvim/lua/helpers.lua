@@ -1,8 +1,6 @@
-local k = vim.api.nvim_set_keymap
+local k_set = vim.keymap.set
 
 local M = {}
-
-M.v = k
 
 M.k = function(args)
   if not args then
@@ -12,7 +10,7 @@ M.k = function(args)
     args.mode = "n"
   end
 
-  k(args.mode, args.key, args.action, { desc = args.desc, noremap = true, silent = true })
+  k_set(args.mode, args.key, args.action, { desc = args.desc, noremap = true, silent = true })
 end
 
 M.k_cmd = function(args)
@@ -23,7 +21,7 @@ M.k_cmd = function(args)
     args.mode = "n"
   end
 
-  k(args.mode, args.key, "<cmd>" .. args.action .. "<cr>", { desc = args.desc, noremap = true, silent = true })
+  k_set(args.mode, args.key, "<cmd>" .. args.action .. "<cr>", { desc = args.desc, noremap = true, silent = true })
 end
 
 return M

@@ -28,6 +28,8 @@ STATE_DIR.mkdir(parents=True, exist_ok=True)
 HISTORY_FILE = STATE_DIR / "version-history.json"
 BACKUP_DIR = STATE_DIR / "nvim-backups"
 BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+LOG_FILE = STATE_DIR / "nvim-update.log"
+MAX_LOG_SIZE = 5 * 1024 * 1024  # 5MB
 
 # --- Settings ---
 XDG_CODE_HOME = os.environ.get("XDG_CODE_HOME")
@@ -40,9 +42,19 @@ NVIM_INSTALL = Path(XDG_CODE_HOME) / "neovim"
 
 # --- Logging ---
 def logmsg(*args, prefix="[INFO]"):
-    print(prefix, *args)
-    with open(current_logfile, "a") as fp:
-        print(prefix, *args, file=fp)
+    # Only write to log file, not stdout
+    try:
+        with open(current_logfile, "a") as fp:
+            print(prefix, *args, file=fp)
+            fp.flush()  # Ensure immediate write
+    except Exception as e:
+        print(
+            f"[LOG ERROR] Failed to write to log file {current_logfile}: {e}",
+            file=sys.stderr,
+        )
+        import traceback
+
+        traceback.print_exc()
 
 
 def logerr(*args):
@@ -55,10 +67,36 @@ def logexc(e):
 
 
 def start_log():
-    now = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    logf = STATE_DIR / f"upgrade-{now}.log"
-    logf.touch()
-    return logf
+    try:
+        # Check if log file needs rotation
+        if LOG_FILE.exists() and LOG_FILE.stat().st_size > MAX_LOG_SIZE:
+            old_log = STATE_DIR / "nvim-update.log.old"
+            if old_log.exists():
+                old_log.unlink()
+            LOG_FILE.rename(old_log)
+        
+        # Write session marker to log
+        now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+        with open(LOG_FILE, "a") as fp:
+            fp.write(f"\n=== Session started at {now} ===\n")
+            fp.flush()
+        
+        return LOG_FILE
+    except Exception as e:
+        print(
+            f"[CRITICAL] Failed to initialize log file in {STATE_DIR}: {e}", file=sys.stderr
+        )
+        import traceback
+
+        traceback.print_exc()
+        # Fallback to a temp file
+        import tempfile
+        now_str = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+        fallback = Path(tempfile.gettempdir()) / f"nvim-update-{now_str}.log"
+        print(f"[DEBUG] Using fallback log file: {fallback}", file=sys.stderr)
+        with open(fallback, "a") as fp:
+            fp.write(f"\n=== Session started at {now} (FALLBACK) ===\n")
+        return fallback
 
 
 current_logfile = str(start_log())
@@ -290,7 +328,7 @@ def show_version():
 
 
 def show_logfile():
-    print(f"Current log file: {current_logfile}")
+    print(str(LOG_FILE))
 
 
 def manual_checkout(sha):
