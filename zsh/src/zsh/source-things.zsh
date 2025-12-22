@@ -35,4 +35,5 @@ zsh-defer zsh_compile_with_cache
 
 zsh-defer lazyload command "update-zsh-tools" "$ZSH_CONFIG_DIR/tools/update-zsh-tools.zsh" "Load zsh tools updater"
 
+source "$ZSH_CONFIG_DIR/utils/index.zsh"
 source "$ZSH_CONFIG_DIR/aliases/index.zsh"

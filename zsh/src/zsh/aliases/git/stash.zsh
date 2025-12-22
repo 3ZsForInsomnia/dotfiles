@@ -133,8 +133,7 @@ function gstaa() {
     echo "Apply stash with FZF selection and diff preview"
     echo "Keys:"
     echo "  Enter    - Apply selected stash"
-    echo "  Ctrl-D   - Show diff against HEAD"
-    echo "  Ctrl-M   - Show diff against main branch"
+    echo "  Ctrl-S   - Inspect diff vs HEAD (see conflicts)"
     echo "Examples:"
     echo "  gstaa           # Browse all stashes"
     echo "  gstaa feature   # Filter stashes containing 'feature'"
@@ -156,9 +155,8 @@ function gstaa() {
       --query="${1:-}" \
       --preview='git stash show -p --color=always {1} | delta' \
       --preview-window="right:65%:wrap" \
-      --bind="ctrl-d:execute(git diff {1} | less -R)" \
-      --bind="ctrl-m:execute(git diff {1}..HEAD | less -R)" \
-      --header="Enter=apply, Ctrl-S=inspect, Ctrl-D=diff vs HEAD, Ctrl-M=diff vs main")
+      --bind="ctrl-s:execute(git diff {1} | delta | less -R)" \
+      --header="Enter=apply, Ctrl-S=inspect diff vs HEAD, Alt-P=toggle preview")
 
   if [[ -n "$selected" ]]; then
     local stash_id=$(echo "$selected" | awk '{print $1}')
@@ -179,7 +177,7 @@ function fstash() {
     echo "  Ctrl-P   - Pop stash"
     echo "  Ctrl-D   - Drop stash"
     echo "  Ctrl-B   - Create branch from stash"
-    echo "  Ctrl-H   - Show diff against HEAD"
+    echo "  Ctrl-S   - Inspect diff vs HEAD (see conflicts)"
     return 0
   fi
 
@@ -198,7 +196,7 @@ function fstash() {
       --no-sort \
       --query="$q" \
       --print-query \
-      --expect=ctrl-a,ctrl-p,ctrl-d,ctrl-b,ctrl-h \
+      --expect=ctrl-a,ctrl-p,ctrl-d,ctrl-b,ctrl-s \
       --preview='git stash show -p --color=always {1} | delta' \
       --preview-window="right:65%:wrap" \
       --header="Enter=show, Ctrl-A=apply, Ctrl-P=pop, Ctrl-D=drop, Ctrl-B=branch, Ctrl-S=inspect"); do
@@ -245,9 +243,9 @@ function fstash() {
         break
       fi
       ;;
-    ctrl-h)
-      git diff "$stash_id" | less -R
-      ;;
+      ctrl-s)
+        git diff "$stash_id" | delta | less -R
+        ;;
     "")
       git stash show -p "$stash_id" | less -R
       ;;

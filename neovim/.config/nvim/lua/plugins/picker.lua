@@ -11,8 +11,8 @@ return {
           layout = {
             box = "horizontal",
             backdrop = false,
-            width = 0.9,
-            height = 0.9,
+            width = 150,
+            height = 45,
             border = "none",
             {
               box = "vertical",
@@ -22,7 +22,7 @@ return {
             {
               win = "preview",
               title = "{preview:Preview}",
-              width = 0.60,
+              width = 105,
               border = "rounded",
               title_pos = "center",
             },
@@ -33,9 +33,9 @@ return {
           preview = false,
           layout = {
             backdrop = false,
-            width = 0.5,
+            width = 85,
             min_width = 80,
-            height = 0.6,
+            height = 45,
             min_height = 10,
             box = "vertical",
             border = "rounded",

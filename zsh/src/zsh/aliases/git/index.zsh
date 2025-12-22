@@ -230,8 +230,8 @@ Ready-Made Compounds:
   gstapu       - Stash → pull rebase → apply
   gstacm       - Stash → checkout main → pull → return → apply
 
-FZF Keys (gstaa): Enter=apply, Ctrl-D=diff vs HEAD, Ctrl-M=diff vs main
-FZF Keys (fstash): Enter=show, Ctrl-A=apply, Ctrl-P=pop, Ctrl-D=drop, Ctrl-B=branch
+FZF Keys (gstaa): Enter=apply, Ctrl-S=inspect diff vs HEAD
+FZF Keys (fstash): Enter=show, Ctrl-A=apply, Ctrl-P=pop, Ctrl-D=drop, Ctrl-B=branch, Ctrl-S=inspect
 
 Use 'function_name -h' for detailed help on any command.
 EOF
@@ -490,7 +490,7 @@ Basic Operations:
 Interactive FZF:
   fwt          - Browse and manage worktrees
 
-FZF Keys: Enter=cd, Ctrl-R=remove, Ctrl-M=move, Ctrl-S=status
+FZF Keys: Enter=cd, Ctrl-R=remove, Ctrl-W=move, Ctrl-S=status
 
 Branch-Based:
   gwtbr <branch> [path] - Create worktree for branch

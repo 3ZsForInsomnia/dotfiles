@@ -88,7 +88,7 @@ return {
           { "<leader>gn", group = "Neogit" },
           { "<leader>gp", group = "Octo PRs" },
           { "<leader>gc", group = "Octo Comments, Threads, Reactions" },
-          { "<leader>gr", group = "Octo Reviews, Assignees" },
+          -- { "<leader>gr", group = "Octo Reviews, Assignees" },
 
           --
           -- <Leader>s Surrounds

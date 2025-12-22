@@ -16,6 +16,15 @@ autoload -Uz parsePackageJsonScripts
 # Autoload project utilities
 autoload -Uz findProjectRoot
 
+# Autoload Nx utilities
+autoload -Uz findNxWorkspaceRoot
+autoload -Uz getNxProjects
+autoload -Uz getNxProjectJsonPath
+autoload -Uz getNxProjectTargets
+autoload -Uz projectHasTarget
+autoload -Uz getNxProjectsWithTarget
+autoload -Uz getNxProjectInfo
+
 # Autoload Python utilities
 autoload -Uz getPyenvVersions
 autoload -Uz getPyenvCurrentVersion

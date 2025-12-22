@@ -1,4 +1,5 @@
 alias gob="go build"
+alias gor="go run"
 
 alias got="go test -v"
 alias gotc="go test -v -cover"

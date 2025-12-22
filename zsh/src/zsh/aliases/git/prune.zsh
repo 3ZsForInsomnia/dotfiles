@@ -1,4 +1,14 @@
-source "$ZSH_CONFIG_DIR/utils/git-pr-utils.zsh"
+  source "$ZSH_CONFIG_DIR/utils/git-pr-utils.zsh"
+
+### Debug Toggle
+# Uncomment the line below to enable debug logging
+# DEBUG_GPRUNE=1
+
+function _debug_log() {
+  if [[ -n "$DEBUG_GPRUNE" ]]; then
+    echo "[DEBUG] $*" >&2
+  fi
+}
 
 ### Main Pruning Commands
 
@@ -16,13 +26,19 @@ function gprune() {
   fi
 
   echo "Fetching PR data for local branches..."
+  _debug_log "Calling _get_merged_closed_prs_with_local_branches_json"
   local prs_json
   prs_json=$(_get_merged_closed_prs_with_local_branches_json)
+  _debug_log "Raw prs_json output:"
+  _debug_log "$prs_json"
+  _debug_log "prs_json length: ${#prs_json}"
 
   if [[ -z "$prs_json" || "$prs_json" == "[]" ]]; then
+    _debug_log "prs_json is empty or []"
     echo "No local branches found for merged or closed PRs."
     return 0
   fi
+  _debug_log "prs_json is valid, proceeding to interactive workflow"
 
   _interactive_prune_workflow "$prs_json"
 }
@@ -135,6 +151,8 @@ function _format_pr_for_fzf() {
 
 function _interactive_prune_workflow() {
   local prs_json="$1"
+  _debug_log "_interactive_prune_workflow called with prs_json length: ${#prs_json}"
+  _debug_log "First 200 chars of prs_json: ${prs_json:0:200}"
   local preview_script_path="$ZSH_CONFIG_DIR/previews/git-prune-preview.zsh"
 
   # Make sure the preview script is executable
@@ -145,16 +163,23 @@ function _interactive_prune_workflow() {
   while true; do
     # Format PRs for FZF using the rich JSON data
     local fzf_options=()
-    # Use jq to parse the JSON array and format each PR
-    local formatted_list
-    formatted_list=$(echo "$prs_json" | jq -r '.[] | 
-      "\(if .state == "MERGED" then "[MERGED]" else "[CLOSED]" end) #\(.number) \(.title) (\(.author.login)) [\(.mergedAt // .createdAt | split("T")[0])] \(.headRefName)"
-    ')
+      # Use jq to parse the JSON array and format each PR
+      local formatted_list
+      _debug_log "About to parse prs_json with jq"
+      _debug_log "prs_json being passed to jq: $prs_json"
+      formatted_list=$(echo "$prs_json" | jq -r '.[] | 
+        "\(if .state == "MERGED" then "[MERGED]" else "[CLOSED]" end) #\(.number) \(.title) (\(.author.login)) [\(.mergedAt // .createdAt | split("T")[0])] \(.headRefName)"
+      ' 2>&1)
+      local jq_exit_code=$?
+      _debug_log "jq exit code: $jq_exit_code"
+      _debug_log "formatted_list output: $formatted_list"
 
-    if [[ -z "$formatted_list" ]]; then
-      echo "No PRs available for pruning."
-      return 0
-    fi
+      if [[ -z "$formatted_list" ]]; then
+        _debug_log "formatted_list is empty after jq parsing"
+        echo "No PRs available for pruning."
+        return 0
+      fi
+      _debug_log "formatted_list has content, proceeding to fzf"
 
     echo "Found $(echo "$formatted_list" | wc -l | tr -d ' ') local branch(es) for merged/closed PRs"
 

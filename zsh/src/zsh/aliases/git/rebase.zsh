@@ -143,6 +143,7 @@ function gstarb() {
 }
 
 alias pullMasThenRebaseWithIt='pullBranchThenRebaseWithIt $GIT_MAIN_BRANCH'
+alias pullMasThenRebaseAndPush='pullMasThenRebaseWithIt; gpf'
 
 ### Git Add + Rebase Continue
 function garbc() {

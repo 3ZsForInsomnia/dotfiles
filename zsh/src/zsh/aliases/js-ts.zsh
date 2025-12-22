@@ -134,7 +134,11 @@ function nins() {
   eval "$command"
 }
 
-alias nxs="nx serve "
+alias nxs="nx serve"
+alias nxt="nx test"
+alias nxb="nx build"
+alias nxg="nx generate"
+alias nxl="nx lint"
 
 alias http='npx http-server'
 

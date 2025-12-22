@@ -109,7 +109,6 @@ return {
         "http",
         "jq",
         "jsdoc",
-        "kulala_http",
       },
       ignore_install = {},
       sync_install = true,

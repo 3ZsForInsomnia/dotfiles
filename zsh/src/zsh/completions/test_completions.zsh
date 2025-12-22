@@ -58,7 +58,10 @@ test_completion "nr" "npm/yarn run scripts"
 test_completion "npm" "npm"
 test_completion "yarn" "yarn"
 test_completion "nx" "nx workspace"
-test_completion "nxs" "nx serve"
+test_completion "nxs" "nx serve (target-aware)"
+test_completion "nxt" "nx test (target-aware)"
+test_completion "nxb" "nx build (target-aware)"
+test_completion "nxl" "nx lint (target-aware)"
 
 echo "\n🔧 Cache Status:"
 if [[ -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh-kube-completions" ]]; then

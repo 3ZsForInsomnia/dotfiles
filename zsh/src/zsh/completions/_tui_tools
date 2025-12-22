@@ -8,8 +8,8 @@ _tui_tools_completion() {
 
   case "$service" in
     y)
-      _message 'Yazi file manager'
-      _directories
+      _description files expl 'Yazi file manager'
+      _directories "$expl[@]"
       ;;
     lzd)
       _message 'LazyDocker TUI'
@@ -18,8 +18,8 @@ _tui_tools_completion() {
       _message 'Newsboat RSS reader'
       ;;
     cat)
-      _message 'bat - cat with syntax highlighting'
-      _files
+      _description files expl 'bat - cat with syntax highlighting'
+      _files "$expl[@]"
       ;;
     lpa)
       _message 'LastPass CLI'

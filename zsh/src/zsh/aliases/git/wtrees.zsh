@@ -125,7 +125,7 @@ function fwt() {
     echo "FZF Key Bindings:"
     echo "  Enter     - Change to worktree directory"
     echo "  Ctrl-R    - Remove worktree"
-    echo "  Ctrl-M    - Move worktree"
+    echo "  Ctrl-W    - Move worktree to new location"
     echo "  Ctrl-S    - Show worktree status"
     echo "  Ctrl-C    - Cancel"
     return 0
@@ -191,11 +191,11 @@ function fwt() {
         --preview="$ZSH_PREVIEWS_DIR/git-worktree.zsh {}" \
         --bind="enter:accept" \
         --bind="ctrl-r:accept" \
-        --bind="ctrl-m:accept" \
+        --bind="ctrl-w:accept" \
         --bind="ctrl-s:accept" \
         --print-query \
-        --expect="ctrl-r,ctrl-m,ctrl-s" \
-        --header="Enter=cd, Ctrl-R=remove, Ctrl-M=move, Ctrl-S=status, Alt-P=toggle preview"); do
+        --expect="ctrl-r,ctrl-w,ctrl-s" \
+        --header="Enter=cd, Ctrl-R=remove, Ctrl-W=move, Ctrl-S=status, Alt-P=toggle preview"); do
 
     # Parse fzf output
     local lines=("${(@f)selected}")
@@ -230,7 +230,7 @@ function fwt() {
           worktree_paths=("${display_lines[@]}")
         fi
         ;;
-      "ctrl-m")
+      "ctrl-w")
         echo "Enter new path for '$selected_path':"
         read -r new_path
         if [[ -n "$new_path" ]]; then

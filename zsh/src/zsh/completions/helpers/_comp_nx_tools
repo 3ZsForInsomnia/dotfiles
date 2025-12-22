@@ -1,0 +1,112 @@
+#!/usr/bin/env zsh
+
+# Completion helpers for Nx workspace tools
+# Wraps nx-utils.zsh functions with completion formatting
+
+# Complete with all nx projects
+_comp_nx_projects() {
+  autoload -Uz getNxProjects
+  
+  local -a projects
+  while IFS= read -r project; do
+    [[ -n "$project" ]] && projects+=("$project")
+  done < <(getNxProjects)
+  
+  if (( ${#projects[@]} > 0 )); then
+    _describe 'nx projects' projects
+    return 0
+  else
+    _message 'No nx projects found'
+    return 1
+  fi
+}
+
+# Complete with nx projects that have a specific target
+# Args: $1 - target name (serve, test, build, lint, etc.)
+_comp_nx_projects_with_target() {
+  local target_name="$1"
+  autoload -Uz getNxProjectsWithTarget
+  
+  local -a projects
+  while IFS= read -r project; do
+    [[ -n "$project" ]] && projects+=("$project")
+  done < <(getNxProjectsWithTarget "$target_name")
+  
+  if (( ${#projects[@]} > 0 )); then
+    _describe "nx projects with '$target_name' target" projects
+    return 0
+  else
+    _message "No projects found with '$target_name' target"
+    return 1
+  fi
+}
+
+# Complete with nx projects that can be served
+_comp_nx_serveable_projects() {
+  _comp_nx_projects_with_target "serve"
+}
+
+# Complete with nx projects that can be tested
+_comp_nx_testable_projects() {
+  _comp_nx_projects_with_target "test"
+}
+
+# Complete with nx projects that can be built
+_comp_nx_buildable_projects() {
+  _comp_nx_projects_with_target "build"
+}
+
+# Complete with nx projects that can be linted
+_comp_nx_lintable_projects() {
+  _comp_nx_projects_with_target "lint"
+}
+
+# Complete with available targets for a project
+# Args: $1 - project name
+_comp_nx_project_targets() {
+  local project_name="$1"
+  autoload -Uz getNxProjectTargets
+  
+  local -a targets
+  while IFS= read -r target; do
+    [[ -n "$target" ]] && targets+=("$target")
+  done < <(getNxProjectTargets "$project_name")
+  
+  if (( ${#targets[@]} > 0 )); then
+    _describe "targets for $project_name" targets
+    return 0
+  else
+    _message "No targets found for $project_name"
+    return 1
+  fi
+}
+
+# Complete with detailed project information
+_comp_nx_projects_detailed() {
+  autoload -Uz getNxProjects getNxProjectInfo
+  
+  local -a projects_info
+  local all_projects
+  all_projects=$(getNxProjects)
+  
+  if [[ -z "$all_projects" ]]; then
+    _message 'No nx projects found'
+    return 1
+  fi
+  
+  while IFS= read -r project; do
+    if [[ -n "$project" ]]; then
+      local info
+      info=$(getNxProjectInfo "$project")
+      projects_info+=("$info")
+    fi
+  done <<< "$all_projects"
+  
+  if (( ${#projects_info[@]} > 0 )); then
+    _describe 'nx projects' projects_info
+    return 0
+  else
+    _message 'No nx projects found'
+    return 1
+  fi
+}

@@ -93,6 +93,11 @@ return {
               spell = true,
             },
           },
+          icons = {
+            chat_fold = " ",
+          },
+          fold_reasoning = true,
+          show_reasoning = true,
         },
       },
       prompt_library = {
@@ -247,7 +252,7 @@ return {
           },
         },
       },
-      strategies = {
+      interactions = {
         chat = {
           opts = {
             completion_provider = "blink",
@@ -258,6 +263,33 @@ return {
             -- model = "gemini-2.5-pro",
             model = "claude-sonnet-4.5",
             -- model = "gpt-5",
+          },
+          tools = {
+            cmd_runner = {
+              opts = {
+                require_approval_before = false,
+              },
+            },
+            read_file = {
+              opts = {
+                require_approval_before = false,
+              },
+            },
+            grep_search = {
+              opts = {
+                require_approval_before = false,
+              },
+            },
+            list_files = {
+              opts = {
+                require_approval_before = false,
+              },
+            },
+            fetch = {
+              opts = {
+                require_approval_before = false,
+              },
+            },
           },
           variables = {
             date = cc_vars.date,
@@ -275,6 +307,29 @@ return {
                 i = "aksjfbgaljsfvbqbe",
               },
             },
+          },
+          roles = {
+            llm = function(adapter)
+              -- Try to get the model; fallback to empty string if not present
+              local model = ""
+              if adapter and adapter.schema and adapter.schema.model and adapter.schema.model.default then
+                -- Handle if .default is a function (some adapters do this!)
+                local default_model = adapter.schema.model.default
+                if type(default_model) == "function" then
+                  local status, result = pcall(default_model, adapter)
+                  model = status and result or ""
+                else
+                  model = tostring(default_model)
+                end
+              end
+
+              if model ~= "" then
+                return "CodeCompanion (" .. adapter.formatted_name .. " - " .. model .. ")"
+              else
+                return "CodeCompanion (" .. adapter.formatted_name .. ")"
+              end
+            end,
+            user = "Me",
           },
         },
         inline = {
@@ -359,7 +414,7 @@ return {
       },
     },
     config = function(_, opts)
-      opts.strategies.chat.slash_commands = {
+      opts.interactions.chat.slash_commands = {
         prompts = require("code-companion-picker").select_slash_command,
         tools = require("code-companion-picker").select_tool_slash_command,
       }

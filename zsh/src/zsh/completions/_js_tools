@@ -1,4 +1,4 @@
-#compdef nr n y npm yarn nx nxs nrd nrb nrt nrl nrsto ni niglobal ng nin nins http shadadd jup watch cleanAndInstall cleanDeps installDeps detectNpmOrYarn getLockfile version
+#compdef nr n y npm yarn nx nxs nxt nxb nxl nxg nrd nrb nrt nrl nrsto ni niglobal ng nin nins http shadadd jup watch cleanAndInstall cleanDeps installDeps detectNpmOrYarn getLockfile version
 
 # JavaScript/TypeScript tools completion system
 
@@ -11,62 +11,8 @@ function _get_package_scripts() {
 
 # Function to get nx projects
 function _get_nx_projects() {
-  # Try nx.json first (modern nx)
-  if [[ -f "nx.json" ]] && command -v jq >/dev/null 2>&1; then
-    local -a projects
-    while IFS= read -r project; do
-      [[ -n "$project" ]] && projects+=("$project")
-    done < <(jq -r '.projects | keys[]' nx.json 2>/dev/null)
-    
-    if (( ${#projects[@]} > 0 )); then
-      _describe 'nx projects' projects
-      return 0
-    fi
-  fi
-  
-  # Try workspace.json (legacy nx)
-  if [[ -f "workspace.json" ]] && command -v jq >/dev/null 2>&1; then
-    local -a projects
-    while IFS= read -r project; do
-      [[ -n "$project" ]] && projects+=("$project")
-    done < <(jq -r '.projects | keys[]' workspace.json 2>/dev/null)
-    
-    if (( ${#projects[@]} > 0 )); then
-      _describe 'nx projects' projects
-      return 0
-    fi
-  fi
-  
-  # Try angular.json (nx with angular)
-  if [[ -f "angular.json" ]] && command -v jq >/dev/null 2>&1; then
-    local -a projects
-    while IFS= read -r project; do
-      [[ -n "$project" ]] && projects+=("$project")
-    done < <(jq -r '.projects | keys[]' angular.json 2>/dev/null)
-    
-    if (( ${#projects[@]} > 0 )); then
-      _describe 'nx projects' projects
-      return 0
-    fi
-  fi
-  
-  # Fallback: try to find project directories
-  if [[ -d "apps" ]] || [[ -d "libs" ]]; then
-    local -a projects
-    for dir in apps/* libs/*; do
-      if [[ -d "$dir" ]]; then
-        local project_name=$(basename "$dir")
-        projects+=("$project_name")
-      fi
-    done
-    
-    if (( ${#projects[@]} > 0 )); then
-      _describe 'nx projects (from directories)' projects
-      return 0
-    fi
-  fi
-  
-  return 1
+  autoload -Uz _comp_nx_projects
+  _comp_nx_projects
 }
 
 # Function to get nx targets/commands
@@ -169,9 +115,37 @@ function _js_tools_complete_args() {
       ;;
     
     nxs)
-      # nx serve - complete with project names
+      # nx serve - complete with projects that have serve target
       if (( CURRENT == 2 )); then
-        _get_nx_projects
+        autoload -Uz _comp_nx_serveable_projects
+        _comp_nx_serveable_projects
+        return 0
+      fi
+      ;;
+    
+    nxt)
+      # nx test - complete with projects that have test target
+      if (( CURRENT == 2 )); then
+        autoload -Uz _comp_nx_testable_projects
+        _comp_nx_testable_projects
+        return 0
+      fi
+      ;;
+    
+    nxb)
+      # nx build - complete with projects that have build target
+      if (( CURRENT == 2 )); then
+        autoload -Uz _comp_nx_buildable_projects
+        _comp_nx_buildable_projects
+        return 0
+      fi
+      ;;
+    
+    nxl)
+      # nx lint - complete with projects that have lint target
+      if (( CURRENT == 2 )); then
+        autoload -Uz _comp_nx_lintable_projects
+        _comp_nx_lintable_projects
         return 0
       fi
       ;;
@@ -195,7 +169,11 @@ function _js_tools() {
     'npm:Node package manager'
     'yarn:Yarn package manager'
     'nx:Nx workspace commands'
-    'nxs:Nx serve (project runner)'
+    'nxs:Nx serve (target-aware)'
+    'nxt:Nx test (target-aware)'
+    'nxb:Nx build (target-aware)'
+    'nxl:Nx lint (target-aware)'
+    'nxg:Nx generate'
     'ni:Install package (npm/yarn auto-detect)'
     'niglobal:Install package globally'
     'ng:Install package globally (alias)'

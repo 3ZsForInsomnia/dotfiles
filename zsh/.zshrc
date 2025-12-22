@@ -7,7 +7,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-fpath=("$ZSH_CONFIG_DIR/completions" "~/.zfunc" $fpath)
+fpath=("$ZSH_CONFIG_DIR/completions" "$ZSH_CONFIG_DIR/completions/helpers" "~/.zfunc" $fpath)
 zmodload zsh/complist
 skip_global_compinit=1
 autoload -Uz is-at-least

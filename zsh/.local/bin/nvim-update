@@ -74,23 +74,25 @@ def start_log():
             if old_log.exists():
                 old_log.unlink()
             LOG_FILE.rename(old_log)
-        
+
         # Write session marker to log
         now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
         with open(LOG_FILE, "a") as fp:
             fp.write(f"\n=== Session started at {now} ===\n")
             fp.flush()
-        
+
         return LOG_FILE
     except Exception as e:
         print(
-            f"[CRITICAL] Failed to initialize log file in {STATE_DIR}: {e}", file=sys.stderr
+            f"[CRITICAL] Failed to initialize log file in {STATE_DIR}: {e}",
+            file=sys.stderr,
         )
         import traceback
 
         traceback.print_exc()
         # Fallback to a temp file
         import tempfile
+
         now_str = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
         fallback = Path(tempfile.gettempdir()) / f"nvim-update-{now_str}.log"
         print(f"[DEBUG] Using fallback log file: {fallback}", file=sys.stderr)
@@ -148,6 +150,8 @@ def get_installed_nvim_sha():
     try:
         output = run([str(NVIM_INSTALL / "bin/nvim"), "--version"], capture_output=True)
         # Look for a pattern like 'g82f08f33c1' in the first line
+        if not output:
+            return None
         first_line = output.splitlines()[0]
         m = re.search(r"g([0-9a-f]{7,})", first_line)
         if m:
@@ -170,6 +174,22 @@ def get_sha():
         return sha, date.strip()
     else:
         return None, None
+
+
+def get_remote_nightly_sha():
+    """Get the SHA of the nightly tag from GitHub without checking it out."""
+    try:
+        # Fetch latest tags from origin
+        run(["git", "fetch", "--tags", "--force"], check=False)
+        # Get the SHA that the nightly tag points to
+        output = run(
+            ["git", "rev-parse", "--short", "nightly"],
+            capture_output=True,
+        )
+        return output if output else None
+    except Exception as e:
+        logexc(e)
+        return None
 
 
 def git_checkout(ref):
@@ -309,22 +329,42 @@ def rollback():
 def show_version():
     sha, date = get_sha()
     installed_sha = get_installed_nvim_sha()
+    remote_nightly_sha = get_remote_nightly_sha()
+
     print(f"Repo HEAD: date={date}, sha={sha}")
     print(f"Installed nvim: sha={installed_sha}")
-    if sha == installed_sha:
-        print("You are on the latest version.")
-    elif installed_sha:
+    if remote_nightly_sha:
+        print(f"Remote nightly: sha={remote_nightly_sha}")
+
+    if not installed_sha:
+        print("Could not determine installed version.")
+        return
+
+    if not remote_nightly_sha:
+        print("Could not determine remote nightly version.")
+        return
+
+    if remote_nightly_sha == installed_sha:
+        print("You are on the latest nightly version.")
+    else:
         try:
-            # Count commits between installed and HEAD
+            # Count commits between installed and remote nightly
             count = run(
-                ["git", "rev-list", "--count", f"{installed_sha}..HEAD"],
+                [
+                    "git",
+                    "rev-list",
+                    "--count",
+                    f"{installed_sha}..{remote_nightly_sha}",
+                ],
                 capture_output=True,
             )
-            print(f"You are {count} commits behind the latest version.")
+            if count and int(count) > 0:
+                print(f"You are {count} commits behind the latest nightly version.")
+            else:
+                # Installed might be ahead or on a different branch
+                print("Your installed version differs from the latest nightly.")
         except Exception:
             print("Could not determine how far behind you are.")
-    else:
-        print("Could not determine installed version.")
 
 
 def show_logfile():

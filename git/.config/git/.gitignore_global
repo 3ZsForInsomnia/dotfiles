@@ -2,3 +2,6 @@ tags
 confluence/*.json
 .DS_STORE
 chroma-data
+src/apps/backend/btx/conf.base.qat.yaml
+src/apps/backend/btx/conf.local.qat.yaml
+.vectorcode
