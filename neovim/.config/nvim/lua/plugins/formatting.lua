@@ -27,8 +27,9 @@ return {
           lua = { require("formatter.filetypes.lua").stylua },
           -- markdown = { require("formatter.filetypes.markdown").prettierd },
           python = {
-            require("formatter.filetypes.python").black,
-            require("formatter.filetypes.python").isort,
+            require("formatter.filetypes.python").ruff,
+            -- require("formatter.filetypes.python").black,
+            -- require("formatter.filetypes.python").isort,
           },
           sh = { require("formatter.filetypes.sh").shfmt },
           sql = { require("formatter.filetypes.sql").sqlformat },

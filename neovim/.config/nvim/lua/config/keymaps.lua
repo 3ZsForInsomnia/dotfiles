@@ -62,10 +62,10 @@ k({
 })
 
 vim.keymap.set("n", "<M-b>", function()
-  require("hover").hover_switch("previous")
+  require("hover").switch("previous")
 end, { desc = "Hover previous" })
 vim.keymap.set("n", "<M-f>", function()
-  require("hover").hover_switch("next")
+  require("hover").switch("next")
 end, { desc = "Hover previous" })
 
 k_cmd({ key = l .. "zu", action = "Lazy update", desc = "Lazy update" })

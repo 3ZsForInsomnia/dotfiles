@@ -136,6 +136,7 @@ function nins() {
 
 alias nxs="nx serve"
 alias nxt="nx test"
+alias nxtw="nx test:watch"
 alias nxb="nx build"
 alias nxg="nx generate"
 alias nxl="nx lint"

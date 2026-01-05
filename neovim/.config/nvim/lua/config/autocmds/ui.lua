@@ -84,7 +84,7 @@ au("CmdlineEnter", {
   group = search_group,
   pattern = { "/", "\\?" },
   callback = function()
-    extended_search_count()
+    _G.extended_search_count()
   end,
 })
 
@@ -92,7 +92,7 @@ au("CmdlineLeave", {
   group = search_group,
   pattern = { "/", "\\?" },
   callback = function()
-    extended_search_count()
+    _G.extended_search_count()
   end,
 })
 
@@ -100,6 +100,6 @@ au({ "CursorMoved", "CursorMovedI" }, {
   group = search_group,
   pattern = "*",
   callback = function()
-    extended_search_count()
+    _G.extended_search_count()
   end,
 })

@@ -88,6 +88,7 @@ return {
       "antoinemadec/FixCursorHold.nvim",
       "nvim-treesitter/nvim-treesitter",
 
+      "nvim-neotest/neotest-python",
       "nvim-neotest/neotest-jest",
       "marilari88/neotest-vitest",
     },
@@ -96,6 +97,7 @@ return {
         ["neotest-golang"] = go_config,
         ["neotest-jest"] = js_config,
         ["neotest-vitest"] = {},
+        ["neotest-python"] = {},
       },
       -- Overseer integration
       consumers = {

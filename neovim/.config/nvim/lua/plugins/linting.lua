@@ -9,7 +9,6 @@ return {
         name = "golangcilint",
         parser = lint.linters.golangcilint.parser,
         cmd = lint.linters.golangcilint.cmd,
-        args = { "run", "--config=golangci.ci.yaml" },
       }
 
       lint.linters_by_ft = {
@@ -20,13 +19,13 @@ return {
         json = { "jsonlint" },
         lua = { "luacheck" },
         -- markdown = { "markdownlint" },
-        python = { "flake8" },
+        python = { "ruff" },
         scss = { "stylelint" },
         sh = { "shellcheck" },
         typescript = { "eslint_d" },
         typescriptreact = { "eslint_d" },
         yaml = { "yamllint" },
-        zsh = { "shellcheck" },
+        -- zsh = { "shellcheck" },
       }
     end,
   },
@@ -49,7 +48,7 @@ return {
           javascriptreact = { "eslint_d" },
           json = { "jsonlint" },
           lua = { "luacheck" },
-          python = { "flake8" },
+          python = { "ruff" },
           scss = { "stylelint" },
           -- sh = { "shfmt" },
           typescript = { "eslint_d" },

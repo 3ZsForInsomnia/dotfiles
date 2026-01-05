@@ -94,8 +94,8 @@ return {
     end,
   },
   {
-    dir = "~/src/jira-ai",
-    -- "3ZsForInsomnia/jira-ai",
+    -- dir = "~/src/jira-ai",
+    "3ZsForInsomnia/jira-ai",
     event = "VeryLazy",
     config = true,
     opts = {
