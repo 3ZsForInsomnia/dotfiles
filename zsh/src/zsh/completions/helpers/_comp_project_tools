@@ -6,10 +6,10 @@
 # Complete with project root directories
 _comp_project_roots() {
   autoload -Uz findProjectRoot
-  
+
   local root
   root=$(findProjectRoot)
-  
+
   if [[ -n "$root" ]]; then
     _message "Project root: $root"
     return 0
