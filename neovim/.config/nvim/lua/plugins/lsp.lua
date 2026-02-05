@@ -1,9 +1,6 @@
 local cmd = require("helpers").k_cmd
 
 local l = "<leader>l"
-local f = function()
-  return "lua vim.diagnostic."
-end
 
 return {
   {
@@ -62,12 +59,12 @@ return {
         "graphql-language-service-cli",
         "html-lsp",
         "isort",
-        "java-language-server",
+        -- "java-language-server",
         "jq",
         "json-lsp",
         "lua-language-server",
         "luacheck",
-        "marksman",
+        -- "marksman",
         "nginx-language-server",
         "nxls",
         "prettier",
@@ -97,136 +94,98 @@ return {
       }),
     },
   },
-  { "RRethy/nvim-treesitter-textsubjects", lazy = true },
+  -- {
+  --   "RRethy/nvim-treesitter-textsubjects",
+  --   lazy = false,
+  --   dependencies = { "nvim-treesitter/nvim-treesitter" },
+  --   opts = {
+  --     prev_selection = ",", -- (Optional) keymap to select the previous selection
+  --     keymaps = {
+  --       ["."] = "textsubjects-smart",
+  --       [";"] = "textsubjects-container-outer",
+  --       ["i;"] = "textsubjects-container-inner",
+  --     },
+  --   },
+  -- },
   {
-    "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPost", "BufNewFile" },
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    lazy = false,
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {
-      ensure_installed = {
-        "awk",
-        "css",
-        "graphql",
-        "http",
-        "jq",
-        "jsdoc",
-      },
-      ignore_install = {},
-      sync_install = true,
-      auto_install = true,
-      highlight = {
-        enable = true, -- false will disable the whole extension
-        -- additional_vim_regex_highlighting = { "markdown" },
-        disable = {}, -- list of language that will be disabled
-      },
-      textsubjects = {
+      select = {
         enable = true,
-        prev_selection = ",", -- (Optional) keymap to select the previous selection
+        lookahead = true,
         keymaps = {
-          ["."] = "textsubjects-smart",
-          [";"] = "textsubjects-container-outer",
-          ["i;"] = "textsubjects-container-inner",
+          -- You can use the capture groups defined in textobjects.scm
+          ["af"] = "@function.outer",
+          ["if"] = "@function.inner",
+          ["aa"] = "@call.outer",
+          ["ia"] = "@call.inner",
+          ["ac"] = "@class.outer",
+          ["ic"] = "@class.inner",
+          ["al"] = "@loop.outer",
+          ["il"] = "@loop.inner",
+          ["ai"] = "@conditional.outer",
+          ["ii"] = "@conditional.inner",
+          ["ao"] = "@block.outer",
+          ["io"] = "@block.inner",
+          ["am"] = "@comment.inner",
         },
       },
-      textobjects = {
+      move = {
         enable = true,
-        select = {
-          enable = true,
-          lookahead = true,
-          keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["aa"] = "@call.outer",
-            ["ia"] = "@call.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
-            ["al"] = "@loop.outer",
-            ["il"] = "@loop.inner",
-            ["ai"] = "@conditional.outer",
-            ["ii"] = "@conditional.inner",
-            ["ao"] = "@block.outer",
-            ["io"] = "@block.inner",
-            ["am"] = "@comment.inner",
-          },
+        set_jumps = true,
+        goto_next_start = {
+          ["[F"] = "@function.outer",
+          ["[C"] = "@class.outer",
+          ["[A"] = "@call.outer",
+          ["[O"] = "@block.outer",
+          ["[I"] = "@conditional.outer",
+          ["[L"] = "@loop.outer",
         },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = {
-            ["[F"] = "@function.outer",
-            ["[C"] = "@class.outer",
-            ["[A"] = "@call.outer",
-            ["[O"] = "@block.outer",
-            ["[I"] = "@conditional.outer",
-            ["[L"] = "@loop.outer",
-          },
-          goto_next_end = {
-            ["]f"] = "@function.outer",
-            ["]c"] = "@class.outer",
-            ["]a"] = "@call.outer",
-            ["]o"] = "@block.outer",
-            ["]i"] = "@conditional.outer",
-            ["]l"] = "@loop.outer",
-          },
-          goto_previous_start = {
-            ["[f"] = "@function.outer",
-            ["[c"] = "@class.outer",
-            ["[a"] = "@call.outer",
-            ["[o"] = "@block.outer",
-            ["[i"] = "@conditional.outer",
-            ["[l"] = "@loop.outer",
-          },
-          goto_previous_end = {
-            ["]F"] = "@function.outer",
-            ["]C"] = "@class.outer",
-            ["]A"] = "@call.outer",
-            ["]O"] = "@block.outer",
-            ["]I"] = "@conditional.outer",
-            ["]L"] = "@loop.outer",
-          },
+        goto_next_end = {
+          ["]f"] = "@function.outer",
+          ["]c"] = "@class.outer",
+          ["]a"] = "@call.outer",
+          ["]o"] = "@block.outer",
+          ["]i"] = "@conditional.outer",
+          ["]l"] = "@loop.outer",
         },
-        swap = {
-          enable = true,
-          swap_next = { ["<leader>swp"] = "@parameter.inner" },
-          swap_previous = { ["<leader>swP"] = "@parameter.inner" },
+        goto_previous_start = {
+          ["[f"] = "@function.outer",
+          ["[c"] = "@class.outer",
+          ["[a"] = "@call.outer",
+          ["[o"] = "@block.outer",
+          ["[i"] = "@conditional.outer",
+          ["[l"] = "@loop.outer",
+        },
+        goto_previous_end = {
+          ["]F"] = "@function.outer",
+          ["]C"] = "@class.outer",
+          ["]A"] = "@call.outer",
+          ["]O"] = "@block.outer",
+          ["]I"] = "@conditional.outer",
+          ["]L"] = "@loop.outer",
         },
       },
-      indent = { enable = true },
-      incremental_selection = {
+      swap = {
         enable = true,
-        keymaps = {
-          init_selection = "gnn",
-          node_incremental = "grn",
-          scope_incremental = "grc",
-          node_decremental = "grm",
-        },
-      },
-      autotag = { enable = true },
-      matchup = { enable = true },
-      pairs = {
-        enable = true,
-        disable = {},
-        highlight_pair_events = { "CursorMoved" },
-        highlight_self = false,
-        goto_right_end = false,
-        fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')",
-        keymaps = {
-          goto_partner = "%",
-          delete_balanced = "X",
-        },
-        delete_balanced = {
-          only_on_first_char = false,
-          fallback_cmd_normal = nil,
-          longest_partner = false,
+        swap_next = { ["<leader>swp"] = "@parameter.inner" },
+        swap_previous = {
+          ["<leader>swP"] = "@parameter.inner",
         },
       },
     },
-    keys = {
-      cmd({
-        key = l .. "e",
-        action = f() .. "open_float()",
-        desc = "Open floating diagnostics window ",
-      }),
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    lazy = false,
+    branch = "main",
+    build = ":TSUpdate",
+    opts = {
+      ignore_install = {},
+      sync_install = true,
+      auto_install = true,
     },
   },
 }

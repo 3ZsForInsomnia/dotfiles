@@ -254,22 +254,22 @@ return {
     keys = {
       k_cmd({
         key = z .. "s",
-        action = "SessionSave",
+        action = "Persisted save",
         desc = "Save session",
       }),
       k_cmd({
         key = z .. "l",
-        action = "SessionLoad",
+        action = "Persisted load",
         desc = "Load session",
       }),
       k_cmd({
         key = z .. "d",
-        action = "SessionDelete",
+        action = "Persisten delete",
         desc = "Delete session",
       }),
       k_cmd({
         key = z .. "a",
-        action = "SessionLoadLast",
+        action = "Persisted load_last",
         desc = "Session load last",
       }),
     },

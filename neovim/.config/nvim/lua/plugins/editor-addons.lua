@@ -1,5 +1,6 @@
 local g = vim.g
 local cmd = require("helpers").k_cmd
+local kcmd = require("helpers").k
 
 local h = "<leader>h"
 local k = function(command)
@@ -250,6 +251,7 @@ return {
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    enabled = false,
     ft = { "markdown", "codecompanion" },
     opts = {
       preset = "obsidian",
@@ -321,6 +323,28 @@ return {
     },
     opts = {
       lang = "typescript",
+    },
+  },
+  {
+    "relf108/nvim-unstack",
+    version = "*",
+    lazy = true,
+    cmd = { "NvimUnstack", "UnstackFromClipboard" },
+    opts = {
+      showsigns = true,
+      mapkey = false,
+    },
+    keys = {
+      kcmd({
+        key = "<leader>zt",
+        action = ":'<,'>NvimUnstack",
+        desc = "Explore stacktrace from visual selection",
+      }),
+      cmd({
+        key = "<leader>zT",
+        action = "UnstackFromClipboard",
+        desc = "Explore stacktrace from clipboard",
+      }),
     },
   },
 }

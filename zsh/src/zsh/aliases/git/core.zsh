@@ -133,17 +133,37 @@ function gaa() {
 ### Commit
 function gc() {
   if [[ "$1" == "-h" ]]; then
-    echo "Usage: gc <message>"
+    echo "Usage: gc [-n] <message>"
     echo "Git commit with message"
-    echo "Example: gc 'fix: resolve bug'"
+    echo "Options:"
+    echo "  -n    Skip pre-commit and commit-msg hooks (--no-verify)"
+    echo "Examples:"
+    echo "  gc 'fix: resolve bug'"
+    echo "  gc -n 'wip: temporary commit'"
     return 0
   fi
 
-  if [[ -z "$1" ]]; then
+  local no_verify=false
+  local message=""
+
+  # Parse flags
+  if [[ "$1" == "-n" ]]; then
+    no_verify=true
+    shift
+  fi
+
+  message="$1"
+
+  if [[ -z "$message" ]]; then
     echo "Error: commit message required"
     return 1
   fi
-  git commit -m "$1"
+
+  if [[ "$no_verify" == true ]]; then
+    git commit -m "$message" --no-verify
+  else
+    git commit -m "$message"
+  fi
 }
 
 function gci() {
@@ -479,12 +499,24 @@ function gac() {
 
 function gacp() {
   if [[ "$1" == "-h" ]]; then
-    echo "Usage: gacp <message> [files]"
+    echo "Usage: gacp [-n] <message> [files]"
     echo "Git add + commit + push"
+    echo "Options:"
+    echo "  -n    Skip pre-commit and commit-msg hooks (--no-verify)"
     echo "Examples:"
     echo "  gacp 'fix bug'           # Add all, commit, push"
     echo "  gacp 'fix bug' file.js   # Add file.js, commit, push"
+    echo "  gacp -n 'wip: temp'      # Skip hooks, add all, commit, push"
     return 0
+  fi
+
+  local no_verify=false
+  local message=""
+
+  # Parse flags
+  if [[ "$1" == "-n" ]]; then
+    no_verify=true
+    shift
   fi
 
   if [[ -z "$1" ]]; then
@@ -492,10 +524,23 @@ function gacp() {
     return 1
   fi
 
-  local message="$1"
+  message="$1"
   shift
 
-  gac "$message" "$@"
+  # Add files
+  if [[ -z "$1" ]]; then
+    ga
+  else
+    ga "$@"
+  fi
+
+  # Commit with or without verify
+  if [[ "$no_verify" == true ]]; then
+    gc -n "$message"
+  else
+    gc "$message"
+  fi
+
   gp
 }
 

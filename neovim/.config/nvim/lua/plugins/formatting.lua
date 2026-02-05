@@ -14,7 +14,7 @@ return {
           go = { require("formatter.filetypes.go").gofmt },
           graphql = { require("formatter.filetypes.graphql").prettierd },
           html = { require("formatter.filetypes.html").prettierd },
-          java = { require("formatter.filetypes.java").google_java_format },
+          -- java = { require("formatter.filetypes.java").google_java_format },
           javascript = {
             require("formatter.filetypes.javascript").eslint_d,
             -- require("formatter.filetypes.javascript").prettierd,

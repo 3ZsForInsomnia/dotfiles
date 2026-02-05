@@ -36,6 +36,7 @@ zsh-defer lazyLoadDeferredCheck
 # Background load non-essential aliases with zsh-defer
 zsh-defer source "$alias_path/nvim.zsh"
 zsh-defer source "$alias_path/searching.zsh"
+zsh-defer source "$alias_path/lss.zsh"
 zsh-defer source "$alias_path/misc.zsh"
 zsh-defer source "$alias_path/python.zsh"
 zsh-defer source "$alias_path/js-ts.zsh"

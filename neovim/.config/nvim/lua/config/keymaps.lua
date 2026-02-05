@@ -1,4 +1,6 @@
-local d = vim.keymap.del
+local v = vim
+
+local d = v.keymap.del
 
 --
 -- Disable global keymaps
@@ -35,11 +37,11 @@ local k_cmd = helpers.k_cmd
 local l = "<leader>"
 
 _G.clear_search_status_virtual_text = function()
-  vim.cmd("nohlsearch")
+  v.cmd("nohlsearch")
 
-  local bufnr = vim.api.nvim_get_current_buf()
-  local ns_id = vim.api.nvim_create_namespace("search_status_virtual_text")
-  vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
+  local bufnr = v.api.nvim_get_current_buf()
+  local ns_id = v.api.nvim_create_namespace("search_status_virtual_text")
+  v.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
 end
 
 k_cmd({ key = l .. ",", action = "lua clear_search_status_virtual_text()", desc = "Clear search highlights" })
@@ -61,10 +63,10 @@ k({
   desc = "Go to bottom of page and center cursor",
 })
 
-vim.keymap.set("n", "<M-b>", function()
+v.keymap.set("n", "<M-b>", function()
   require("hover").switch("previous")
 end, { desc = "Hover previous" })
-vim.keymap.set("n", "<M-f>", function()
+v.keymap.set("n", "<M-f>", function()
   require("hover").switch("next")
 end, { desc = "Hover previous" })
 
