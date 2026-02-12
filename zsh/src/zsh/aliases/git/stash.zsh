@@ -51,7 +51,7 @@ function gstat() {
   fi
 }
 
-function gstal() {
+function gstl() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gstal"
     echo "List all stashes"
@@ -243,9 +243,9 @@ function fstash() {
         break
       fi
       ;;
-      ctrl-s)
-        git diff "$stash_id" | delta | less -R
-        ;;
+    ctrl-s)
+      git diff "$stash_id" | delta | less -R
+      ;;
     "")
       git stash show -p "$stash_id" | less -R
       ;;

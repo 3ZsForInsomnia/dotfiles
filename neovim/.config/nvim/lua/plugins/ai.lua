@@ -345,11 +345,11 @@ return {
           },
           keymaps = {
             accept_change = {
-              modes = { n = "ga" },
+              modes = { n = "gda" },
               description = "Accept the suggested change",
             },
             reject_change = {
-              modes = { n = "gr" },
+              modes = { n = "gdr" },
               opts = { nowait = true },
               description = "Reject the suggested change",
             },

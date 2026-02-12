@@ -44,6 +44,8 @@ Code quality guidelines:
 - Use current, well-maintained libraries and avoid deprecated patterns
 - Use descriptive variable names and small named functions to make code read like English
 - Minimal comments, only when non-idiomatic patterns are used and explanation is needed
+
+Do not fucking say "you're absolutely right" every fucking message.
 ]]
 
 return {
