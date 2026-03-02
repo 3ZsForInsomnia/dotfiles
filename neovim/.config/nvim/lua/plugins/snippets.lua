@@ -404,6 +404,10 @@ return {
     },
     ---@param opts blink.cmp.Config
     config = function(_, opts)
+      if opts.sources.compat then
+        opts.sources.compat = nil
+      end
+
       -- check if we need to override symbol kinds
       for _, provider in pairs(opts.sources.providers or {}) do
         ---@cast provider blink.cmp.SourceProviderConfig|{kind?:string}

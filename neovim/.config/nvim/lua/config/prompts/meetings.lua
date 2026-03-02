@@ -41,8 +41,8 @@ local function get_meeting_prep_text()
     .. "\n\n"
     .. "**Important:**\n"
     .. "- Create inline wiki-links [[path/to/file]] where relevant\n"
-    .. "- Use ${full_stack_dev} for file operations\n"
-    .. "- All VectorCode queries use project_root=\""
+    .. "- Use ${agent} for file operations\n"
+    .. '- All VectorCode queries use project_root="'
     .. S.notes_root
     .. '"\n'
     .. "- Extract action items from previous meetings using pattern recognition (not TODO markers)\n"
@@ -104,10 +104,10 @@ local function get_meeting_cleanup_text()
     .. S.confluence_jira_tools
     .. "\n\n"
     .. "**Important:**\n"
-    .. "- All VectorCode queries use project_root=\""
+    .. '- All VectorCode queries use project_root="'
     .. S.notes_root
     .. '"\n'
-    .. "- Use ${full_stack_dev} for file operations\n"
+    .. "- Use ${agent} for file operations\n"
     .. "- Sources section goes at very end, even after Action Items/Follow-ups\n"
     .. "- Files in Sources should use wiki-links inline where relevant (but don't have to)\n"
     .. "- Files with inline wiki-links should appear in Sources\n"

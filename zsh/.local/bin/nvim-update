@@ -176,14 +176,14 @@ def get_sha():
         return None, None
 
 
-def get_remote_nightly_sha():
-    """Get the SHA of the nightly tag from GitHub without checking it out."""
+def get_remote_tag_sha(tag):
+    """Get the SHA of a given tag from GitHub without checking it out."""
     try:
         # Fetch latest tags from origin
         run(["git", "fetch", "--tags", "--force"], check=False)
-        # Get the SHA that the nightly tag points to
+        # Get the SHA that the tag points to
         output = run(
-            ["git", "rev-parse", "--short", "nightly"],
+            ["git", "rev-parse", "--short", tag],
             capture_output=True,
         )
         return output if output else None
@@ -238,10 +238,12 @@ def save_history(history):
         logerr("Failed to save version history!")
 
 
-def add_history_entry(tag, sha, action):
+def add_history_entry(tag, sha, action, channel=None):
     history = load_history()
-    ts = datetime.utcnow().isoformat() + "Z"
+    ts = datetime.now(timezone.utc).isoformat()
     entry = {"timestamp": ts, "tag": tag, "sha": sha, "action": action}
+    if channel:
+        entry["channel"] = channel
     if history and history[-1]["sha"] == sha:
         # Don't repeat
         return
@@ -252,7 +254,8 @@ def add_history_entry(tag, sha, action):
 def print_history():
     history = load_history()
     for idx, h in enumerate(history):
-        print(f"{idx}: [{h['timestamp']}] {h['action']} {h['tag']} ({h['sha']})")
+        channel = h.get('channel', 'unknown')
+        print(f"{idx}: [{h['timestamp']}] {h['action']} {h['tag']} ({h['sha']}) [{channel}]")
 
 
 def last_history():
@@ -266,26 +269,25 @@ def prev_history():
 
 
 # --- Core actions ---
-def upgrade():
+def upgrade(channel):
     try:
-        logmsg("Deleting local tags 'nightly' and 'stable' if they exist...")
-        run(["git", "tag", "-d", "nightly"])
-        run(["git", "tag", "-d", "stable"])
+        logmsg(f"Deleting local tag '{channel}' if it exists...")
+        run(["git", "tag", "-d", channel], check=False)
 
         logmsg("Fetching latest origin & tags...")
         run(["git", "fetch", "--no-tags", "origin"])
         run(["git", "fetch", "--tags", "--force"])
 
-        logmsg("Checking out latest 'nightly' tag...")
-        run(["git", "checkout", "nightly"])
+        logmsg(f"Checking out latest '{channel}' tag...")
+        run(["git", "checkout", channel])
 
         sha_repo, date_repo = get_sha()
         sha_installed = get_installed_nvim_sha()
-        logmsg(f"Nightly tag SHA: {sha_repo}, Installed: {sha_installed}")
+        logmsg(f"{channel} tag SHA: {sha_repo}, Installed: {sha_installed}")
 
         if sha_repo == sha_installed:
-            logmsg("Already up to date with nightly. No upgrade needed.")
-            print("Already up to date with nightly. No upgrade needed.")
+            logmsg(f"Already up to date with {channel}. No upgrade needed.")
+            print(f"Already up to date with {channel}. No upgrade needed.")
             return
 
         if sha_installed:
@@ -299,9 +301,10 @@ def upgrade():
 
         logmsg(f"Upgrade complete: {date_repo=} {sha_repo=}")
         add_history_entry(
-            date_repo, sha_repo, "upgrade_from_" + (sha_installed or "none")
+            date_repo, sha_repo, "upgrade_from_" + (sha_installed or "none"),
+            channel=channel,
         )
-        print(f"Upgraded from {sha_installed} to {sha_repo} (nightly)")
+        print(f"Upgraded from {sha_installed} to {sha_repo} ({channel})")
 
     except Exception as e:
         logexc(e)
@@ -326,59 +329,67 @@ def rollback():
         sys.exit(1)
 
 
-def show_version():
+def get_commit_date(sha):
+    """Get the commit date for a given SHA as a datetime."""
+    try:
+        output = run(
+            ["git", "log", "-1", "--format=%ci", sha],
+            capture_output=True,
+        )
+        if output:
+            # Parse git date format: "2026-02-20 14:30:00 -0500"
+            return datetime.strptime(output, "%Y-%m-%d %H:%M:%S %z")
+        return None
+    except Exception as e:
+        logexc(e)
+        return None
+
+
+def show_version(channel):
     sha, date = get_sha()
     installed_sha = get_installed_nvim_sha()
-    remote_nightly_sha = get_remote_nightly_sha()
+    remote_sha = get_remote_tag_sha(channel)
 
     print(f"Repo HEAD: date={date}, sha={sha}")
     print(f"Installed nvim: sha={installed_sha}")
-    if remote_nightly_sha:
-        print(f"Remote nightly: sha={remote_nightly_sha}")
+    if remote_sha:
+        print(f"Remote {channel}: sha={remote_sha}")
 
     if not installed_sha:
         print("Could not determine installed version.")
         return
 
-    if not remote_nightly_sha:
-        print("Could not determine remote nightly version.")
+    if not remote_sha:
+        print(f"Could not determine remote {channel} version.")
         return
 
-    if remote_nightly_sha == installed_sha:
-        print("You are on the latest nightly version.")
+    if remote_sha == installed_sha:
+        print(f"You are on the latest {channel} version.")
     else:
-        try:
-            # Count commits between installed and remote nightly
-            count = run(
-                [
-                    "git",
-                    "rev-list",
-                    "--count",
-                    f"{installed_sha}..{remote_nightly_sha}",
-                ],
-                capture_output=True,
-            )
-            if count and int(count) > 0:
-                print(f"You are {count} commits behind the latest nightly version.")
+        installed_date = get_commit_date(installed_sha)
+        remote_date = get_commit_date(remote_sha)
+        if installed_date and remote_date:
+            days_behind = (remote_date - installed_date).days
+            if days_behind > 0:
+                print(f"You are {days_behind} day{'s' if days_behind != 1 else ''} behind the latest {channel} version.")
             else:
-                # Installed might be ahead or on a different branch
-                print("Your installed version differs from the latest nightly.")
-        except Exception:
-            print("Could not determine how far behind you are.")
+                print(f"Your installed version differs from the latest {channel}.")
+        else:
+            print(f"Could not determine how far behind the latest {channel} you are.")
 
 
 def show_logfile():
     print(str(LOG_FILE))
 
 
-def manual_checkout(sha):
+def manual_checkout(sha, channel=None):
     try:
         logmsg(f"Checking out {sha} ...")
         git_checkout(sha)
         remove_build()
         build_and_install()
         sha_new, date_new = get_sha()
-        add_history_entry(date_new, sha_new, "manual_checkout")
+        add_history_entry(date_new, sha_new, "manual_checkout", channel=channel)
         print(f"Checked out {date_new} ({sha_new})")
     except Exception as e:
         logexc(e)
@@ -389,6 +400,13 @@ def manual_checkout(sha):
 # --- CLI ---
 def main():
     parser = ArgumentParser(description="Advanced Neovim Source Upgrade Manager.")
+    parser.add_argument(
+        "-c",
+        "--channel",
+        choices=["nightly", "stable"],
+        default="nightly",
+        help="Release channel to target (default: nightly).",
+    )
     parser.add_argument(
         "--upgrade", action="store_true", help="Upgrade to latest upstream version."
     )
@@ -420,17 +438,17 @@ def main():
 
     args = parser.parse_args()
     if args.upgrade:
-        upgrade()
+        upgrade(args.channel)
     elif args.rollback:
         rollback()
     elif args.history:
         print_history()
     elif args.version:
-        show_version()
+        show_version(args.channel)
     elif args.logfile:
         show_logfile()
     elif args.checkout:
-        manual_checkout(args.checkout)
+        manual_checkout(args.checkout, channel=args.channel)
 
 
 if __name__ == "__main__":

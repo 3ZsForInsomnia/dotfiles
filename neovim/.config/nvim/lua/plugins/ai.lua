@@ -10,7 +10,7 @@ return {
     event = "InsertEnter",
     config = true,
     opts = {
-      copilot_model = "gpt-5",
+      -- copilot_model = "gpt-41-copilot",
       filetypes = {
         ["*"] = true,
       },
@@ -35,24 +35,23 @@ return {
     },
     build = "npm install -g mcp-hub@latest",
     config = function()
-      local gh_pat = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
-      local global_env = {
-        ["input:github_pat_mcp"] = gh_pat,
-      }
-
       require("mcphub").setup({
-        global_env = global_env,
+        global_env = {
+          GITHUB_PERSONAL_ACCESS_TOKEN = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN"),
+          SLACK_USER_TOKEN = os.getenv("SLACK_USER_TOKEN"),
+          SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID"),
+          SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET"),
+        },
       })
     end,
   },
   {
-    "3ZsForInsomnia/token-count.nvim",
-    -- dir = "~/src/token-count.nvim",
+    -- "3ZsForInsomnia/token-count.nvim",
+    dir = "~/src/token-count.nvim",
     event = "VeryLazy",
     config = true,
     opts = {
-      model = "claude-4.5-sonnet",
-      -- model = "gpt-5",
+      model = "claude-4.6-opus",
     },
   },
   {
@@ -78,9 +77,35 @@ return {
       },
     },
     opts = {
+      rules = {
+        chatmodes = {
+          description = "Project chatmodes",
+          files = {
+            ".github/chatmodes/*.chatmode.md",
+          },
+        },
+        personal = {
+          description = "Personal rules and code philosophy",
+          files = {
+            require("config.prompts.personal-programming").prompt_path,
+          },
+        },
+        linters = {
+          description = "Project linter configs",
+          files = {
+            "eslint.config.js",
+            ".golangci.*.yaml",
+          },
+        },
+        opts = {
+          chat = {
+            autoload = { "default", "chatmodes", "personal", "linters" },
+            enabled = true,
+          },
+        },
+      },
       opts = {
         log_level = "ERROR",
-        system_prompt = require("config.prompts.personal-programming").main_system_prompt(),
       },
       display = {
         chat = {
@@ -101,7 +126,7 @@ return {
         },
       },
       prompt_library = {
-        -- System Prompts
+        -- "System" Prompts
         ["System: Personal Programming"] = require("config.prompts.personal-programming").selectable_prompt,
         ["System: Hobbies"] = require("config.prompts.hobbies"),
         ["System: Emotional Processing"] = require("config.prompts.personal-processing"),
@@ -259,9 +284,10 @@ return {
           },
           adapter = {
             name = "copilot",
+            model = "claude-opus-4.6",
+            -- model = "claude-sonnet-4.5",
             -- model = "gemini-3-pro-preview",
             -- model = "gemini-2.5-pro",
-            model = "claude-sonnet-4.5",
             -- model = "gpt-5",
           },
           tools = {

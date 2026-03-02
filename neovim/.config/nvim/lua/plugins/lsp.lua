@@ -64,7 +64,7 @@ return {
         "json-lsp",
         "lua-language-server",
         "luacheck",
-        -- "marksman",
+        "marksman",
         "nginx-language-server",
         "nxls",
         "prettier",

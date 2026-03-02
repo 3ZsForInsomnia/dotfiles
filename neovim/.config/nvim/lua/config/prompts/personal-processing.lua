@@ -31,7 +31,7 @@ return {
   opts = { is_slash_cmd = true, auto_submit = false, short_name = "process_emotions" },
   prompts = {
     {
-      role = "system",
+      role = "user",
       content = processing_system_prompt,
     },
   },

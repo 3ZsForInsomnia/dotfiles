@@ -6,8 +6,8 @@ local f = function(number)
   return "<cmd>LualineBuffersJump! " .. number .. "<cr>"
 end
 
--- local b = "<leader>b"
-local b = "b"
+local b = "<leader>b"
+-- local b = "b"
 
 k({
   key = b .. "n",

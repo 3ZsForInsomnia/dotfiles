@@ -110,9 +110,7 @@ _G.openNote = function(noteType)
     c("e " .. notePath)
     return
   else
-    c("ObsidianNew " .. name)
-    -- c("ObsidianNew " .. name:gsub(" ", "\\ "))
-    c("ObsidianTemplate " .. noteType .. "Note.md")
+    c("Obsidian new_from_template " .. name .. " " .. noteType .. "Note.md")
   end
 end
 
@@ -120,7 +118,7 @@ _G.searchTagUnderCursor = function()
   local word = v.fn.expand("<cWORD>")
   local tag = word:match("#([%w%-_/]+)")
   if tag then
-    c("ObsidianTags " .. tag)
+    c("Obsidian tags " .. tag)
   else
     v.notify("No tag under cursor", v.log.levels.WARN)
   end
@@ -148,6 +146,7 @@ return {
       require("config.notes-ai-utils").setup()
     end,
     opts = {
+      legacy_commands = false,
       dir = notesPath,
       notes_subdir = "notes",
       workspaces = {
@@ -158,7 +157,7 @@ return {
       },
 
       open_notes_in = "current",
-      disable_frontmatter = false,
+      frontmatter_enabled = true,
 
       templates = {
         folder = "9 - Resources/90 - Templates",
@@ -167,7 +166,7 @@ return {
       },
 
       attachments = {
-        img_folder = "9 - Resources/98 - Attachments",
+        folder = "9 - Resources/98 - Attachments",
       },
 
       {
@@ -178,9 +177,9 @@ return {
         },
       },
 
-      follow_url_func = function(url)
-        v.ui.open(url)
-      end,
+      -- follow_url_func = function(url)
+      --   v.ui.open(url)
+      -- end,
 
       preferred_link_style = "wiki",
       wiki_link_func = function(opts)
@@ -212,8 +211,12 @@ return {
           insert_tag = "<C-l>",
         },
       },
-      sort_by = "modified",
-      sort_reversed = true,
+
+      search = {
+        sort_by = "modified",
+        sort_reversed = true,
+      },
+
       footer = { enabled = false },
     },
     keys = {
@@ -297,6 +300,7 @@ return {
       cmd({
         key = o .. "c",
         action = "Obsidian toc",
+
         desc = "Navigate table of contents",
       }),
 

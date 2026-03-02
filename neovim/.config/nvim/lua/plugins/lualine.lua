@@ -44,6 +44,7 @@ return {
     dependencies = {
       -- { dir = "~/src/token-count.nvim" },
       "3ZsForInsomnia/token-count.nvim",
+      "catppuccin/nvim",
     },
     config = function()
       require("lualine").setup({
@@ -110,6 +111,7 @@ return {
           lualine_c = { "navic" },
           lualine_z = {
             {
+              "buffers",
               "searchcount",
               maxcount = 999,
               timeout = 500,

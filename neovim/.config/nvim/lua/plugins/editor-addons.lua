@@ -251,7 +251,6 @@ return {
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    enabled = false,
     ft = { "markdown", "codecompanion" },
     opts = {
       preset = "obsidian",
@@ -260,37 +259,6 @@ return {
       completions = {
         blink = { enabled = true },
         lsp = { enabled = true },
-      },
-    },
-  },
-  {
-    "luckasRanarison/tailwind-tools.nvim",
-    ft = {
-      "html",
-      "css",
-      "scss",
-      "javascript",
-      "typescript",
-      "javascriptreact",
-      "typescriptreact",
-    },
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {
-      {
-        document_color = {
-          enabled = true,
-          kind = "inline",
-          inline_symbol = "󰝤 ",
-          debounce = 200,
-        },
-        conceal = {
-          enabled = true,
-          min_length = 1,
-          symbol = "󱏿",
-          highlight = {
-            fg = "#38BDF8",
-          },
-        },
       },
     },
   },

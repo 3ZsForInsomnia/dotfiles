@@ -3,7 +3,7 @@ local cmd = require("helpers").k_cmd
 return {
   {
     "folke/noice.nvim",
-    enabled = false,
+    enabled = true,
     opts = {
       popupmenu = {
         enabled = true,

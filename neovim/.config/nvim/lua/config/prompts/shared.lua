@@ -53,7 +53,7 @@ local date_aware_query = [[
 Current date: #{date}
 
 When querying VectorCode, prefer recent context:
-1. After getting VectorCode results, use ${full_stack_dev} to check file modification times
+1. After getting VectorCode results, use ${agent} to check file modification times
 2. Prioritize files modified within last 3 months unless older files are highly relevant
 3. Focus on recent context for meeting notes and project discussions
 ]]

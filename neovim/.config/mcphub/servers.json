@@ -21,7 +21,7 @@
         "mcp"
       ],
       "command": "uvx",
-      "disabled": false
+      "disabled": true
     },
     "dbhub-demo": {
       "args": [

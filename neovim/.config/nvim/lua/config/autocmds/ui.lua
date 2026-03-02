@@ -61,6 +61,11 @@ _G.extended_search_count = function()
   local search_count_options = { maxcount = 100000, timeout = 500 }
   local sinfo = vim.fn.searchcount(search_count_options)
 
+  -- Nil-safety checks for sinfo fields
+  if not sinfo or not sinfo.incomplete or not sinfo.total or not sinfo.current then
+    return
+  end
+
   local search_stat = sinfo.incomplete > 0 and "[?/?]"
     or sinfo.total > 0 and ("[%s/%s]"):format(sinfo.current, sinfo.total)
     or nil

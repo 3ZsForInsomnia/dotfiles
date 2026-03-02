@@ -5,7 +5,7 @@
 -- Both versions:
 --   - Default location (if not specified): 1 - Work/13 - Meetings/<person>/<today>.md
 --   - Person inferred from first line of notes
---   - Uses ${full_stack_dev} for file read/write operations
+--   - Uses ${agent} for file read/write operations
 --   - Creates new file and populates with enhanced/reformatted notes
 
 local S = require("config.prompts.shared")
@@ -48,7 +48,7 @@ local function get_note_file_remote_text()
     .. "- Add Sources section at the end with footnote citations\n"
     .. '- After writing the file, confirm the action: "Created: <full_path>"\n\n'
     .. "**Important:** The user may provide additional details about the destination in this chat. If they specify a path or filename, use that instead of defaults.\n\n"
-    .. "Use @{full_stack_dev} tools for file operations and @vectorcode_query for context retrieval.\n\n"
+    .. "Use @{agent} tools for file operations and @vectorcode_query for context retrieval.\n\n"
     .. S.sources_format
 
   return text
@@ -63,7 +63,7 @@ local note_file_remote = {
   },
   prompts = {
     {
-      role = "system",
+      role = "user",
       content = function(context)
         return "You are helping organize meeting notes into a structured note system. Notes root: "
           .. S.notes_root
@@ -103,7 +103,7 @@ local function get_note_file_local_text()
     .. "- Keep formatting simple and clean\n"
     .. "- Preserve original content, just organize better\n"
     .. '- Confirm action: "Created: <full_path>"\n\n'
-    .. "Use @{full_stack_dev} tools for file operations."
+    .. "Use @{agent} tools for file operations."
 
   return text
 end

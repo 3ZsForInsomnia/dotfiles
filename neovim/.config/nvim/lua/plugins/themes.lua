@@ -52,7 +52,7 @@ return {
         lsp_trouble = true,
         mason = true,
         markdown = false,
-        mini = false,
+        mini = true,
         native_lsp = {
           enabled = true,
           virtual_text = {

@@ -500,6 +500,7 @@ function gac() {
 function gacp() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gacp [-n] <message> [files]"
+    echo "       gacp <message> [-n] [files]"
     echo "Git add + commit + push"
     echo "Options:"
     echo "  -n    Skip pre-commit and commit-msg hooks (--no-verify)"
@@ -507,13 +508,15 @@ function gacp() {
     echo "  gacp 'fix bug'           # Add all, commit, push"
     echo "  gacp 'fix bug' file.js   # Add file.js, commit, push"
     echo "  gacp -n 'wip: temp'      # Skip hooks, add all, commit, push"
+    echo "  gacp 'wip: temp' -n      # Skip hooks (flag after message)"
     return 0
   fi
 
   local no_verify=false
   local message=""
+  local files=()
 
-  # Parse flags
+  # Parse flags before message
   if [[ "$1" == "-n" ]]; then
     no_verify=true
     shift
@@ -527,11 +530,22 @@ function gacp() {
   message="$1"
   shift
 
+  # Parse flags after message and collect files
+  while [[ $# -gt 0 ]]; do
+    if [[ "$1" == "-n" ]]; then
+      no_verify=true
+      shift
+    else
+      files+=("$1")
+      shift
+    fi
+  done
+
   # Add files
-  if [[ -z "$1" ]]; then
+  if [[ ${#files[@]} -eq 0 ]]; then
     ga
   else
-    ga "$@"
+    ga "${files[@]}"
   fi
 
   # Commit with or without verify

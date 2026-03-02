@@ -121,6 +121,7 @@ return {
           { "<leader>na", group = "Helpers to add notes to AI context" },
           { "<leader>o", group = "Overseer" },
           { "<leader>p", group = "Revman" },
+          { "<leader>P", group = "Profiler" },
           { "<leader>q", group = "Quickfix" },
           { "<leader>r", group = "Refactoring" },
           { "<leader>t", group = "Testing" },
@@ -212,7 +213,6 @@ return {
       }),
     },
   },
-  { "andymass/vim-matchup" },
   { "winston0410/range-highlight.nvim", event = "VeryLazy" },
   {
     "kylechui/nvim-surround",
@@ -293,7 +293,6 @@ return {
     },
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
-      -- { "<leader>st", false },
       { "[t", false },
       { "]t", false },
       { "<leader>sT", false },
@@ -302,15 +301,5 @@ return {
   {
     "OXY2DEV/helpview.nvim",
     lazy = false,
-  },
-  {
-    "rcarriga/nvim-notify",
-    opts = {
-      max_width = 100,
-      max_height = 10,
-      minimum_width = 40,
-      render = "wrapped-compact",
-      timeout = 3000,
-    },
   },
 }

@@ -38,7 +38,7 @@ return {
   opts = { is_slash_cmd = true, auto_submit = false, short_name = "ai_rabbi" },
   prompts = {
     {
-      role = "system",
+      role = "user",
       content = aiRabbiText,
     },
   },

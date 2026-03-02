@@ -53,7 +53,7 @@ return {
   opts = { is_slash_cmd = true, auto_submit = false, short_name = "system_hobbies" },
   prompts = {
     {
-      role = "system",
+      role = "user",
       content = hobbiesText,
     },
   },

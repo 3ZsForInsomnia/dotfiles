@@ -105,7 +105,7 @@ Critical guidelines:
   - Frontend: components (reusable vs one-off, design system usage), state management, routing, validation
   - Service integration points, error handling, testing strategy
 - HELP WITH SIZING ESTIMATES at a high level (flag if something seems >3 days)
-- USE VECTORCODE/FULL_STACK_DEV to find similar implementations, existing components, patterns
+- USE VECTORCODE/AGENT to find similar implementations, existing components, patterns
   - Avoid searches that return huge results (guard against context crashes)
 
 #{vccharter}#{vccurrproj}#{vcnotes}#{vcwork}
@@ -133,7 +133,7 @@ When I share an epic:
 7. Recommend API endpoints, DB schema considerations
 8. Specify async work (workers/batch jobs) vs synchronous API calls
 9. Flag opportunities for reusable components/libraries vs one-off implementations
-   - Use VectorCode/full_stack_dev to find what we already have
+   - Use VectorCode/agent to find what we already have
 10. Flag stories that might be larger than 3 days or have hidden complexity
 11. Propose QA testing strategies and mock data needs
 12. STRONGLY suggest product review if there are significant gaps or complexity
