@@ -284,6 +284,106 @@ function gdh() {
   git diff HEAD "$@"
 }
 
+function gdc() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: gdc <ref> [ref2] [-- files...]"
+    echo "Git diff between commits (ref..HEAD or ref1..ref2)"
+    echo "Examples:"
+    echo "  gdc HEAD~3          # Last 3 commits"
+    echo "  gdc abc123          # From abc123 to HEAD"
+    echo "  gdc main feature    # Between two refs"
+    echo "  gdc HEAD~3 -- src/  # Last 3 commits, specific path"
+    return 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "Error: ref required (e.g. HEAD~3, commit hash, branch name)"
+    return 1
+  fi
+
+  local ref1="$1"
+  shift
+
+  # If next arg exists and isn't "--", treat it as ref2
+  local ref2="HEAD"
+  if [[ -n "$1" && "$1" != "--" ]]; then
+    ref2="$1"
+    shift
+  fi
+
+  if ! git rev-parse --verify "$ref1" &>/dev/null; then
+    echo "Error: '$ref1' is not a valid ref"
+    return 1
+  fi
+  if ! git rev-parse --verify "$ref2" &>/dev/null; then
+    echo "Error: '$ref2' is not a valid ref"
+    return 1
+  fi
+
+  git diff "$ref1".."$ref2" "$@"
+}
+
+function gdcf() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: gdcf <ref> [ref2]"
+    echo "Interactive per-file diff browser between commits"
+    echo "Examples:"
+    echo "  gdcf HEAD~3          # Browse files changed in last 3 commits"
+    echo "  gdcf abc123          # Browse files changed since abc123"
+    echo "  gdcf main feature    # Browse files changed between two refs"
+    echo ""
+    echo "FZF Key Bindings:"
+    echo "  Enter     - View full diff in pager"
+    echo "  Ctrl-C    - Cancel"
+    return 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "Error: ref required (e.g. HEAD~3, commit hash, branch name)"
+    return 1
+  fi
+
+  local ref1="$1"
+  shift
+
+  local ref2="HEAD"
+  if [[ -n "$1" ]]; then
+    ref2="$1"
+    shift
+  fi
+
+  if ! git rev-parse --verify "$ref1" &>/dev/null; then
+    echo "Error: '$ref1' is not a valid ref"
+    return 1
+  fi
+  if ! git rev-parse --verify "$ref2" &>/dev/null; then
+    echo "Error: '$ref2' is not a valid ref"
+    return 1
+  fi
+
+  local changed_files
+  changed_files=$(git diff --name-only "$ref1".."$ref2")
+
+  if [[ -z "$changed_files" ]]; then
+    echo "No differences found between $ref1 and $ref2"
+    return 0
+  fi
+
+  local file_count=$(echo "$changed_files" | wc -l | tr -d ' ')
+  echo "📊 $ref1 → $ref2 ($file_count changed files)"
+  echo ""
+
+  local selected_file
+  selected_file=$(echo "$changed_files" |
+    fzf $(fzf_git_opts) \
+      --preview="$ZSH_PREVIEWS_DIR/git-diff-file.zsh $ref1 $ref2 {}" \
+      --header="$ref1 → $ref2 | Enter=view full diff, Ctrl-C=cancel")
+
+  if [[ -n "$selected_file" ]]; then
+    git diff --color=always "$ref1".."$ref2" -- "$selected_file" | less -R
+  fi
+}
+
 ### Fetch
 function gf() {
   if [[ "$1" == "-h" ]]; then

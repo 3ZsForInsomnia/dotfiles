@@ -87,7 +87,7 @@ return {
         personal = {
           description = "Personal rules and code philosophy",
           files = {
-            require("config.prompts.personal-programming").prompt_path,
+            vim.fn.stdpath("config") .. "/lua/config/prompts/personal-programming.md",
           },
         },
         linters = {
