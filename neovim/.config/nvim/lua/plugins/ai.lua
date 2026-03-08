@@ -369,17 +369,6 @@ return {
             qnotes = cc_vars.qnotes,
             qwork = cc_vars.qwork,
           },
-          keymaps = {
-            accept_change = {
-              modes = { n = "gda" },
-              description = "Accept the suggested change",
-            },
-            reject_change = {
-              modes = { n = "gdr" },
-              opts = { nowait = true },
-              description = "Reject the suggested change",
-            },
-          },
         },
       },
       -- memory = {

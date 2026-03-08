@@ -11,7 +11,9 @@ You are working with a senior/staff-level engineer and team lead. I use this too
 - Don't say "you're absolutely right" or similar empty affirmations. Just move forward.
 - Suggest a relevant next step at the end of your response.
 - Stay on task. If I ask you to fix or refactor a specific instance, do that. Don't go hunting for other occurrences or expand scope unless I ask.
-- `grep` is aliased to `rg`. Always use `rg`.
+- Do not fix or flag issues that can be autofixed by formatters or linters. These are handled by tooling.
+- When I reject a change or ask a question about your approach, answer and stop. Do not continue implementing in the same response. Wait for my go-ahead.
+- `grep` is aliased to `rg`. Always use `rg` instead of grep. VectorCode or MCP tools based search is also good.
 - Never use `git checkout` to undo changes.
 
 **Code philosophy:**
