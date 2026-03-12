@@ -1,212 +1,149 @@
 #!/usr/bin/env zsh
 
 # Nx workspace utility functions
-# Functions for finding and parsing nx project configurations
 
-# Find the nx workspace root
-# Returns: absolute path to workspace root, or empty if not found
+_nx_cache_dir="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache}"
+_nx_cache_file="$_nx_cache_dir/nx-projects.json"
+_nx_cache_ttl=3600
+
 findNxWorkspaceRoot() {
-  local search_dir="${1:-.}"
-  local current_dir="$(cd "$search_dir" 2>/dev/null && pwd)"
-  
+  local current_dir="$(cd "${1:-.}" 2>/dev/null && pwd)"
+
   while [[ -n "$current_dir" && "$current_dir" != "/" ]]; do
-    # Check for nx workspace markers
-    if [[ -f "$current_dir/nx.json" ]] || \
-       [[ -f "$current_dir/workspace.json" ]] || \
-       [[ -f "$current_dir/angular.json" ]]; then
+    if [[ -f "$current_dir/nx.json" ]]; then
       echo "$current_dir"
       return 0
     fi
     current_dir="$(dirname "$current_dir")"
   done
-  
+
   return 1
 }
 
-# Get all nx projects from workspace configuration
-# Returns: array of project names, one per line
+_nx_workspace_is_cached() {
+  local workspace_name="$1"
+  [[ -f "$_nx_cache_file" ]] || return 1
+  jq -e --arg w "$workspace_name" '.[$w]' "$_nx_cache_file" >/dev/null 2>&1
+}
+
+_nx_cache_is_stale() {
+  [[ -f "$_nx_cache_file" ]] || return 0
+  local cache_age=$(( $(date +%s) - $(stat -f %m "$_nx_cache_file" 2>/dev/null || echo 0) ))
+  (( cache_age >= _nx_cache_ttl ))
+}
+
+
+_nx_build_cache() {
+  local workspace_root="$1"
+  local workspace_name="$(basename "$workspace_root")"
+
+  mkdir -p "$_nx_cache_dir"
+
+  local -A target_map
+  while IFS= read -r project_file; do
+    local project_name=$(basename "$(dirname "$project_file")")
+    local targets
+    targets=$(jq -r '.targets // {} | keys[]' "$project_file" 2>/dev/null)
+    while IFS= read -r target; do
+      [[ -n "$target" ]] && target_map[$target]="${target_map[$target]:+${target_map[$target]},}\"$project_name\""
+    done <<< "$targets"
+  done < <(find "$workspace_root" -name "project.json" -not -path "*/node_modules/*" 2>/dev/null)
+
+  local workspace_json
+  workspace_json=$({
+    echo "{"
+    local first=true
+    for target in "${(@k)target_map}"; do
+      $first || echo ","
+      first=false
+      printf '  "%s": [%s]' "$target" "${target_map[$target]}"
+    done
+    echo "\n}"
+  })
+
+  local existing="{}"
+  [[ -f "$_nx_cache_file" ]] && existing=$(cat "$_nx_cache_file")
+
+  echo "$existing" | jq --arg w "$workspace_name" --argjson data "$workspace_json" '.[$w] = $data' > "$_nx_cache_file"
+}
+
+_nx_ensure_cache() {
+  local workspace_root
+  workspace_root=$(findNxWorkspaceRoot) || return 1
+  local workspace_name="$(basename "$workspace_root")"
+
+  if ! _nx_workspace_is_cached "$workspace_name"; then
+    _nx_build_cache "$workspace_root"
+  fi
+
+  echo "$workspace_name"
+
+  if _nx_cache_is_stale; then
+    _nx_build_cache "$workspace_root" &!
+  fi
+}
+
 getNxProjects() {
-  local workspace_root
-  workspace_root=$(findNxWorkspaceRoot)
-  
-  if [[ -z "$workspace_root" ]]; then
-    return 1
-  fi
-  
-  # Try nx.json first (modern nx with project.json files)
-  if [[ -f "$workspace_root/nx.json" ]] && command -v jq >/dev/null 2>&1; then
-    # Modern nx stores projects as object keys or in projects array
-    local projects
-    projects=$(jq -r '
-      if .projects then
-        if (.projects | type) == "object" then
-          .projects | keys[]
-        elif (.projects | type) == "array" then
-          .projects[]
-        else
-          empty
-        end
-      else
-        empty
-      end
-    ' "$workspace_root/nx.json" 2>/dev/null)
-    
-    if [[ -n "$projects" ]]; then
-      echo "$projects"
-      return 0
-    fi
-  fi
-  
-  # Try workspace.json (legacy nx)
-  if [[ -f "$workspace_root/workspace.json" ]] && command -v jq >/dev/null 2>&1; then
-    jq -r '.projects | keys[]' "$workspace_root/workspace.json" 2>/dev/null
-    return 0
-  fi
-  
-  # Try angular.json (nx with angular)
-  if [[ -f "$workspace_root/angular.json" ]] && command -v jq >/dev/null 2>&1; then
-    jq -r '.projects | keys[]' "$workspace_root/angular.json" 2>/dev/null
-    return 0
-  fi
-  
-  # Fallback: scan for project.json files
-  if [[ -d "$workspace_root/apps" ]] || [[ -d "$workspace_root/libs" ]]; then
-    find "$workspace_root/apps" "$workspace_root/libs" \
-      -maxdepth 2 -name "project.json" 2>/dev/null | \
-      while read -r project_file; do
-        basename "$(dirname "$project_file")"
-      done
-    return 0
-  fi
-  
-  return 1
+  local workspace_name
+  workspace_name=$(_nx_ensure_cache) || return 1
+  jq -r --arg w "$workspace_name" '.[$w] | [.[] | .[]] | unique | .[]' "$_nx_cache_file" 2>/dev/null
 }
 
-# Get the project.json path for a given project
-# Args: $1 - project name
-# Returns: absolute path to project.json, or empty if not found
-getNxProjectJsonPath() {
-  local project_name="$1"
-  local workspace_root
-  workspace_root=$(findNxWorkspaceRoot)
-  
-  if [[ -z "$workspace_root" ]]; then
-    return 1
-  fi
-  
-  # Check common locations
-  local possible_paths=(
-    "$workspace_root/apps/$project_name/project.json"
-    "$workspace_root/libs/$project_name/project.json"
-    "$workspace_root/packages/$project_name/project.json"
-    "$workspace_root/$project_name/project.json"
-  )
-  
-  for path in "${possible_paths[@]}"; do
-    if [[ -f "$path" ]]; then
-      echo "$path"
-      return 0
-    fi
-  done
-  
-  # Fallback: search for it
-  local found
-  found=$(find "$workspace_root" -name "project.json" -path "*/$project_name/project.json" -print -quit 2>/dev/null)
-  
-  if [[ -n "$found" ]]; then
-    echo "$found"
-    return 0
-  fi
-  
-  return 1
+getNxProjectsWithTarget() {
+  local target_name="$1"
+  local workspace_name
+  workspace_name=$(_nx_ensure_cache) || return 1
+  jq -r --arg w "$workspace_name" --arg t "$target_name" '.[$w][$t] // [] | .[]' "$_nx_cache_file" 2>/dev/null
 }
 
-# Get available targets for a specific project
-# Args: $1 - project name
-# Returns: array of target names, one per line
 getNxProjectTargets() {
   local project_name="$1"
-  local project_json
-  project_json=$(getNxProjectJsonPath "$project_name")
-  
-  if [[ -z "$project_json" ]] || [[ ! -f "$project_json" ]]; then
-    return 1
-  fi
-  
-  if ! command -v jq >/dev/null 2>&1; then
-    return 1
-  fi
-  
-  jq -r '.targets | keys[]' "$project_json" 2>/dev/null
+  local workspace_name
+  workspace_name=$(_nx_ensure_cache) || return 1
+  jq -r --arg w "$workspace_name" --arg p "$project_name" '.[$w] | to_entries[] | select(.value | index($p)) | .key' "$_nx_cache_file" 2>/dev/null
 }
 
-# Check if a project has a specific target
-# Args: $1 - project name, $2 - target name
-# Returns: 0 if target exists, 1 otherwise
 projectHasTarget() {
   local project_name="$1"
   local target_name="$2"
-  local project_json
-  project_json=$(getNxProjectJsonPath "$project_name")
-  
-  if [[ -z "$project_json" ]] || [[ ! -f "$project_json" ]]; then
-    return 1
-  fi
-  
-  if ! command -v jq >/dev/null 2>&1; then
-    return 1
-  fi
-  
-  jq -e ".targets.\"$target_name\" != null" "$project_json" >/dev/null 2>&1
+  local workspace_name
+  workspace_name=$(_nx_ensure_cache) || return 1
+  jq -e --arg w "$workspace_name" --arg t "$target_name" --arg p "$project_name" '.[$w][$t] // [] | index($p) != null' "$_nx_cache_file" >/dev/null 2>&1
 }
 
-# Get all projects that have a specific target
-# Args: $1 - target name (e.g., "serve", "test", "build", "lint")
-# Returns: array of project names, one per line
-getNxProjectsWithTarget() {
-  local target_name="$1"
-  local -a projects_with_target
-  
-  # Get all projects
-  local all_projects
-  all_projects=$(getNxProjects)
-  
-  if [[ -z "$all_projects" ]]; then
-    return 1
-  fi
-  
-  # Filter projects that have the target
-  while IFS= read -r project; do
-    if projectHasTarget "$project" "$target_name"; then
-      echo "$project"
-    fi
-  done <<< "$all_projects"
+getNxProjectJsonPath() {
+  local project_name="$1"
+  local workspace_root
+  workspace_root=$(findNxWorkspaceRoot) || return 1
+
+  find "$workspace_root" -name "project.json" -path "*/$project_name/project.json" -not -path "*/node_modules/*" -print -quit 2>/dev/null
 }
 
-# Get project information including available targets
-# Args: $1 - project name
-# Returns: formatted string with project info
 getNxProjectInfo() {
   local project_name="$1"
-  local project_json
-  project_json=$(getNxProjectJsonPath "$project_name")
-  
-  if [[ -z "$project_json" ]] || [[ ! -f "$project_json" ]]; then
-    echo "$project_name (no project.json found)"
-    return 1
-  fi
-  
-  if ! command -v jq >/dev/null 2>&1; then
-    echo "$project_name"
-    return 0
-  fi
-  
   local targets
-  targets=$(jq -r '.targets | keys | join(", ")' "$project_json" 2>/dev/null)
-  
+  targets=$(getNxProjectTargets "$project_name")
+
   if [[ -n "$targets" ]]; then
-    echo "$project_name [$targets]"
+    local target_list=$(echo "$targets" | tr '\n' ', ' | sed 's/, $//')
+    echo "$project_name [$target_list]"
   else
     echo "$project_name"
   fi
 }
+
+nxInvalidateCache() {
+  local workspace_root
+  workspace_root=$(findNxWorkspaceRoot)
+
+  if [[ -z "$workspace_root" ]]; then
+    rm -f "$_nx_cache_file"
+    return
+  fi
+
+  local workspace_name="$(basename "$workspace_root")"
+  local existing="{}"
+  [[ -f "$_nx_cache_file" ]] && existing=$(cat "$_nx_cache_file")
+  echo "$existing" | jq --arg w "$workspace_name" 'del(.[$w])' > "$_nx_cache_file"
+}
+

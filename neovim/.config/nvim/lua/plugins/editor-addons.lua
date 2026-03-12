@@ -7,6 +7,36 @@ local k = function(command)
   return "lua require('kulala')." .. command .. "()"
 end
 
+local function select_kulala_env()
+  local git_root = vim.fs.root(0, ".git")
+  if not git_root then
+    vim.notify("Not in a git repository", vim.log.levels.WARN)
+    return
+  end
+
+  local env_file = git_root .. "/.http/http-client.env.json"
+  if vim.fn.filereadable(env_file) ~= 1 then
+    vim.notify("No .http/http-client.env.json found at project root", vim.log.levels.WARN)
+    return
+  end
+
+  local content = vim.fn.readfile(env_file)
+  local decoded = vim.json.decode(table.concat(content, "\n"))
+
+  local is_env_key = function(key)
+    return not vim.startswith(key, "$")
+  end
+
+  local env_names = vim.iter(vim.tbl_keys(decoded)):filter(is_env_key):totable()
+  table.sort(env_names)
+
+  vim.ui.select(env_names, { prompt = "Select Kulala environment" }, function(choice)
+    if choice then
+      require("kulala").set_selected_env(choice)
+    end
+  end)
+end
+
 local function split_env_var(var, sep)
   local str = os.getenv(var)
   if not str then
@@ -83,6 +113,11 @@ return {
         key = h .. "r",
         action = k("replay"),
         desc = "Replay HTTP request",
+      }),
+      kcmd({
+        key = h .. "E",
+        action = select_kulala_env,
+        desc = "Select Kulala environment",
       }),
     },
   },

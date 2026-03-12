@@ -1,0 +1,4 @@
+#autoload
+
+autoload -Uz _comp_nx_projects_with_target
+_comp_nx_projects_with_target "build"

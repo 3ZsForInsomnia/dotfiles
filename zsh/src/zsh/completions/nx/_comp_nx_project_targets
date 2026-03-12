@@ -1,0 +1,20 @@
+#autoload
+
+local project_name="$1"
+local cache_file="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache}/nx-projects.json"
+local workspace_name="$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")"
+
+[[ -f "$cache_file" ]] || { _message 'No nx cache found'; return 1 }
+
+local -a targets
+while IFS= read -r target; do
+  [[ -n "$target" ]] && targets+=("$target")
+done < <(jq -r --arg w "$workspace_name" --arg p "$project_name" '.[$w] | to_entries[] | select(.value | index($p)) | .key' "$cache_file" 2>/dev/null)
+
+if (( ${#targets[@]} > 0 )); then
+  _describe "targets for $project_name" targets
+  return 0
+else
+  _message "No targets found for $project_name"
+  return 1
+fi

@@ -1,15 +1,5 @@
   source "$ZSH_CONFIG_DIR/utils/git-pr-utils.zsh"
 
-### Debug Toggle
-# Uncomment the line below to enable debug logging
-# DEBUG_GPRUNE=1
-
-function _debug_log() {
-  if [[ -n "$DEBUG_GPRUNE" ]]; then
-    echo "[DEBUG] $*" >&2
-  fi
-}
-
 ### Main Pruning Commands
 
 function gprune() {
@@ -26,21 +16,17 @@ function gprune() {
   fi
 
   echo "Fetching PR data for local branches..."
-  _debug_log "Calling _get_merged_closed_prs_with_local_branches_json"
+  _gprune_debug_log "Calling _get_merged_closed_prs_with_local_branches_json"
   local prs_json
   prs_json=$(_get_merged_closed_prs_with_local_branches_json)
-  _debug_log "Raw prs_json output:"
-  _debug_log "$prs_json"
-  _debug_log "prs_json length: ${#prs_json}"
+  _gprune_debug_log "prs_json length: ${#prs_json}"
 
   if [[ -z "$prs_json" || "$prs_json" == "[]" ]]; then
-    _debug_log "prs_json is empty or []"
     echo "No local branches found for merged or closed PRs."
     return 0
   fi
-  _debug_log "prs_json is valid, proceeding to interactive workflow"
 
-  _interactive_prune_workflow "$prs_json"
+  _gprune_interactive_workflow "$prs_json"
 }
 
 function gprunepr() {
@@ -59,8 +45,6 @@ function gprunepr() {
   fi
 
   local pr_number="$1"
-
-  # Get PR info
   local pr_json
   pr_json=$(gh pr view "$pr_number" --json number,title,state,headRefName,author,mergedAt 2>/dev/null)
 
@@ -74,13 +58,11 @@ function gprunepr() {
   local state=$(echo "$pr_json" | jq -r '.state')
   local author=$(echo "$pr_json" | jq -r '.author.login')
 
-  # Check if branch exists locally
   if ! git show-ref --verify --quiet "refs/heads/$branch" 2>/dev/null; then
     echo "Branch '$branch' for PR #$pr_number not found locally"
     return 1
   fi
 
-  # Show PR info and confirm
   echo "PR #$pr_number: $title"
   echo "Author: $author"
   echo "State: $state"
@@ -101,119 +83,114 @@ function gprunepr() {
   fi
 }
 
-### Helper Functions
+### Helper Functions — each independently callable for debugging
 
-function _get_prs_with_local_branches() {
-  # This function is deprecated and is kept here for reference during the refactor.
-  # The new logic is in `zsh/src/zsh/utils/git-pr-utils.zsh`.
-  #
-  # Get both merged and closed PRs that have local branches
-  # Get all PRs (merged and closed, but not open)
-  # Using jq to combine and deduplicate by PR number
-  gh pr list --state all --json number,title,headRefName,author,mergedAt,createdAt,state --limit 500 2>/dev/null |
-    jq -r '.[] | select(.state == "MERGED" or .state == "CLOSED") | select(.headRefName != null) | @json' |
-    while IFS= read -r pr_json; do
-      local branch=$(echo "$pr_json" | jq -r '.headRefName')
-      # Check if branch exists locally and isn't main
-      if [[ "$branch" != "$GIT_MAIN_BRANCH" ]] && git show-ref --verify --quiet "refs/heads/$branch" 2>/dev/null; then
-        echo "$pr_json"
-      fi
-    done
-}
-
-function _format_pr_for_fzf() {
-  local pr_json="$1"
-
-  local number=$(echo "$pr_json" | jq -r '.number')
-  local title=$(echo "$pr_json" | jq -r '.title')
-  local author=$(echo "$pr_json" | jq -r '.author.login')
-  local branch=$(echo "$pr_json" | jq -r '.headRefName')
-  local state=$(echo "$pr_json" | jq -r '.state')
-  local merged_at=$(echo "$pr_json" | jq -r '.mergedAt // .createdAt')
-
-  # Format date
-  local date_formatted=""
-  if [[ "$merged_at" != "null" ]]; then
-    # macOS date format
-    date_formatted=$(echo "$merged_at" | cut -d'T' -f1)
-  fi
-
-  # Add state prefix
-  local state_prefix=""
-  if [[ "$state" == "MERGED" ]]; then
-    state_prefix="[MERGED] "
-  elif [[ "$state" == "CLOSED" ]]; then
-    state_prefix="[CLOSED] "
-  fi
-
-  printf "%s#%d %s (%s) [%s] %s\n" "$state_prefix" "$number" "$title" "$author" "$date_formatted" "$branch"
-}
-
-function _interactive_prune_workflow() {
+function _gprune_format_prs_for_fzf() {
   local prs_json="$1"
-  _debug_log "_interactive_prune_workflow called with prs_json length: ${#prs_json}"
-  _debug_log "First 200 chars of prs_json: ${prs_json:0:200}"
+
+  echo "$prs_json" | jq -r '.[] |
+    "\(if .state == "MERGED" then "[MERGED]" else "[CLOSED]" end) #\(.number) \(.title) (\(.author.login)) [\(.mergedAt // .createdAt | split("T")[0])] \(.headRefName)"
+  '
+}
+
+function _gprune_write_json_tmpfile() {
+  local prs_json="$1"
+  local tmpfile
+  tmpfile=$(mktemp "${TMPDIR:-/tmp}/gprune_prs.XXXXXX.json")
+  echo "$prs_json" > "$tmpfile"
+  echo "$tmpfile"
+}
+
+function _gprune_select_with_fzf() {
+  local formatted_list="$1"
+  local preview_script="$2"
+  local json_tmpfile="$3"
+
+  echo "$formatted_list" |
+    fzf --multi \
+      --reverse \
+      --preview="$preview_script {2} {NF} $json_tmpfile" \
+      --preview-window="right:60%" \
+      --bind="ctrl-a:select-all" \
+      --bind="ctrl-d:deselect-all" \
+      --header="Tab=select, Ctrl-A=select all, Ctrl-D=deselect all, Enter=confirm, Esc=cancel"
+}
+
+function _gprune_extract_branches_from_selection() {
+  local selected="$1"
+  local branches=()
+
+  while IFS= read -r line; do
+    if [[ -n "$line" ]]; then
+      branches+=("$(echo "$line" | awk '{print $NF}')")
+    fi
+  done <<< "$selected"
+
+  echo "${branches[@]}"
+}
+
+function _gprune_delete_branches() {
+  local branches=("$@")
+  local deleted_count=0
+
+  echo ""
+  echo "Deleting branches..."
+  for branch in "${branches[@]}"; do
+    if git branch -D "$branch" 2>/dev/null; then
+      echo "✅ Deleted: $branch"
+      ((deleted_count++))
+    else
+      echo "❌ Failed to delete: $branch"
+    fi
+  done
+  echo ""
+  echo "Deleted $deleted_count of ${#branches[@]} branches."
+}
+
+function _gprune_interactive_workflow() {
+  local prs_json="$1"
   local preview_script_path="$ZSH_CONFIG_DIR/previews/git-prune-preview.zsh"
 
-  # Make sure the preview script is executable
   if [[ ! -x "$preview_script_path" ]]; then
     chmod +x "$preview_script_path"
   fi
 
-  while true; do
-    # Format PRs for FZF using the rich JSON data
-    local fzf_options=()
-      # Use jq to parse the JSON array and format each PR
-      local formatted_list
-      _debug_log "About to parse prs_json with jq"
-      _debug_log "prs_json being passed to jq: $prs_json"
-      formatted_list=$(echo "$prs_json" | jq -r '.[] | 
-        "\(if .state == "MERGED" then "[MERGED]" else "[CLOSED]" end) #\(.number) \(.title) (\(.author.login)) [\(.mergedAt // .createdAt | split("T")[0])] \(.headRefName)"
-      ' 2>&1)
-      local jq_exit_code=$?
-      _debug_log "jq exit code: $jq_exit_code"
-      _debug_log "formatted_list output: $formatted_list"
+  # Write JSON to a temp file so the preview script can read it
+  # (avoids ARG_MAX issues and shell quoting problems with large JSON)
+  local json_tmpfile
+  json_tmpfile=$(_gprune_write_json_tmpfile "$prs_json")
+  _gprune_debug_log "JSON written to tmpfile: $json_tmpfile"
 
-      if [[ -z "$formatted_list" ]]; then
-        _debug_log "formatted_list is empty after jq parsing"
-        echo "No PRs available for pruning."
-        return 0
-      fi
-      _debug_log "formatted_list has content, proceeding to fzf"
+  # Ensure cleanup on exit
+  trap "rm -f '$json_tmpfile'" EXIT INT TERM
+
+  while true; do
+    local formatted_list
+    formatted_list=$(_gprune_format_prs_for_fzf "$prs_json")
+
+    if [[ -z "$formatted_list" ]]; then
+      echo "No PRs available for pruning."
+      return 0
+    fi
 
     echo "Found $(echo "$formatted_list" | wc -l | tr -d ' ') local branch(es) for merged/closed PRs"
 
-    # FZF selection
     local selected
-    selected=$(echo "$formatted_list" |
-      fzf --multi \
-        --reverse \
-        --preview="$preview_script_path {2} {NF} '$prs_json'" \
-        --preview-window="right:60%" \
-        --bind="ctrl-a:select-all" \
-        --bind="ctrl-d:deselect-all" \
-        --header="Tab=select, Ctrl-A=select all, Ctrl-D=deselect all, Enter=confirm, Esc=cancel")
+    selected=$(_gprune_select_with_fzf "$formatted_list" "$preview_script_path" "$json_tmpfile")
 
     if [[ -z "$selected" ]]; then
       echo "Cancelled."
       return 0
     fi
 
-    # Extract branches to delete
-    local branches_to_delete=()
-    while IFS= read -r line; do
-      if [[ -n "$line" ]]; then
-        # Extract the branch name - it's the last space-separated field
-        local branch=$(echo "$line" | awk '{print $NF}')
-        branches_to_delete+=("$branch")
-      fi
-    done <<<"$selected"
+    local branches_str
+    branches_str=$(_gprune_extract_branches_from_selection "$selected")
+    local branches_to_delete=(${=branches_str})
 
     if [[ ${#branches_to_delete[@]} -eq 0 ]]; then
       continue
     fi
 
-    # Show confirmation
     echo ""
     echo "Selected ${#branches_to_delete[@]} branch(es) for deletion:"
     printf '  %s\n' "${branches_to_delete[@]}"
@@ -226,19 +203,7 @@ function _interactive_prune_workflow() {
     read -r response
     case "$response" in
     [Yy])
-      echo ""
-      echo "Deleting branches..."
-      local deleted_count=0
-      for branch in "${branches_to_delete[@]}"; do
-        if git branch -D "$branch" 2>/dev/null; then
-          echo "✅ Deleted: $branch"
-          ((deleted_count++))
-        else
-          echo "❌ Failed to delete: $branch"
-        fi
-      done
-      echo ""
-      echo "Deleted $deleted_count of ${#branches_to_delete[@]} branches."
+      _gprune_delete_branches "${branches_to_delete[@]}"
       return 0
       ;;
     [Ee])
