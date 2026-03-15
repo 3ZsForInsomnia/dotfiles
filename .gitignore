@@ -4,16 +4,16 @@
 node_modules
 tags
 
-.env*
-base.yml
+# Work stuff - automatically exclude files (with certain exceptions) that contain `work` in their filename
+# THIS IS IMPORTANT, DO NOT TOUCH
+*work*
+!ai/.agent/skills/*work*
 
 # Miscellaneous stuff that shouldn't be committed
 resurrect
 rss/.newsboat/cache.db
 i3wm/.local/share/nvim
 linear-client/config
-
 *.zwc
-
-*work*
-!ai/.agent/skills/*work*
+.env*
+base.yml
