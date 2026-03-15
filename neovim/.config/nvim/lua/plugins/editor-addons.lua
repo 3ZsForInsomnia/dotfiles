@@ -350,4 +350,14 @@ return {
       }),
     },
   },
+  {
+    "DamianVCechov/hexview.nvim",
+    config = true,
+    cmd = { "Hex", "HexSet", "UnHex" },
+  },
+  {
+    "razak17/tailwind-fold.nvim",
+    config = true,
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+  },
 }

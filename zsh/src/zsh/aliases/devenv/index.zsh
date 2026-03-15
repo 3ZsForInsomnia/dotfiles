@@ -8,6 +8,7 @@ function sourceDevEnvStuff() {
     "frontend.zsh"
     "locations.zsh"
     "misc.zsh"
+    "openskills.zsh"
     "procfiles.zsh"
   )
 

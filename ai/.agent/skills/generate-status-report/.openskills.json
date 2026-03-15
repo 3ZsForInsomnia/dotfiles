@@ -1,0 +1,7 @@
+{
+  "source": "https://github.com/atlassian/atlassian-mcp-server",
+  "sourceType": "git",
+  "repoUrl": "https://github.com/atlassian/atlassian-mcp-server",
+  "subpath": "skills/generate-status-report",
+  "installedAt": "2026-03-15T21:37:00.599Z"
+}

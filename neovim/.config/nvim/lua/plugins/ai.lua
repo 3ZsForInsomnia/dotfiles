@@ -88,6 +88,7 @@ return {
           description = "Personal rules and code philosophy",
           files = {
             vim.fn.stdpath("config") .. "/lua/config/prompts/personal-programming.md",
+            os.getenv("HOME") .. "/.agent/AGENTS.md",
           },
         },
         linters = {
