@@ -221,12 +221,12 @@ return {
               delete = { n = "d", i = "<M-d>" },
               duplicate = { n = "<C-y>", i = "<C-y>" },
             },
-            auto_generate_title = true,
+            auto_generate_title = false, -- use CodeCompanion's own title generation
             title_generation_opts = {
-              adapter = nil, -- defaults to current chat adapter
-              model = nil, -- defaults to current chat model
-              refresh_every_n_prompts = 10,
-              max_refreshes = 15,
+              adapter = nil, -- defaults to current chat adapter when nil
+              model = nil, -- defaults to current chat model when nil
+              refresh_every_n_prompts = 1, -- 10,
+              max_refreshes = 1, -- 15,
               format_title = function(original_title)
                 return original_title
               end,
@@ -243,7 +243,7 @@ return {
               generation_opts = {
                 adapter = nil, -- defaults to current chat adapter
                 model = nil, -- defaults to current chat model
-                context_size = 90000, -- max tokens that the model supports
+                context_size = 128000, -- max tokens that the model supports
                 include_references = true, -- include slash command content
                 include_tool_outputs = true, -- include tool execution results
                 system_prompt = nil, -- custom system prompt (string or function)
@@ -369,6 +369,21 @@ return {
             vcwork = cc_vars.vcwork,
             qnotes = cc_vars.qnotes,
             qwork = cc_vars.qwork,
+          },
+        },
+        background = {
+          chat = {
+            callbacks = {
+              ["on_ready"] = {
+                actions = {
+                  "interactions.background.builtin.chat_make_title",
+                },
+                enabled = true,
+              },
+            },
+            opts = {
+              enabled = true,
+            },
           },
         },
       },

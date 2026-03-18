@@ -38,3 +38,19 @@ au("CursorHold", {
   pattern = "*",
   command = "call E()",
 })
+
+-- Emit CodeCompanion title to CodeCompanionHistory
+au("User", {
+  pattern = "CodeCompanionChatSubmitted",
+  callback = function(ev)
+    local ok, chat_mod = pcall(require, "codecompanion.interactions.chat")
+    if not ok then
+      return
+    end
+
+    local chat = chat_mod.buf_get_chat(ev.data.bufnr)
+    if chat and chat.title and chat.title ~= "" then
+      chat.opts.title = chat.title
+    end
+  end,
+})
