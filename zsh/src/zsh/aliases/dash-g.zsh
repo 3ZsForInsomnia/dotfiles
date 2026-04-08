@@ -63,7 +63,7 @@ if [ "$MY_SYSTEM" = "linux" ]; then
 elif [ "$MY_SYSTEM" = "mac" ]; then
   alias -g PC='| pbcopy'
   alias -g PP='| pbpaste'
-  alias P='pbpaste'
+  alias P='pbcopy'
 
   alias copy='pbcopy'
   alias paste='pbpaste'

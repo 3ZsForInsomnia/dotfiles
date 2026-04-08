@@ -56,6 +56,13 @@ function fup() {
   result=$(fuckitup -f "$@")
   echo "$result"
 }
+function fupc() {
+  if [ "$MY_SYSTEM" = "linux" ]; then
+    fup "$@" | copy
+  elif [ "$MY_SYSTEM" = "mac" ]; then
+    fup "$@" | pbcopy
+  fi
+}
 
 alias oreg='o https://regex101.com'
 

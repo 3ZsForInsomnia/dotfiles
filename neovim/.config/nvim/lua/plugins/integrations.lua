@@ -181,10 +181,10 @@ return {
       --   v.ui.open(url)
       -- end,
 
-      preferred_link_style = "wiki",
-      wiki_link_func = function(opts)
-        return require("obsidian.util").wiki_link_id_prefix(opts)
-      end,
+      link = {
+        style = "wiki",
+        format = "shortest",
+      },
 
       note_id_func = function(title)
         return title

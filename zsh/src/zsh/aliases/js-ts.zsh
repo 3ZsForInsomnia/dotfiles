@@ -140,6 +140,8 @@ alias nxtw="nx test:watch"
 alias nxb="nx build"
 alias nxg="nx generate"
 alias nxl="nx lint"
+alias nxe="nx test:e2e e2e"
+alias nxi="nx test:integration e2e"
 
 alias http='npx http-server'
 

@@ -71,8 +71,8 @@ return {
         cmd = "VsccImport",
       },
       {
-        "3ZsForInsomnia/code-companion-picker",
-        -- dir = "~/src/code-companion-picker",
+        -- "3ZsForInsomnia/code-companion-picker",
+        dir = "~/src/code-companion-picker",
         cmd = "CodeCompanionPrompts",
       },
     },
@@ -448,6 +448,7 @@ return {
       opts.interactions.chat.slash_commands = {
         prompts = require("code-companion-picker").select_slash_command,
         tools = require("code-companion-picker").select_tool_slash_command,
+        skills = require("code-companion-picker").select_skill_slash_command,
       }
 
       require("codecompanion").setup(opts)

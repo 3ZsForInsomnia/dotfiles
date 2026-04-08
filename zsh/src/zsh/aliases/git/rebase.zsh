@@ -148,15 +148,32 @@ alias pullMasThenRebaseAndPush='pullMasThenRebaseWithIt; gpf'
 ### Git Add + Rebase Continue
 function garbc() {
   if [[ "$1" == "-h" ]]; then
-    echo "Usage: garbc [path]"
+    echo "Usage: garbc [-p] [path]"
     echo "Add files and continue rebase"
+    echo "  -p  Force push after successful rebase continue"
     echo "Examples:"
-    echo "  garbc        # Add all changes (.) and continue rebase"
-    echo "  garbc file.txt # Add specific file and continue rebase"
+    echo "  garbc            # Add all changes (.) and continue rebase"
+    echo "  garbc file.txt   # Add specific file and continue rebase"
+    echo "  garbc -p         # Add all, continue rebase, then force push"
+    echo "  garbc file.txt -p # Add file, continue rebase, then force push"
     return 0
   fi
 
-  local pathes="${1:-.}"
-  git add "$pathes"
-  git rebase --continue
+  local push_after=false
+  local path="."
+
+  for arg in "$@"; do
+    if [[ "$arg" == "-p" ]]; then
+      push_after=true
+    else
+      path="$arg"
+    fi
+  done
+
+  git add "$path"
+  git rebase --continue || return 1
+
+  if $push_after; then
+    gpf
+  fi
 }

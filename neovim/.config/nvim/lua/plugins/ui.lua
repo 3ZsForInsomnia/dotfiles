@@ -54,6 +54,27 @@ return {
         split = {
           enter = true,
         },
+        -- cmdline_input = {
+        --   size = {
+        --     width = "auto",
+        --     min_width = 80,
+        --     max_width = 120,
+        --     height = "auto",
+        --     max_height = 15,
+        --   },
+        --   win_options = {
+        --     wrap = true,
+        --     linebreak = true,
+        --   },
+        -- },
+        -- cmdline_popup = {
+        --   size = {
+        --     min_width = 80,
+        --     width = "auto",
+        --     height = "auto",
+        --     max_height = 15,
+        --   },
+        -- },
       },
       routes = {
         {

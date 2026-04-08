@@ -1,4 +1,4 @@
-export OSK_HOME="$HOME/.agent/skills"
+export SKILLS_HOME="$HOME/.agent/skills"
 
 alias osk="openskills"
 alias oskSync='openskills sync -o "$HOME"/.agent/AGENTS.md -y'
@@ -9,7 +9,7 @@ function oskInstall() {
 
 function oskUpdate() {
   current_dir=$(pwd)
-  cd "$OSK_HOME"
+  cd "$SKILLS_HOME"
   openskills update
   cd "$current_dir"
 }
@@ -35,7 +35,7 @@ function oskLink() {
 
   for skill in "$skills_dir"/*(N/); do
     local name=$(basename "$skill")
-    local target="$OSK_HOME/$name"
+    local target="$SKILLS_HOME/$name"
 
     if [[ -e "$target" ]]; then
       echo "Skipping $name (already exists)"

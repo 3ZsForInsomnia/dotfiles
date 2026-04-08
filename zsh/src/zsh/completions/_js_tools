@@ -149,6 +149,14 @@ function _js_tools_complete_args() {
         return 0
       fi
       ;;
+    nxe)
+      # nx lint - complete with projects that have lint target
+      if (( CURRENT == 2 )); then
+        autoload -Uz _comp_nx_lintable_projects
+        _comp_nx_lintable_projects
+        return 0
+      fi
+      ;;
   esac
   
   return 1
