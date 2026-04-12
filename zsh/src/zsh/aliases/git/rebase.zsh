@@ -160,17 +160,17 @@ function garbc() {
   fi
 
   local push_after=false
-  local path="."
+  local add_target="."
 
   for arg in "$@"; do
     if [[ "$arg" == "-p" ]]; then
       push_after=true
     else
-      path="$arg"
+      add_target="$arg"
     fi
   done
 
-  git add "$path"
+  git add "$add_target"
   git rebase --continue || return 1
 
   if $push_after; then
