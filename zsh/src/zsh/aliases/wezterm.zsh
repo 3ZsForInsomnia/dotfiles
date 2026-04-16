@@ -7,14 +7,28 @@ alias notestab="renameTab notes"
 
 alias upgradeWezterm="brew upgrade --cask wezterm@nightly --no-quarantine --greedy-latest"
 
-# Create a layout with a main pane (80%) and two stacked panes on the right (20%)
+# Create a layout: top pane (70%) + bottom pane (30%) split into main left + two stacked right
 function wezterm-layout() {
-  local main_pane_id
-  main_pane_id=$(wezterm cli get-pane-direction right 2>/dev/null)
+  local pane_below
+  pane_below=$(wezterm cli get-pane-direction down 2>/dev/null)
 
-  if [[ -n "$main_pane_id" ]]; then
-    echo "Panes already exist to the right. Run in a tab with a single pane."
+  if [[ -n "$pane_below" ]]; then
+    wezterm cli activate-pane-direction down
+  fi
+
+  local pane_right
+  pane_right=$(wezterm cli get-pane-direction right 2>/dev/null)
+
+  if [[ -n "$pane_right" ]]; then
+    echo "Right panes already exist. Run in a tab without right splits."
     return 1
+  fi
+
+  local pane_above
+  pane_above=$(wezterm cli get-pane-direction up 2>/dev/null)
+
+  if [[ -z "$pane_above" ]]; then
+    wezterm cli split-pane --top --percent 70 >/dev/null
   fi
 
   local right_pane_id
