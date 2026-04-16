@@ -1,4 +1,4 @@
-#compdef k kpf get_pods view_kpod_logs get_latest_version_row view_kpod_log_latest getKDepls delKDepl findAndDelKDepl getKPodStatus restartKPod kns kpsh kdrst kdscale kspf ksview kpods_check kctx kplogs kjlogs kdesc kevents kgetall kwho_am_i kubeForwardPorts kfwd khelp fkns fkctx fkp fks fkd fksvc fkcm fksecret fkjob
+#compdef k kpf get_pods view_kpod_logs view_kpod_log_latest getKDepls delKDepl findAndDelKDepl getKPodStatus restartKPod kns kpsh kinto kdrst kdscale kspf ksview kpods_check kctx kplogs kjlogs kdesc kevents kgetall kwho_am_i kubeForwardPorts kfwd khelp fkns fkctx fkp fks fkd fksvc fkcm fksecret fkjob
 
 local -a commands
 commands=(
@@ -6,11 +6,12 @@ commands=(
   'kpf:Port forward to pod/service'
   'get_pods:Get pods in namespace'
   'kplogs:View pod logs with options'
-  'view_kpod_logs:View specific pod logs'
+  'view_kpod_logs:Alias for kplogs'
   'view_kpod_log_latest:View latest pod logs'
   'getKPodStatus:Get pod status details'
   'restartKPod:Restart pod deployment'
-  'kpsh:Shell into pod'
+  'kinto:Shell into pod (direct)'
+  'kpsh:Shell into pod (interactive)'
   'kpods_check:Check pod status across namespaces'
   'ksview:View service details'
   'kspf:Port forward to service'

@@ -90,6 +90,7 @@ function setup_deferred_env() {
   export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;$XDG_CONFIG_HOME/luarocks/?.lua;"
   export LUAROCKS_CONFIG="$XDG_CONFIG_HOME/luarocks/config.lua"
   export DASHT_DOCSETS_DIR="$HOME/.local/share/Zeal/Zeal/docsets/"
+  export SKILLPORT_SKILLS_DIR="$SKILLS_HOME"
 
   ######################
   # OS specific items  #

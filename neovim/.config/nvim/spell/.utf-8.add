@@ -342,3 +342,5 @@ envs
 wegovy
 integ
 envar
+sed
+gitignored

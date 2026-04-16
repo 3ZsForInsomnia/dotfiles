@@ -218,6 +218,10 @@ return {
       },
 
       footer = { enabled = false },
+
+      sync = {
+        enabled = true,
+      },
     },
     keys = {
       cmd({

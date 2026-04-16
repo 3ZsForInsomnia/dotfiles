@@ -10,10 +10,10 @@ brew_packages_with_cask=("witch" "obsidian" "google-chrome" "slack" "postman" "f
 # copyq is replaced by maccy
 # rectangle's functionality is now part of MacOS
 
-npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http" "@mermaid-js/mermaid-cli" "openskills")
+npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http" "@mermaid-js/mermaid-cli" "openskills" "obsidian-headless")
 
 # All Python packages to install in global venv
-python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory")
+python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory" "skillport")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh")
 

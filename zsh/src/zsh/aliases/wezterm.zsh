@@ -25,3 +25,4 @@ function wezterm-layout() {
   wezterm cli activate-pane-direction left
 }
 alias wtl='wezterm-layout'
+alias wezdev='wezterm-layout'

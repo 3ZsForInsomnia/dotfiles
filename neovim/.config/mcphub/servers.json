@@ -71,7 +71,7 @@
       "disabled": true
     },
     "figma": {
-      "disabled": false,
+      "disabled": true,
       "type": "http",
       "url": "http://127.0.0.1:3845/mcp"
     },
@@ -119,6 +119,12 @@
       ],
       "command": "npx",
       "type": "stdio"
+    },
+    "playwright": {
+      "args": [
+        "@playwright/mcp@latest"
+      ],
+      "command": "npx"
     },
     "tavily": {
       "args": [

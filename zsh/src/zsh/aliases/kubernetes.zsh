@@ -8,11 +8,35 @@ alias kpf="k port-forward"
 
 # Basic Service/Env/Namespace functions
 # ------------------------------------------------------------------------------
+function resolve_namespace() {
+  local service=$1
+  local env=$2
+
+  if [[ -n "$service" && -n "$env" ]]; then
+    get_namespace_for "$service" "$env"
+    return
+  fi
+
+  local namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
+
+  if [[ -z "$namespace" ]]; then
+    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers |
+      fzf --height=40% --border --prompt="Select Namespace: ")
+  fi
+
+  if [[ -z "$namespace" ]]; then
+    echo "No namespace selected." >&2
+    return 1
+  fi
+
+  echo "$namespace"
+}
+
 function get_pods_by_namespace {
   local service=$1
   local env=$2
 
-  namespace=$(get_namespace_for "$service" "$env")
+  local namespace=$(get_namespace_for "$service" "$env")
 
   # Get the list of pod names in the namespace
   kubectl get pods -n "$namespace" -o custom-columns=NAME:.metadata.name --no-headers 2>/dev/null
@@ -25,135 +49,38 @@ function get_latest_pod {
   local service=$1
   local env=$2
 
-  namespace=$(get_namespace_for "$service" "$env")
-  local app_prefix="sql-patch"
+  local namespace=$(get_namespace_for "$service" "$env")
 
   # Get all matching pods
-  pods=$(get_pods_by_namespace "$service" "$env")
+  local pods=$(get_pods_by_namespace "$service" "$env")
 
   if [[ -z "$pods" ]]; then
-      echo "No pods found with the prefix '${app_prefix}' in the namespace '${namespace}'"
+      echo "No pods found in namespace '${namespace}'"
       return 1
   fi
 
   # Sort by version and get the latest pod
-  latest_pod=$(echo "$pods" | awk -F '-' '{print $3, $0}' | sort -t. -k1,1nr -k2,2nr -k3,3nr | head -n 1 | cut -d' ' -f2)
+  local latest_pod=$(echo "$pods" | awk -F '-' '{print $3, $0}' | sort -t. -k1,1nr -k2,2nr -k3,3nr | head -n 1 | cut -d' ' -f2)
 
   # Remove any `<stdin>` from output if present
-  clean_pod=$(echo "$latest_pod" | sed 's/^<stdin>:.*://g')
+  local clean_pod=$(echo "$latest_pod" | sed 's/^<stdin>:.*://g')
 
-  # Print the cleaned result
   echo "$clean_pod"
 }
 
-function view_kpod_logs() {
-  local service="$1"
-  local env="$2"
-  local pod="$3"
-  local container="$4"
-  local follow=${5:-false}
-
-  namespace=$(get_namespace_for "$service" "$env")
-  
-  if [[ -z "$pod" ]]; then
-    # Get pod using fzf
-    echo "Fetching pods in namespace: $namespace"
-    pod=$(fkp "$namespace")
-    if [[ -z "$pod" ]]; then
-      return 1
-    fi
-  fi
-
-  if [[ -z "$container" ]]; then
-    containers=$(kubectl get pod "$pod" -n "$namespace" -o jsonpath='{.spec.containers[*].name}')
-    if [[ $(echo "$containers" | wc -w) -gt 1 ]]; then
-      container=$(echo "$containers" | tr ' ' '\n' | fzf --height=40% --border --prompt="Select Container: ")
-      if [[ -z "$container" ]]; then
-        echo "No container selected."
-        return 1
-      fi
-    fi
-  fi
-  
-  echo "Viewing logs for pod $pod ${container:+container $container} in namespace $namespace"
-  
-  if [[ "$follow" == "true" ]]; then
-    if [[ -n "$container" ]]; then
-      kubectl logs -n "$namespace" "$pod" -c "$container" -f
-    else
-      kubectl logs -n "$namespace" "$pod" -f
-    fi
-  else
-    if [[ -n "$container" ]]; then
-      kubectl logs -n "$namespace" "$pod" -c "$container"
-    else
-      kubectl logs -n "$namespace" "$pod"
-    fi
-  fi
-  
-  # Build kubectl logs command
-  local log_cmd="kubectl logs -n $namespace $pod"
-  if [[ -n "$container" ]]; then
-    log_cmd="$log_cmd -c $container"
-  fi
-  if [[ "$follow" == true ]]; then
-    log_cmd="$log_cmd -f"
-  fi  
-  if [[ -n "$tail_lines" ]]; then
-    log_cmd="$log_cmd --tail=$tail_lines"
-  fi
-  
-  # Display info
-  echo "📋 Viewing logs for: $pod"
-  if [[ -n "$container" ]]; then
-    echo "📦 Container: $container"
-  fi
-  echo "📍 Namespace: $namespace"
-  if [[ -n "$service" && -n "$env" ]]; then
-    echo "🏷️  Service: $service (env: $env)"
-  fi
-  if [[ "$follow" == true ]]; then
-    echo "🔄 Streaming logs (press Ctrl+C to exit)"
-  fi
-  echo ""
-  
-  # Execute logs command
-  eval "$log_cmd"
-}
-
-function get_latest_version_row() {
-  local input_data=("$@")
-  local latest_row=""
-  local max_version=""
-
-  for row in "${input_data[@]}"; do
-    # Extract the version part
-    local version=$(echo "$row" | grep -o 'sql-patch-[0-9]\+\.[0-9]\+\.[0-9]\+')
-    
-    # Check if the current version is greater than the max_version
-    if [[ "$version" > "$max_version" ]]; then
-      max_version="$version"
-      latest_row="$row"
-    elif [[ "$version" == "$max_version" ]]; then
-      # Update latest_row if they are the same
-      latest_row="$row"
-    fi
-  done
-
-  echo "$latest_row"
-}
+alias view_kpod_logs='kplogs'
 
 function view_kpod_log_latest() {
   local service="$1"
   local env="$2"
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  echo "Fetching logs for the latest pod in namespace: $namespace"
-  
-  output=$(get_pods_by_namespace "$service" "$env")
-  pods=("${(@f)$(echo "$output")}")
 
-  latest_pod=$(get_latest_version_row "${pods[@]}")
+  local namespace=$(get_namespace_for "$service" "$env")
+  echo "Fetching logs for the latest pod in namespace: $namespace"
+
+  local output=$(get_pods_by_namespace "$service" "$env")
+  local pods=("${(@f)$(echo "$output")}")
+
+  local latest_pod=$(get_latest_version_row "${pods[@]}")
 
   k logs -n "$namespace" "$latest_pod"
 }
@@ -164,7 +91,7 @@ function getKDepls() {
   local service=$1
   local env=$2
 
-  namespace=$(get_namespace_for "$service" "$env")
+  local namespace=$(get_namespace_for "$service" "$env")
 
   k get deployments -n "$namespace"
 }
@@ -174,8 +101,8 @@ function delKDepl() {
   local env=$2
   local deployment=$3
 
-  namespace=$(get_namespace_for "$service" "$env")
-  
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$deployment" ]]; then
     deployment=$(fkd "$namespace")
     if [[ -z "$deployment" ]]; then
@@ -186,7 +113,7 @@ function delKDepl() {
   echo "You are about to delete deployment: $deployment in namespace $namespace"
   echo -n "Are you sure? (y/N) "
   read confirm
-  
+
   if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
     k delete deployment "$deployment" -n "$namespace"
     echo "Deployment $deployment deleted"
@@ -199,8 +126,8 @@ function findAndDelKDepl() {
   local service=$1
   local env=$2
 
-  namespace=$(get_namespace_for "$service" "$env")
-  selected_deployment=$(fkd "$namespace")
+  local namespace=$(get_namespace_for "$service" "$env")
+  local selected_deployment=$(fkd "$namespace")
 
   if [[ -n "$selected_deployment" ]]; then
     echo "Deleting deployment: $selected_deployment"
@@ -215,10 +142,9 @@ function getKPodStatus() {
   local service=$1
   local env=$2
   local pod=$3
-  local container=$4
 
-  namespace=$(get_namespace_for "$service" "$env")
-  
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$pod" ]]; then
     echo "🔍 Select pod for logs:"
     pod=$(fkp "$namespace")
@@ -236,19 +162,19 @@ function restartKPod() {
   local env=$2
   local pod=$3
 
-  namespace=$(get_namespace_for "$service" "$env")
-  
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$pod" ]]; then
     pod=$(fkp "$namespace")
     if [[ -z "$pod" ]]; then
       return 1
     fi
   fi
-  
+
   echo "This will delete the pod and let Kubernetes recreate it"
   echo -n "Continue with pod $pod? (y/N) "
   read confirm
-  
+
   if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
     kubectl delete pod "$pod" -n "$namespace"
     echo "Pod $pod deleted, waiting for recreation..."
@@ -265,9 +191,9 @@ function kns() {
   # Switch to namespace (service/env aware)
   local service=$1
   local env=$2
-  
+
   if [[ -n "$service" && -n "$env" ]]; then
-    namespace=$(get_namespace_for "$service" "$env")
+    local namespace=$(get_namespace_for "$service" "$env")
     kubectl config set-context --current --namespace="$namespace"
     echo "✅ Switched to namespace: $namespace (service: $service, env: $env)"
   else
@@ -283,39 +209,58 @@ function kns() {
 
 # Service/Pod Shell Access
 # ------------------------------------------------------------------------------
+function kinto() {
+  if [[ "$1" == "-h" || -z "$1" ]]; then
+    echo "Usage: kinto <pod> [namespace] [container]"
+    echo "Shell into a kubernetes pod (tries zsh, then bash, then sh)"
+    return 0
+  fi
+
+  local pod=$1
+  local namespace=$2
+  local container=$3
+
+  local cmd=(kubectl exec -it)
+  if [[ -n "$namespace" ]]; then
+    cmd+=(-n "$namespace")
+  fi
+  cmd+=("$pod")
+  if [[ -n "$container" ]]; then
+    cmd+=(-c "$container")
+  fi
+  cmd+=(-- sh -c "zsh || bash || sh")
+
+  "${cmd[@]}"
+}
+
 function kpsh() {
-  # Interactive shell into pod (service/env aware)
   local service=$1
   local env=$2
   local pod=$3
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$pod" ]]; then
     pod=$(fkp "$namespace")
     if [[ -z "$pod" ]]; then
       return 1
     fi
   fi
-  
-  if [[ -z "$container" ]]; then
-    local containers=$(kubectl get pod "$pod" -n "$namespace" -o jsonpath='{.spec.containers[*].name}')
-    
-    if [[ $(echo "$containers" | wc -w) -gt 1 ]]; then
-      echo "🔍 Multiple containers found, select one:"
-      container=$(echo "$containers" | tr ' ' '\n' | 
-        fzf $(fzf_select_opts) --prompt="Select Container: ")
-      if [[ -z "$container" ]]; then
-        echo "❌ No container selected."
-        return 1
-      fi
+
+  local containers=$(kubectl get pod "$pod" -n "$namespace" -o jsonpath='{.spec.containers[*].name}')
+  local container
+
+  if [[ $(echo "$containers" | wc -w) -gt 1 ]]; then
+    echo "🔍 Multiple containers found, select one:"
+    container=$(echo "$containers" | tr ' ' '\n' |
+      fzf $(fzf_select_opts) --prompt="Select Container: ")
+    if [[ -z "$container" ]]; then
+      echo "❌ No container selected."
+      return 1
     fi
-    echo "Starting shell in pod $pod, container $container..."
-    kubectl exec -it -n "$namespace" "$pod" -c "$container" -- sh -c "bash || ash || sh"
-  else
-    echo "Starting shell in pod $pod..."
-    kubectl exec -it -n "$namespace" "$pod" -- sh -c "bash || ash || sh"
   fi
+
+  kinto "$pod" "$namespace" "$container"
 }
 
 # Deployment Management
@@ -325,19 +270,19 @@ function kdrst() {
   local service=$1
   local env=$2
   local deployment=$3
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$deployment" ]]; then
     deployment=$(fkd "$namespace")
     if [[ -z "$deployment" ]]; then
       return 1
     fi
   fi
-  
+
   echo "Restarting deployment: $deployment in namespace $namespace"
   kubectl rollout restart deployment "$deployment" -n "$namespace"
-  
+
   echo "Checking rollout status (Ctrl+C to exit)..."
   kubectl rollout status deployment "$deployment" -n "$namespace"
 }
@@ -347,26 +292,26 @@ function kdscale() {
   local service=$1
   local env=$2
   local deployment=$3
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$deployment" ]]; then
     deployment=$(fkd "$namespace")
     if [[ -z "$deployment" ]]; then
       return 1
     fi
   fi
-  
+
   local current_replicas=$(kubectl get deployment "$deployment" -n "$namespace" -o jsonpath='{.spec.replicas}')
   echo "Deployment: $deployment"
   echo "Current replicas: $current_replicas"
   echo -n "Enter new replica count (0-20): "
   read replicas
-  
+
   if [[ "$replicas" =~ ^[0-9]+$ && $replicas -le 20 ]]; then
     echo "Scaling deployment: $deployment to $replicas replicas in namespace $namespace"
     kubectl scale deployment "$deployment" --replicas="$replicas" -n "$namespace"
-    
+
     echo "Waiting for scaling operation to complete..."
     kubectl rollout status deployment "$deployment" -n "$namespace"
   else
@@ -381,20 +326,20 @@ function kspf() {
   local service=$1
   local env=$2
   local k8s_service=$3
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$k8s_service" ]]; then
     k8s_service=$(fksvc "$namespace")
     if [[ -z "$k8s_service" ]]; then
       return 1
     fi
   fi
-  
+
   # Get available ports from the service
   local ports=$(kubectl get service "$k8s_service" -n "$namespace" -o jsonpath='{.spec.ports[*].port}')
   local port
-  
+
   if [[ $(echo "$ports" | wc -w) -gt 1 ]]; then
     port=$(echo "$ports" | tr ' ' '\n' | fzf --height=40% --border --prompt="Select Service Port: ")
     if [[ -z "$port" ]]; then
@@ -404,11 +349,11 @@ function kspf() {
   else
     port=$ports
   fi
-  
+
   echo -n "Local port to use (default $port): "
   read local_port
   local_port=${local_port:-$port}
-  
+
   echo "🔌 Port forwarding $k8s_service:$port to localhost:$local_port"
   echo "   Namespace: $namespace"
   echo "   Service: $service (env: $env)"
@@ -423,32 +368,32 @@ function ksview() {
   local service=$1
   local env=$2
   local secret=$3
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$secret" ]]; then
     secret=$(fksecret "$namespace")
     if [[ -z "$secret" ]]; then
       return 1
     fi
   fi
-  
+
   echo "Secret: $secret"
   echo "Namespace: $namespace"
   echo "Service: $service (env: $env)"
   echo "-------------"
-  
+
   # Try to use yq for better formatting if available
   if command -v yq >/dev/null 2>&1; then
     kubectl get secret "$secret" -n "$namespace" -o yaml | yq e '.data | map_values(@base64d)' - | less
   else
     # Fallback to manual decoding
-    kubectl get secret "$secret" -n "$namespace" -o jsonpath='{.data}' | 
-      sed 's/:/\n/g' | 
-      sed 's/{//g' | 
-      sed 's/}//g' | 
-      sed 's/"//g' | 
-      sed 's/,/\n/g' | 
+    kubectl get secret "$secret" -n "$namespace" -o jsonpath='{.data}' |
+      sed 's/:/\n/g' |
+      sed 's/{//g' |
+      sed 's/}//g' |
+      sed 's/"//g' |
+      sed 's/,/\n/g' |
       while read line; do
         if [[ "$line" =~ ^[a-zA-Z0-9_-]+$ ]]; then
           key=$line
@@ -465,14 +410,14 @@ function kpods_check() {
   # Check for problematic pods (service/env aware)
   local service=$1
   local env=$2
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   echo "Checking pods in namespace: $namespace"
   echo "Service: $service (env: $env)"
-  
-  kubectl get pods -n "$namespace" -o custom-columns=NAME:.metadata.name,STATUS:.status.phase,RESTARTS:.status.containerStatuses[0].restartCount,AGE:.metadata.creationTimestamp | 
-    awk 'NR>1 && ($2!="Running" || $3>0) {print $0}' | 
+
+  kubectl get pods -n "$namespace" -o custom-columns=NAME:.metadata.name,STATUS:.status.phase,RESTARTS:.status.containerStatuses[0].restartCount,AGE:.metadata.creationTimestamp |
+    awk 'NR>1 && ($2!="Running" || $3>0) {print $0}' |
     (grep -v '^$' || echo "All pods are healthy!")
 }
 
@@ -527,27 +472,11 @@ function fkp() {
  fi
 
   # Interactive pod selection
-  local service=$1
-  local env=$2
-  local namespace
-  
-  if [[ -n "$service" && -n "$env" ]]; then
-    namespace=$(get_namespace_for "$service" "$env")
-  else
-    namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
-  fi
-  
-  if [[ -z "$namespace" ]]; then
-    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | 
-      fzf $(fzf_select_opts) --prompt="Select Namespace: ")
-    if [[ -z "$namespace" ]]; then
-      echo "No namespace selected."
-      return 1
-    fi
-  fi
-  
- echo "🔍 Fetching pods in namespace: $namespace"
- 
+  local namespace=$(resolve_namespace "$1" "$2")
+  [[ -z "$namespace" ]] && return 1
+
+ echo "🔍 Fetching pods in namespace: $namespace" >&2
+
   # Get pod list without headers and use fzf to select
   local pod_line
   pod_line=$(kubectl get pods -n "$namespace" \
@@ -560,16 +489,16 @@ function fkp() {
         --bind="ctrl-r:execute(kubectl delete pod -n $namespace {1})" \
         --bind="ctrl-s:execute(kubectl describe pod -n $namespace {1} | less -R)" \
         --header="Enter=select, Ctrl-L=logs, Ctrl-E=shell, Ctrl-R=restart, Ctrl-S=describe")
-  
+
   if [[ -n "$pod_line" ]]; then
     # Extract just the pod name (first column)
     local pod_name=$(echo "$pod_line" | awk '{print $1}')
     echo "$pod_name" | pbcopy
-    echo "✅ Selected pod: $pod_name (copied to clipboard)"
+    echo "✅ Selected pod: $pod_name (copied to clipboard)" >&2
     echo "$pod_name"
     return 0
   else
-    echo "❌ No pod selected."
+    echo "❌ No pod selected." >&2
     return 1
   fi
 }
@@ -578,7 +507,7 @@ function kplogs() {
  if [[ "$1" == "-h" ]]; then
    echo "Usage: kplogs [service] [env] [pod] [container]"
    echo "Interactive pod logs viewer with streaming support"
-   echo ""  
+   echo ""
    echo "Options:"
    echo "  -f, --follow    Follow logs (stream)"
    echo "  --tail N        Show last N lines"
@@ -593,7 +522,7 @@ function kplogs() {
   # Interactive pod logs viewer (service/env aware)
  local follow=false
  local tail_lines=""
- 
+
  # Parse flags
  while [[ $# -gt 0 ]]; do
    case "$1" in
@@ -610,23 +539,23 @@ function kplogs() {
        ;;
    esac
  done
- 
+
   local service=$1
   local env=$2
   local pod=$3
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$pod" ]]; then
     pod=$(fkp "$namespace")
     if [[ -z "$pod" ]]; then
       return 1
     fi
   fi
-  
+
   local containers=$(kubectl get pod "$pod" -n "$namespace" -o jsonpath='{.spec.containers[*].name}')
   local container
-  
+
   if [[ $(echo "$containers" | wc -w) -gt 1 ]]; then
     container=$(echo "$containers" | tr ' ' '\n' | fzf --height=40% --border --prompt="Select Container: ")
     if [[ -z "$container" ]]; then
@@ -634,6 +563,28 @@ function kplogs() {
       return 1
     fi
   fi
+
+  local log_cmd="kubectl logs -n $namespace $pod"
+  if [[ -n "$container" ]]; then
+    log_cmd="$log_cmd -c $container"
+  fi
+  if [[ "$follow" == true ]]; then
+    log_cmd="$log_cmd -f"
+  fi
+  if [[ -n "$tail_lines" ]]; then
+    log_cmd="$log_cmd --tail=$tail_lines"
+  fi
+
+  echo "📋 Viewing logs for: $pod" >&2
+  if [[ -n "$container" ]]; then
+    echo "📦 Container: $container" >&2
+  fi
+  echo "📍 Namespace: $namespace" >&2
+  if [[ "$follow" == true ]]; then
+    echo "🔄 Streaming logs (press Ctrl+C to exit)" >&2
+  fi
+
+  eval "$log_cmd"
 }
 
 ### Service Functions with FZF
@@ -654,19 +605,11 @@ function fks() {
     return 0
   fi
 
-  local namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
-  
-  if [[ -z "$namespace" ]]; then
-    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | 
-      fzf $(fzf_select_opts) --prompt="Select Namespace: ")
-    if [[ -z "$namespace" ]]; then
-      echo "❌ No namespace selected."
-      return 1
-    fi
-  fi
-  
-  echo "🔍 Fetching services in namespace: $namespace"
-  
+  local namespace=$(resolve_namespace "$1" "$2")
+  [[ -z "$namespace" ]] && return 1
+
+  echo "🔍 Fetching services in namespace: $namespace" >&2
+
   # Get service list
   local service_line
   service_line=$(kubectl get services -n "$namespace" \
@@ -678,15 +621,15 @@ function fks() {
         --bind="ctrl-e:execute(kubectl get endpoints -n $namespace {1})" \
         --bind="ctrl-s:execute(kubectl describe service -n $namespace {1} | less -R)" \
         --header="Enter=select, Ctrl-P=port-forward info, Ctrl-E=endpoints, Ctrl-S=describe")
-  
+
   if [[ -n "$service_line" ]]; then
     local service_name=$(echo "$service_line" | awk '{print $1}')
     echo "$service_name" | pbcopy
-    echo "✅ Selected service: $service_name (copied to clipboard)"
+    echo "✅ Selected service: $service_name (copied to clipboard)" >&2
     echo "$service_name"
     return 0
   else
-    echo "❌ No service selected."
+    echo "❌ No service selected." >&2
     return 1
   fi
 }
@@ -694,27 +637,11 @@ function fks() {
 # Deployment Functions with FZF
 # ------------------------------------------------------------------------------
 function fkd() {
-  # Interactive deployment selection
-  local service=$1
-  local env=$2
-  local namespace
-  
-  if [[ -n "$service" && -n "$env" ]]; then
-    namespace=$(get_namespace_for "$service" "$env")
-  else
-    namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
-  fi
-  
-  if [[ -z "$namespace" ]]; then
-    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | fzf --height=40% --border --prompt="Select Namespace: ")
-    if [[ -z "$namespace" ]]; then
-      echo "No namespace selected."
-      return 1
-    fi
-  fi
-  
+  local namespace=$(resolve_namespace "$1" "$2")
+  [[ -z "$namespace" ]] && return 1
+
   local depl_line=$(kubectl get deployments -n "$namespace" -o "custom-columns=NAME:.metadata.name,READY:.status.readyReplicas,UP-TO-DATE:.status.updatedReplicas,AVAILABLE:.status.availableReplicas,AGE:.metadata.creationTimestamp" --no-headers | fzf --height=40% --border --prompt="Select Deployment ($namespace): ")
-  
+
   if [[ -n "$depl_line" ]]; then
     local deployment_name=$(echo "$depl_line" | awk '{print $1}')
     echo "$deployment_name" | copy
@@ -729,27 +656,11 @@ function fkd() {
 # Service Functions with FZF
 # ------------------------------------------------------------------------------
 function fksvc() {
-  # Interactive service selection
-  local service=$1
-  local env=$2
-  local namespace
-  
-  if [[ -n "$service" && -n "$env" ]]; then
-    namespace=$(get_namespace_for "$service" "$env")
-  else
-    namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
-  fi
-  
-  if [[ -z "$namespace" ]]; then
-    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | fzf --height=40% --border --prompt="Select Namespace: ")
-    if [[ -z "$namespace" ]]; then
-      echo "No namespace selected."
-      return 1
-    fi
-  fi
-  
+  local namespace=$(resolve_namespace "$1" "$2")
+  [[ -z "$namespace" ]] && return 1
+
   local svc_line=$(kubectl get services -n "$namespace" -o "custom-columns=NAME:.metadata.name,TYPE:.spec.type,CLUSTER-IP:.spec.clusterIP,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip,PORTS:.spec.ports[0].port" --no-headers | fzf --height=40% --border --prompt="Select Service ($namespace): ")
-  
+
   if [[ -n "$svc_line" ]]; then
     local service_name=$(echo "$svc_line" | awk '{print $1}')
     echo "$service_name" | copy
@@ -764,27 +675,11 @@ function fksvc() {
 # ConfigMap Functions with FZF
 # ------------------------------------------------------------------------------
 function fkcm() {
-  # Interactive ConfigMap selection
-  local service=$1
-  local env=$2
-  local namespace
-  
-  if [[ -n "$service" && -n "$env" ]]; then
-    namespace=$(get_namespace_for "$service" "$env")
-  else
-    namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
-  fi
-  
-  if [[ -z "$namespace" ]]; then
-    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | fzf --height=40% --border --prompt="Select Namespace: ")
-    if [[ -z "$namespace" ]]; then
-      echo "No namespace selected."
-      return 1
-    fi
-  fi
-  
+  local namespace=$(resolve_namespace "$1" "$2")
+  [[ -z "$namespace" ]] && return 1
+
   local cm=$(kubectl get configmaps -n "$namespace" -o custom-columns=NAME:.metadata.name,DATA:.data | fzf --height=40% --border --prompt="Select ConfigMap ($namespace): ")
-  
+
   if [[ -n "$cm" ]]; then
     local cm_name=$(echo "$cm" | awk '{print $1}')
     echo "$cm_name" | copy
@@ -799,27 +694,11 @@ function fkcm() {
 # Secret Functions with FZF
 # ------------------------------------------------------------------------------
 function fksecret() {
-  # Interactive Secret selection
-  local service=$1
-  local env=$2
-  local namespace
-  
-  if [[ -n "$service" && -n "$env" ]]; then
-    namespace=$(get_namespace_for "$service" "$env")
-  else
-    namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
-  fi
-  
-  if [[ -z "$namespace" ]]; then
-    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | fzf --height=40% --border --prompt="Select Namespace: ")
-    if [[ -z "$namespace" ]]; then
-      echo "No namespace selected."
-      return 1
-    fi
-  fi
-  
+  local namespace=$(resolve_namespace "$1" "$2")
+  [[ -z "$namespace" ]] && return 1
+
   local secret=$(kubectl get secrets -n "$namespace" -o custom-columns=NAME:.metadata.name,TYPE:.type,DATA:.data | fzf --height=40% --border --prompt="Select Secret ($namespace): ")
-  
+
   if [[ -n "$secret" ]]; then
     local secret_name=$(echo "$secret" | awk '{print $1}')
     echo "$secret_name" | copy
@@ -834,27 +713,11 @@ function fksecret() {
 # Job Functions with FZF
 # ------------------------------------------------------------------------------
 function fkjob() {
-  # Interactive Job selection
-  local service=$1
-  local env=$2
-  local namespace
-  
-  if [[ -n "$service" && -n "$env" ]]; then
-    namespace=$(get_namespace_for "$service" "$env")
-  else
-    namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
-  fi
-  
-  if [[ -z "$namespace" ]]; then
-    namespace=$(kubectl get namespace -o custom-columns=NAME:.metadata.name --no-headers | fzf --height=40% --border --prompt="Select Namespace: ")
-    if [[ -z "$namespace" ]]; then
-      echo "No namespace selected."
-      return 1
-    fi
-  fi
-  
+  local namespace=$(resolve_namespace "$1" "$2")
+  [[ -z "$namespace" ]] && return 1
+
   local job=$(kubectl get jobs -n "$namespace" -o custom-columns=NAME:.metadata.name,COMPLETIONS:.status.succeeded,DURATION:.status.completionTime,AGE:.metadata.creationTimestamp | fzf --height=40% --border --prompt="Select Job ($namespace): ")
-  
+
   if [[ -n "$job" ]]; then
     local job_name=$(echo "$job" | awk '{print $1}')
     echo "$job_name" | copy
@@ -871,16 +734,16 @@ function kjlogs() {
   local service=$1
   local env=$2
   local job=$3
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   if [[ -z "$job" ]]; then
     job=$(fkjob "$namespace")
     if [[ -z "$job" ]]; then
       return 1
     fi
   fi
-  
+
   local pod=$(kubectl get pods -n "$namespace" -l job-name="$job" -o custom-columns=NAME:.metadata.name --no-headers | head -1)
   echo "Viewing logs for job $job (pod $pod) in namespace $namespace"
   echo "Service: $service (env: $env)"
@@ -893,10 +756,10 @@ function kdesc() {
   # Interactive resource description (service/env aware)
   local service=$1
   local env=$2
-  
-  namespace=$(get_namespace_for "$service" "$env")
+
+  local namespace=$(get_namespace_for "$service" "$env")
   local resource_type=$(echo -e "pod\ndeployment\nservice\nconfigmap\nsecret\njob\ningress" | fzf --height=40% --border --prompt="Select Resource Type: ")
-  
+
   if [[ -n "$resource_type" ]]; then
     local resource
     case "$resource_type" in
@@ -908,7 +771,7 @@ function kdesc() {
       job) resource=$(fkjob "$namespace") ;;
       ingress) resource=$(kubectl get ingress -n "$namespace" -o custom-columns=NAME:.metadata.name --no-headers | fzf --height=40% --border --prompt="Select Ingress: ") ;;
     esac
-    
+
     if [[ -n "$resource" ]]; then
       echo "Describing $resource_type: $resource"
       echo "Namespace: $namespace"
@@ -922,9 +785,9 @@ function kevents() {
   # Show events for namespace (service/env aware)
   local service=$1
   local env=$2
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   echo "Events in namespace: $namespace"
   echo "Service: $service (env: $env)"
   kubectl get events -n "$namespace" --sort-by='.lastTimestamp' | less
@@ -936,9 +799,9 @@ function kgetall() {
   # Get all resources in a namespace (service/env aware)
   local service=$1
   local env=$2
-  
-  namespace=$(get_namespace_for "$service" "$env")
-  
+
+  local namespace=$(get_namespace_for "$service" "$env")
+
   echo "All resources in namespace: $namespace"
   echo "Service: $service (env: $env)"
   kubectl get all -n "$namespace"
@@ -949,7 +812,7 @@ function kwho_am_i() {
   local ctx=$(kubectl config current-context)
   local user=$(kubectl config view -o jsonpath="{.contexts[?(@.name==\"$ctx\")].context.user}")
   local ns=$(kubectl config view --minify -o jsonpath='{..namespace}')
-  
+
   echo "Context: $ctx"
   echo "User: $user"
   echo "Namespace: ${ns:-default}"
@@ -960,8 +823,8 @@ function kubeForwardPorts() {
   local namespace=$1
   local service=$2
   shift 2
-  
-  cmd="kpf -n $namespace $service $*"
+
+  local cmd="kpf -n $namespace $service $*"
   eval "$cmd"
 }
 
@@ -973,7 +836,7 @@ function kfwd() {
   local service=$(get_service_for "$app" "$env")
   local ports=$(get_port_for "$app" "$env")
 
-  cmd="kubeForwardPorts $namespace $service $ports"
+  local cmd="kubeForwardPorts $namespace $service $ports"
   echo "$cmd"
   eval "$cmd"
 }
@@ -988,7 +851,8 @@ function khelp() {
   echo ""
   echo "Pod Management:"
   echo "  fkp <service> <env>        - Find and select a pod"
-  echo "  kpsh <service> <env>       - Shell into a pod"
+  echo "  kinto <pod> [ns] [container] - Shell into a pod (direct)"
+  echo "  kpsh <service> <env>       - Shell into a pod (interactive)"
   echo "  kplogs <service> <env>     - View pod logs"
   echo "  restartKPod <service> <env>- Restart a pod"
   echo "  getKPodStatus <service> <env> - Get pod status"
@@ -1008,7 +872,7 @@ function khelp() {
   echo "Context/Namespace:"
   echo "  fkns                       - Find and copy namespace name"
   echo "  kns <service> <env>        - Switch to a namespace"
-  echo "  fkctx                      - Find and copy context name" 
+  echo "  fkctx                      - Find and copy context name"
   echo "  kctx                       - Switch to a context"
   echo "  kwho_am_i                  - Show current k8s context info"
   echo ""
