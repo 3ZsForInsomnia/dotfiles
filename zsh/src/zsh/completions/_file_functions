@@ -11,7 +11,7 @@ function _file_functions_complete_args() {
       # Neovim functions - complete with any files/directories
       if (( CURRENT == 2 )); then
         _alternative \
-          'files:files:_files' \
+          'files:files:_comp_files_no_dirs' \
           'directories:directories:_directories'
         return 0
       fi
@@ -21,7 +21,7 @@ function _file_functions_complete_args() {
       # Open function - files, directories, and URLs
       if (( CURRENT == 2 )); then
         _alternative \
-          'files:files:_files' \
+          'files:files:_comp_files_no_dirs' \
           'directories:directories:_directories' \
           'urls:URLs:(http:// https:// ftp:// file:// www.)'
         return 0
@@ -48,7 +48,9 @@ function _file_functions_complete_args() {
     fzv)
       # fzf + nvim - uses fzf internally, but we can provide file completion as fallback
       if (( CURRENT == 2 )); then
-        _files
+        _alternative \
+          'files:files:_comp_files_no_dirs' \
+          'directories:directories:_directories'
         return 0
       fi
       ;;
@@ -56,7 +58,9 @@ function _file_functions_complete_args() {
     fzo)
       # fzf + open - uses fzf internally, but we can provide file completion as fallback
       if (( CURRENT == 2 )); then
-        _files
+        _alternative \
+          'files:files:_comp_files_no_dirs' \
+          'directories:directories:_directories'
         return 0
       fi
       ;;

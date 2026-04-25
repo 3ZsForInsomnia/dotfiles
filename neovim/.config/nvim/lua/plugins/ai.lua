@@ -46,12 +46,12 @@ return {
     end,
   },
   {
-    -- "3ZsForInsomnia/token-count.nvim",
-    dir = "~/src/token-count.nvim",
+    "3ZsForInsomnia/token-count.nvim",
     event = "VeryLazy",
     config = true,
     opts = {
-      model = "claude-4.6-opus",
+      model = "claude-4.7-opus",
+      copilot_host = true,
     },
   },
   {
@@ -285,11 +285,7 @@ return {
           },
           adapter = {
             name = "copilot",
-            model = "claude-opus-4.6",
-            -- model = "claude-sonnet-4.5",
-            -- model = "gemini-3-pro-preview",
-            -- model = "gemini-2.5-pro",
-            -- model = "gpt-5",
+            model = "claude-opus-4.7",
           },
           tools = {
             cmd_runner = {

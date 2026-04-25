@@ -1,0 +1,13 @@
+#compdef cat
+
+# `cat` is aliased to `bat`. For flag completion, delegate to bat's native
+# completion. For file/dir arguments, use grouped files+directories so the
+# display matches our other custom completions (o, v, etc.).
+
+if [[ ${words[CURRENT]} == -* ]]; then
+  _bat
+else
+  _alternative \
+    'files:files:_comp_files_no_dirs' \
+    'directories:directories:_directories'
+fi

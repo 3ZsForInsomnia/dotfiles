@@ -1,0 +1,62 @@
+#compdef lss lsg lsd lsr lsrg
+
+# Completions for the eza-based ls aliases (see aliases/searching.zsh,
+# aliases/lss.zsh). Plain `ls` lives in its own _ls file.
+
+function _eza_aliases() {
+  local cmd="$words[1]"
+
+  case "$cmd" in
+    lss)
+      # lss is its own function with its own flags (not eza's).
+      if (( CURRENT == 2 )) || [[ ${words[CURRENT]} == -* ]]; then
+        local -a lss_options
+        lss_options=(
+          '-d[Filter to files modified/created in last N days]:days'
+          '-n[Limit output to N results]:number'
+          '-c[Use creation date for filtering and sorting]'
+          '-s[Sort by size (largest first)]'
+          '--rev[Reverse sort order]'
+          '-h[Show help message]'
+          '--help[Show help message]'
+        )
+        _arguments -s -S $lss_options && return 0
+      fi
+      _alternative \
+        'files:files:_comp_files_no_dirs' \
+        'directories:directories:_directories'
+      ;;
+
+    lsd)
+      # lsd='eza -lahUmD -F --icons -I ".git"' — directories only.
+      if [[ ${words[CURRENT]} == -* ]]; then
+        _eza
+      else
+        _alternative \
+          'directories:directories:_directories'
+      fi
+      ;;
+
+    lsr)
+      # lsr='lsrFunc' — first arg is optional depth, then eza handles the rest.
+      if [[ ${words[CURRENT]} == -* ]]; then
+        _eza
+      elif (( CURRENT == 2 )); then
+        _message "optional depth (number)"
+      else
+        _alternative \
+          'files:files:_comp_files_no_dirs' \
+          'directories:directories:_directories'
+      fi
+      ;;
+
+    lsg|lsrg)
+      # Both pipe ls/eza output through grep — first arg is the grep pattern.
+      if (( CURRENT == 2 )); then
+        _message "grep pattern"
+      fi
+      ;;
+  esac
+}
+
+_eza_aliases "$@"

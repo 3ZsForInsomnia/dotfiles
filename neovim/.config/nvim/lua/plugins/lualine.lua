@@ -95,6 +95,11 @@ return {
             { "filename", new_file_status = true, path = 1 },
           },
           lualine_x = {
+            {
+              require("noice").api.statusline.mode.get,
+              cond = require("noice").api.statusline.mode.has,
+              color = { fg = "#ff9e64" },
+            },
             require("token-count.integrations.lualine").current_buffer,
           },
           lualine_y = { "progress" },

@@ -1,4 +1,4 @@
-#compdef y lzd rss cat lpa lpas gogh ogogh
+#compdef y lzd rss lpa lpas gogh ogogh
 
 # Completion for TUI application shortcuts
 
@@ -8,18 +8,15 @@ _tui_tools_completion() {
 
   case "$service" in
     y)
-      _description files expl 'Yazi file manager'
-      _directories "$expl[@]"
+      _alternative \
+        'files:files:_comp_files_no_dirs' \
+        'directories:directories:_directories'
       ;;
     lzd)
       _message 'LazyDocker TUI'
       ;;
     rss)
       _message 'Newsboat RSS reader'
-      ;;
-    cat)
-      _description files expl 'bat - cat with syntax highlighting'
-      _files "$expl[@]"
       ;;
     lpa)
       _message 'LastPass CLI'

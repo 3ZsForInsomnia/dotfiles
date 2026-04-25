@@ -102,6 +102,12 @@ source "$ZSH_CONFIG_DIR/source-things.zsh"
 
 zstyle ':completion:*' menu select
 
+# Restrict _files matches to non-directories when invoked via the
+# _comp_files_no_dirs helper. This counteracts zsh-autocomplete's global
+# file-patterns zstyle so that `_alternative 'files:files:_comp_files_no_dirs'
+# 'directories:directories:_directories'` produces cleanly separated groups.
+zstyle ':completion:*:files-no-dirs:*' file-patterns '%p(#q-^/):globbed-files'
+
 # Completion styling - show descriptions properly
 zstyle ':completion:*' format '%B-- %d --%b'
 zstyle ':completion:*:descriptions' format '%B-- %d --%b'

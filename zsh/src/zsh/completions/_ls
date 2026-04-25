@@ -1,0 +1,14 @@
+#compdef ls
+
+# `ls` is aliased to `eza -lahUm -F --icons --git`. For flag completion,
+# delegate to eza's native completion (the system _ls knows BSD ls flags
+# which don't apply to eza). For file/dir arguments, use grouped
+# files+directories matching our other custom completions.
+
+if [[ ${words[CURRENT]} == -* ]]; then
+  _eza
+else
+  _alternative \
+    'files:files:_comp_files_no_dirs' \
+    'directories:directories:_directories'
+fi

@@ -35,7 +35,6 @@ return {
           enabled = true,
         },
       },
-      input = { enabled = true },
       notifier = { enabled = true },
       picker = { enabled = true }, -- has its own config file
       profiler = { enabled = true },

@@ -75,6 +75,20 @@
       "type": "http",
       "url": "http://127.0.0.1:3845/mcp"
     },
+    "git-mcp": {
+      "args": [
+        "@cyanheads/git-mcp-server@latest"
+      ],
+      "command": "npx",
+      "env": {
+        "GIT_EMAIL": "zach@zjlevine.dev",
+        "GIT_USERNAME": "3ZsForInsomnia",
+        "LOGS_DIR": "~/.local/state/git-mcp/logs/",
+        "MCP_LOG_LEVEL": "info",
+        "MCP_TRANSPORT_TYPE": "stdio"
+      },
+      "type": "stdio"
+    },
     "github": {
       "args": [
         "run",

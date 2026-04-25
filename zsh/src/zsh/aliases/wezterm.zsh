@@ -28,7 +28,7 @@ function wezterm-layout() {
   pane_above=$(wezterm cli get-pane-direction up 2>/dev/null)
 
   if [[ -z "$pane_above" ]]; then
-    wezterm cli split-pane --top --percent 70 >/dev/null
+    wezterm cli split-pane --top --percent 80 >/dev/null
   fi
 
   local right_pane_id

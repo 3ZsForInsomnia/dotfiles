@@ -1,0 +1,20 @@
+#autoload
+
+# Wrapper around _files that restricts matches to non-directories.
+#
+# Background: zsh-autocomplete sets a global file-patterns zstyle on
+# `:completion:*` that makes _files always emit both `directories` and
+# `globbed-files` tags, which causes directories to appear duplicated when
+# used inside `_alternative 'files:…' 'directories:…'`.
+#
+# This helper extends $curcontext with `:files-no-dirs` so a more-specific
+# zstyle (defined in .zshrc) overrides the autocomplete one for this call
+# only. _directories used as a sibling alternative is unaffected.
+#
+# Usage:
+#   _alternative \
+#     'files:files:_comp_files_no_dirs' \
+#     'directories:directories:_directories'
+
+local curcontext="${curcontext%:*}:files-no-dirs"
+_files "$@"

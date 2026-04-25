@@ -1,4 +1,4 @@
-#compdef dots dotsv notes notesv work workv src c q :q rezsh zshrc wezrc xconf xconvim xstate allZsh allWez rmrf mkcd cls .. ... .... ..... ~ shots tdata docs http http-server addcreds sudo oreg wttr wttr1 wttr3 wttrpng unstow unstowAll updateInitScriptGist dlslack dls fup
+#compdef dots dotsv notes notesv work workv src c q :q rezsh zshrc wezrc xconf xconvim xstate allZsh allWez rmrf mkcd cls .. ... .... ..... ~ shots tdata docs http http-server addcreds oreg wttr wttr1 wttr3 wttrpng unstow unstowAll updateInitScriptGist dlslack dls fup
 
 # Miscellaneous aliases and shortcuts completion
 
@@ -38,7 +38,6 @@ function _misc_aliases() {
     'http:Start HTTP server'
     'http-server:Start HTTP server'
     'addcreds:Add SSH credentials'
-    'sudo:Sudo with alias expansion'
     'oreg:Open in registry/system'
     'wttr:Get weather report'
     'wttr1:Get 1-day weather forecast'

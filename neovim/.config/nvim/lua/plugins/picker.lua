@@ -5,6 +5,7 @@ return {
   lazy = false,
   opts = {
     picker = {
+      ui_select = true,
       layouts = {
         custom_telescope = {
           reverse = true,

@@ -9,7 +9,8 @@ end
 
 return {
   {
-    "sindrets/diffview.nvim",
+    "dlyongemallo/diffview.nvim",
+    version = "*",
     cmd = {
       f("Open"),
       f("Close"),

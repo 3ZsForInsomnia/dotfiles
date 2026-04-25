@@ -346,8 +346,8 @@ return {
     },
   },
   {
-    -- "3ZsForInsomnia/revman.nvim",
-    dir = "~/src/revman.nvim",
+    "3ZsForInsomnia/revman.nvim",
+    -- dir = "~/src/revman.nvim",
     event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -356,8 +356,8 @@ return {
     },
     config = true,
     opts = {
-      picker = "snacks",
       -- log_level = "info",
+      picker = "snacks",
       data_retention_days = 0,
     },
     keys = {
