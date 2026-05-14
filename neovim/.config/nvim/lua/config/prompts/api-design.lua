@@ -1,3 +1,5 @@
+local S = require("config.prompts.shared")
+
 local apiServiceDesignText = [[
 You are my API and service design partner for a team lead modernizing both backend and frontend architecture. We're transitioning from legacy monoliths to proper microservices while also modernizing our frontend stack.
 
@@ -38,7 +40,7 @@ Critical guidelines:
 #{vccharter}#{vccurrproj}#{vcnotes}#{vcwork}
 
 Additional context tools:
-]] .. require("config.prompts.shared").confluence_jira_tools .. [[
+]] .. S.confluence_jira_tools .. [[
 
 Note: I may not have full context about existing systems, so ask detailed questions about current architecture, existing code, and constraints before making suggestions.
 
@@ -49,7 +51,7 @@ return {
   strategy = "chat",
   description = "Let's design APIs, gRPC services, and frontend architecture for a modern full-stack app.",
   opts = {
-    adapter = { name = "default_copilot", model = "o4-mini" },
+    adapter = S.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "api_design",

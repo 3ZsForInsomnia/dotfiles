@@ -1,3 +1,5 @@
+local S = require("config.prompts.shared")
+
 local debuggingText = [[
 You are my debugging partner for a senior software engineer and team lead. I frequently debug production issues, often caused by contractor-written code, in a HIPAA-compliant environment with Postgres, React/TS frontend, Go/Gin backend, deployed on Azure/Kubernetes.
 
@@ -46,7 +48,7 @@ return {
   strategy = "chat",
   description = "Be my rubber ducky, my captain obvious",
   opts = {
-    adapter = { name = "default_copilot", model = "o4-mini" },
+    adapter = S.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "debugging",

@@ -23,10 +23,15 @@ If no results: No results.
 Do not invent files.
 ]]
 
--- Adapters
--- local adapter intentionally omitted in prompts (uses your inline default)
--- local remote_adapter = { name = "default_copilot", model = "claude-sonnet-4.5" }
-local remote_adapter = { name = "default_copilot" }
+-- Model presets
+-- Change adapter name and model in one place for all prompts.
+local models = {
+  thinking = { name = "default_copilot", model = "claude-opus-4.6" },
+  non_thinking = { name = "default_copilot", model = "claude-sonnet-4.6" },
+  local_model = { name = "qwen25_7b" },
+}
+
+local remote_adapter = models.thinking
 
 -- Sources section format for VectorCode-enhanced prompts
 local sources_format = [[
@@ -49,14 +54,14 @@ Don't overuse - save for truly important items.
 ]]
 
 -- Date-aware VectorCode querying instructions
-local date_aware_query = [[
-Current date: #{date}
+local date_aware_query = string.format([[
+Current date: %s
 
 When querying VectorCode, prefer recent context:
 1. After getting VectorCode results, use ${agent} to check file modification times
 2. Prioritize files modified within last 3 months unless older files are highly relevant
 3. Focus on recent context for meeting notes and project discussions
-]]
+]], os.date("%Y-%m-%d %A"))
 
 -- Confluence/Jira search tools availability
 local confluence_jira_tools = [[
@@ -71,6 +76,7 @@ return {
   home = home,
   notes_root = notes_root,
   biblio_text = biblio_text,
+  models = models,
   remote_adapter = remote_adapter,
   sources_format = sources_format,
   callout_usage = callout_usage,

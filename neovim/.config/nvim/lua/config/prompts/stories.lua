@@ -1,3 +1,5 @@
+local S = require("config.prompts.shared")
+
 local storyWritingText = [[
 You are my story breakdown assistant for a team lead writing Jira stories from feature epics. I work with a mixed-skill team (2+ years experience) of contractors and full-time developers.
 
@@ -156,7 +158,7 @@ return {
   strategy = "chat",
   description = "Let's tell a fantastic and wonderful story together",
   opts = {
-    adapter = { name = "default_copilot", model = "o4-mini" },
+    adapter = S.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "story_writing",

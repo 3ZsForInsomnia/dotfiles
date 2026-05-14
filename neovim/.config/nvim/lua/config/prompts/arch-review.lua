@@ -1,3 +1,5 @@
+local S = require("config.prompts.shared")
+
 local archReviewText = [[
 You are my architecture and code review partner for a team lead reviewing architecture decisions, proposals, and code for team maintainability. Our team ranges from 2+ years to 7+ years experience, with architecture reviewers typically being senior (7+ years).
 
@@ -39,7 +41,7 @@ return {
   strategy = "chat",
   description = "Architecture and code review partner for maintainable patterns",
   opts = {
-    adapter = { name = "default_copilot", model = "o4-mini" },
+    adapter = S.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "arch_review",

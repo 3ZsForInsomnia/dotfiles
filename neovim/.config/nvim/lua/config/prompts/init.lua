@@ -47,4 +47,10 @@ return {
   ["VC: Extract Keywords & Query"] = require("config.prompts.vectorcode").vc_extract_keywords,
   ["VC: Search with Summary"] = require("config.prompts.vectorcode").vc_search_summary,
   ["VC: Raw File List"] = require("config.prompts.vectorcode").vc_search_raw,
+  ["VC: Full Routing"] = require("config.prompts.vectorcode").vc_routing,
+  ["VC: Route Current Project"] = require("config.prompts.vectorcode").vc_route_current,
+  ["VC: Route Notes"] = require("config.prompts.vectorcode").vc_route_notes,
+  ["VC: Route Work"] = require("config.prompts.vectorcode").vc_route_work,
+  ["VC: Quick Notes"] = require("config.prompts.vectorcode").vc_quick_notes,
+  ["VC: Quick Work"] = require("config.prompts.vectorcode").vc_quick_work,
 }

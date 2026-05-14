@@ -1,6 +1,5 @@
 local k_cmd = require("helpers").k_cmd
 local k = require("helpers").k
-local cc_vars = require("config.codecompanion-variables")
 
 local a = "<leader>a"
 
@@ -50,7 +49,7 @@ return {
     event = "VeryLazy",
     config = true,
     opts = {
-      model = "claude-4.7-opus",
+      model = "claude-4.6-opus",
       copilot_host = true,
     },
   },
@@ -77,13 +76,7 @@ return {
       },
     },
     opts = {
-      rules = {
-        chatmodes = {
-          description = "Project chatmodes",
-          files = {
-            ".github/chatmodes/*.chatmode.md",
-          },
-        },
+      rules = vim.tbl_extend("force", {
         personal = {
           description = "Personal rules and code philosophy",
           files = {
@@ -91,20 +84,23 @@ return {
             os.getenv("HOME") .. "/.agent/AGENTS.md",
           },
         },
-        linters = {
-          description = "Project linter configs",
-          files = {
-            "eslint.config.js",
-            ".golangci.*.yaml",
-          },
-        },
+        eslint = require("config.codecompanion.rules").conditional_rule(
+          "ESLint config",
+          "**/*.{ts,tsx,js,jsx}",
+          { "eslint.config.js" }
+        ),
+        golangci_lint = require("config.codecompanion.rules").conditional_rule(
+          "Go linter configs",
+          "**/*.go",
+          { ".golangci.ci.yaml" }
+        ),
         opts = {
           chat = {
-            autoload = { "default", "chatmodes", "personal", "linters" },
+            autoload = { "default", "personal" },
             enabled = true,
           },
         },
-      },
+      }, require("config.codecompanion.rules").build_instruction_rules()),
       opts = {
         log_level = "ERROR",
       },
@@ -132,7 +128,7 @@ return {
           opts = {
             tool_group = {
               -- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
-              enabled = false,
+              enabled = true,
               -- a list of extra tools that you want to include in `@vectorcode_toolbox`.
               -- if you use @vectorcode_vectorise, it'll be very handy to include
               -- `file_search` here.
@@ -239,7 +235,7 @@ return {
           },
           adapter = {
             name = "copilot",
-            model = "claude-opus-4.7",
+            model = "claude-opus-4.6",
           },
           tools = {
             cmd_runner = {
@@ -267,15 +263,38 @@ return {
                 require_approval_before = false,
               },
             },
-          },
-          variables = {
-            date = cc_vars.date,
-            vccharter = cc_vars.vccharter,
-            vccurrproj = cc_vars.vccurrproj,
-            vcnotes = cc_vars.vcnotes,
-            vcwork = cc_vars.vcwork,
-            qnotes = cc_vars.qnotes,
-            qwork = cc_vars.qwork,
+            test_inline = {
+              description = "Test inline tool",
+              name = "test_inline",
+              cmds = {
+                function(self, args, opts)
+                  print("test_inline called with: " .. vim.inspect(args))
+                  return { status = "success", data = "inline tool ran: " .. (args.message or "no message") }
+                end,
+              },
+              schema = {
+                type = "function",
+                ["function"] = {
+                  name = "test_inline",
+                  description = "A test tool. Call it with a message.",
+                  parameters = {
+                    type = "object",
+                    properties = {
+                      message = { type = "string", description = "A test message" },
+                    },
+                    required = { "message" },
+                  },
+                },
+              },
+              output = {
+                success = function(self, stdout, meta)
+                  meta.tools.chat:add_tool_output(self, stdout[1])
+                end,
+                error = function(self, stderr, meta)
+                  meta.tools.chat:add_tool_output(self, stderr[1])
+                end,
+              },
+            },
           },
           keymaps = {
             close = {
@@ -308,18 +327,11 @@ return {
             end,
             user = "Me",
           },
+          variables = {},
         },
         inline = {
           adapter = "qwen25_7b",
-          variables = {
-            date = cc_vars.date,
-            vccharter = cc_vars.vccharter,
-            vccurrproj = cc_vars.vccurrproj,
-            vcnotes = cc_vars.vcnotes,
-            vcwork = cc_vars.vcwork,
-            qnotes = cc_vars.qnotes,
-            qwork = cc_vars.qwork,
-          },
+          variables = {},
         },
         background = {
           chat = {
@@ -337,17 +349,6 @@ return {
           },
         },
       },
-      -- memory = {
-      --   opts = {
-      --     chat = {
-      --       enabled = true,
-      --     },
-      --   },
-      --   default = {
-      --     description = "Common memory files",
-      --     files = {},
-      --   },
-      -- },
       adapters = {
         http = {
           opts = {
@@ -360,9 +361,10 @@ return {
                   order = 1,
                   type = "enum",
                   desc = "Select one of your curated Copilot-backed models",
-                  default = "claude-sonnet-4.5",
+                  default = "claude-sonnet-4.6",
                   choices = {
-                    ["claude-sonnet-4.5"] = { opts = { provider = "anthropic" } },
+                    ["claude-sonnet-4.6"] = { opts = { provider = "anthropic" } },
+                    ["claude-opus-4.6"] = { opts = { provider = "anthropic" } },
                     ["gpt-5-2025-08-07"] = { opts = { provider = "openai", tier = "flagship" } },
                     ["o4-mini"] = { opts = { provider = "openai", can_reason = true, reasoning_tier = "mini" } },
                     ["gemini-2.5-pro"] = { opts = { provider = "google", multimodal = true } },

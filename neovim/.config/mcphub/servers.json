@@ -71,7 +71,7 @@
       "disabled": true
     },
     "figma": {
-      "disabled": true,
+      "disabled": false,
       "type": "http",
       "url": "http://127.0.0.1:3845/mcp"
     },
@@ -139,6 +139,10 @@
         "@playwright/mcp@latest"
       ],
       "command": "npx"
+    },
+    "sunsama": {
+      "type": "http",
+      "url": "https://api.sunsama.com/mcp"
     },
     "tavily": {
       "args": [

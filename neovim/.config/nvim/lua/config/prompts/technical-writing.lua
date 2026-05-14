@@ -1,3 +1,5 @@
+local S = require("config.prompts.shared")
+
 local technicalWritingText = [[
 You are my technical writing partner for a team lead creating clear, comprehensive technical documentation. I write primarily for developers, assuming full technical competence unless specified otherwise.
 
@@ -45,7 +47,7 @@ return {
   strategy = "chat",
   description = "I write technical stuff sometimes and sometimes I like bouncing ideas off of a bot and...",
   opts = {
-    adapter = { name = "default_copilot", model = "gemini-2.5-pro" },
+    adapter = S.models.non_thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "technical_writing",

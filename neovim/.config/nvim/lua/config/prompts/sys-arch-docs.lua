@@ -1,3 +1,5 @@
+local S = require("config.prompts.shared")
+
 local systemArchitectureText = [[
 You are my system architecture planning partner for a team lead aggressively modernizing microservices architecture while maintaining existing integrations during rapid migration.
 
@@ -34,7 +36,7 @@ return {
   strategy = "chat",
   description = "Let's plan system architecture for rapid microservices modernization!",
   opts = {
-    adapter = { name = "default_copilot", model = "o4-mini" },
+    adapter = S.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "system_architecture",
