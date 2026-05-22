@@ -108,3 +108,11 @@ au({ "CursorMoved", "CursorMovedI" }, {
     _G.extended_search_count()
   end,
 })
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  once = true,
+  callback = function()
+    pcall(vim.api.nvim_clear_autocmds, { group = "lazyvim_resize_splits" })
+  end,
+})

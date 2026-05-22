@@ -27,24 +27,6 @@ return {
     },
   },
   {
-    "ravitemer/mcphub.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    build = "npm install -g mcp-hub@latest",
-    config = function()
-      require("mcphub").setup({
-        global_env = {
-          GITHUB_PERSONAL_ACCESS_TOKEN = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN"),
-          SLACK_USER_TOKEN = os.getenv("SLACK_USER_TOKEN"),
-          SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID"),
-          SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET"),
-        },
-      })
-    end,
-  },
-  {
     "3ZsForInsomnia/token-count.nvim",
     event = "VeryLazy",
     config = true,
@@ -65,6 +47,12 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "ravitemer/codecompanion-history.nvim",
       {
+        "Davidyz/codecompanion-dap.nvim",
+        dependencies = {
+          "mfussenegger/nvim-dap",
+        },
+      },
+      {
         "3ZsForInsomnia/vs-code-companion",
         -- dir = "~/src/vs-code-companion",
         cmd = "VsccImport",
@@ -78,7 +66,7 @@ return {
     opts = {
       rules = vim.tbl_extend("force", {
         personal = {
-          description = "Personal rules and code philosophy",
+          description = 'Personal rules and code philosophy. This is really my "system" prompt',
           files = {
             vim.fn.stdpath("config") .. "/lua/config/prompts/personal-programming.md",
             os.getenv("HOME") .. "/.agent/AGENTS.md",
@@ -124,39 +112,42 @@ return {
       },
       prompt_library = require("config.prompts"),
       extensions = {
-        vectorcode = {
-          opts = {
-            tool_group = {
-              -- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
-              enabled = true,
-              -- a list of extra tools that you want to include in `@vectorcode_toolbox`.
-              -- if you use @vectorcode_vectorise, it'll be very handy to include
-              -- `file_search` here.
-              extras = {},
-              collapse = false, -- whether the individual tools should be shown in the chat
-            },
-            tool_opts = {
-              ["*"] = {},
-              ls = {},
-              vectorise = {},
-              query = {
-                max_num = { chunk = 80, document = 20 },
-                default_num = { chunk = 50, document = 10 },
-                include_stderr = false,
-                use_lsp = true,
-                no_duplicate = true,
-                chunk_mode = true,
-                summarise = {
-                  enabled = false,
-                  adapter = nil,
-                  query_augmented = true,
-                },
-              },
-              files_ls = {},
-              files_rm = {},
-            },
-          },
+        dap = {
+          enabled = true,
         },
+        -- vectorcode = {
+        --   opts = {
+        --     tool_group = {
+        --       -- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
+        --       enabled = true,
+        --       -- a list of extra tools that you want to include in `@vectorcode_toolbox`.
+        --       -- if you use @vectorcode_vectorise, it'll be very handy to include
+        --       -- `file_search` here.
+        --       extras = {},
+        --       collapse = false, -- whether the individual tools should be shown in the chat
+        --     },
+        --     tool_opts = {
+        --       ["*"] = {},
+        --       ls = {},
+        --       vectorise = {},
+        --       query = {
+        --         max_num = { chunk = 80, document = 20 },
+        --         default_num = { chunk = 50, document = 10 },
+        --         include_stderr = false,
+        --         use_lsp = true,
+        --         no_duplicate = true,
+        --         chunk_mode = true,
+        --         summarise = {
+        --           enabled = false,
+        --           adapter = nil,
+        --           query_augmented = true,
+        --         },
+        --       },
+        --       files_ls = {},
+        --       files_rm = {},
+        --     },
+        --   },
+        -- },
         history = {
           enabled = true,
           opts = {
@@ -212,21 +203,20 @@ return {
             },
           },
         },
-        mcphub = {
-          callback = "mcphub.extensions.codecompanion",
-          opts = {
-            -- MCP Tools
-            make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
-            show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
-            add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
-            show_result_in_chat = true, -- Show tool results directly in chat buffer
-            format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
-            -- MCP Resources
-            make_vars = true, -- Convert MCP resources to #variables for prompts
-            -- MCP Prompts
-            make_slash_commands = true, -- Add MCP prompts as /slash commands
-          },
-        },
+        -- opts = {
+        --   collapse_tools = true,
+        --   interval_ms = 1000,
+        --   winfixbuf = true,
+        --
+        --   tool_opts = {
+        --     evaluate = {
+        --       require_approval_before = true,
+        --     },
+        --     source = {
+        --       prefer_filesystem = true,
+        --     },
+        --   },
+        -- },
       },
       interactions = {
         chat = {
@@ -395,6 +385,20 @@ return {
           end,
         },
       },
+      acp = {
+        copilot_acp = function()
+          return require("codecompanion.adapters").extend("copilot_acp", {
+            defaults = {
+              timeout = 20000,
+              session_config_options = {
+                model = "claude-opus-4-6",
+              },
+              mcpServers = "inherit_from_config",
+            },
+          })
+        end,
+      },
+      mcp = require("config.codecompanion.mcp")(),
     },
     config = function(_, opts)
       opts.interactions.chat.slash_commands = {
