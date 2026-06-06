@@ -31,8 +31,8 @@ return {
     event = "VeryLazy",
     config = true,
     opts = {
-      model = "claude-4.6-opus",
-      copilot_host = true,
+      model = "claude-4.6-sonnet",
+      copilot_host = false,
     },
   },
   {
@@ -64,7 +64,7 @@ return {
       },
     },
     opts = {
-      rules = vim.tbl_extend("force", {
+      rules = {
         personal = {
           description = 'Personal rules and code philosophy. This is really my "system" prompt',
           files = {
@@ -88,12 +88,13 @@ return {
             enabled = true,
           },
         },
-      }, require("config.codecompanion.rules").build_instruction_rules()),
+      },
       opts = {
         log_level = "ERROR",
       },
       display = {
         chat = {
+          show_token_count = true,
           start_in_insert_mode = true,
           window = {
             opts = {
@@ -223,10 +224,7 @@ return {
           opts = {
             completion_provider = "blink",
           },
-          adapter = {
-            name = "copilot",
-            model = "claude-opus-4.6",
-          },
+          adapter = "anthropic_acp",
           tools = {
             cmd_runner = {
               opts = {
@@ -253,38 +251,6 @@ return {
                 require_approval_before = false,
               },
             },
-            test_inline = {
-              description = "Test inline tool",
-              name = "test_inline",
-              cmds = {
-                function(self, args, opts)
-                  print("test_inline called with: " .. vim.inspect(args))
-                  return { status = "success", data = "inline tool ran: " .. (args.message or "no message") }
-                end,
-              },
-              schema = {
-                type = "function",
-                ["function"] = {
-                  name = "test_inline",
-                  description = "A test tool. Call it with a message.",
-                  parameters = {
-                    type = "object",
-                    properties = {
-                      message = { type = "string", description = "A test message" },
-                    },
-                    required = { "message" },
-                  },
-                },
-              },
-              output = {
-                success = function(self, stdout, meta)
-                  meta.tools.chat:add_tool_output(self, stdout[1])
-                end,
-                error = function(self, stderr, meta)
-                  meta.tools.chat:add_tool_output(self, stderr[1])
-                end,
-              },
-            },
           },
           keymaps = {
             close = {
@@ -295,11 +261,9 @@ return {
             },
           },
           roles = {
-            llm = function(adapter)
-              -- Try to get the model; fallback to empty string if not present
+            llm = function(adapter, chat)
               local model = ""
               if adapter and adapter.schema and adapter.schema.model and adapter.schema.model.default then
-                -- Handle if .default is a function (some adapters do this!)
                 local default_model = adapter.schema.model.default
                 if type(default_model) == "function" then
                   local status, result = pcall(default_model, adapter)
@@ -309,10 +273,18 @@ return {
                 end
               end
 
+              local token_str = ""
+              if adapter.type == "acp" then
+                local meta = _G.codecompanion_chat_metadata and chat and _G.codecompanion_chat_metadata[chat.bufnr]
+                if meta and meta.tokens then
+                  token_str = " ~" .. meta.tokens .. "t"
+                end
+              end
+
               if model ~= "" then
-                return "CodeCompanion (" .. adapter.formatted_name .. " - " .. model .. ")"
+                return "CodeCompanion (" .. adapter.formatted_name .. " - " .. model .. token_str .. ")"
               else
-                return "CodeCompanion (" .. adapter.formatted_name .. ")"
+                return "CodeCompanion (" .. adapter.formatted_name .. token_str .. ")"
               end
             end,
             user = "Me",
@@ -383,24 +355,46 @@ return {
               },
             })
           end,
-        },
-      },
-      acp = {
-        copilot_acp = function()
-          return require("codecompanion.adapters").extend("copilot_acp", {
-            defaults = {
-              timeout = 20000,
-              session_config_options = {
-                model = "claude-opus-4-6",
+          anthropic = function()
+            return require("codecompanion.adapters").extend("anthropic", {
+              env = {
+                CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_TOKEN",
               },
-              mcpServers = "inherit_from_config",
-            },
-          })
-        end,
+            })
+          end,
+        },
+        acp = {
+          copilot_acp = function()
+            return require("codecompanion.adapters").extend("copilot_acp", {
+              defaults = {
+                timeout = 20000,
+                session_config_options = {
+                  model = "claude-opus-4-6",
+                },
+                mcpServers = "inherit_from_config",
+              },
+            })
+          end,
+          anthropic_acp = function()
+            return require("codecompanion.adapters").extend("claude_code", {
+              env = {
+                CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_TOKEN",
+              },
+              defaults = {
+                --   session_config_options = {
+                --     model = "claude-sonnet-4-6",
+                --   },
+                mcpServers = "inherit_from_config",
+              },
+            })
+          end,
+        },
       },
       mcp = require("config.codecompanion.mcp")(),
     },
     config = function(_, opts)
+      require("config.codecompanion.rules").setup_instruction_autocmd()
+
       opts.interactions.chat.slash_commands = {
         prompts = require("code-companion-picker").select_slash_command,
         tools = require("code-companion-picker").select_tool_slash_command,

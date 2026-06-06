@@ -4,12 +4,14 @@ local function cwd_name()
   return v.fn.fnamemodify(v.fn.getcwd(), ":t")
 end
 
-local function add_when_in(default_servers, server_name, repos)
+local function add_when_in(initial_servers, server_names, repos)
   if v.tbl_contains(repos, cwd_name()) then
-    table.insert(default_servers, server_name)
+    for _, name in ipairs(server_names) do
+      table.insert(initial_servers, name)
+    end
   end
 
-  return default_servers
+  return initial_servers
 end
 
 local servers = {
@@ -22,13 +24,13 @@ local servers = {
 
   ["git-mcp"] = {
     cmd = { "npx", "@cyanheads/git-mcp-server@latest" },
-    env = {
-      GIT_EMAIL = "zach@zjlevine.dev",
-      GIT_USERNAME = "3ZsForInsomnia",
-      LOGS_DIR = "~/.local/state/git-mcp/logs/",
-      MCP_LOG_LEVEL = "info",
-      MCP_TRANSPORT_TYPE = "stdio",
-    },
+    -- env = {
+    --   GIT_EMAIL = "zach@zjlevine.dev",
+    --   GIT_USERNAME = "3ZsForInsomnia",
+    --   LOGS_DIR = "~/.local/state/git-mcp/logs/",
+    --   MCP_LOG_LEVEL = "info",
+    --   MCP_TRANSPORT_TYPE = "stdio",
+    -- },
   },
 
   ["github"] = {
@@ -40,9 +42,6 @@ local servers = {
       "-e",
       "GITHUB_PERSONAL_ACCESS_TOKEN",
       "ghcr.io/github/github-mcp-server",
-    },
-    env = {
-      GITHUB_PERSONAL_ACCESS_TOKEN = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN"),
     },
   },
 
@@ -134,17 +133,26 @@ local servers = {
   ["vectorcode"] = {
     cmd = { "vectorcode-mcp-server" },
   },
+
+  ["claude_memory"] = {
+    name = "memory-fs",
+    command = "npx",
+    args = { "-y", "@modelcontextprotocol/server-filesystem", "/path/to/memories" },
+    env = {},
+  },
 }
 
 local default_servers = {
+  -- "claude_memory",
+  "git-mcp",
+  "github",
   "vectorcode",
-  "nx",
 }
 
-add_when_in(default_servers, "nx", {
-  "platform",
-  "platform-2",
-})
+local work_repos = { "platform", "platform-2" }
+local work_servers = { "atlassian", "dbhub-plat", "figma", "kubernetes", "nx" }
+
+add_when_in(default_servers, work_servers, work_repos)
 
 return function()
   return {

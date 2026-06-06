@@ -359,6 +359,7 @@ return {
       -- log_level = "info",
       picker = "snacks",
       data_retention_days = 0,
+      background_sync_frequency = 60,
     },
     keys = {
       cmd({
