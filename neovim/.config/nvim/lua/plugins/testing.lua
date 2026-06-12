@@ -24,6 +24,13 @@ local go_config = {
   },
 }
 
+local playwright_config = {
+  options = {
+    persist_project_selection = true,
+    enable_dynamic_test_discovery = true,
+  },
+}
+
 local function jump_to_next_failed_test()
   require("neotest").jump.next({ status = "failed" })
 end
@@ -91,6 +98,7 @@ return {
       "nvim-neotest/neotest-python",
       "nvim-neotest/neotest-jest",
       "marilari88/neotest-vitest",
+      "thenbe/neotest-playwright",
     },
     opts = {
       adapters = {
@@ -98,6 +106,7 @@ return {
         ["neotest-jest"] = js_config,
         ["neotest-vitest"] = {},
         ["neotest-python"] = {},
+        ["neotest-playwright"] = playwright_config,
       },
       -- Overseer integration
       consumers = {

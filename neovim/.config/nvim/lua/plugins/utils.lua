@@ -22,4 +22,18 @@ return {
       { "<leader>zss", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
     },
   },
+  {
+    "necrom4/convy.nvim",
+    cmd = { "Convy", "ConvySeparator" },
+    opts = {},
+    keys = {
+      {
+        "<leader>zC",
+        ":Convy<CR>",
+        desc = "Convert (interactive selection)",
+        mode = { "n", "v" },
+        silent = true,
+      },
+    },
+  },
 }

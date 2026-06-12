@@ -9,7 +9,6 @@ return {
     event = "InsertEnter",
     config = true,
     opts = {
-      -- copilot_model = "gpt-41-copilot",
       filetypes = {
         ["*"] = true,
       },
@@ -94,7 +93,7 @@ return {
       },
       display = {
         chat = {
-          show_token_count = true,
+          show_token_count = false,
           start_in_insert_mode = true,
           window = {
             opts = {
@@ -251,6 +250,16 @@ return {
                 require_approval_before = false,
               },
             },
+            mcp__vectorcode__query = {
+              opts = {
+                require_approval_before = false,
+              },
+            },
+            mcp__vectorcode__ls = {
+              opts = {
+                require_approval_before = false,
+              },
+            },
           },
           keymaps = {
             close = {
@@ -261,7 +270,7 @@ return {
             },
           },
           roles = {
-            llm = function(adapter, chat)
+            llm = function(adapter)
               local model = ""
               if adapter and adapter.schema and adapter.schema.model and adapter.schema.model.default then
                 local default_model = adapter.schema.model.default
@@ -273,19 +282,12 @@ return {
                 end
               end
 
-              local token_str = ""
-              if adapter.type == "acp" then
-                local meta = _G.codecompanion_chat_metadata and chat and _G.codecompanion_chat_metadata[chat.bufnr]
-                if meta and meta.tokens then
-                  token_str = " ~" .. meta.tokens .. "t"
-                end
-              end
+              local cc_tokens = require("token-count.integrations.codecompanion")
+              local tokens = cc_tokens.get_estimated_tokens(vim.api.nvim_get_current_buf())
+              local model_str = model ~= "" and (" (" .. model .. ")") or ""
+              local token_str = tokens and (" | Tokens: " .. tokens) or ""
 
-              if model ~= "" then
-                return "CodeCompanion (" .. adapter.formatted_name .. " - " .. model .. token_str .. ")"
-              else
-                return "CodeCompanion (" .. adapter.formatted_name .. token_str .. ")"
-              end
+              return adapter.formatted_name .. model_str .. token_str
             end,
             user = "Me",
           },
@@ -296,6 +298,10 @@ return {
           variables = {},
         },
         background = {
+          adapter = {
+            name = "default_copilot",
+            model = "claude-sonnet-4-6",
+          },
           chat = {
             callbacks = {
               ["on_ready"] = {
@@ -317,7 +323,7 @@ return {
             show_model_choices = true,
           },
           default_copilot = function()
-            require("codecompanion.adapters").extend("copilot", {
+            return require("codecompanion.adapters").extend("copilot", {
               schema = {
                 model = {
                   order = 1,
@@ -368,9 +374,6 @@ return {
             return require("codecompanion.adapters").extend("copilot_acp", {
               defaults = {
                 timeout = 20000,
-                session_config_options = {
-                  model = "claude-opus-4-6",
-                },
                 mcpServers = "inherit_from_config",
               },
             })
@@ -381,9 +384,6 @@ return {
                 CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_TOKEN",
               },
               defaults = {
-                --   session_config_options = {
-                --     model = "claude-sonnet-4-6",
-                --   },
                 mcpServers = "inherit_from_config",
               },
             })
@@ -393,6 +393,8 @@ return {
       mcp = require("config.codecompanion.mcp")(),
     },
     config = function(_, opts)
+      require("token-count.integrations.codecompanion").setup()
+
       require("config.codecompanion.rules").setup_instruction_autocmd()
 
       opts.interactions.chat.slash_commands = {

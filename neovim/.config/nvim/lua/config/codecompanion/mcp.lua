@@ -82,10 +82,6 @@ local servers = {
     cmd = { "npx", "-y", "mcp-remote", "https://api.sunsama.com/mcp" },
   },
 
-  ["basic-memory"] = {
-    cmd = { "uvx", "basic-memory", "mcp" },
-  },
-
   ["dbhub-demo"] = {
     cmd = { "npx", "-y", "@bytebase/dbhub", "--transport", "stdio", "--demo" },
   },
@@ -135,22 +131,26 @@ local servers = {
   },
 
   ["claude_memory"] = {
-    name = "memory-fs",
-    command = "npx",
-    args = { "-y", "@modelcontextprotocol/server-filesystem", "/path/to/memories" },
-    env = {},
+    cmd = { "npx", "-y", "@modelcontextprotocol/server-filesystem", os.getenv("HOME") .. "/.claude/projects" },
   },
 }
 
 local default_servers = {
-  -- "claude_memory",
+  "claude_memory",
   "git-mcp",
   "github",
+  "sunsama",
   "vectorcode",
 }
 
 local work_repos = { "platform", "platform-2" }
-local work_servers = { "atlassian", "dbhub-plat", "figma", "kubernetes", "nx" }
+local work_servers = {
+  "dbhub-plat",
+  "figma",
+  "kubernetes",
+  "nx",
+  "playwright",
+}
 
 add_when_in(default_servers, work_servers, work_repos)
 

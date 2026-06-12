@@ -190,12 +190,6 @@ return {
         return title
       end,
 
-      completion = {
-        nvim_cmp = false,
-        blink = true,
-        min_chars = 2,
-      },
-
       picker = {
         name = "snacks.pick",
         note_mappings = {
