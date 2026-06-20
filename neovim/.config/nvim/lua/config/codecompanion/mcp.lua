@@ -139,7 +139,7 @@ local default_servers = {
   "claude_memory",
   "git-mcp",
   "github",
-  "sunsama",
+  -- "sunsama",
   "vectorcode",
 }
 

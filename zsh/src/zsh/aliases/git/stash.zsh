@@ -127,6 +127,71 @@ function gstd() {
 
 ### FZF-Enhanced Stash Operations
 
+function gstdm() {
+  if [[ "$1" == "-h" ]]; then
+    echo "Usage: gstdm [search]"
+    echo "Drop stashes with FZF multi-select"
+    echo "Keys:"
+    echo "  Tab      - Select/deselect stash"
+    echo "  Enter    - Drop all selected stashes (confirms first)"
+    echo "  Ctrl-C   - Cancel"
+    echo "Examples:"
+    echo "  gstdm           # Browse all stashes"
+    echo "  gstdm feature   # Pre-filter by 'feature'"
+    return 0
+  fi
+
+  local stashes
+  stashes=$(git stash list --pretty="%C(yellow)%gd%C(reset) %C(green)(%cr)%C(reset) %gs" 2>/dev/null)
+
+  if [[ -z "$stashes" ]]; then
+    echo "No stashes found"
+    return 0
+  fi
+
+  local selected
+  selected=$(echo "$stashes" |
+    fzf --ansi \
+      --multi \
+      --reverse \
+      --query="${1:-}" \
+      --preview='git stash show -p --color=always {1} | delta' \
+      --preview-window="right:65%:wrap" \
+      --header="Tab=select, Enter=drop selected, Ctrl-C=cancel")
+
+  if [[ -z "$selected" ]]; then
+    return 0
+  fi
+
+  # Strip ANSI codes and extract stash refs, then sort by index descending
+  # so that dropping stash@{N} doesn't shift the indices of lower stashes
+  local -a stash_ids
+  while IFS= read -r line; do
+    local id
+    id=$(echo "$line" | sed 's/\x1b\[[0-9;]*m//g' | awk '{print $1}')
+    [[ -n "$id" ]] && stash_ids+=("$id")
+  done <<< "$selected"
+
+  local -a sorted_ids
+  sorted_ids=($(printf '%s\n' "${stash_ids[@]}" | sort -t'{' -k2 -rn))
+
+  local count="${#sorted_ids[@]}"
+  local plural=""
+  (( count > 1 )) && plural="es"
+  echo "Will drop $count stash${plural}:"
+  printf '  %s\n' "${sorted_ids[@]}"
+  printf 'Confirm? (y/N) '
+  read -r response
+  if [[ ! "$response" =~ ^[Yy]$ ]]; then
+    echo "Cancelled."
+    return 0
+  fi
+
+  for stash_id in "${sorted_ids[@]}"; do
+    git stash drop "$stash_id" && echo "Dropped $stash_id"
+  done
+}
+
 function gstaa() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: gstaa [search]"
@@ -176,6 +241,7 @@ function fstash() {
     echo "  Ctrl-A   - Apply stash"
     echo "  Ctrl-P   - Pop stash"
     echo "  Ctrl-D   - Drop stash"
+    echo "  Ctrl-X   - Multi-select drop stashes"
     echo "  Ctrl-B   - Create branch from stash"
     echo "  Ctrl-S   - Inspect diff vs HEAD (see conflicts)"
     return 0
@@ -196,10 +262,10 @@ function fstash() {
       --no-sort \
       --query="$q" \
       --print-query \
-      --expect=ctrl-a,ctrl-p,ctrl-d,ctrl-b,ctrl-s \
+      --expect=ctrl-a,ctrl-p,ctrl-d,ctrl-b,ctrl-s,ctrl-x \
       --preview='git stash show -p --color=always {1} | delta' \
       --preview-window="right:65%:wrap" \
-      --header="Enter=show, Ctrl-A=apply, Ctrl-P=pop, Ctrl-D=drop, Ctrl-B=branch, Ctrl-S=inspect"); do
+      --header="Enter=show, Ctrl-A=apply, Ctrl-P=pop, Ctrl-D=drop, Ctrl-X=multi-drop, Ctrl-B=branch, Ctrl-S=inspect"); do
 
     mapfile -t out <<<"$out"
     q="${out[0]}"
@@ -233,6 +299,14 @@ function fstash() {
           break
         }
       fi
+      ;;
+    ctrl-x)
+      gstdm
+      stashes=$(git stash list --pretty="%C(yellow)%gd%C(reset) %C(green)(%cr)%C(reset) %gs" 2>/dev/null)
+      [[ -z "$stashes" ]] && {
+        echo "No more stashes"
+        break
+      }
       ;;
     ctrl-b)
       echo "Enter branch name:"

@@ -39,7 +39,7 @@ return {
       },
       open_files_do_not_replace_types = { "terminal", "Trouble", "trouble", "qf", "Outline" },
       popup_border_style = "NC",
-      use_popups_for_input = false,
+      use_popups_for_input = true,
       event_handlers = {
         {
           event = "neo_tree_buffer_enter",

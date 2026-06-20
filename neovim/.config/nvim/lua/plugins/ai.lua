@@ -298,10 +298,6 @@ return {
           variables = {},
         },
         background = {
-          adapter = {
-            name = "default_copilot",
-            model = "claude-sonnet-4-6",
-          },
           chat = {
             callbacks = {
               ["on_ready"] = {
@@ -329,10 +325,10 @@ return {
                   order = 1,
                   type = "enum",
                   desc = "Select one of your curated Copilot-backed models",
-                  default = "claude-sonnet-4.6",
+                  default = "claude-sonnet-4.8",
                   choices = {
-                    ["claude-sonnet-4.6"] = { opts = { provider = "anthropic" } },
-                    ["claude-opus-4.6"] = { opts = { provider = "anthropic" } },
+                    ["claude-sonnet-4.8"] = { opts = { provider = "anthropic" } },
+                    ["claude-opus-4.8"] = { opts = { provider = "anthropic" } },
                     ["gpt-5-2025-08-07"] = { opts = { provider = "openai", tier = "flagship" } },
                     ["o4-mini"] = { opts = { provider = "openai", can_reason = true, reasoning_tier = "mini" } },
                     ["gemini-2.5-pro"] = { opts = { provider = "google", multimodal = true } },

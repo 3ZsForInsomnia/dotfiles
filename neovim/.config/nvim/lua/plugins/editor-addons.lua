@@ -53,7 +53,11 @@ return {
   {
     "mistweaverco/kulala.nvim",
     ft = { "http", "rest", "gql", "graphql" },
+    submodules = false,
     opts = {
+      kulala_core = {
+        download_url = "https://github.com/mistweaverco/kulala-core/releases/download/%s/%s",
+      },
       ui = {
         split_direction = "horizontal",
       },
@@ -359,5 +363,9 @@ return {
     "razak17/tailwind-fold.nvim",
     config = true,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
+  },
+  {
+    "gregorias/nvim-surround-wk",
+    config = true,
   },
 }
