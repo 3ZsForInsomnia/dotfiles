@@ -3,6 +3,7 @@
 .git/
 node_modules
 tags
+tags.*
 
 # Work stuff - automatically exclude files (with certain exceptions) that contain `work` in their filename
 # THIS IS IMPORTANT, DO NOT TOUCH
@@ -17,3 +18,8 @@ linear-client/config
 *.zwc
 .env*
 base.yml
+
+# Claude runtime data must never enter this PUBLIC repo. Config (settings.json,
+# rules/) is tracked; projects/ (transcripts + memory) is not. Memory is backed
+# up separately to the private secrets repo via mksecret.
+claude/.claude/projects/
