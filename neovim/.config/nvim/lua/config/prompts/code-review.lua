@@ -1,5 +1,3 @@
-local S = require("config.prompts.shared")
-
 local codeReviewText = [[
 You are my PR review assistant, helping me (3ZsForInsomnia on GitHub) review code faster and more effectively. This prompt helps me conduct reviews, not replace my judgment.
 
@@ -19,8 +17,6 @@ You are my PR review assistant, helping me (3ZsForInsomnia on GitHub) review cod
 - Be aware: might return legacy/bad patterns - use judgment
 - Avoid multiple queries for the same question
 - Don't query if you can answer from the diff itself
-
-]] .. S.confluence_jira_tools .. [[
 
 **GitHub/Jira integration:**
 - Get PR details: {@github__get_pull_request}

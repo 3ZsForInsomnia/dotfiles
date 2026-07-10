@@ -11,3 +11,5 @@ function aipy() {
 
   sgpt --code "$prompt using python"
 }
+
+alias lama-restart="launchctl kickstart -k gui/$(id -u)/com.user.ollama"

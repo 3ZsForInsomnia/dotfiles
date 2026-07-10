@@ -9,6 +9,7 @@
 --   Inject collection routing instructions into a chat message.
 
 local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 --------------------------------------------------
 -- Routing helpers
@@ -120,7 +121,7 @@ local vc_search_summary = {
   strategy = "chat",
   description = "VectorCode: Search with summary and sources",
   opts = {
-    adapter = S.remote_adapter,
+    adapter = cc_models.models.thinking,
     auto_submit = false,
   },
   prompts = {
@@ -146,7 +147,7 @@ local vc_search_raw = {
   strategy = "chat",
   description = "VectorCode: Raw file listing",
   opts = {
-    adapter = S.remote_adapter,
+    adapter = cc_models.models.thinking,
     auto_submit = false,
   },
   prompts = {

@@ -1,19 +1,10 @@
 local k_cmd = require("helpers").k_cmd
 local k = require("helpers").k
+local cc_models = require("config.codecompanion.models")
 
 local a = "<leader>a"
 
 return {
-  {
-    "zbirenbaum/copilot.lua",
-    event = "InsertEnter",
-    config = true,
-    opts = {
-      filetypes = {
-        ["*"] = true,
-      },
-    },
-  },
   {
     "Davidyz/VectorCode",
     version = "*",
@@ -65,9 +56,7 @@ return {
     opts = {
       rules = {
         personal = {
-          description = 'Personal rules and code philosophy. This is really my "system" prompt',
           files = {
-            vim.fn.stdpath("config") .. "/lua/config/prompts/personal-programming.md",
             os.getenv("HOME") .. "/.agent/AGENTS.md",
           },
         },
@@ -89,7 +78,7 @@ return {
         },
       },
       opts = {
-        log_level = "ERROR",
+        log_level = "DEBUG",
       },
       display = {
         chat = {
@@ -115,39 +104,6 @@ return {
         dap = {
           enabled = true,
         },
-        -- vectorcode = {
-        --   opts = {
-        --     tool_group = {
-        --       -- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
-        --       enabled = true,
-        --       -- a list of extra tools that you want to include in `@vectorcode_toolbox`.
-        --       -- if you use @vectorcode_vectorise, it'll be very handy to include
-        --       -- `file_search` here.
-        --       extras = {},
-        --       collapse = false, -- whether the individual tools should be shown in the chat
-        --     },
-        --     tool_opts = {
-        --       ["*"] = {},
-        --       ls = {},
-        --       vectorise = {},
-        --       query = {
-        --         max_num = { chunk = 80, document = 20 },
-        --         default_num = { chunk = 50, document = 10 },
-        --         include_stderr = false,
-        --         use_lsp = true,
-        --         no_duplicate = true,
-        --         chunk_mode = true,
-        --         summarise = {
-        --           enabled = false,
-        --           adapter = nil,
-        --           query_augmented = true,
-        --         },
-        --       },
-        --       files_ls = {},
-        --       files_rm = {},
-        --     },
-        --   },
-        -- },
         history = {
           enabled = true,
           opts = {
@@ -203,27 +159,13 @@ return {
             },
           },
         },
-        -- opts = {
-        --   collapse_tools = true,
-        --   interval_ms = 1000,
-        --   winfixbuf = true,
-        --
-        --   tool_opts = {
-        --     evaluate = {
-        --       require_approval_before = true,
-        --     },
-        --     source = {
-        --       prefer_filesystem = true,
-        --     },
-        --   },
-        -- },
       },
       interactions = {
         chat = {
           opts = {
             completion_provider = "blink",
           },
-          adapter = "anthropic_acp",
+          adapter = "claude_code",
           tools = {
             cmd_runner = {
               opts = {
@@ -294,10 +236,14 @@ return {
           variables = {},
         },
         inline = {
-          adapter = "qwen25_7b",
+          adapter = cc_models.local_adapter,
           variables = {},
         },
         background = {
+          adapter = {
+            name = cc_models.local_adapter,
+            model = cc_models.local_model,
+          },
           chat = {
             callbacks = {
               ["on_ready"] = {
@@ -318,69 +264,34 @@ return {
           opts = {
             show_model_choices = true,
           },
-          default_copilot = function()
-            return require("codecompanion.adapters").extend("copilot", {
-              schema = {
-                model = {
-                  order = 1,
-                  type = "enum",
-                  desc = "Select one of your curated Copilot-backed models",
-                  default = "claude-sonnet-4.8",
-                  choices = {
-                    ["claude-sonnet-4.8"] = { opts = { provider = "anthropic" } },
-                    ["claude-opus-4.8"] = { opts = { provider = "anthropic" } },
-                    ["gpt-5-2025-08-07"] = { opts = { provider = "openai", tier = "flagship" } },
-                    ["o4-mini"] = { opts = { provider = "openai", can_reason = true, reasoning_tier = "mini" } },
-                    ["gemini-2.5-pro"] = { opts = { provider = "google", multimodal = true } },
-                    -- ["gemini-3-pro-preview"] = { opts = { provider = "google", multimodal = true } },
-                  },
-                },
-              },
-            })
-          end,
-          qwen25_7b = function()
+          -- Local model. All tuning lives in config.codecompanion.models so the
+          -- model can be swapped in one place. Shared with minuet (text
+          -- completion) and CodeCompanion's inline + background strategies.
+          [cc_models.local_adapter] = function()
             return require("codecompanion.adapters").extend("ollama", {
-              name = "qwen25_7b",
+              name = cc_models.local_adapter,
               schema = {
-                model = {
-                  default = "qwen2.5:7b-instruct",
-                  choices = {
-                    "qwen2.5:7b-instruct",
-                    "qwen2.5:7b",
-                  },
-                },
-                num_ctx = { default = 16384 },
-                temperature = { default = 0.2 }, -- lower for deterministic inline transformations
-                keep_alive = { default = "1h" }, -- keep model in memory for responsiveness
-                -- 'think' only if your build advertises reasoning capability; leave false otherwise
-                think = { default = false },
-              },
-            })
-          end,
-          anthropic = function()
-            return require("codecompanion.adapters").extend("anthropic", {
-              env = {
-                CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_TOKEN",
+                model = { default = cc_models.local_model },
+                num_ctx = { default = cc_models.local_num_ctx },
+                temperature = { default = cc_models.local_temperature },
+                keep_alive = { default = cc_models.local_keep_alive },
+                think = { default = cc_models.local_think },
               },
             })
           end,
         },
         acp = {
-          copilot_acp = function()
-            return require("codecompanion.adapters").extend("copilot_acp", {
-              defaults = {
-                timeout = 20000,
-                mcpServers = "inherit_from_config",
-              },
-            })
-          end,
-          anthropic_acp = function()
+          claude_code = function()
             return require("codecompanion.adapters").extend("claude_code", {
               env = {
                 CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_TOKEN",
               },
               defaults = {
                 mcpServers = "inherit_from_config",
+                session_config_options = {
+                  model = cc_models.remote_thinking_model,
+                  thought_level = cc_models.remote_thought_level,
+                },
               },
             })
           end,

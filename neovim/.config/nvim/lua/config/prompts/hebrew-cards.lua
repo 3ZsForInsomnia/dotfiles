@@ -1,4 +1,4 @@
-local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 local vocab_text = [[
 @{anki_mcp}
@@ -231,7 +231,7 @@ local vocab_prompt = {
   strategy = "chat",
   description = "Create Hebrew vocabulary flashcards",
   opts = {
-    adapter = S.models.non_thinking,
+    adapter = cc_models.models.non_thinking,
     auto_submit = false,
     is_slash_cmd = true,
     short_name = "hebrew_vocab",
@@ -245,7 +245,7 @@ local grammar_prompt = {
   strategy = "chat",
   description = "Create Hebrew grammar practice cards",
   opts = {
-    adapter = S.models.non_thinking,
+    adapter = cc_models.models.non_thinking,
     auto_submit = false,
   },
   prompts = {
@@ -257,7 +257,7 @@ local function_prompt = {
   strategy = "chat",
   description = "Create Hebrew function word flashcards",
   opts = {
-    adapter = S.models.non_thinking,
+    adapter = cc_models.models.non_thinking,
     auto_submit = false,
   },
   prompts = {

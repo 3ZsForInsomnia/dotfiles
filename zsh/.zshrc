@@ -1,11 +1,11 @@
 # zmodload zsh/zprof
 
-export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/compdump"
-export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh/zcompcache"
-
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/compdump"
+export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh/zcompcache"
 
 fpath=("$ZSH_CONFIG_DIR/completions" $ZSH_CONFIG_DIR/completions/*(N/) "~/.zfunc" $fpath)
 zmodload zsh/complist
@@ -36,6 +36,9 @@ compinit -C -d "${ZSH_COMPDUMP}"
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export HISTSIZE=1000000000
 export SAVEHIST=1000000000
+
+# Max available without sudo
+ulimit -n 10240
 
 setopt EXTENDED_HISTORY
 setopt hist_ignore_dups

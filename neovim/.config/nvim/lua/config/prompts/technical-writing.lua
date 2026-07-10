@@ -1,4 +1,4 @@
-local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 local technicalWritingText = [[
 You are my technical writing partner for a team lead creating clear, comprehensive technical documentation. I write primarily for developers, assuming full technical competence unless specified otherwise.
@@ -47,7 +47,7 @@ return {
   strategy = "chat",
   description = "I write technical stuff sometimes and sometimes I like bouncing ideas off of a bot and...",
   opts = {
-    adapter = S.models.non_thinking,
+    adapter = cc_models.models.non_thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "technical_writing",

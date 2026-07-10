@@ -4,9 +4,9 @@
 
 paths_to_check=("$HOME/.cache" "$HOME/.local/state" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.config" "$HOME/.local/bin" "$HOME/src" "$HOME/Downloads/slack" "$HOME/Downloads/postman" "$HOME/Pictures/screenshots" "$HOME/Documents/test data" "$HOME/Documents/sync" "$HOME/.local/state/psql" "$HOME/.cache/zsh" "$HOME/.local/state/zsh" "$HOME/.local/state/python" "$HOME/.local/share/psql" "$HOME/.local/state/less" "$HOME/.local/share/bookmarks" "$HOME/src/work" "$HOME/.local/share/npm" "$HOME/.local/share/pyenv")
 
-brew_taps="espanso/espanso ankitpokhrel/jira-cli atlassian/homebrew-acli"
-brew_packages=("eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei" "graphviz" "git-delta" "tmux" "overmind" "pngpaste" "hyperfine" "pandoc" "speedtest-cli" "zoxide" "helm" "yq" "ollama" "acli" "copilot-cli" "bear")
-brew_packages_with_cask=("witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass-cli" "maccy")
+brew_taps="espanso/espanso ankitpokhrel/jira-cli atlassian/homebrew-acli datadog-labs/pack"
+brew_packages=("eza" "fzf" "fd" "ripgrep" "go" "delve" "stow" "powerlevel10k" "luacheck" "bat" "docker" "kubernetes-cli" "lazydocker" "gh" "jira" "imagemagick" "ffmpeg" "yazi" "sevenzip" "poppler" "zoxide" "glow" "fx" "node" "luarocks" "ninja" "cmake" "gettext" "curl" "pyenv" "newsboat" "espanso" "tokei" "graphviz" "git-delta" "tmux" "overmind" "pngpaste" "hyperfine" "pandoc" "speedtest-cli" "zoxide" "helm" "yq" "ollama" "acli" "copilot-cli" "bear" "datadog-labs/pack/pup" "htop")
+brew_packages_with_cask=("witch" "obsidian" "google-chrome" "slack" "postman" "font-fira-code-nerd-font" "font-symbols-only-nerd-font" "lastpass-cli" "maccy" "ghostty")
 # copyq is replaced by maccy
 # rectangle's functionality is now part of MacOS
 
@@ -792,13 +792,13 @@ setup_services() {
   if check_command_is_installed ollama; then
     echo "Step 11a: Starting ollama via brew services..."
     brew services start ollama
-    
+
     # Wait a moment for service to start
     sleep 3
-    
+
     echo "Step 11a: Downloading nomic-embed-text model..."
     ollama pull nomic-embed-text
-    
+
     echo "Step 11a: Finished setting up ollama!"
   else
     echo "Step 11a: ollama is not installed. Skipping ollama setup."

@@ -16,11 +16,19 @@ alias cls='c; ls'
 
 alias src='j src'
 alias dots='j dots'
-alias dotsv='dots; renameTab "dots"; v'
+alias dotsv='dots; v'
+# alias dotsv='dots; renameTab "dots"; v'
 alias notes='j notes'
-alias notesv='notes; renameTab "notes"; v'
-alias work='j plat; renameTab "work";'
+alias notesv='notes; v'
+# alias notesv='notes; renameTab "notes"; v'
+# alias work='j plat; renameTab "work";'
+alias work='j plat'
 alias workv='work; v'
+
+# Open a new Ghostty window and run notes/dots/work v in it
+gnotesv() { open -na Ghostty --args -e "zsh -ic notesv"; }
+gworkv() { open -na Ghostty --args -e "zsh -ic workv"; }
+gdotsv() { open -na Ghostty --args -e "zsh -ic dotsv"; }
 
 alias tdata='j tdata'
 alias xconf='j xconf'
@@ -70,7 +78,7 @@ alias oreg='o https://regex101.com'
 alias http='/opt/homebrew/bin/http' # This is httpie's script
 alias http-server='$HOME/.npm/_npx/e5196fa6dc3cecbc/node_modules/.bin/http-server'
 
-alias unstow='stow --target=$HOME'
+alias unstow='stow --no-folding --target=$HOME'
 function unstowAll() {
   cd "$HOME/src/dotfiles/"
 

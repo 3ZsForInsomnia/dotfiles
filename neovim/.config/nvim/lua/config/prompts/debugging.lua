@@ -1,4 +1,4 @@
-local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 local debuggingText = [[
 You are my debugging partner for a senior software engineer and team lead. I frequently debug production issues, often caused by contractor-written code, in a HIPAA-compliant environment with Postgres, React/TS frontend, Go/Gin backend, deployed on Azure/Kubernetes.
@@ -31,9 +31,6 @@ Critical guidelines:
 
 #{vccharter}#{vccurrproj}#{vcnotes}#{vcwork}
 
-Additional context tools:
-]] .. require("config.prompts.shared").confluence_jira_tools .. [[
-
 When I share debugging progress:
 1. Assess what data points I have vs. what's missing
 2. Suggest 2-3 next investigation steps, prioritized by likelihood/effort
@@ -48,7 +45,7 @@ return {
   strategy = "chat",
   description = "Be my rubber ducky, my captain obvious",
   opts = {
-    adapter = S.models.thinking,
+    adapter = cc_models.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "debugging",

@@ -23,16 +23,6 @@ If no results: No results.
 Do not invent files.
 ]]
 
--- Model presets
--- Change adapter name and model in one place for all prompts.
-local models = {
-  thinking = { name = "default_copilot", model = "claude-opus-4.6" },
-  non_thinking = { name = "default_copilot", model = "claude-sonnet-4.6" },
-  local_model = { name = "qwen25_7b" },
-}
-
-local remote_adapter = models.thinking
-
 -- Sources section format for VectorCode-enhanced prompts
 local sources_format = [[
 
@@ -63,23 +53,11 @@ When querying VectorCode, prefer recent context:
 3. Focus on recent context for meeting notes and project discussions
 ]], os.date("%Y-%m-%d %A"))
 
--- Confluence/Jira search tools availability
-local confluence_jira_tools = [[
-Atlassian tools available:
-- ${atlassian_mcp_server__getJiraIssue}
-- ${atlassian_mcp_server__searchJiraIssuesUsingJql}
-- ${atlassian_mcp_server__getConfluencePage}
-- ${atlassian_mcp_server__searchConfluenceUsingCql}
-]]
-
 return {
   home = home,
   notes_root = notes_root,
   biblio_text = biblio_text,
-  models = models,
-  remote_adapter = remote_adapter,
   sources_format = sources_format,
   callout_usage = callout_usage,
   date_aware_query = date_aware_query,
-  confluence_jira_tools = confluence_jira_tools,
 }

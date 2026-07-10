@@ -3,7 +3,7 @@ alias_path="$ZSH_CONFIG_DIR/aliases"
 sources=(
   "compilation.zsh"
   "config-utils.zsh"
-  "sgpt.zsh"
+  "ai.zsh"
   "utils.zsh"
   "vectorcode.zsh"
   "makefiles.zsh"

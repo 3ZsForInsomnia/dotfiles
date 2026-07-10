@@ -9,6 +9,7 @@
 --   - Creates new file and populates with enhanced/reformatted notes
 
 local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 -- Helper to get today's date in the format matching daily notes
 local function get_today_filename()
@@ -58,7 +59,7 @@ local note_file_remote = {
   strategy = "chat",
   description = "File notes to person/meeting (remote, enhanced)",
   opts = {
-    adapter = S.remote_adapter,
+    adapter = cc_models.models.thinking,
     auto_submit = false,
   },
   prompts = {

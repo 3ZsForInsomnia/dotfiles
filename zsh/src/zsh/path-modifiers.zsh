@@ -39,6 +39,17 @@ source "$ZSH_CONFIG_DIR/language-environments.zsh"
 
 export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep
 export OLLAMA_MODELS="$XDG_DATA_HOME/ollama/models"
+# One warm local model is shared by CodeCompanion + minuet. OLLAMA_CONTEXT_LENGTH
+# must match the num_ctx CodeCompanion requests (M.local_num_ctx in
+# config/codecompanion/models.lua) or Ollama loads a second instance and OOMs.
+# Flash attention + q8_0 KV cache keep the 16k window within the RAM budget.
+# NOTE: brew-services (launchd) does NOT inherit shell exports -- to apply to the
+# running service also run, once per boot:
+#   for v in OLLAMA_CONTEXT_LENGTH=16384 OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0; do
+#     launchctl setenv ${v%%=*} ${v#*=}; done && brew services restart ollama
+export OLLAMA_CONTEXT_LENGTH=16384
+export OLLAMA_FLASH_ATTENTION=1
+export OLLAMA_KV_CACHE_TYPE=q8_0
 export BASIC_MEMORY_CONFIG_DIR="$XDG_CONFIG_HOME/basic-memory"
 export BASIC_MEMORY_HOME="$XDG_DATA_HOME/basic-memory"
 export BASIC_MEMORY_PROJECT_ROOT="$XDG_DATA_HOME/basic-memory"

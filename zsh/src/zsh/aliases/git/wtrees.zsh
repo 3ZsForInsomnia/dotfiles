@@ -117,6 +117,55 @@ function gwtm() {
 
 ### Interactive Worktree Management with FZF
 
+# Short, human display name for a worktree. The main worktree shows as
+# "(main)"; worktrees under a ".worktrees/" dir show only the part after it
+# (e.g. /repo/.worktrees/feat-x -> feat-x); anything else falls back to its
+# basename.
+function _gwt_display_name() {
+  local wt_path="$1" main_wt="$2"
+  if [[ "$wt_path" == "$main_wt" ]]; then
+    print -r -- "(main)"
+  elif [[ "$wt_path" == */.worktrees/* ]]; then
+    print -r -- "${wt_path##*/.worktrees/}"
+  else
+    print -r -- "${wt_path:t}"
+  fi
+}
+
+# Emit one tab-delimited fzf line per worktree: "<name> [branch] (detached)\t<abs-path>".
+# The absolute path is kept as a hidden trailing column (fzf --with-nth=1) so the
+# preview and the cd/remove/move actions still have the real path to work with.
+function _gwt_fzf_lines() {
+  local porcelain main_wt
+  porcelain=$(git worktree list --porcelain 2>/dev/null)
+  [[ -z "$porcelain" ]] && return 1
+  main_wt=$(awk '/^worktree /{print $2; exit}' <<<"$porcelain")
+
+  local line current_path="" current_branch="" current_head=""
+
+  # Flush the entry we just finished parsing.
+  _gwt_flush() {
+    [[ -z "$current_path" ]] && return
+    local display="$(_gwt_display_name "$current_path" "$main_wt")"
+    [[ -n "$current_branch" ]] && display="$display [$current_branch]"
+    [[ "$current_head" == "detached" ]] && display="$display (detached)"
+    printf '%s\t%s\n' "$display" "$current_path"
+  }
+
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^worktree\ (.*) ]]; then
+      _gwt_flush
+      current_path="${match[1]}"; current_branch=""; current_head=""
+    elif [[ "$line" =~ ^branch\ refs/heads/(.*) ]]; then
+      current_branch="${match[1]}"
+    elif [[ "$line" == "detached" ]]; then
+      current_head="detached"
+    fi
+  done <<<"$porcelain"
+  _gwt_flush
+  unfunction _gwt_flush
+}
+
 function fwt() {
   if [[ "$1" == "-h" ]]; then
     echo "Usage: fwt"
@@ -131,89 +180,38 @@ function fwt() {
     return 0
   fi
 
-  local worktrees
-  worktrees=$(git worktree list --porcelain 2>/dev/null)
-
-  if [[ -z "$worktrees" ]]; then
-    echo "No worktrees found"
-    return 0
-  fi
-
-  # Parse worktree list into display format
-  local display_lines=()
-  local worktree_paths=()
-  local worktree_branches=()
-
-  local current_path=""
-  local current_branch=""
-  local current_head=""
-
-  while IFS= read -r line; do
-    if [[ "$line" =~ ^worktree\ (.*) ]]; then
-      # Save previous entry
-      if [[ -n "$current_path" ]]; then
-        local display_line="$current_path"
-        [[ -n "$current_branch" ]] && display_line="$display_line [$current_branch]"
-        [[ "$current_head" == "detached" ]] && display_line="$display_line (detached)"
-        display_lines+=("$display_line")
-        worktree_paths+=("$current_path")
-        worktree_branches+=("$current_branch")
-      fi
-
-      current_path="${match[1]}"
-      current_branch=""
-      current_head=""
-    elif [[ "$line" =~ ^branch\ refs/heads/(.*) ]]; then
-      current_branch="${match[1]}"
-    elif [[ "$line" =~ ^HEAD\ (.{40}) ]]; then
-      current_head="detached"
+  # Each loop iteration regenerates the list, so destructive actions (remove)
+  # simply fall through and the refreshed list is shown on the next pass.
+  local selected lines query key selection selected_path response new_path
+  while :; do
+    local fzf_input
+    fzf_input=$(_gwt_fzf_lines)
+    if [[ -z "$fzf_input" ]]; then
+      echo "No worktrees found"
+      break
     fi
-  done <<<"$worktrees"
 
-  # Don't forget the last entry
-  if [[ -n "$current_path" ]]; then
-    local display_line="$current_path"
-    [[ -n "$current_branch" ]] && display_line="$display_line [$current_branch]"
-    [[ "$current_head" == "detached" ]] && display_line="$display_line (detached)"
-    display_lines+=("$display_line")
-    worktree_paths+=("$current_path")
-    worktree_branches+=("$current_branch")
-  fi
+    selected=$(printf '%s\n' "$fzf_input" | \
+      fzf $(fzf_git_opts) \
+          --delimiter=$'\t' --with-nth=1 \
+          --preview="$ZSH_PREVIEWS_DIR/git-worktree.zsh {2}" \
+          --bind="enter:accept" \
+          --bind="ctrl-r:accept" \
+          --bind="ctrl-w:accept" \
+          --bind="ctrl-s:accept" \
+          --print-query \
+          --expect="ctrl-r,ctrl-w,ctrl-s" \
+          --header="Enter=cd  Ctrl-R=remove  Ctrl-W=move  Ctrl-S=status  Alt-P=toggle preview") || break
 
-  if [[ ${#display_lines[@]} -eq 0 ]]; then
-    echo "No worktrees found"
-    return 0
-  fi
-
-  local selected
-  while selected=$(printf '%s\n' "${display_lines[@]}" | \
-    fzf $(fzf_git_opts) \
-        --preview="$ZSH_PREVIEWS_DIR/git-worktree.zsh {}" \
-        --bind="enter:accept" \
-        --bind="ctrl-r:accept" \
-        --bind="ctrl-w:accept" \
-        --bind="ctrl-s:accept" \
-        --print-query \
-        --expect="ctrl-r,ctrl-w,ctrl-s" \
-        --header="Enter=cd, Ctrl-R=remove, Ctrl-W=move, Ctrl-S=status, Alt-P=toggle preview"); do
-
-    # Parse fzf output
-    local lines=("${(@f)selected}")
-    local query="${lines[1]}"
-    local key="${lines[2]}"
-    local selection="${lines[3]}"
+    lines=("${(@f)selected}")
+    query="${lines[1]}"
+    key="${lines[2]}"
+    selection="${lines[3]}"
 
     [[ -z "$selection" ]] && break
 
-    # Find the selected worktree path
-    local selected_path=""
-    for ((i=1; i<=${#display_lines[@]}; i++)); do
-      if [[ "${display_lines[$i]}" == "$selection" ]]; then
-        selected_path="${worktree_paths[$i]}"
-        break
-      fi
-    done
-
+    # The hidden last column (after the tab) is the absolute worktree path.
+    selected_path="${selection##*$'\t'}"
     [[ -z "$selected_path" ]] && continue
 
     case "$key" in
@@ -222,12 +220,6 @@ function fwt() {
         read -r response
         if [[ "$response" =~ ^[Yy]$ ]]; then
           git worktree remove "$selected_path" && echo "Removed: $selected_path"
-          # Refresh the list
-          worktrees=$(git worktree list --porcelain 2>/dev/null)
-          [[ -z "$worktrees" ]] && { echo "No more worktrees"; break; }
-          # Re-parse worktrees (simplified for demo)
-          display_lines=($(git worktree list | awk '{print $1}'))
-          worktree_paths=("${display_lines[@]}")
         fi
         ;;
       "ctrl-w")

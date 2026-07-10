@@ -1,4 +1,4 @@
-local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 local archReviewText = [[
 You are my architecture and code review partner for a team lead reviewing architecture decisions, proposals, and code for team maintainability. Our team ranges from 2+ years to 7+ years experience, with architecture reviewers typically being senior (7+ years).
@@ -41,7 +41,7 @@ return {
   strategy = "chat",
   description = "Architecture and code review partner for maintainable patterns",
   opts = {
-    adapter = S.models.thinking,
+    adapter = cc_models.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "arch_review",

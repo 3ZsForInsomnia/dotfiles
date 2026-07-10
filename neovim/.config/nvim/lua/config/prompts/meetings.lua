@@ -7,6 +7,7 @@
 --   - meeting_cleanup: Clean up and enhance meeting notes with better formatting
 
 local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 --------------------------------------------------
 -- Meeting Preparation
@@ -36,8 +37,6 @@ local function get_meeting_prep_text()
     .. S.date_aware_query
     .. "\n"
     .. S.callout_usage
-    .. "\n"
-    .. S.confluence_jira_tools
     .. "\n\n"
     .. "**Important:**\n"
     .. "- Create inline wiki-links [[path/to/file]] where relevant\n"
@@ -54,7 +53,7 @@ local meeting_prep = {
   strategy = "chat",
   description = "Prepare for meetings or create project status snapshots with VectorCode context",
   opts = {
-    adapter = S.remote_adapter,
+    adapter = cc_models.models.thinking,
     auto_submit = false,
     is_slash_cmd = true,
     short_name = "meeting_prep",
@@ -100,8 +99,6 @@ local function get_meeting_cleanup_text()
     .. "\n\n"
     .. "**Additional Guidelines:**\n"
     .. S.date_aware_query
-    .. "\n"
-    .. S.confluence_jira_tools
     .. "\n\n"
     .. "**Important:**\n"
     .. '- All VectorCode queries use project_root="'
@@ -118,7 +115,7 @@ local meeting_cleanup = {
   strategy = "chat",
   description = "Clean up and enhance meeting notes with better formatting and context",
   opts = {
-    adapter = S.remote_adapter,
+    adapter = cc_models.models.thinking,
     auto_submit = false,
     is_slash_cmd = true,
     short_name = "meeting_cleanup",

@@ -1,5 +1,6 @@
 local v = vim
 local g = v.g
+local cc_models = require("config.codecompanion.models")
 
 local red = "ErrorMsg"
 local green = "SpellRare"
@@ -154,6 +155,29 @@ return {
     end,
   },
   {
+    "milanglacier/minuet-ai.nvim",
+    event = "InsertEnter",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      provider = "openai_fim_compatible",
+      context_window = 4096,
+      debounce_delay = 400,
+      n_completions = 1,
+      provider_options = {
+        openai_fim_compatible = {
+          api_key = "TERM",
+          name = "Ollama",
+          end_point = "http://localhost:11434/v1/completions",
+          model = cc_models.local_model,
+          optional = {
+            max_tokens = 256,
+            top_p = 0.9,
+          },
+        },
+      },
+    },
+  },
+  {
     "saghen/blink.cmp",
     event = "InsertEnter",
     version = not g.lazyvim_blink_main and "*",
@@ -166,7 +190,7 @@ return {
       "L3MON4D3/LuaSnip",
       "disrupted/blink-cmp-conventional-commits",
       "bydlw98/blink-cmp-env",
-      "giuxtaposition/blink-cmp-copilot",
+      "milanglacier/minuet-ai.nvim",
       "moyiz/blink-emoji.nvim",
       "Kaiser-Yang/blink-cmp-git",
       {
@@ -185,7 +209,6 @@ return {
       },
       appearance = {
         kind_icons = {
-          Copilot = "",
           Text = "󰉿",
           Method = "󰊕",
           Function = "󰊕",
@@ -288,7 +311,7 @@ return {
       sources = {
         default = {
           "snippets",
-          "copilot",
+          "minuet",
           "lsp",
           "dadbod",
           "git",
@@ -311,24 +334,12 @@ return {
               return v.bo.filetype == "gitcommit"
             end,
           },
-          copilot = {
-            name = "copilot",
-            kind = "Copilot",
-            module = "blink-cmp-copilot",
-            max_items = 2,
+          minuet = {
+            name = "minuet",
+            module = "minuet.blink",
             score_offset = 100,
             async = true,
-            transform_items = function(_, items)
-              local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
-              local kind_idx = #CompletionItemKind + 1
-              CompletionItemKind[kind_idx] = "Copilot"
-
-              for _, item in ipairs(items) do
-                item.kind = kind_idx
-              end
-
-              return items
-            end,
+            max_items = 2,
           },
           dadbod = {
             name = "Dadbod",

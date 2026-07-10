@@ -71,7 +71,7 @@ local servers = {
   },
 
   ["atlassian"] = {
-    cmd = { "npx", "-y", "mcp-remote", "https://mcp.atlassian.com/v1/sse" },
+    cmd = { "npx", "-y", "mcp-remote", "https://mcp.atlassian.com/v1/mcp" },
   },
 
   ["figma"] = {
@@ -129,22 +129,18 @@ local servers = {
   ["vectorcode"] = {
     cmd = { "vectorcode-mcp-server" },
   },
-
-  ["claude_memory"] = {
-    cmd = { "npx", "-y", "@modelcontextprotocol/server-filesystem", os.getenv("HOME") .. "/.claude/projects" },
-  },
 }
 
 local default_servers = {
-  "claude_memory",
   "git-mcp",
   "github",
   -- "sunsama",
   "vectorcode",
 }
 
-local work_repos = { "platform", "platform-2" }
+local work_repos = { "platform", "platform-2", "infrastructure", "specification" }
 local work_servers = {
+  "atlassian",
   "dbhub-plat",
   "figma",
   "kubernetes",

@@ -1,4 +1,4 @@
-local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 local storyWritingText = [[
 You are my story breakdown assistant for a team lead writing Jira stories from feature epics. I work with a mixed-skill team (2+ years experience) of contractors and full-time developers.
@@ -112,9 +112,6 @@ Critical guidelines:
 
 #{vccharter}#{vccurrproj}#{vcnotes}#{vcwork}
 
-Additional context tools:
-]] .. require("config.prompts.shared").confluence_jira_tools .. [[
-
 Ticket management tools (use only when I ask):
 - ${atlassian_mcp_server__createJiraIssue}
 - ${atlassian_mcp_server__editJiraIssue}
@@ -158,7 +155,7 @@ return {
   strategy = "chat",
   description = "Let's tell a fantastic and wonderful story together",
   opts = {
-    adapter = S.models.thinking,
+    adapter = cc_models.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "story_writing",

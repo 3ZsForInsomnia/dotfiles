@@ -1,4 +1,4 @@
-local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 local apiServiceDesignText = [[
 You are my API and service design partner for a team lead modernizing both backend and frontend architecture. We're transitioning from legacy monoliths to proper microservices while also modernizing our frontend stack.
@@ -39,9 +39,6 @@ Critical guidelines:
 
 #{vccharter}#{vccurrproj}#{vcnotes}#{vcwork}
 
-Additional context tools:
-]] .. S.confluence_jira_tools .. [[
-
 Note: I may not have full context about existing systems, so ask detailed questions about current architecture, existing code, and constraints before making suggestions.
 
 Focus on helping me design cohesive full-stack architecture that supports backend modernization (REST + gRPC), frontend organization goals, and consistent data modeling across all interfaces.
@@ -51,7 +48,7 @@ return {
   strategy = "chat",
   description = "Let's design APIs, gRPC services, and frontend architecture for a modern full-stack app.",
   opts = {
-    adapter = S.models.thinking,
+    adapter = cc_models.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "api_design",

@@ -1,4 +1,4 @@
-#compdef nr n y npm yarn nx nxs nxt nxb nxl nxg nrd nrb nrt nrl nrsto ni niglobal ng nin nins http shadadd jup watch cleanAndInstall cleanDeps installDeps detectNpmOrYarn getLockfile version
+#compdef nr n y npm yarn nx nxs nxt nxtc nxb nxl nxg nrd nrb nrt nrl nrsto ni niglobal ng nin nins http shadadd jup watch cleanAndInstall cleanDeps installDeps detectNpmOrYarn getLockfile version
 
 # JavaScript/TypeScript tools completion system
 
@@ -141,6 +141,14 @@ function _js_tools_complete_args() {
       fi
       ;;
     
+    nxtc)
+      # nx typecheck - complete with projects that have typecheck target
+      if (( CURRENT == 2 )); then
+        autoload -Uz _comp_nx_typecheckable_projects
+        _comp_nx_typecheckable_projects
+        return 0
+      fi
+      ;;
     nxl)
       # nx lint - complete with projects that have lint target
       if (( CURRENT == 2 )); then
@@ -179,6 +187,7 @@ function _js_tools() {
     'nx:Nx workspace commands'
     'nxs:Nx serve (target-aware)'
     'nxt:Nx test (target-aware)'
+    'nxtc:Nx typecheck (target-aware)'
     'nxb:Nx build (target-aware)'
     'nxl:Nx lint (target-aware)'
     'nxg:Nx generate'

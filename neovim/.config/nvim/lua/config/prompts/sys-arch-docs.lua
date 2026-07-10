@@ -1,4 +1,4 @@
-local S = require("config.prompts.shared")
+local cc_models = require("config.codecompanion.models")
 
 local systemArchitectureText = [[
 You are my system architecture planning partner for a team lead aggressively modernizing microservices architecture while maintaining existing integrations during rapid migration.
@@ -36,7 +36,7 @@ return {
   strategy = "chat",
   description = "Let's plan system architecture for rapid microservices modernization!",
   opts = {
-    adapter = S.models.thinking,
+    adapter = cc_models.models.thinking,
     is_slash_cmd = true,
     auto_submit = false,
     short_name = "system_architecture",

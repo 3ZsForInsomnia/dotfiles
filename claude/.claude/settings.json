@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "additionalDirectories": ["/Users/zacharylevinw/Documents/sync"],
+    "ask": [
+      "Edit(/Users/zacharylevinw/Documents/sync)",
+      "Write(/Users/zacharylevinw/Documents/sync)"
+    ],
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "mcp__vectorcode__query",
+      "mcp__vectorcode__ls",
+      "mcp__vectorcode__files_ls"
+    ]
+  }
+}

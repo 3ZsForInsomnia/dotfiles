@@ -364,8 +364,8 @@ return {
     config = true,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
-  {
-    "gregorias/nvim-surround-wk",
-    config = true,
-  },
+  -- {
+  --   "gregorias/nvim-surround-wk",
+  --   config = true,
+  -- },
 }
