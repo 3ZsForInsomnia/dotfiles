@@ -2,7 +2,7 @@
 -- Remote adapter for better summarization quality
 -- Placement: new buffer for easy reference/copy
 
-local S = require("config.prompts.shared")
+local S = require("config.codecompanion.prompts.shared")
 
 --------------------------------------------------
 -- Web Fetch & Summarize (REMOTE)

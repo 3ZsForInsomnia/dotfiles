@@ -8,7 +8,7 @@
 --   - Uses ${agent} for file read/write operations
 --   - Creates new file and populates with enhanced/reformatted notes
 
-local S = require("config.prompts.shared")
+local S = require("config.codecompanion.prompts.shared")
 local cc_models = require("config.codecompanion.models")
 
 -- Helper to get today's date in the format matching daily notes

@@ -6,7 +6,7 @@
 --   - meeting_prep: Prepare for meetings or create project status snapshots
 --   - meeting_cleanup: Clean up and enhance meeting notes with better formatting
 
-local S = require("config.prompts.shared")
+local S = require("config.codecompanion.prompts.shared")
 local cc_models = require("config.codecompanion.models")
 
 --------------------------------------------------

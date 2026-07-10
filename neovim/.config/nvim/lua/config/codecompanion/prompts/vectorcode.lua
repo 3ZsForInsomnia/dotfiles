@@ -8,7 +8,7 @@
 -- Routing prompts (converted from variables):
 --   Inject collection routing instructions into a chat message.
 
-local S = require("config.prompts.shared")
+local S = require("config.codecompanion.prompts.shared")
 local cc_models = require("config.codecompanion.models")
 
 --------------------------------------------------

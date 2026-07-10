@@ -150,7 +150,18 @@ local work_servers = {
 
 add_when_in(default_servers, work_servers, work_repos)
 
-return function()
+local M = {}
+
+-- Approval overrides for this server's MCP tools. Lives here (not in
+-- interactions.lua) because "which MCP tools skip the chat approval prompt" is
+-- an MCP-domain decision; interactions.lua merges these with CodeCompanion's
+-- own built-in tool approvals at assembly time.
+M.tool_approvals = {
+  mcp__vectorcode__query = { opts = { require_approval_before = false } },
+  mcp__vectorcode__ls = { opts = { require_approval_before = false } },
+}
+
+function M.config()
   return {
     servers = servers,
     opts = {
@@ -158,3 +169,5 @@ return function()
     },
   }
 end
+
+return M
