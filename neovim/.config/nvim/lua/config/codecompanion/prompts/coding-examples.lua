@@ -6,6 +6,8 @@
 --   - snippet: Simple code examples
 --   - good_bad_example: Good vs Bad pattern comparisons
 
+local cc_models = require("config.codecompanion.models")
+
 --------------------------------------------------
 -- Simple Code Snippet
 --------------------------------------------------
@@ -24,6 +26,7 @@ local snippet = {
   strategy = "chat",
   description = "Code snippet (quick example)",
   opts = {
+    adapter = cc_models.models.local_model,
     auto_submit = false,
   },
   prompts = {
@@ -56,6 +59,7 @@ local good_bad_example = {
   strategy = "chat",
   description = "Good vs Bad code comparison",
   opts = {
+    adapter = cc_models.models.local_model,
     auto_submit = false,
   },
   prompts = {

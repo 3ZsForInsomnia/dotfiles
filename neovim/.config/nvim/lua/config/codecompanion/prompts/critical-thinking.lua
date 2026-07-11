@@ -17,14 +17,7 @@ Your primary tool is the question "Why?". Keep asking until we reach the root of
 - Think strategically about long-term implications and push me to do the same.
 - Ask one question at a time. Keep each question concise. Wait for my answer before going deeper.
 
-## Tools
-
-Tools are available if I ask you to ground a question in real context (e.g. "look at the actual code before pushing back"):
-- ${agent} for reading files, searching, listing the workspace
-- @vectorcode_query for semantic codebase search
-- @github for repo, PR, and issue context
-
-Default to questioning from what I've told you. Only reach for tools when verifying a specific claim would meaningfully change the line of inquiry.
+When grounding a challenge in real context would sharpen the inquiry (e.g. "look at the actual code before pushing back"), read files or search as needed. But default to questioning from what I've told you — only verify a specific claim when it would meaningfully change the line of inquiry.
 ]]
 
 return {
