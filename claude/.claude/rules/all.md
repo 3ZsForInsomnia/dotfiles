@@ -14,6 +14,7 @@ description: "Universal coding rules that apply to all languages and projects"
 - Reuse existing code. Check what exists in the project before writing something new.
 - Write code that's easy to delete. New functionality should be isolated enough to remove without cascading changes.
 - Prefer well-known design patterns when they fit — strategy over growing switch statements, dependency injection for testability, declarative over stateful and imperative. Don't force patterns where they don't belong.
+- Use idiomatic patterns and current best practices for the language or framework. Prefer current, well-maintained libraries; avoid deprecated APIs and patterns.
 
 ## Types
 
@@ -29,6 +30,17 @@ Prefer narrow, specific types. Types should encode what is actually possible at 
 
 - Extract values to named constants when they are non-obvious or appear more than once. A bare `7` with no context is a magic number; `0` in an array index is not.
 - Suppressions (eslint-disable, @ts-expect-error, nolint, etc.) require a comment explaining why, and are a last resort — not a shortcut for bad types or a workaround for a fixable issue.
+- Keep new files under ~250 lines. When an existing file grows long, extract a cohesive piece into a new file rather than letting it sprawl.
+
+## Comments and PR descriptions
+
+Comments are welcome where they add durable value. The bar is not quantity — it's that a comment must make sense to a reader who has none of our conversation and no task context.
+
+- No chat-specific content: don't reference what we discussed, alternatives we considered but didn't take, or "the requirements were X." A ticket reference is fine when it genuinely helps a future reader.
+- Avoid temporal notes like "this used to do X" unless there's a strong, lasting reason to record the old behavior.
+- Don't comment code that already reads clearly.
+
+The same standard applies to PR descriptions.
 
 ## Testing
 
