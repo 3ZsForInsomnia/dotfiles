@@ -59,6 +59,10 @@ architecture), work info (codebase, people and meeting notes, projects/product),
 life notes, and more. Assume there may be relevant content there even when the
 category isn't listed here.
 
+VectorCode is also available as a CLI (`vectorcode`; docs:
+https://github.com/Davidyz/VectorCode/blob/main/docs/cli.md) for querying and
+managing collections. (A dedicated skill for it is TBD.)
+
 You may write to it, but always treat writes carefully — it's *my* memory system,
 not yours. That caution holds even when we're working inside the repo itself.
 
