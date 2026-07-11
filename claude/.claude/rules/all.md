@@ -1,8 +1,3 @@
----
-applyTo: "**"
-description: "Universal coding rules that apply to all languages and projects"
----
-
 # All Code
 
 ## Philosophy

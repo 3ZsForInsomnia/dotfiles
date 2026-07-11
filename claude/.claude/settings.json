@@ -1,4 +1,5 @@
 {
+  "theme": "dark",
   "permissions": {
     "additionalDirectories": ["/Users/zacharylevinw/Documents/sync"],
     "ask": [

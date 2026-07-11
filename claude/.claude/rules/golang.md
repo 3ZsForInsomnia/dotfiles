@@ -1,6 +1,6 @@
 ---
-applyTo: "**/*.go"
-description: "Go-specific coding rules and testing conventions"
+paths:
+  - "**/*.go"
 ---
 
 # Go

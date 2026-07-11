@@ -1,6 +1,6 @@
 ---
-applyTo: "**/*.{ts,tsx,js,jsx}"
-description: "TypeScript and React rules covering types, patterns, and testing"
+paths:
+  - "**/*.{ts,tsx,js,jsx}"
 ---
 
 # TypeScript and React
