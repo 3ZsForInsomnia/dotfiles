@@ -143,7 +143,6 @@ return {
       end, { noremap = false, expr = true })
 
       require("obsidian").setup(opts)
-      require("config.notes-ai-utils").setup()
     end,
     opts = {
       legacy_commands = false,
@@ -326,17 +325,6 @@ return {
         key = o .. "y",
         action = "lua openNote('Yearly')",
         desc = "Open yearly note",
-      }),
-
-      cmd({
-        key = o .. "a1",
-        action = "OpenRecentNotes 1",
-        desc = "Send files edited within last 1 day to quickfix",
-      }),
-      cmd({
-        key = o .. "a7",
-        action = "OpenRecentNotes 7",
-        desc = "Send files edited within last 7 days to quickfix",
       }),
     },
   },
