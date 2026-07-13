@@ -1,78 +1,55 @@
-export SKILLS_HOME="$HOME/.agent/skills"
-export SKILLS_BACKEND="skillport"
+# Skill management via skillport (https://github.com/gotalab/skillport).
+#
+# Skills live under $SKILLS_HOME, organized into three namespaces for at-a-glance
+# clarity in the list (skillport protects local edits natively, so namespaces are
+# purely organizational):
+#   custom/  - skills authored from scratch (author here, or: skillport add <path> --namespace custom)
+#   work/    - skills symlinked from a work repo's .github/skills (skLinkWork)
+#   lib/     - skills downloaded from external sources (skInstall); updatable via skUpdate
+#
+# SKILLS_HOME / SKILLPORT_SKILLS_DIR are exported eagerly in path-modifiers.zsh
+# (this file is lazy-loaded, so it can't be their reliable source).
 
-alias osk="openskills"
+alias sk="skillport"
 alias skp="skillport"
 
-function _skillsCmd() {
-  if [[ "$SKILLS_BACKEND" == "skillport" ]]; then
-    echo "skillport"
-  else
-    echo "openskills"
-  fi
-}
-
-alias sk='$(_skillsCmd)'
-
+# Add a downloaded skill (GitHub URL, owner/repo, or built-in) into the lib namespace.
 function skillsInstall() {
-  if [[ "$SKILLS_BACKEND" == "skillport" ]]; then
-    skillport add "$@"
-  else
-    openskills install "$@" --universal --global
-  fi
+  skillport add "$@" --namespace lib
 }
 alias skInstall="skillsInstall"
 
 function skillsList() {
-  if [[ "$SKILLS_BACKEND" == "skillport" ]]; then
-    skillport list "$@"
-  else
-    openskills list "$@"
-  fi
+  skillport list "$@"
 }
 alias skList="skillsList"
 
 function skillsShow() {
-  if [[ "$SKILLS_BACKEND" == "skillport" ]]; then
-    skillport show "$@"
-  else
-    openskills read "$@"
-  fi
+  skillport show "$@"
 }
 alias skShow="skillsShow"
 
+# Regenerate the AGENTS.md skill table.
 function skillsSync() {
-  if [[ "$SKILLS_BACKEND" == "skillport" ]]; then
-    skillport doc "$@"
-  else
-    openskills sync -o "$HOME"/.agent/AGENTS.md -y "$@"
-  fi
+  skillport doc "$@"
 }
 alias skSync="skillsSync"
 
+# Update skills from their sources. Locally-edited skills are skipped unless
+# --force is passed (skillport refuses to clobber local changes) — that skip is
+# the signal to reconcile a customized skill against its upstream.
 function skillsUpdate() {
-  if [[ "$SKILLS_BACKEND" == "skillport" ]]; then
-    skillport update "$@"
-  else
-    local current_dir=$(pwd)
-    cd "$SKILLS_HOME"
-    openskills update "$@"
-    cd "$current_dir"
-  fi
+  skillport update "$@"
 }
 alias skUpdate="skillsUpdate"
 
 function skillsHelp() {
-  if [[ "$SKILLS_BACKEND" == "skillport" ]]; then
-    skillport --help
-  else
-    openskills -h
-  fi
+  skillport --help
 }
 alias skHelp="skillsHelp"
 
-# Link skills from a git repo's .github/skills to ~/.agent/skills (openskills only)
-function oskLink() {
+# Symlink a work repo's .github/skills into the work namespace, then resync.
+function skillsLinkWork() {
   local project_root
   project_root=$(git rev-parse --show-toplevel 2>/dev/null)
 
@@ -82,23 +59,26 @@ function oskLink() {
   fi
 
   local skills_dir="$project_root/.github/skills"
-
   if [[ ! -d "$skills_dir" ]]; then
     echo "Error: no .github/skills directory found in $project_root" >&2
     return 1
   fi
 
+  local work_dir="$SKILLS_HOME/work"
+  mkdir -p "$work_dir"
+
   for skill in "$skills_dir"/*(N/); do
     local name=$(basename "$skill")
-    local target="$SKILLS_HOME/$name"
+    local target="$work_dir/$name"
 
     if [[ -e "$target" ]]; then
-      echo "Skipping $name (already exists)"
+      echo "Skipping work/$name (already exists)"
     else
       ln -s "$skill" "$target"
-      echo "Linked $name"
+      echo "Linked work/$name"
     fi
   done
 
   skillsSync
 }
+alias skLinkWork="skillsLinkWork"

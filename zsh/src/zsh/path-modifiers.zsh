@@ -56,6 +56,12 @@ export BASIC_MEMORY_PROJECT_ROOT="$XDG_DATA_HOME/basic-memory"
 export PGUSER="postgres"
 export JIRA_BROWSER="google-chrome"
 
+# skillport reads SKILLPORT_SKILLS_DIR to locate the skill library; unset, it
+# falls back to ~/.skillport/skills. Exported eagerly so nvim/CodeCompanion
+# inherit it no matter when they launch.
+export SKILLS_HOME="${SKILLS_HOME:-$HOME/.agent/skills}"
+export SKILLPORT_SKILLS_DIR="$SKILLS_HOME"
+
 ######################
 # Path modifiers     #
 ######################
@@ -101,7 +107,6 @@ function setup_deferred_env() {
   export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?.lua;$XDG_CONFIG_HOME/luarocks/?.lua;"
   export LUAROCKS_CONFIG="$XDG_CONFIG_HOME/luarocks/config.lua"
   export DASHT_DOCSETS_DIR="$HOME/.local/share/Zeal/Zeal/docsets/"
-  export SKILLPORT_SKILLS_DIR="$SKILLS_HOME"
 
   ######################
   # OS specific items  #
