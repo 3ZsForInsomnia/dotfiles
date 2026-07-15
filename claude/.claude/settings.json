@@ -13,7 +13,17 @@
       "WebFetch",
       "mcp__vectorcode__query",
       "mcp__vectorcode__ls",
-      "mcp__vectorcode__files_ls"
+      "mcp__vectorcode__files_ls",
+      "mcp__Sunsama__list_resources",
+      "mcp__Sunsama__read_resource",
+      "mcp__Sunsama__get_task_by_id",
+      "mcp__Sunsama__get_backlog_tasks",
+      "mcp__Sunsama__get_archived_tasks",
+      "mcp__Sunsama__get_daily_highlights",
+      "mcp__Sunsama__get_task_time_estimate",
+      "mcp__Sunsama__search_tasks",
+      "mcp__Sunsama__list_help_articles",
+      "mcp__Sunsama__get_help_article"
     ]
   }
 }
