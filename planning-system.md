@@ -49,9 +49,10 @@ Shared infrastructure the routines and the author-the-plan skills all build on.
 - **The track = two backlog folders: `W/Milestones` (work) and `P/Milestones`
   (personal).** Each milestone is a task in its folder with a due date where one
   exists; the folder marks it as a milestone, never a task to bring into a day.
-- **Milestone ↔ task link is a title prefix.** Each milestone owns a short key;
-  tasks serving it are named `[key]: task name`, found via `search_tasks`. Titles
-  only; never task notes. Untagged tasks are simply unaffiliated.
+- **Milestone ↔ task link is a title prefix.** Each milestone owns a key `PREFIX-n`
+  (per-project prefix + number, managed by milestone authoring); tasks serving it are
+  named `[PREFIX-n]: task name`, found via `search_tasks`, and the shared prefix groups a
+  project's milestones. Titles only, never task notes. Untagged tasks are unaffiliated.
 - **No hierarchy inside Sunsama** (it has none; subtasks are just checklists).
   Work references Jira's epic→story→subtask; personal caps at milestone + `[key]:`
   tasks. A big personal goal becomes several sibling milestones, not nested ones.
@@ -150,42 +151,57 @@ skill is iterable, skippable, and redoable**; selective redo (redo data model + 
 then re-run only what follows) comes from independent create-or-revise artifacts, not an
 orchestrator.
 
-**The pipeline:**
+**The planning pipeline:**
 1. **Requirements** (early, quick). Sense-check the requirements, discover the code
    reality, flag early risk. One skill, adapting to input maturity: a comprehensive PRD to
    pressure-test (depth-first), a vague idea to shape, or an existing project to understand
-   and extend. Output: `requirements.md` plus the moving pieces and provisional risk. Makes
-   the user informed enough to give a better-than-vibes answer; not itself a business report.
-2. **Design** (extensible, built). Architecture, contracts, data model, and whatever else a
+   and extend. Output: `requirements.md`. Makes the user informed enough to give a
+   better-than-vibes answer; not itself a business report.
+2. **Design** (extensible). Architecture, contracts, data model, and whatever else a
    feature needs. Each reads requirements and the code. Any subset skippable (no DB change,
    skip the data model) or re-runnable.
-3. **Milestones** (coarse decomposition). Break the work into dated dev-plan goals,
-   rough-sized, each with a risk level and a "what we'd remove if we could" flag. The
-   high-level plan of action, not tickets.
-4. **Breakdown** (fine decomposition, separate, execution-time). Detailed, assignable
-   tickets for a single epic when it is actually being worked. Adapts to the sink
-   (Jira/Sunsama) and to whatever design artifacts are present.
-5. **Plan / report** (last, work-only in use). Turn the risk-annotated milestones into one
+3. **Milestones** (coarse decomposition). Group the work into epic-level milestones:
+   outcome (a cuttable user capability) and foundational (groundwork, placed just-in-time),
+   sequenced by dependency. Each carries an hours estimate (best/likely/worst via a risk
+   band), a risk level, and a cut-candidate flag. Output: `milestones.md`. No dates (the
+   user owns those); no Sunsama writes (the user sets those up when ready).
+4. **Plan / report** (last, work-only in use). Turn the risk-annotated milestones into one
    plan for eng leadership, product, and business to decide scope, with scope pushback
    built in. Scope is their call, not the user's; a business cut loops back to re-run
    milestones. The only stage with no personal use.
 
-**Early vs late risk:** stage 1 identifies and rough-sizes risk (what is risky); stage 5
-translates it (what that risk means for scope, timeline, and the business). The two sit on
-opposite sides of estimation, which is why the report is last.
+**Breakdown is not a planning stage.** Breaking a milestone into assignable tickets happens
+later, per-milestone, at development time, so it sits outside this pipeline. Execution-time
+and recurring; still to build.
+
+**Entry point (stage 0).** A kickoff/navigator: "here are my epics/Confluence/Figma, this
+project needs x/y/z, let's get started." It reports which artifacts are present, missing, or
+stale and dispatches a single producer on request. Idempotent and re-entrant (run it, do a
+few, come back). Distinct from the plan/report, same no-orchestration safeguards (gap-check,
+single consented dispatch, no auto-chaining, stateless).
+
+**Early vs late risk:** stage 1 identifies and rough-sizes risk (what is risky); stage 4
+translates it (what that risk means for scope and the business). The two sit on opposite
+sides of estimation, which is why the report is last.
 
 **Artifact conventions (shared):**
 - One markdown file per artifact type, per project, in the notes repo. Work projects at
-  `1 - Work/10 - Projects/<project>/`; a personal project in its own folder (path TBD). The
-  folder name is the link back to the milestone; no index file.
+  `1 - Work/10 - Projects/<project>/`, personal at `0 - Personal/01 - Projects/<project>/`.
+  The folder name is the project; no index file.
 - Create-or-revise: re-runs update in place.
 - Iterative-ready: design producers use a candidate loop (explore approaches, compare,
-  converge, keep the culled as alternatives); requirements iterates as depth-first
+  converge, keep the culled as alternatives); requirements and milestones iterate by
   refinement, not compete-and-cull.
+- The collaborative opener is the first principle in every skill (surface and pause at the
+  judgment calls; the user steers and decides).
 - Diagrams use the shared `mermaid-diagrams` skill.
 - Each artifact stands on its own, not tailored to a consumer.
 
 **Build status:**
+- **Requirements** ✅ `requirements-analysis`. `requirements.md`. Adapts to input maturity;
+  problem/user-outcome emphasis, moving pieces, discovery (reuse/touch/build-new), early
+  risk, open questions. Scope-neutral. Kept the questioning cadence and Why/Simpler from
+  `requirements-clarity`, dropped its scoring and do-everything template.
 - **Data model** ✅ `data-modeling`. `schema.md`. Postgres-first; normalize from the domain,
   integrity as constraints, index/denormalize from usage, avoid jsonb. Fresh
   (`database-schema-designer` dropped as bloat).
@@ -195,18 +211,17 @@ opposite sides of estimation, which is why the report is last.
 - **Contracts** ✅ `api-design`. `contracts.md`. REST/RPC/events, HTTP semantics, error and
   cross-cutting shape, idempotency, sync/async. Adapted from the `api-design` prompt,
   narrowed to interfaces.
-- **Requirements** next (stage 1). One agnostic skill. Mostly fresh: keep the questioning
-  cadence and the Why/Simpler pair from `requirements-clarity`, drop its scoring and its
-  do-everything PRD template.
-- **Milestone authoring** to build (stage 3). Coarse decomposition; consumes the designs,
-  rough-sizes, dates, flags cut-candidates.
-- **Breakdown** deferred, execution-time (stage 4). Draws on `stories.lua`'s durable
-  breakdown doc and gap/spike/state-coverage judgment, not its dev-driven workflow.
-  Ticket-ready, no acceptance criteria; story cap ~7-8 days.
-- **Plan / report** to build last (stage 5). Synthesizes the artifacts and milestones into
-  the RFC. May also be the front door that reports which artifacts are present/missing and
-  dispatches a single producer on request (no auto-chaining), which is what keeps it a
-  planner, not an orchestrator.
+- **Milestone authoring** ✅ `milestone-authoring`. `milestones.md`. Outcome/foundational
+  split, `PREFIX-n` keys it manages, hours estimate (best/likely/worst, risk band low 10 /
+  med 20 / high 40 percent, size-tiered rounding), cut-candidates. Doc only, no Sunsama.
+- **Plan / report** ✅ `plan-report`. `plan.md`. Synthesizes requirements, designs, and
+  milestones into a leadership/business-facing plan for scope decisions; technical milestones
+  kept visible, shared-groundwork vs capability grouping from the dependency graph, risk in
+  business terms, bandwidth not dates, scope prepared not decided.
+- **Kickoff / navigator** to build (stage 0). The entry point above.
+- **Breakdown** to build, execution-time (not a planning stage). Draws on `stories.lua`'s
+  durable breakdown doc and gap/spike/state-coverage judgment, not its dev-driven workflow.
+  Ticket-ready, no acceptance criteria.
 
 Dropped from scope: `gepetto` (monolithic, rebuild-not-revise), `arch-review` (a review
 partner, kept as a general skill).
