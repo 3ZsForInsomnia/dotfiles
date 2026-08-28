@@ -80,7 +80,7 @@ Structure:
     omit for personal>
 
     ## Constraints & quality attributes
-    <first pass: the known product/business constraints; revisited after design>
+    <the known product/business constraints; technical constraints surface in the designs>
 
     ## Success
     <the business-level outcome that means this worked>

@@ -44,12 +44,12 @@ surface.
   come back in the same backlog read; the folder marks them as milestones, never
   as tasks to bring into a day.
 - **Milestone ↔ task link: a title prefix.** Sunsama has no native parent/child,
-  so the link lives in the **task title**: each milestone owns a short key, and
-  every task serving it is named `[key]: task name` (e.g. `[pay]: wire up refund
-  endpoint`). Find a milestone's tasks with `search_tasks("[key]")`. The milestone
-  task in the folder defines the key; there's no separate registry. Tasks without
-  a `[key]:` prefix are simply unaffiliated; not everything belongs to a milestone.
-  The link is in titles only; never read it from task notes.
+  so the link lives in the **task title**: each milestone owns a key `PREFIX-n`
+  (per-project prefix + number, set by milestone authoring), and every task serving it
+  is named `[PREFIX-n]: task name` (e.g. `[PPX-3]: wire up refund endpoint`). Find a
+  milestone's tasks with `search_tasks("[PPX-3]")`, or a whole project's with the shared
+  prefix. Tasks without a `[PREFIX-n]:` prefix are unaffiliated; not everything belongs to
+  a milestone. The link is in titles only; never read it from task notes.
 - **All Sunsama tasks:** backlog and anything already scheduled. Use
   `search_tasks` to find a specific one.
 - **The last few days of daily notes** (notes repo, `~/Documents/sync`), the
@@ -68,7 +68,7 @@ The skill's only Sunsama write is `create_task`. Create one when planning turns 
 a real new commitment that isn't already in Sunsama: a check-in, a "revise
 milestone X" task, a follow-up. Confirm the title and details with the user first.
 Most mornings this doesn't happen at all. If the new task serves a milestone, name
-it `[key]: ...`.
+it `[PREFIX-n]: ...`.
 
 The skill never moves tasks into a day, sets priorities, or timeboxes to the
 calendar. It surfaces the plan; the user acts on it in Sunsama.
@@ -89,7 +89,7 @@ this shape:
 
     ## YYYY-MM-DD
     ### Planned
-    - [work] [key]: task name (~estimate)
+    - [work] [PREFIX-n]: task name (~estimate)
     - [personal] task name (~estimate)
     ### Actual
     _(daily review fills this)_
@@ -98,10 +98,10 @@ Terse by design: context for the AI, not a report for the user. It records what 
 committed to, not a schedule. The path is absolute, so writes don't depend on the
 working directory.
 
-A confirmed milestone miss is recorded as a `- miss [key]: <reason>` line inside the
+A confirmed milestone miss is recorded as a `- miss [PREFIX-n]: <reason>` line inside the
 day's entry (see the milestone check). Its presence is the watchlist signal later
 runs read; the day it sits on is the day the issue showed, so no separate "since"
-date is needed. A recovery may optionally be noted as `- recovered [key]`, but
+date is needed. A recovery may optionally be noted as `- recovered [PREFIX-n]`, but
 nothing needs clearing: markers age out of the read window on their own.
 
 ## The flow
@@ -126,7 +126,7 @@ data to inform that call, which is the whole reason this runs here instead of th
 user eyeballing it and going on feel.
 
 **Start with the watchlist.** Read roughly the last two weeks of entries in the daily
-log (`~/Documents/sync/daily-log.md`) and note any milestone carrying `miss [key]`
+log (`~/Documents/sync/daily-log.md`) and note any milestone carrying `miss [PREFIX-n]`
 markers in that window. Treat them as a *watchlist*: a nudge toward where to look
 harder, not something immediately actionable and not a conclusion. A milestone that
 has slipped recently earns a closer look even when today's snapshot looks fine;
@@ -137,23 +137,26 @@ the working directory.
 Then do the legwork, scoped to what matters now: milestones near their due dates,
 plus anything the watchlist flags. Don't analyze everything every morning:
 
+- **The milestone doc:** when the project has a `milestones.md` in its folder, read the
+  relevant milestones from it for the estimates, risk levels, and cut-candidates behind the
+  numbers, richer context than Sunsama holds.
 - **Work milestones:** query Jira for the epic/story's subtasks and transition
   history (Sunsama has neither). Surface data-backed smells: a breakdown that's
   sparse relative to the milestone's size and how soon it's due; work that hasn't
   transitioned in a while.
-- **Personal milestones:** Sunsama is the complete picture here; read the `[key]:`
+- **Personal milestones:** Sunsama is the complete picture here; read the `[PREFIX-n]:`
   tasks and their estimates for the same sparseness/coverage read.
 - **Both, cheap:** deadline proximity, collisions (two due the same week), and
   notes-silence (a soon-due milestone the last few days' notes haven't touched).
 
 Hand back a light digest: a couple of lines pointing at the one or two milestones
-worth a look, with the data behind each (e.g. "`[pay]`: epic due in 8 days, only 3
+worth a look, with the data behind each (e.g. "`[PPX-3]`: epic due in 8 days, only 3
 subtasks and nothing moved since the 18th"). The user decides whether any of it
 matters. Most mornings nothing needs action. If one's off, hand off to the milestone
 skill or note it to skip; never revise milestones here.
 
 **Record a confirmed miss.** When the user confirms a milestone is genuinely off, or
-is on the fence (default to recording), add a `- miss [key]: <one-line reason>`
+is on the fence (default to recording), add a `- miss [PREFIX-n]: <one-line reason>`
 marker to today's daily-log entry. Never record on your suspicion alone. Nothing
 needs clearing later: markers age out of the two-week read window on their own, and a
 recovered milestone simply stops collecting them. This record is always a soft
@@ -170,7 +173,7 @@ routine that combines them. Reason over them:
 - **Against the day's shape.** Use the calendar's free blocks and today's rhythm
   (early start, mid-day gym) for how much actually fits, as context, not a
   schedule you write.
-- **Tie work to the track.** Where a candidate is named `[key]: ...`, note which
+- **Tie work to the track.** Where a candidate is named `[PREFIX-n]: ...`, note which
   milestone it moves, so priority reflects what's actually due.
 
 Present a prioritized, deadline-aware plan and talk it through. Surface candidates

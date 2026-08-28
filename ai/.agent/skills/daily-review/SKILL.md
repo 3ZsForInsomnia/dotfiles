@@ -1,6 +1,6 @@
 ---
 name: daily-review
-description: "End-of-workday review routine. Reconciles what was planned this morning against what actually happened, updates the track where the day changed it, captures loops so nothing needs reconstructing tomorrow, and closes the day's log entry. Work only (personal review is a separate pre-sleep routine). Use when the user says 'daily review', 'review my day', 'end of day', 'wrap up my day', 'eod review', or 'how did today go'. Reads Sunsama and the daily log; the reflection and the decisions stay the user's."
+description: "End-of-workday review routine. Reconciles what was planned this morning against what actually happened, updates the track where the day changed it, captures loops so nothing needs reconstructing tomorrow, and closes the day's log entry. Work only (the personal review is separate). Use when the user says 'daily review', 'review my day', 'end of day', 'wrap up my day', 'eod review', or 'how did today go'. Reads Sunsama and the daily log; the reflection and the decisions stay the user's."
 user-invocable: true
 ---
 
@@ -8,8 +8,7 @@ user-invocable: true
 
 The end-of-workday routine. Reconciles the day: what got planned this morning
 versus what actually happened, what that means for the track, and what needs to be
-ready to act on tomorrow. Work only. The personal review is a separate, pre-sleep
-routine.
+ready to act on tomorrow. Work only; the personal review is separate.
 
 This is **not a shortened weekly review.** It looks at what was pertinent today and
 how the day's work fits the larger plan. The weekly review is a different lens (the
@@ -49,8 +48,9 @@ adds detail (a ticket's status, a transition), but it is never the surface.
 - **Sunsama's current state for today** for what actually happened: which tasks are
   done, which aren't, and the actual times where the user set them (a task estimated
   at 1h that took 3h is a signal). Compare this against the log's planned half.
-- **The track (`W/Milestones`)** for the milestone check. Work only here, so
-  `P/Milestones` is out of scope (personal is the pre-sleep routine's concern).
+- **The track (`W/Milestones`)** for the milestone check, plus the project's
+  `milestones.md` for the relevant milestones' estimates, risk levels, and cut-candidates.
+  Work only here, so `P/Milestones` is out of scope (the personal review handles personal).
 - **The last few days of daily notes** (notes repo, `~/Documents/sync`), as ambient
   context: what loops were already open, what the week has been like. Not 1:1 with
   tasks. Today's note is usually already in the buffer. Daily notes live at
@@ -67,10 +67,10 @@ file.** The Actual section records what got done, what slipped and by roughly ho
 much, and a terse why where it's worth keeping. It is context for the AI, not a report
 for the user, so keep it short.
 
-A confirmed milestone miss is recorded as a `- miss [key]: <reason>` line inside the
+A confirmed milestone miss is recorded as a `- miss [PREFIX-n]: <reason>` line inside the
 day's entry (see step 3). Its presence is the watchlist signal later runs read; the
 day it sits on is the day the issue showed, so no separate date is stored. A recovery
-may optionally be noted as `- recovered [key]`; nothing needs clearing, since markers
+may optionally be noted as `- recovered [PREFIX-n]`; nothing needs clearing, since markers
 age out of the read window on their own.
 
 ## Writes
@@ -79,7 +79,7 @@ Two write targets, same as planning plus the log:
 
 - **Sunsama `create_task`**, confirmed first, for a genuinely new follow-up the review
   turns up (a check-in, a loop to close, a "revise milestone X"). If it serves a
-  milestone, name it `[key]: ...`. The skill does not move tasks into days, set
+  milestone, name it `[PREFIX-n]: ...`. The skill does not move tasks into days, set
   priorities, or timebox.
 - **The daily log** (`daily-log.md`): fill today's Actual section.
 - **The daily note is not a default write target.** The AI may *offer* to add the
@@ -99,7 +99,7 @@ mattered today, not a line-by-line audit.
 ### 1. Start: watchlist and context
 
 Read roughly the last two weeks of entries in the daily log
-(`~/Documents/sync/daily-log.md`) and note any milestone carrying `miss [key]`
+(`~/Documents/sync/daily-log.md`) and note any milestone carrying `miss [PREFIX-n]`
 markers in that window. Treat them as a watchlist: a nudge toward where to look
 harder, not a conclusion; repeated markers across days weigh more than one. The log
 path is absolute, so this doesn't depend on the working directory. Then read this
@@ -125,7 +125,7 @@ updated), confirm and apply it. If a milestone is genuinely off, hand off to the
 milestone skill or note it to pick up later; never revise milestones here.
 
 **Record a confirmed miss.** When the user confirms a milestone is genuinely off, or is
-on the fence (default to recording), add a `- miss [key]: <one-line reason>` marker to
+on the fence (default to recording), add a `- miss [PREFIX-n]: <one-line reason>` marker to
 today's daily-log entry when you close it in step 6. Never record on your suspicion
 alone. Nothing needs clearing later: markers age out of the two-week window on their
 own, and a recovered milestone simply stops collecting them.
@@ -155,7 +155,7 @@ their own version or leave it in the log alone.
 
 Fill today's Actual section in the daily log (see **The daily log**), matching the
 file's existing format: what got done, what slipped and by roughly how much, a terse
-why where it's worth keeping, plus any `- miss [key]:` markers confirmed in step 3.
+why where it's worth keeping, plus any `- miss [PREFIX-n]:` markers confirmed in step 3.
 That closes the day. The planned-versus-actual trail it leaves is what lets the miss
 signals in future planning and reviews mean something.
 

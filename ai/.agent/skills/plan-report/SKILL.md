@@ -21,8 +21,11 @@ have no business deciders.
   and options, and pause at the judgment calls for the user to steer. The decisions stay
   the user's; don't drive to a finished artifact on your own.
 - **Synthesize, don't re-derive.** Read the existing artifacts and pull them together;
-  don't redo the design or re-investigate the code. If an artifact is missing or stale,
-  say so and decide with the user whether to run its producer first.
+  don't redo the design or re-investigate the code. If an artifact is missing (or the user
+  flags one as stale), say so and decide with the user whether to run its producer first.
+- **Check coverage.** Confirm every requirement and moving-piece is addressed by at least
+  one milestone, sanely; flag any gap. It's the last chance to catch a requirement no
+  milestone covers.
 - **Keep the technical milestones visible.** Organize for readability (shared groundwork,
   then capabilities), but show the actual milestones, so both technical and non-technical
   readers grasp the structure and see where the risk sits. The organization is the
@@ -98,8 +101,8 @@ Structure:
 Not a script; the shape of the work, done with the user.
 
 1. **Gather.** Read `requirements.md`, the designs, and `milestones.md`. If a needed
-   artifact is missing or stale, flag it and decide with the user whether to run its
-   producer first.
+   artifact is missing (or the user says one is stale), flag it and decide with the user
+   whether to run its producer first.
 2. **Group.** From the milestone dependency graph, separate shared groundwork (foundational,
    2+ dependents) from the capability groups (each outcome milestone plus its own
    foundational work).
