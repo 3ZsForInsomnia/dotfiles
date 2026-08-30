@@ -61,6 +61,19 @@ build another, then compare; or sketch several up front and cull. Do not force a
 - **Converge on one.** The culled candidates carry forward as the alternatives
   considered in the decisions and rationale.
 
+## Inputs
+
+- **The project's requirements and discovery artifact** (`requirements.md`): the domain
+  entities and relationships, and the existing data the discovery surfaced (current tables,
+  columns, what's reused vs built new). Design on top of it rather than re-investigating.
+- **The design artifacts, when present** (`architecture.md` for which components own what
+  data and the service boundaries; `contracts.md` for the payload shapes that imply stored
+  data). The design producers can run in any order, so treat these as available-if-present.
+- **The existing `schema.md`**, when revising.
+- **Expected access patterns, from the user:** the real queries, hot read paths, write
+  volume, and scale. Indexing and any denormalization key off these, and the artifacts
+  don't capture them.
+
 ## The artifact
 
 One markdown file per project, `schema.md`, in that project's folder in the notes
