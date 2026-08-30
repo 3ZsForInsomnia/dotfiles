@@ -47,13 +47,12 @@ a one-shot.
   **design artifacts** (`architecture.md`, `contracts.md`, `schema.md`) for what the work
   is and how complex it is.
 - **The existing `milestones.md`**, when revising; it is also the numbering registry.
-- **The user**, for the boundary judgment and the base-hours estimates.
 
 ## Estimation
 
 Hours with a risk-scaled band, computed by formula so there's no false precision. To get
-the base hours, decompose the milestone only enough to size it and keep it high-level; if
-you're detailing how to do the work, you've overshot into `story-breakdown`'s territory.
+the base hours, decompose the milestone only enough to size it; if you're detailing how to
+do the work, you've gone too granular for a milestone.
 
 - **likely** = the base hours agreed with the user.
 - **best** = likely × (1 − x); **worst** = likely × (1 + 2x). The 2x encodes the fact

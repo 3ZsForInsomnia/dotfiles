@@ -52,9 +52,8 @@ a business report.
 
 ## How it iterates
 
-Not the design producers' candidate loop. This iterates by depth-first refinement:
-decompose the input, dive into each piece, pressure-test it, and go deeper where it is
-unclear or risky. Refinement rounds, not competing alternatives to cull.
+By depth-first refinement: decompose the input, dive into each piece, pressure-test it,
+and go deeper where it is unclear or risky. Each round sharpens the same picture.
 
 ## The artifact
 

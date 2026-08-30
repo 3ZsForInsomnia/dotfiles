@@ -64,7 +64,7 @@ not force a shape.
 
 One markdown file per project, `architecture.md`, in that project's folder in the
 notes repo (`~/Documents/sync`). Work projects live under
-`1 - Work/10 - Projects/<project>/`; a project elsewhere writes to its own folder.
+`1 - Work/10 - Projects/<project>/`, personal under `0 - Personal/01 - Projects/<project>/`.
 The folder name is the project. If `architecture.md` already exists, read it and
 update it in place rather than rebuilding.
 

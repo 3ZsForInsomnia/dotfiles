@@ -44,7 +44,6 @@ have no business deciders.
   `contracts.md`, `schema.md`), and `milestones.md`, which is the spine: the milestones,
   estimates, risks, cut-candidates, and the dependency graph.
 - **The existing `plan.md`**, when revising.
-- **The user**, for the framing and the pushback judgment.
 
 Shared vs capability-specific grouping is read straight off the milestone dependency graph:
 a `(F)` milestone that 2+ `(O)` milestones depend on is shared groundwork; a `(F)` milestone
@@ -52,8 +51,8 @@ only one `(O)` depends on belongs to that capability.
 
 ## How it iterates
 
-By refinement, not compete-and-cull: assemble a draft, then work the framing and the
-scope pushback with the user until it says what they need it to say. Create-or-revise.
+By refinement: assemble a draft, then work the framing and the scope pushback with the
+user until it says what they need it to say. Create-or-revise.
 
 ## The artifact
 

@@ -43,12 +43,11 @@ can create the tickets in the tracker on request.
   have changed it. Investigate with VectorCode plus reading.
 - **The existing `breakdown-PPX-n.md`**, when revising; it also records which tickets are
   already created.
-- **The user.**
 
 ## How it iterates
 
-By refinement, not compete-and-cull: decompose, review against the code, fill the gaps,
-and refine with the user. Create-or-revise.
+By refinement: decompose, review against the code, fill the gaps, and refine with the
+user. Create-or-revise.
 
 ## The artifact
 
