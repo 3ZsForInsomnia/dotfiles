@@ -10,10 +10,9 @@ The end-of-workday routine. Reconciles the day: what got planned this morning
 versus what actually happened, what that means for the track, and what needs to be
 ready to act on tomorrow. Work only; the personal review is separate.
 
-This is **not a shortened weekly review.** It looks at what was pertinent today and
-how the day's work fits the larger plan. The weekly review is a different lens (the
-week's arc and patterns); this one is the day. It is also **selective**: it does not
-account for every task every day, only what actually mattered.
+It looks at what was pertinent today and how the day's work fits the larger plan. It
+is **selective**: it does not account for every task every day, only what actually
+mattered.
 
 Like daily planning, this skill **operates** the plan. It surfaces what changed and
 records the user's calls; it does not author or revise milestones inline.

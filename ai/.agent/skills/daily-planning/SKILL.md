@@ -111,13 +111,20 @@ to 15–20 minutes, but that's their attention, not your processing. You can do 
 work (querying Jira, scanning histories, cross-referencing notes) as long as what
 you hand back stays light and digested.
 
-### 1. Is Sunsama current?
+### 1. Mountain check
+
+Before the plan, confirm today's daily note has the **mountain** filled in: intention,
+gratitudes, anticipations, emotions (after a short meditation), and any other thoughts.
+It's done before planning, so this is a check, not a fill. If it's missing, nudge the user
+to do it first; both the day's plan and the evening review key off the intention.
+
+### 2. Is Sunsama current?
 
 Ask once, up front: is there anything from Jira or yesterday not yet entered? The
 plan is only as good as what's in Sunsama, and entering it is the user's call;
 don't verify or backfill it yourself. Wait for the go-ahead, then proceed.
 
-### 2. Milestone check
+### 3. Milestone check
 
 Read `W/Milestones` and `P/Milestones` (both; this spans personal and professional)
 with their due dates. **You can't pronounce a milestone on-track or off**: only the
@@ -162,7 +169,7 @@ needs clearing later: markers age out of the two-week read window on their own, 
 recovered milestone simply stops collecting them. This record is always a soft
 supplementary nudge, never an override of today's data or the user's call.
 
-### 3. Surface today's plan
+### 4. Surface today's plan
 
 Pull the candidates from Sunsama: personal and professional together, the one
 routine that combines them. Reason over them:
@@ -180,12 +187,12 @@ Present a prioritized, deadline-aware plan and talk it through. Surface candidat
 and structure; the user picks what today is. Don't hand back a rigid hour-by-hour
 schedule.
 
-### 4. Capture anything genuinely new
+### 5. Capture anything genuinely new
 
 If the conversation turns up a concrete new commitment that isn't in Sunsama,
 create it per **Creating tasks** above, confirming first. Usually nothing.
 
-### 5. Open today's log entry
+### 6. Open today's log entry
 
 Once the plan is settled, write its **planned half** to the daily log (see **The
 daily log**). One entry, terse, matching the file's existing format; leave Actual
