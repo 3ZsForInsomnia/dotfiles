@@ -129,6 +129,15 @@ local servers = {
   ["vectorcode"] = {
     cmd = { "vectorcode-mcp-server" },
   },
+
+  ["webmcp"] = {
+    cmd = {
+      "npx",
+      "-y",
+      "@jason.today/webmcp@latest",
+      "--mcp",
+    },
+  },
 }
 
 local default_servers = {

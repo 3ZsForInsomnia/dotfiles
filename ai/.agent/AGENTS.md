@@ -83,6 +83,11 @@ Each skill contains step-by-step instructions, templates, and scripts.
   <location>/Users/zacharylevinw/src/dotfiles/ai/.agent/skills/daily-meeting-update/SKILL.md</location>
 </skill>
 <skill>
+  <name>daily-planning</name>
+  <description>Morning planning routine that decides what to do today to move deadlines — 'what do I do today to make X happen by day Y'. Combines personal and professional work (the one routine that does). Use when the user says 'daily planning', 'plan my day', 'morning planning', 'what should I do today', or starts their day. Reads Sunsama (the source of truth) and recent daily notes, runs a light milestone health check, and surfaces a prioritized, deadline-aware plan the user commits to. Proposes; the user decides.</description>
+  <location>/Users/zacharylevinw/src/dotfiles/ai/.agent/skills/daily-planning/SKILL.md</location>
+</skill>
+<skill>
   <name>database-schema-designer</name>
   <description>Design robust, scalable database schemas for SQL and NoSQL databases. Provides normalization guidelines, indexing strategies, migration patterns, constraint design, and performance optimization. Ensures data integrity, query performance, and maintainable data models.</description>
   <location>/Users/zacharylevinw/src/dotfiles/ai/.agent/skills/database-schema-designer/SKILL.md</location>
@@ -186,6 +191,11 @@ Each skill contains step-by-step instructions, templates, and scripts.
   <name>lesson-learned</name>
   <description>Analyze recent code changes via git history and extract software engineering lessons. Use when the user asks 'what is the lesson here?', 'what can I learn from this?', 'engineering takeaway', 'what did I just learn?', 'reflect on this code', or wants to extract principles from recent work.</description>
   <location>/Users/zacharylevinw/src/dotfiles/ai/.agent/skills/lesson-learned/SKILL.md</location>
+</skill>
+<skill>
+  <name>local-delegation</name>
+  <description>How and when to offload grunt work to the local model (codestral via Ollama) using the `lbm` shell command, to save Claude's own context and reasoning. Consult before delegating summarization, classification, extraction/reformatting, boilerplate drafting, or first-pass proofreading — and to decide when NOT to delegate. Covers the task wrappers, how to feed input without defeating the purpose, how much to trust the output, and the hard guardrails.</description>
+  <location>/Users/zacharylevinw/src/dotfiles/ai/.agent/skills/local-delegation/SKILL.md</location>
 </skill>
 <skill>
   <name>marp-slide</name>

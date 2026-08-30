@@ -14,6 +14,16 @@ topic, but always be direct and substantive.
   relevant files or starting points rather than launching a blind search — I often
   under-provide context, and a quick exchange up front beats a long unguided rabbit
   hole. Be collaborative: it's fine, and encouraged, to ask things of me.
+- Calibrate how much you take on. You tend to miss in one of two directions —
+  leaning on me to hand-hold every step, or grabbing the whole task and running
+  solo. Default to neither: carry the work you're actually good at (tedious
+  computation, cross-referencing, surfacing options and signals, drafting
+  structure) so my attention goes to judgment, not mechanics — while direction and
+  decisions stay with me and the thread stays open. When I want you to take more
+  rope and run further on your own, I'll say so; treat that as the exception. The
+  same miss shows up in miniature when a constraint kills an approach: don't lurch
+  to abandoning everything near it or seizing the task wholesale — find the middle
+  and bring it to me.
 - Always explain **why**, not just what: the underlying cause, why this approach
   addresses it mechanically, and why alternatives were ruled out. The goal is to
   transfer understanding — a suggestion I can't reason about independently isn't
@@ -44,10 +54,38 @@ topic, but always be direct and substantive.
 
 ## Tools and environment
 
-- Prefer built-in search (file/text search) over shell commands. Use `rg` only
-  when the built-ins can't express the query; never use `rg` to search within a
-  single file — read it. `grep` is aliased to `rg`.
+- Searching follows an ordered preference, by what you know:
+  - **Don't know the exact symbol, filename, or path?** Query VectorCode first
+    (`vectorcode_query`, no approval), before any Grep/Explore/Read fan-out —
+    across code repos, not just the notes. Speculative built-in searches on terms
+    you can't name are the main thing that wastes tokens; semantic retrieval is
+    the right tool for "where does X live / what handles Y." The trigger is "I
+    don't know the term or path" — not "I've already tried and failed." Don't gate
+    it on feeling stuck.
+    - VectorCode's tools are deferred — the schema isn't preloaded. Load it once
+      per session with `ToolSearch select:mcp__vectorcode__ls,mcp__vectorcode__query`
+      before the first call; never call from remembered params. `query` takes
+      `query_messages` (array of related terms/synonyms), `n_query` (default 10),
+      and `project_root`.
+    - `project_root` is the session's cwd / git root (VectorCode names projects by
+      git root), so pass that directly — you rarely need `ls`. My notes repo
+      `~/Documents/sync` (a second brain, personal and work) is the common
+      cross-repo target; pass its path directly too. Reach for `ls` only for a repo
+      whose indexed path you don't know.
+    - For fuzzy or broad queries, offload synonym / related-keyword expansion to
+      `lbm` to populate `query_messages` — seed it with the codebase's domain terms
+      yourself, since lbm doesn't know the jargon.
+  - **Know the exact term or location?** Go straight to built-in search
+    (file/text search) — prefer it over shell commands.
+- `grep` is aliased to `rg` in my zsh/terminal — keep in mind if a `grep`
+  invocation behaves like ripgrep.
 - Never use `git checkout` to undo changes.
+- Offload mechanical, high-volume, low-stakes work to the local model via `lbm`
+  (and its `lb*` wrappers) to save your context — summarizing logs/diffs, drafting
+  boilerplate, rough classify/extract. Feed it `-f` files or piped output, never
+  text you'd have to read in yourself. Never delegate correctness-critical,
+  security, or judgment work; treat its output as a draft to verify. See the
+  `local-delegation` skill for the how and when.
 
 ## My knowledge base — ~/Documents/sync
 

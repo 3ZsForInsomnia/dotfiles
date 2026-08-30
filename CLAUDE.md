@@ -1,7 +1,7 @@
 # Dotfiles
 
 Managed with GNU Stow: each top-level directory is a stow package whose contents
-symlink into `$HOME` (e.g. `claude/.claude/` → `~/.claude/`). A file edited here is
+symlink into `$HOME` (e.g. `ai/.claude/` → `~/.claude/`). A file edited here is
 read from its stowed location at runtime, not from this repo.
 
 ## Secrets

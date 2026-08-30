@@ -110,6 +110,7 @@ return {
           { "<leader>z", group = "Misc" },
           { "<leader>zc", group = "Colortils" },
           { "<leader>ze", group = "Emmet" },
+          { "<leader>zm", group = "Mermaid" },
           { "<leader>zs", group = "Sessions" },
 
           --

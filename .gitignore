@@ -9,6 +9,11 @@ tags.*
 # THIS IS IMPORTANT, DO NOT TOUCH
 *work*
 !ai/.agent/skills/*work*
+# Symlink to PERSONAL settings.json (no work data); path just happens to contain "work".
+# Re-include only this exact chain, not a wildcard, so real work files stay excluded.
+!ai/src/work/
+!ai/src/work/.claude/
+!ai/src/work/.claude/settings.json
 
 # Miscellaneous stuff that shouldn't be committed
 resurrect

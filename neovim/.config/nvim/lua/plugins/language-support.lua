@@ -7,6 +7,36 @@ end
 
 return {
   {
+    "kevalin/mermaid.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ft = { "mmd", "mermaid" },
+    config = function()
+      require("mermaid").setup()
+    end,
+    keys = {
+      cmd({
+        key = l .. "mo",
+        action = "MerdmaidPreview",
+        desc = "Mermaid preview",
+      }),
+      cmd({
+        key = l .. "mc",
+        action = "MerdmaidPreviewStop",
+        desc = "Stop mermaid preview",
+      }),
+      cmd({
+        key = l .. "mc",
+        action = "MerdmaidCopyURL",
+        desc = "Mermaid copy URL",
+      }),
+      cmd({
+        key = l .. "mr",
+        action = "MerdmaidRender",
+        desc = "Mermaid render",
+      }),
+    },
+  },
+  {
     "aklt/plantuml-syntax",
     ft = "uml",
   },

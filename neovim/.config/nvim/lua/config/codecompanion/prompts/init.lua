@@ -4,10 +4,8 @@ return {
   -- "System" Prompts
   ["System: Hobbies"] = require("config.codecompanion.prompts.hobbies"),
   ["System: Emotional Processing"] = require("config.codecompanion.prompts.personal-processing"),
-  ["System: Daily Planning"] = require("config.codecompanion.prompts.daily-weekly").dailyPlanning,
-  ["System: Review Notes Daily"] = require("config.codecompanion.prompts.daily-weekly").dailyReview,
-  ["System: Review Notes Weekly"] = require("config.codecompanion.prompts.daily-weekly").weeklyReview,
   ["System: Critical Thinking"] = require("config.codecompanion.prompts.critical-thinking"),
+  ["Learning"] = require("config.codecompanion.prompts.learning"),
 
   -- Software Development
   ["Debugging"] = require("config.codecompanion.prompts.debugging"),
