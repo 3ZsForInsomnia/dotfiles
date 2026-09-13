@@ -5,7 +5,7 @@ function lss() {
   # Parse options using zparseopts
   local -A opts
   local -a args
-  zparseopts -D -E -A opts -- h -help c s d: n: -rev
+  zparseopts -D -E -A opts -- h -help c s r d: n: -rev
 
   # Show help
   if [[ -n "${opts[-h]}" || -n "${opts[--help]}" ]]; then
@@ -18,15 +18,16 @@ Options:
   -d <days>    Filter to files modified/created in last N days
   -n <num>     Limit output to N results
   -c           Use creation date (for filtering and sorting)
-  -s           Sort by size (largest first)
-  --rev        Reverse sort order
+  -s           Sort by size
+  -r, --rev    Reverse sort order (newest/largest first)
   -h, --help   Show this help message
 
 Defaults:
-  - Sort by modification date (newest first)
-  - Size sorting: largest to smallest
-  - Date sorting: most recent to oldest
+  - Sort by modification date, ascending (newest nearest the prompt)
+  - Size sorting: smallest to largest (largest nearest the prompt)
+  - Date sorting: oldest to most recent
   - Directory: current directory
+  - Output pages through less when it exceeds page_threshold items
 
 Examples:
   lss              # All files, sorted by modified date
@@ -34,8 +35,8 @@ Examples:
   lss -d7 -n10     # Top 10 files from last 7 days
   lss -c -d7       # Files created in last 7 days, sorted by created date
   lss -s -d7       # Files modified in last 7 days, sorted by size
-  lss -n5 -s       # Top 5 files sorted by size
-  lss --rev        # All files, oldest first
+  lss -n5 -s -r    # Top 5 largest files
+  lss --rev        # All files, newest first
   lss -d7 ../dir   # Files in ../dir from last 7 days
 
 Note: -c and -s are mutually exclusive
@@ -49,6 +50,9 @@ EOF
     return 1
   fi
 
+  # Page the output through less once it exceeds this many items (header excluded).
+  local page_threshold=15
+
   # Get remaining positional arguments (directory path)
   local target_dir="${@[-1]:-.}"
   
@@ -60,20 +64,18 @@ EOF
   # Build eza command
   local eza_cmd="eza -lahUm -F --icons --git --color=always"
   
-  # Determine sort field
+  # Determine sort field. Default is ascending, so the newest (or largest) item
+  # lands nearest the prompt instead of scrolling off the top.
   if [[ -n "${opts[-s]}" ]]; then
-    # Sort by size
-    eza_cmd="$eza_cmd --sort=size --reverse"
+    eza_cmd="$eza_cmd --sort=size"
   elif [[ -n "${opts[-c]}" ]]; then
-    # Sort by creation date
-    eza_cmd="$eza_cmd --sort=created --reverse"
+    eza_cmd="$eza_cmd --sort=created"
   else
-    # Default: sort by modification date
-    eza_cmd="$eza_cmd --sort=modified --reverse"
+    eza_cmd="$eza_cmd --sort=modified"
   fi
 
-  # Add reverse flag if needed (this will un-reverse, making it ascending)
-  if [[ -n "${opts[--rev]}" ]]; then
+  # -r/--rev flips to descending (newest/largest first).
+  if [[ -n "${opts[-r]}" || -n "${opts[--rev]}" ]]; then
     eza_cmd="$eza_cmd --reverse"
   fi
 
@@ -157,6 +159,20 @@ EOF
     output=$(echo -e "$output" | head -n $((limit + 1)))
   fi
 
-  # Output the result
-  echo -e "$output"
+  # Output the result, paging through less when the list is long enough to warrant it.
+  local rendered
+  rendered=$(echo -e "$output")
+  local item_count=$(($(printf '%s\n' "$rendered" | wc -l) - 1))
+
+  if [[ -t 1 && $item_count -gt $page_threshold ]]; then
+    # -R keeps eza's colors and icons intact. In the ascending default the newest
+    # items are at the bottom, so +G opens there; -r/--rev puts them at the top.
+    local -a less_opts=(-R)
+    if [[ -z "${opts[-r]}" && -z "${opts[--rev]}" ]]; then
+      less_opts+=(+G)
+    fi
+    printf '%s\n' "$rendered" | less "${less_opts[@]}"
+  else
+    printf '%s\n' "$rendered"
+  fi
 }

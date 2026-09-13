@@ -190,7 +190,7 @@ return {
       end,
 
       picker = {
-        name = "snacks.pick",
+        name = "snacks.picker",
         note_mappings = {
           -- Create a new note from your query.
           new = "<C-x>",
