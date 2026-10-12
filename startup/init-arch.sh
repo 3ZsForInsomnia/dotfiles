@@ -16,7 +16,7 @@ gui_applications=("copyq" "obsidian" "google-chrome" "slack-desktop" "postman-bi
 npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http" "@mermaid-js/mermaid-cli" "openskills" "obsidian-headless")
 
 # All Python packages to install in global venv
-python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory" "datadog")
+python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory" "datadog" "skillz @ git+https://github.com/3ZsForInsomnia/skillz.git")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh" "$HOME/.config/i3" "$HOME/.config/dunst" "$HOME/.config/rofi" "$HOME/.config/systemd" "$HOME/.icons" "$HOME/.Xmodmap" "$HOME/.XCompose")
 
@@ -301,7 +301,7 @@ retrieve_hidden_gists() {
   echo "Finished retrieving hidden gists!"
 }
 
-alias unstow='stow --target=$HOME'
+alias unstow='stow --target=$HOME --ignore="\.zwc$"'
 function unstowAll() {
   cd "$XDG_CODE_HOME/dotfiles/"
 
@@ -1068,7 +1068,8 @@ healthcheck() {
     # Check if packages are installed in the global venv
     PYTHON_FAILED_PACKAGES=()
     for package in "${python_packages_to_install[@]}"; do
-      if ! "$HOME/.global-py/bin/python" -m pip list | grep -q "^$package "; then
+      local package_name="${package%% @ *}"
+      if ! "$HOME/.global-py/bin/python" -m pip list | grep -q "^$package_name "; then
         PYTHON_FAILED_PACKAGES+=("$package")
       fi
     done
