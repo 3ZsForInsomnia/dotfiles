@@ -18,6 +18,7 @@ Prefer narrow, specific types. Types should encode what is actually possible at 
 ## Values and Errors
 
 - Validate all external inputs at system boundaries. Everything past the entry point can be trusted.
+- Fail loudly as early as possible when required data is missing. The first function that needs a value should throw, not pass the absence deeper.
 - Don't swallow errors silently — rethrow, surface to the user, or log. Silence is never acceptable.
 - Use structured logging. Never include sensitive data, PII, or secrets in log output.
 

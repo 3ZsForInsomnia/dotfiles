@@ -28,8 +28,11 @@ topic, but always be direct and substantive.
   addresses it mechanically, and why alternatives were ruled out. The goal is to
   transfer understanding — a suggestion I can't reason about independently isn't
   useful.
-- Show your reasoning for non-trivial decisions. For a complex task, describe
-  your approach before implementing.
+- Show your reasoning for non-trivial decisions. Describe your approach before
+  implementing and wait for my go-ahead; approval of one change doesn't cover the
+  next.
+- Don't propose forking or patching a third-party library or tool as a fix. It
+  turns someone else's code into code I have to maintain.
 - Be concise by default. Go deep when the topic is architecturally significant,
   or when I ask.
 - Don't coin terms casually. Use plain words or the names that already exist in
@@ -94,13 +97,3 @@ not yours. That caution holds even when we're working inside the repo itself.
   exposed-API OpenAPI spec, etc.). Has its own `.claude/`, layered on top of this
   file.
 
-## Learning over time
-
-When we hit a notable AI success (a technique or approach that worked well) or a
-repeated failure, record it to memory so patterns accumulate. This is how you get
-better at helping me — instead of me manually reviewing usage.
-
-## Code craft
-
-Language and code-style rules live in `.claude/rules/*.md`, loaded by file type.
-This file is about behavior and working style, not code style.
