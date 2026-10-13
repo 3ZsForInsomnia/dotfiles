@@ -1,0 +1,7 @@
+library = "~/src/dotfiles/ai/.config/skillz"
+
+[namespaces.core]
+link_to = "~/.claude/skills"
+
+[namespaces.work]
+pull_from = "~/src/work/platform/.claude/skills"

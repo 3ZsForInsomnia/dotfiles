@@ -1,0 +1,677 @@
+{
+  "skills": {
+    "agent-md-refactor": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:3793d347098a9a74ee692c8ad237fd5b860f092455d598ea8f50f2b773429378",
+      "installed_at": "2026-10-13T01:28:46Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/agent-md-refactor",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "89a8fede359cb48c66f1af44c5aa8fc07b82cded"
+    },
+    "algorithmic-art": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:4a85abfeaa09f2dd2c4b76c85d57b65f61dc10d55c3cca245989cee8897c2be5",
+      "installed_at": "2026-10-13T01:30:31Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/algorithmic-art",
+      "source": "anthropics/skills",
+      "upstream_hash": "4aef6bcad51d058ec32b1acb9da436851863e56e"
+    },
+    "backend-to-frontend-handoff-docs": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:ef950971321fb417bc1722d6a4b8b1c8aa72e55776a50f37400706638574c1d0",
+      "installed_at": "2026-10-13T01:28:47Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/backend-to-frontend-handoff-docs",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "e79a3bff34ca86c70cefe3a495466bf1d219e202"
+    },
+    "brand-guidelines": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:10067cdd9be9cd5d97c741fc6e25830135afa0e11cc71e567b75763e26d08799",
+      "installed_at": "2026-10-13T01:30:31Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/brand-guidelines",
+      "source": "anthropics/skills",
+      "upstream_hash": "1dc8bd3584b80568edae7da16382363e24ecf0f0"
+    },
+    "c4-architecture": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:2528e8ea65472b188f160cd95ae6737d6305b8afb6c384a3cc48fcd5284ae768",
+      "installed_at": "2026-10-13T01:28:50Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/c4-architecture",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "48e17a1a069ed4632a5555f7bd0927b2c106a819"
+    },
+    "canvas-design": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:1866477474e694f562261008bb6a817e53f027b6347b062fbd1e2ee2eb83f20d",
+      "installed_at": "2026-10-13T01:31:07Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/canvas-design",
+      "source": "anthropics/skills",
+      "upstream_hash": "95095faaee2ea943e85a5d1d562fde06841e835e"
+    },
+    "capture-tasks-from-meeting-notes": {
+      "commit": "b74220d41142fae52b4f680c805b2ab81050991a",
+      "content_hash": "sha256:8f11d633ed9a341f696cbf3a18ac93bf7a6e9775ad3f5f7082bd668cdb6f9d7f",
+      "installed_at": "2026-10-13T01:37:04Z",
+      "namespace": "vendor/atlassian",
+      "path": "skills/capture-tasks-from-meeting-notes",
+      "source": "atlassian/atlassian-mcp-server@main",
+      "upstream_hash": "44cf7d8c0795239c60f504126a4c2976c0c4f01e"
+    },
+    "codex": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:fcf0ea8ed576067da06dbc00a4c35e92bd0cb65319bf249e3539dbbc17832172",
+      "installed_at": "2026-10-13T01:28:51Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/codex",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "c7b5263152d1f5b335e594a407219bf6ec5fe3fd"
+    },
+    "command-creator": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:5254916f928e83b4de38c2f90c681793251a4f396d037adb972a5db058d7d6aa",
+      "installed_at": "2026-10-13T01:28:53Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/command-creator",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "7d6bf8d3e9c8c87fca7f1636da1283dbe1e8c58e"
+    },
+    "commit-work": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:9df7a6fa2b73587e0be1034a2c00bd72157bef546a0f724be589c3612e862383",
+      "installed_at": "2026-10-13T01:28:55Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/commit-work",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "ac7c2ea0f24eb668f5b80e4f237efa4a90f12312"
+    },
+    "crafting-effective-readmes": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:e4c5a3ec30f44906b1333d2f6d27011b50631bf024295cb068f422382fdb5b5a",
+      "installed_at": "2026-10-13T01:29:01Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/crafting-effective-readmes",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "72e2a4d89c5a14b762cfc58e3bbd7fd63e9642b0"
+    },
+    "daily-meeting-update": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:0f0406bd291210712af40e33ede1dfbdc84c7d4a84863cf5a8dc3408453c8122",
+      "installed_at": "2026-10-13T01:29:02Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/daily-meeting-update",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "3760aa83431c441e02b0126bb013e2bfaa6b5441"
+    },
+    "database-schema-designer": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:45844be469e96fb9ca60d0cb820e0702db70ab24fc8158663502fbd1ec3008fc",
+      "installed_at": "2026-10-13T01:29:04Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/database-schema-designer",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "aaedacc8d3da73b0bbc02f75dc22d2854371c3dd"
+    },
+    "datadog-cli": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:5c1d834812548f923c168a891103d6c8b7c94adbd1aa72c2b68ac47d7711bd56",
+      "installed_at": "2026-10-13T01:29:07Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/datadog-cli",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "9cfb2176bd74e084f3c239dc175239cda9ea8a34"
+    },
+    "dependency-updater": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:12dfd3ffb6f21ac5505bbdf0be4f9d43c492ba8d78620ccb6b613a7cff7a55fd",
+      "installed_at": "2026-10-13T01:29:09Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/dependency-updater",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "65459aa3b16657ab04a2e4ea07f4e07e85c5285c"
+    },
+    "design-system-starter": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:1fe666d588750f487f2d7c41c8f5eac9303c2d0b8fa0bc81ab1e35ddf6f35fce",
+      "installed_at": "2026-10-13T01:29:12Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/design-system-starter",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "57ed5e3c57ec410c17d13786c7878645910d8572"
+    },
+    "difficult-workplace-conversations": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:bc6928388268877fcfbbec569d2c5a5138bb1595b2166a82c641946f3902250f",
+      "installed_at": "2026-10-13T01:29:15Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/difficult-workplace-conversations",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "caa0f9634c627de6c505479ebcb92bdd1ce28038"
+    },
+    "doc-coauthoring": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:d32facc16a25b47a21a90e79c1e6c072d342a9e41b595b58b86f869ff33ccc26",
+      "installed_at": "2026-10-13T01:31:08Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/doc-coauthoring",
+      "source": "anthropics/skills",
+      "upstream_hash": "d9df960e61fe2bafe9183e37de6f9f6b73b74087"
+    },
+    "docx": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:5b58401c8411c469d6ad194242a5026b2ef5baec7ae24febe0785c167868eca5",
+      "installed_at": "2026-10-13T01:31:36Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/docx",
+      "source": "anthropics/skills",
+      "upstream_hash": "6e6f5b95c1de6e803cc07b214f5059b074d64e0c"
+    },
+    "domain-name-brainstormer": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:297c777d0aba970e4b3ff81d937d8edb450f030ec7c0ef4a4aff977f06b4328d",
+      "installed_at": "2026-10-13T01:29:16Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/domain-name-brainstormer",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "55715a53c5719590adbefec7660a937382f3533a"
+    },
+    "draw-io": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:35d0322a2fd051d94b4df9df7e54a225ff0fe277c6311fb47eb992f96cecd287",
+      "installed_at": "2026-10-13T01:29:18Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/draw-io",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "7f11a1fc99d76896cb5a9a6468e04e3a1ea7aab4"
+    },
+    "excalidraw": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:1eafca88fc64b2fae7f5950fc8c2bb453c579c22e9be0107f41a5f6cb9d86331",
+      "installed_at": "2026-10-13T01:29:19Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/excalidraw",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "535a7f7b3194cfe0bf308ad8f4558d066a7b95af"
+    },
+    "feedback-mastery": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:d6006681ed637ecbcb0a839e59e33b28f29727eeed8035e44b1efe4d6a689f9c",
+      "installed_at": "2026-10-13T01:29:22Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/feedback-mastery",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "df1a28190f6e31809c400556df02297166a4ff2e"
+    },
+    "frontend-design": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:83485963700bcf11d5bf78118facb301676b69d918fee2e45a95e7f1a2840f6c",
+      "installed_at": "2026-10-13T01:31:37Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/frontend-design",
+      "source": "anthropics/skills",
+      "upstream_hash": "d79e2a5bb4df4a386c2adcdd9ab8709bba28c3f6"
+    },
+    "frontend-to-backend-requirements": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:00189ddb2d70ad68145a048de946b49562cbcd67942ced1c53d2db8d69564c23",
+      "installed_at": "2026-10-13T01:29:23Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/frontend-to-backend-requirements",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "9aa0f09717a9c475eeef99a9a0d493bbdc35e8f7"
+    },
+    "game-changing-features": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:2eb3343c1631be8f93c1d9808d25740a66ef998445bf554ba0d13b04e148690c",
+      "installed_at": "2026-10-13T01:29:24Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/game-changing-features",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "3538ed17db233eedc52b8039d43172313c88d842"
+    },
+    "gemini": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:7bee2cc6e2e7ad8d86e0f31aae84a640eaa6577db249ce4320735bddc5c670ce",
+      "installed_at": "2026-10-13T01:29:25Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/gemini",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "54c93ba37c400f6485880e01cfeaeff90d04a1be"
+    },
+    "generate-status-report": {
+      "commit": "b74220d41142fae52b4f680c805b2ab81050991a",
+      "content_hash": "sha256:70279cd9fcc5455a4f5a2305bc860f1123dd83a8f1de92f2fa1fa410b571dd7b",
+      "installed_at": "2026-10-13T01:37:07Z",
+      "namespace": "vendor/atlassian",
+      "path": "skills/generate-status-report",
+      "source": "atlassian/atlassian-mcp-server@main",
+      "upstream_hash": "7a9ec841a4c42af112344f217e061e4ec5ce996c"
+    },
+    "gepetto": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:80de6f6e132b336358dba07bcace9faf42d1d0f5de7992519456cee765af282d",
+      "installed_at": "2026-10-13T01:29:28Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/gepetto",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "025f9521b883880d6d69c782fd687f16e0347fb4"
+    },
+    "humanizer": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:9f0b3facf471c3f5ac21e11ef4cd258abe12f484d971e17b5ed922fc18f1a553",
+      "installed_at": "2026-10-13T01:29:29Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/humanizer",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "004c1998fffe4d5cd4535123d65cf9fb1a107b64"
+    },
+    "internal-comms": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:a864e111fed981a514102493dafd2bf426929af06cf35e8943ccbdeb4be65724",
+      "installed_at": "2026-10-13T01:31:39Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/internal-comms",
+      "source": "anthropics/skills",
+      "upstream_hash": "9869687dcf6deb6802ca88ac11e67b6f7278017a"
+    },
+    "jira": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:3f0504ce6f74a72f322e372640f80ad1240448347ddd23cd4169b3ae9facd2bd",
+      "installed_at": "2026-10-13T01:29:31Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/jira",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "c727e041f8c55d018d6dd97a871b8ff2572dafe5"
+    },
+    "lesson-learned": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:58a63ecda867f44cfe27f5af7390caf127d54b676d7924692fb18c0312e133fa",
+      "installed_at": "2026-10-13T01:29:33Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/lesson-learned",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "6ab6847ffef7f50b70aa1d637c75a167387b6c7f"
+    },
+    "marp-slide": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:46f96b839987e9e33d8fb1f15d1227bcc21cbd21d4e803a51d28b0952c29ac6d",
+      "installed_at": "2026-10-13T01:29:43Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/marp-slide",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "fcba767a6ab48cbe297d752d83c7987f61eabdb8"
+    },
+    "mcp-builder": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:890b91d77934d6d19d12a85a878d3502ea3dca2a5d3ede10bbaa0dd2761120dc",
+      "installed_at": "2026-10-13T01:31:44Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/mcp-builder",
+      "source": "anthropics/skills",
+      "upstream_hash": "b866bcfb57b780c10b587c7b543e871a91661ce0"
+    },
+    "meme-factory": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:0e0ae321fc2b2d8f99faed6810d37c5446c505122a4f6f07069606a6f1b7c0aa",
+      "installed_at": "2026-10-13T01:29:46Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/meme-factory",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "354fdb0858dec6339372dfeb5e3ea8db66c05df7"
+    },
+    "mermaid-diagrams": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:c425d7bc17756e5c0538e57286a008b18a45d0967401695c003692badf0cb37a",
+      "installed_at": "2026-10-13T01:29:50Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/mermaid-diagrams",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "1b7a962715838d762fe4b34701d797d1d57496cd"
+    },
+    "mui": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:a9632281547ca520c3e633145bdaf6ac40e4717d7fe7bf2e29b788c4d7767465",
+      "installed_at": "2026-10-13T01:29:53Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/mui",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "ffb3bce7ef6c1114c6ffb69a98970fb0885dc30d"
+    },
+    "naming-analyzer": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:7e502fa2f5846207f1335b8e6a373f03e9b77c9377d1d81d00efc83305225991",
+      "installed_at": "2026-10-13T01:29:54Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/naming-analyzer",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "6717b98252ff6423dccbd77dc652dead434552bb"
+    },
+    "openapi-to-typescript": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:25ce746e02c8c3bc81eeb594dcf2cd1dd5c9bada1cebe08d5d2f9295d659416c",
+      "installed_at": "2026-10-13T01:29:55Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/openapi-to-typescript",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "d290240518f61c70b6c2ef063d0d06d6ad76cdad"
+    },
+    "pdf": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:8da60dcc59ddbd4d2057f217416a6cf5c8b1e17ed671548d25ace5846afbab7b",
+      "installed_at": "2026-10-13T01:31:49Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/pdf",
+      "source": "anthropics/skills",
+      "upstream_hash": "6369f4649de69bd6857c9bc3b058a77206009238"
+    },
+    "perplexity": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:ae95740f10210e99a303b329a864e24bba5699bd424acf90d6c2700eb07fc775",
+      "installed_at": "2026-10-13T01:29:56Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/perplexity",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "fbb8dc9cb950b40d239b87cc366e013ae666db12"
+    },
+    "plugin-forge": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:8758c0673d948449fb941cc19a3683546047903a0ba33a5b1847459eb1fa8998",
+      "installed_at": "2026-10-13T01:29:59Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/plugin-forge",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "85abb40bbb81ea328e3e154f70903dda13efbc7b"
+    },
+    "pptx": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:f4113381a33ec4e215451fdfb322ef7f36f128b3864627bb3fc5ba2327261f00",
+      "installed_at": "2026-10-13T01:31:51Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/pptx",
+      "source": "anthropics/skills",
+      "upstream_hash": "64529c8b3f35fe632b7256bd2f6d46e4b40160ce"
+    },
+    "professional-communication": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:79ff4ec0a0e1211d73e92082b0d3a29f750560ab423df3c201395630f8b2e592",
+      "installed_at": "2026-10-13T01:30:02Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/professional-communication",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "a131460b559752fae7756380394d7e21f7c0db6a"
+    },
+    "qa-test-planner": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:6bd81c44579a303c493f7f3024e820d944663bb23b8b7bb3263faadd8fc3b889",
+      "installed_at": "2026-10-13T01:30:05Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/qa-test-planner",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "0f6e2438f6037ae4a4e45410d26daca6d61141d2"
+    },
+    "react-dev": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:a2cb4f9d511edecc89b1e83277ec6721be72c764221775e141baa21e1f775e68",
+      "installed_at": "2026-10-13T01:30:10Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/react-dev",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "71dc3ea9be90252ed83db3b13a686406f3b73abe"
+    },
+    "react-useeffect": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:e450f31d028a1a2670dae02473b1ce8f7c8c2bfa212e7e656c58b444d272bd45",
+      "installed_at": "2026-10-13T01:30:12Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/react-useeffect",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "b16fcda0660491a139a2537c6fa46433eecf640f"
+    },
+    "reducing-entropy": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:a6f8030665c23b307630640ebec4824064f92110c2e6450c3946cad7765ac79a",
+      "installed_at": "2026-10-13T01:30:15Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/reducing-entropy",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "31380d65f4abe7cae6ca2cc1332bafd14d0d8793"
+    },
+    "requirements-clarity": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:7061c61cc747a3ac257d808c6e82f37e92caa1ef4b25fde310f286b1c4fc7626",
+      "installed_at": "2026-10-13T01:30:16Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/requirements-clarity",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "88157583b20b296c8eaa3808af3dd3d669d73ce0"
+    },
+    "search-company-knowledge": {
+      "commit": "b74220d41142fae52b4f680c805b2ab81050991a",
+      "content_hash": "sha256:58f38b950fd4ac248780b7d47dff2aa8ace94e0ee9960baaedd2ead3ce4cdefa",
+      "installed_at": "2026-10-13T01:37:08Z",
+      "namespace": "vendor/atlassian",
+      "path": "skills/search-company-knowledge",
+      "source": "atlassian/atlassian-mcp-server@main",
+      "upstream_hash": "b077123b833a70e80adf96c05a589f53fb1fd842"
+    },
+    "session-handoff": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:24d5fb0af311e83368849c65eb75908a32d9b902c12e12f7a91c7387be085f46",
+      "installed_at": "2026-10-13T01:30:22Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/session-handoff",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "9038976da9e22fa34168feb813ef18082fe005b1"
+    },
+    "ship-learn-next": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:51ec5f843ae9b4672220d5e6d0c8ba5d7027212c5f99a7bec7ed033880d1b8cd",
+      "installed_at": "2026-10-13T01:30:23Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/ship-learn-next",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "b7e94f80ccd59c128aac8653af61ad90fc67bf51"
+    },
+    "skill-creator": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:2d7f889e6ae93c6c27d699856942c336b5b8644537496987d5571043d059b1dc",
+      "installed_at": "2026-10-13T01:31:58Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/skill-creator",
+      "source": "anthropics/skills",
+      "upstream_hash": "3cf9a8db32597ba3e24b584a3d696f4e11c7d7b6"
+    },
+    "skill-judge": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:3e651f7a3d8c238bf8ae3d34da22498b1510294a35ec4b14eedfa07937f84ea7",
+      "installed_at": "2026-10-13T01:30:23Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/skill-judge",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "7e98bf10ccdbd7e9293e9f59564e6dc949999f85"
+    },
+    "slack-gif-creator": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:25581243f719e75121f9051ec671e810e53375fe648a6362d673d6bfbbe9d479",
+      "installed_at": "2026-10-13T01:32:01Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/slack-gif-creator",
+      "source": "anthropics/skills",
+      "upstream_hash": "c61d2f7bb6334b68a6936ad3f41ebfc7cb76fe2a"
+    },
+    "spec-to-backlog": {
+      "commit": "b74220d41142fae52b4f680c805b2ab81050991a",
+      "content_hash": "sha256:5d03b784a3ba85e894deb892fbb7326735418c9aaf18693dec423a2d483626bc",
+      "installed_at": "2026-10-13T01:37:10Z",
+      "namespace": "vendor/atlassian",
+      "path": "skills/spec-to-backlog",
+      "source": "atlassian/atlassian-mcp-server@main",
+      "upstream_hash": "e9413bab2cd8277e2341657356dceb0b0dd1917b"
+    },
+    "supabase-postgres-best-practices": {
+      "commit": "c9be0e931b7930f7d02126d04774d904c381e7d7",
+      "content_hash": "sha256:3eb972c2d7c818e544e35cc33ea8d7147d4d78ae08142ef40037b0fbac7a2505",
+      "installed_at": "2026-10-13T01:32:30Z",
+      "namespace": "vendor/supabase",
+      "path": "skills/supabase-postgres-best-practices",
+      "source": "supabase/agent-skills",
+      "upstream_hash": "27bde25111c4cd5e6f803fc9db5fbffe27bb26cf"
+    },
+    "theme-factory": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:f426a07c06316201360be19324f2689c5bd3ab2d1669848c9383c321efa4386f",
+      "installed_at": "2026-10-13T01:32:07Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/theme-factory",
+      "source": "anthropics/skills",
+      "upstream_hash": "e05534d132fb1b21f9917840874758e30f0a9b1a"
+    },
+    "triage-issue": {
+      "commit": "b74220d41142fae52b4f680c805b2ab81050991a",
+      "content_hash": "sha256:06b838c70f706e6d8717077a9fa651595ba39da7b9d4461b74bf058ac1db8efd",
+      "installed_at": "2026-10-13T01:37:12Z",
+      "namespace": "vendor/atlassian",
+      "path": "skills/triage-issue",
+      "source": "atlassian/atlassian-mcp-server@main",
+      "upstream_hash": "3b0a1cf5703171f7624f52e1f2f37d44541592d2"
+    },
+    "web-artifacts-builder": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:7a081b86fd5068d3ca2c4d9c059956634feff65ccbf1c39c3d34a6e5d0971139",
+      "installed_at": "2026-10-13T01:32:09Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/web-artifacts-builder",
+      "source": "anthropics/skills",
+      "upstream_hash": "821b94f16c123d5f12e4e72eda9f7a162e2698f6"
+    },
+    "web-to-markdown": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:081698f3a2e51a06a7b92c97e526f13d31bed47a21bc4907051169a02073ad73",
+      "installed_at": "2026-10-13T01:30:24Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/web-to-markdown",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "8c1f61f08e68d42f3fd365174195c1461eb9d125"
+    },
+    "webapp-testing": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:48cd9a742a59250edec6db89cf081ef5465f365e2133f6d6c5e29c380b754b7d",
+      "installed_at": "2026-10-13T01:32:11Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/webapp-testing",
+      "source": "anthropics/skills",
+      "upstream_hash": "5ffb7dc66b9fd4c25c3e400a4c00da99a349b714"
+    },
+    "writing-clearly-and-concisely": {
+      "commit": "3027f20f3181758385a1bb8c022d4041dfb4de84",
+      "content_hash": "sha256:054d0502e8adb60b0b62c3b144bae30b27e9bcc3d4089b33404f10b5a9a27bb4",
+      "installed_at": "2026-10-13T01:30:28Z",
+      "namespace": "vendor/softaworks",
+      "path": "skills/writing-clearly-and-concisely",
+      "source": "softaworks/agent-toolkit",
+      "upstream_hash": "4bb2d919b567277219f7a18358bd05e0a1679a77"
+    },
+    "xlsx": {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "content_hash": "sha256:9654007fafc12c77a2080477c90bd7758a632197089ea1cfa959b9f60444f443",
+      "installed_at": "2026-10-13T01:32:12Z",
+      "namespace": "vendor/anthropics",
+      "path": "skills/xlsx",
+      "source": "anthropics/skills",
+      "upstream_hash": "fe6471cc9b5b97aae0b576ccb92ffd9b0207589d"
+    }
+  },
+  "sources": {
+    "anthropics/skills": {
+      "ref": null,
+      "skills": [
+        "algorithmic-art",
+        "brand-guidelines",
+        "canvas-design",
+        "doc-coauthoring",
+        "docx",
+        "frontend-design",
+        "internal-comms",
+        "mcp-builder",
+        "pdf",
+        "pptx",
+        "skill-creator",
+        "slack-gif-creator",
+        "theme-factory",
+        "web-artifacts-builder",
+        "webapp-testing",
+        "xlsx"
+      ]
+    },
+    "atlassian/atlassian-mcp-server@main": {
+      "ref": "main",
+      "skills": [
+        "capture-tasks-from-meeting-notes",
+        "generate-status-report",
+        "search-company-knowledge",
+        "spec-to-backlog",
+        "triage-issue"
+      ]
+    },
+    "softaworks/agent-toolkit": {
+      "ref": null,
+      "skills": [
+        "agent-md-refactor",
+        "backend-to-frontend-handoff-docs",
+        "c4-architecture",
+        "codex",
+        "command-creator",
+        "commit-work",
+        "crafting-effective-readmes",
+        "daily-meeting-update",
+        "database-schema-designer",
+        "datadog-cli",
+        "dependency-updater",
+        "design-system-starter",
+        "difficult-workplace-conversations",
+        "domain-name-brainstormer",
+        "draw-io",
+        "excalidraw",
+        "feedback-mastery",
+        "frontend-to-backend-requirements",
+        "game-changing-features",
+        "gemini",
+        "gepetto",
+        "humanizer",
+        "jira",
+        "lesson-learned",
+        "marp-slide",
+        "meme-factory",
+        "mermaid-diagrams",
+        "mui",
+        "naming-analyzer",
+        "openapi-to-typescript",
+        "perplexity",
+        "plugin-forge",
+        "professional-communication",
+        "qa-test-planner",
+        "react-dev",
+        "react-useeffect",
+        "reducing-entropy",
+        "requirements-clarity",
+        "session-handoff",
+        "ship-learn-next",
+        "skill-judge",
+        "web-to-markdown",
+        "writing-clearly-and-concisely"
+      ]
+    },
+    "supabase/agent-skills": {
+      "ref": null,
+      "skills": [
+        "supabase-postgres-best-practices"
+      ]
+    }
+  },
+  "version": 1
+}
