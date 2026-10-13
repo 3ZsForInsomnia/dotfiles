@@ -1,5 +1,14 @@
 {
   "theme": "dark",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "skillOverrides": {
+    "init": "off",
+    "keybindings-help": "off",
+    "schedule": "off"
+  },
   "permissions": {
     "additionalDirectories": ["/Users/zacharylevinw/Documents/sync"],
     "ask": [
