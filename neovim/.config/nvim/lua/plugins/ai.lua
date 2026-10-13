@@ -58,7 +58,7 @@ return {
         ),
         opts = {
           chat = {
-            autoload = { "default" },
+            autoload = {},
             enabled = true,
           },
         },
@@ -129,8 +129,6 @@ return {
       mcp = require("config.codecompanion.mcp").config(),
     },
     config = function(_, opts)
-      require("config.codecompanion.rules").setup_instruction_autocmd()
-
       opts.interactions.chat.slash_commands = {
         prompts = require("code-companion-picker").select_slash_command,
         tools = require("code-companion-picker").select_tool_slash_command,

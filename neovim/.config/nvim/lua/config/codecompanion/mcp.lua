@@ -4,14 +4,8 @@ local function cwd_name()
   return v.fn.fnamemodify(v.fn.getcwd(), ":t")
 end
 
-local function add_when_in(initial_servers, server_names, repos)
-  if v.tbl_contains(repos, cwd_name()) then
-    for _, name in ipairs(server_names) do
-      table.insert(initial_servers, name)
-    end
-  end
-
-  return initial_servers
+local function in_any_of(repos)
+  return v.tbl_contains(repos, cwd_name())
 end
 
 local servers = {
@@ -20,17 +14,6 @@ local servers = {
     env = {
       ANKI_CONNECT_URL = "http://localhost:8765",
     },
-  },
-
-  ["git-mcp"] = {
-    cmd = { "npx", "@cyanheads/git-mcp-server@latest" },
-    -- env = {
-    --   GIT_EMAIL = "zach@zjlevine.dev",
-    --   GIT_USERNAME = "3ZsForInsomnia",
-    --   LOGS_DIR = "~/.local/state/git-mcp/logs/",
-    --   MCP_LOG_LEVEL = "info",
-    --   MCP_TRANSPORT_TYPE = "stdio",
-    -- },
   },
 
   ["github"] = {
@@ -137,9 +120,12 @@ local servers = {
 }
 
 local default_servers = {
-  "git-mcp",
-  "github",
   -- "sunsama",
+}
+
+-- Org rules block GitHub MCP auth in work repos, so it only loads outside them.
+local personal_servers = {
+  "github",
 }
 
 local work_repos = { "platform", "platform-2", "infrastructure", "specification" }
@@ -152,7 +138,7 @@ local work_servers = {
   "playwright",
 }
 
-add_when_in(default_servers, work_servers, work_repos)
+v.list_extend(default_servers, in_any_of(work_repos) and work_servers or personal_servers)
 
 local M = {}
 
