@@ -51,9 +51,11 @@ return {
         -- "3ZsForInsomnia/code-companion-picker",
         dir = "~/src/code-companion-picker",
         cmd = "CodeCompanionPrompts",
+        opts = { skills = { backend = "skillz" } },
       },
     },
     opts = {
+      log_level = "DEBUG",
       rules = {
         personal = {
           files = {
@@ -130,7 +132,7 @@ return {
                 CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_TOKEN",
               },
               defaults = {
-                mcpServers = "inherit_from_config",
+                mcpServers = require("config.codecompanion.mcp").acp_servers(),
                 session_config_options = {
                   model = cc_models.remote_thinking_model,
                   thought_level = cc_models.remote_thought_level,
@@ -148,7 +150,7 @@ return {
       opts.interactions.chat.slash_commands = {
         prompts = require("code-companion-picker").select_slash_command,
         tools = require("code-companion-picker").select_tool_slash_command,
-        skills = require("code-companion-picker").select_skill_slash_command,
+        skill = require("code-companion-picker").select_skill_slash_command,
       }
 
       require("codecompanion").setup(opts)
