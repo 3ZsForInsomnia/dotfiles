@@ -44,16 +44,6 @@ return {
           include_tool_outputs = true, -- include tool execution results
         },
       },
-
-      memory = {
-        auto_create_memories_on_summary_generation = true,
-        vectorcode_exe = "vectorcode",
-        tool_opts = {
-          default_num = 10,
-        },
-        notify = true,
-        index_on_startup = false,
-      },
     },
   },
 }

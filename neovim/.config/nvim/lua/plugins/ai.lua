@@ -6,17 +6,6 @@ local a = "<leader>a"
 
 return {
   {
-    "Davidyz/VectorCode",
-    version = "*",
-    build = "uv tool upgrade vectorcode",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    cmd = "VectorCode",
-    opts = {
-      async_backend = "lsp",
-      on_setup = { lsp = true },
-    },
-  },
-  {
     "3ZsForInsomnia/token-count.nvim",
     event = "VeryLazy",
     config = true,
@@ -57,11 +46,6 @@ return {
     opts = {
       log_level = "DEBUG",
       rules = {
-        personal = {
-          files = {
-            os.getenv("HOME") .. "/.agent/AGENTS.md",
-          },
-        },
         eslint = require("config.codecompanion.rules").conditional_rule(
           "ESLint config",
           "**/*.{ts,tsx,js,jsx}",
@@ -74,7 +58,7 @@ return {
         ),
         opts = {
           chat = {
-            autoload = { "default", "personal" },
+            autoload = { "default" },
             enabled = true,
           },
         },

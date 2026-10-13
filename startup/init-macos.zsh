@@ -10,10 +10,10 @@ brew_packages_with_cask=("witch" "obsidian" "google-chrome" "slack" "postman" "f
 # copyq is replaced by maccy
 # rectangle's functionality is now part of MacOS
 
-npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http" "@mermaid-js/mermaid-cli" "openskills" "obsidian-headless")
+npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "jsonlint" "nx@latest" "commitizen" "markdownlint" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http" "@mermaid-js/mermaid-cli" "obsidian-headless")
 
 # All Python packages to install in global venv
-python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory" "skillport" "datadog" "skillz @ git+https://github.com/3ZsForInsomnia/skillz.git")
+python_packages_to_install=("yamllint" "shell-gpt" "datadog" "skillz @ git+https://github.com/3ZsForInsomnia/skillz.git")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh")
 
@@ -381,7 +381,7 @@ show_steps() {
   echo "Step 8: Installing Neovim from source"
   echo "Step 9: Cloning dotfiles repo and unstowing dotfiles"
   echo "Step 10: Set MacOS settings that can be handled via CLI"
-  echo "Step 11: Setup services (ollama, chromadb)"
+  echo "Step 11: Setup services (ollama)"
   echo ""
   echo "At this point, the steps become manual and are broken up into two parts:"
   echo ""
@@ -793,70 +793,9 @@ setup_services() {
     echo "Step 11a: Starting ollama via brew services..."
     brew services start ollama
 
-    # Wait a moment for service to start
-    sleep 3
-
-    echo "Step 11a: Downloading nomic-embed-text model..."
-    ollama pull nomic-embed-text
-
     echo "Step 11a: Finished setting up ollama!"
   else
     echo "Step 11a: ollama is not installed. Skipping ollama setup."
-  fi
-
-  echo "Step 11b: Setting up ChromaDB service..."
-
-  if check_command_is_installed docker; then
-    # Create chroma data directory
-    mkdir -p "$HOME/.local/share/chroma-data"
-    
-    # Create LaunchAgent directory if it doesn't exist
-    mkdir -p "$HOME/Library/LaunchAgents"
-    
-    # Check if plist already exists
-    if [[ -f "$HOME/Library/LaunchAgents/com.user.chromadb.plist" ]]; then
-      echo "Step 11b: ChromaDB plist already exists, updating if needed..."
-      # Unload existing service
-      launchctl unload "$HOME/Library/LaunchAgents/com.user.chromadb.plist" 2>/dev/null || true
-    fi
-    
-    # Create the plist file
-    cat > "$HOME/Library/LaunchAgents/com.user.chromadb.plist" << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>com.user.chromadb</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/usr/local/bin/docker</string>
-    <string>run</string>
-    <string>--rm</string>
-    <string>-v</string>
-    <string>$HOME/.local/share/chroma-data:/data</string>
-    <string>-p</string>
-    <string>8000:8000</string>
-    <string>chromadb/chroma:0.6.3</string>
-  </array>
-  <key>RunAtLoad</key>
-  <true/>
-  <key>KeepAlive</key>
-  <true/>
-  <key>StandardOutPath</key>
-  <string>/tmp/chromadb.log</string>
-  <key>StandardErrorPath</key>
-  <string>/tmp/chromadb.err</string>
-</dict>
-</plist>
-EOF
-    
-    # Load the service
-    launchctl load "$HOME/Library/LaunchAgents/com.user.chromadb.plist"
-    
-    echo "Step 11b: Finished setting up ChromaDB service!"
-  else
-    echo "Step 11b: Docker is not installed. Skipping ChromaDB setup."
   fi
 
   echo "Step 11: Finished setting up services!"
@@ -1224,21 +1163,6 @@ healthcheck() {
     fi
   else
     echo "  Ollama is not installed!"
-    echo ""
-    (( did_anything_fail++ ))
-  fi
-  
-  # Check ChromaDB service
-  if check_if_file_or_folder_exists "$HOME/Library/LaunchAgents/com.user.chromadb.plist"; then
-    if launchctl list | grep -q "com.user.chromadb"; then
-      echo_on_success "  ChromaDB service is loaded!"
-    else
-      echo "  ChromaDB service plist exists but is not loaded!"
-      echo ""
-      (( did_anything_fail++ ))
-    fi
-  else
-    echo "  ChromaDB service plist does not exist!"
     echo ""
     (( did_anything_fail++ ))
   fi

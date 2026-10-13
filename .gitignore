@@ -8,7 +8,9 @@ tags.*
 # Work stuff - automatically exclude files (with certain exceptions) that contain `work` in their filename
 # THIS IS IMPORTANT, DO NOT TOUCH
 *work*
-!ai/.agent/skills/*work*
+# Skill content is public and never work data; file names like WorkSans,
+# workflows, and framework only match *work* by accident.
+!ai/.config/skillz/**
 # Symlink to PERSONAL settings.json (no work data); path just happens to contain "work".
 # Re-include only this exact chain, not a wildcard, so real work files stay excluded.
 !ai/src/work/

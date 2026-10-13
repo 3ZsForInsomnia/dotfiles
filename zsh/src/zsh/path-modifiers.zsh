@@ -50,17 +50,8 @@ export OLLAMA_MODELS="$XDG_DATA_HOME/ollama/models"
 export OLLAMA_CONTEXT_LENGTH=16384
 export OLLAMA_FLASH_ATTENTION=1
 export OLLAMA_KV_CACHE_TYPE=q8_0
-export BASIC_MEMORY_CONFIG_DIR="$XDG_CONFIG_HOME/basic-memory"
-export BASIC_MEMORY_HOME="$XDG_DATA_HOME/basic-memory"
-export BASIC_MEMORY_PROJECT_ROOT="$XDG_DATA_HOME/basic-memory"
 export PGUSER="postgres"
 export JIRA_BROWSER="google-chrome"
-
-# skillport reads SKILLPORT_SKILLS_DIR to locate the skill library; unset, it
-# falls back to ~/.skillport/skills. Exported eagerly so nvim/CodeCompanion
-# inherit it no matter when they launch.
-export SKILLS_HOME="${SKILLS_HOME:-$HOME/.agent/skills}"
-export SKILLPORT_SKILLS_DIR="$SKILLS_HOME"
 
 ######################
 # Path modifiers     #

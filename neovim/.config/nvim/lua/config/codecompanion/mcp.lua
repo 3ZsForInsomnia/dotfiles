@@ -126,10 +126,6 @@ local servers = {
     cmd = { "uvx", "mcp-obsidian" },
   },
 
-  ["vectorcode"] = {
-    cmd = { "vectorcode-mcp-server" },
-  },
-
   ["webmcp"] = {
     cmd = {
       "npx",
@@ -144,7 +140,6 @@ local default_servers = {
   "git-mcp",
   "github",
   -- "sunsama",
-  "vectorcode",
 }
 
 local work_repos = { "platform", "platform-2", "infrastructure", "specification" }
@@ -165,16 +160,23 @@ local M = {}
 -- interactions.lua) because "which MCP tools skip the chat approval prompt" is
 -- an MCP-domain decision; interactions.lua merges these with CodeCompanion's
 -- own built-in tool approvals at assembly time.
-M.tool_approvals = {
-  mcp__vectorcode__query = { opts = { require_approval_before = false } },
-  mcp__vectorcode__ls = { opts = { require_approval_before = false } },
-}
+M.tool_approvals = {}
+
+function M.acp_servers()
+  return v.tbl_map(function(name)
+    local cmd = servers[name].cmd
+    return { name = name, command = cmd[1], args = v.list_slice(cmd, 2), env = servers[name].env or {} }
+  end, default_servers)
+end
 
 function M.config()
   return {
     servers = servers,
     opts = {
-      default_servers = default_servers,
+      -- Empty on purpose: CodeCompanion starts its own copy of every default
+      -- server whenever any chat opens, even ACP chats where Claude runs its
+      -- own. ACP sessions get default_servers through acp_servers() instead.
+      default_servers = {},
     },
   }
 end

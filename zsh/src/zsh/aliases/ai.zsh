@@ -14,35 +14,25 @@ function aipy() {
 
 alias lama-restart="launchctl kickstart -k gui/$(id -u)/com.user.ollama"
 
-# --- skillport: skill management (https://github.com/gotalab/skillport) ---
-# Skills live under $SKILLS_HOME (set in path-modifiers.zsh): downloaded skills at the
-# root; custom/ holds skills you author (skUpdate leaves untracked skills alone).
-alias sk="skillport"
-alias skAdd="sk add"        # add a skill: GitHub URL, owner/repo, or builtin
-alias skList="sk list"
-alias skShow="sk show"      # print a skill's full instructions
-alias skUpdate="sk update"  # refresh downloaded skills from their source
-alias skHelp="sk --help"
-
-# Regenerate ~/.agent/AGENTS.md in place; skillport swaps only its marked block.
-# Path derives from SKILLPORT_SKILLS_DIR so there's no second source of truth.
-function skSync() {
-  skillport doc -o "${SKILLPORT_SKILLS_DIR:h}/AGENTS.md" --force "$@"
-}
-
-# --- lbm: delegate grunt work to the local model (codestral via Ollama) ---
+# --- lbm: delegate grunt work to the local model (via Ollama) ---
 # Offloads cheap, high-volume, low-stakes tasks (summarize, classify, extract,
-# reformat, draft) to the local model so they don't cost Claude's context. The
-# instruction is the positional arg; content is appended from stdin and/or -f FILE
-# (repeatable), so large inputs never pass through Claude's window. Prints only the
-# model's response. Wrapper functions layer a fixed base instruction on top.
+# reformat) to the local model so they don't cost Claude's context. The instruction
+# is the positional arg; content comes from stdin and/or -f FILE (repeatable), so
+# large inputs never pass through Claude's window. Prints only the model's
+# response. Wrapper functions layer a fixed base instruction on top.
 #
 #   lbm "summarize the failures, list each as file:line" -f run.log
-#   git diff main | lbm "draft a conventional-commit message for this diff"
+#   git log --oneline v3..v4 | lbm "summarize what changed between these releases"
 #   lbm "classify as one of bug|task|story, reply with the label only" -f ticket.md
 : "${LBM_MODEL:=codestral:22b-v0.1-q4_0}"
 : "${LBM_URL:=http://localhost:11434/api/generate}"
 : "${LBM_TEMP:=0.1}"
+# Calls are stateless; this only keeps the model loaded in memory between them.
+: "${LBM_KEEP_ALIVE:=1h}"
+# Input cap, at roughly 4 chars per token. Ollama silently drops the front of a
+# prompt that overflows its context window, so stay well under the window and
+# leave room for the reply. Scale this with the model's context length.
+: "${LBM_MAX_CHARS:=24000}"
 
 function lbm() {
   local -a files rest
@@ -56,8 +46,8 @@ function lbm() {
   # Slurp stdin only when it is a real pipe or redirected file. Testing "not a tty"
   # is too broad: non-interactive callers (Claude's shell) attach a char-device
   # stdin that is neither a tty nor EOF, so `cat` would block forever.
-  local prompt="${rest[*]}"
-  [[ -p /dev/stdin || -f /dev/stdin ]] && prompt+="${prompt:+$'\n\n'}$(cat)"
+  local prompt=""
+  [[ -p /dev/stdin || -f /dev/stdin ]] && prompt="$(cat)"
 
   local f
   for f in "${files[@]}"; do
@@ -65,11 +55,20 @@ function lbm() {
     prompt+="${prompt:+$'\n\n'}# ${f}"$'\n'"$(<"$f")"
   done
 
+  # The instruction goes last so that it survives if Ollama truncates the front.
+  local instruction="${rest[*]}"
+  [[ -n "$instruction" ]] && prompt+="${prompt:+$'\n\n'}${instruction}"
+
   [[ -n "$prompt" ]] || { print -u2 "lbm: no prompt (give an instruction, pipe input, or -f FILE)"; return 1; }
 
+  (( ${#prompt} <= LBM_MAX_CHARS )) || {
+    print -u2 "lbm: input is ${#prompt} chars, over the LBM_MAX_CHARS limit of ${LBM_MAX_CHARS}; trim or split it"
+    return 1
+  }
+
   local resp
-  resp="$(jq -n --arg m "$LBM_MODEL" --arg p "$prompt" --argjson t "$LBM_TEMP" \
-            '{model:$m, prompt:$p, stream:false, options:{temperature:$t}}' \
+  resp="$(jq -n --arg m "$LBM_MODEL" --arg p "$prompt" --argjson t "$LBM_TEMP" --arg k "$LBM_KEEP_ALIVE" \
+            '{model:$m, prompt:$p, stream:false, keep_alive:$k, options:{temperature:$t}}' \
           | curl -sS "$LBM_URL" -d @-)" \
     || { print -u2 "lbm: request to $LBM_URL failed"; return 1; }
 
@@ -91,10 +90,7 @@ alias bitch=lbm
 # Task wrappers: each bakes in a stable base prompt, then forwards the caller's
 # extra instruction and any -f/stdin content to lbm. Compose per call, e.g.
 #   lbclass "into one of: bug, task, story" -f ticket.md
-#   git diff --staged | lbcommit
+#   tail -500 build.log | lbsum
 lbsum()     { lbm "Summarize concisely. Output only the summary — no preamble, no sign-off." "$@"; }
 lbclass()   { lbm "Classify the input into exactly one of the categories I specify. Reply with only the label, nothing else." "$@"; }
 lbextract() { lbm "Extract or reformat the data exactly as instructed. Output only the result — no explanation, no code fences." "$@"; }
-lbproof()   { lbm "Fix only spelling and grammar. Preserve wording, meaning, and formatting otherwise. Output only the corrected text." "$@"; }
-lbcommit()  { lbm "Write a single Conventional Commits message (type(scope): summary, imperative mood) for this diff. Output only the message." "$@"; }
-lbpr()      { lbm "Draft a PR description with three sections — Summary, Changes, Test plan. Be concise. Output only the description." "$@"; }

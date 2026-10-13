@@ -13,10 +13,10 @@ aur_packages=("luacheck" "powerlevel10k-git" "espanso" "lastpass-cli" "jira-cli"
 # Cross-platform GUI applications (some available as Flatpak/AUR)
 gui_applications=("copyq" "obsidian" "google-chrome" "slack-desktop" "postman-bin")
 
-npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "jsonlint" "nx@latest" "commitizen" "markdownlint" "mcp-hub@latest" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http" "@mermaid-js/mermaid-cli" "openskills" "obsidian-headless")
+npm_packages_to_install=("eslint_d" "@fsouza/prettierd" "jsonlint" "nx@latest" "commitizen" "markdownlint" "@bytebase/dbhub" "nx-mcp@latest" "task-master-ai" "@johnlindquist/worktree" "anki-mcp-http" "@mermaid-js/mermaid-cli" "obsidian-headless")
 
 # All Python packages to install in global venv
-python_packages_to_install=("yamllint" "shell-gpt" "vectorcode" "basic-memory" "datadog" "skillz @ git+https://github.com/3ZsForInsomnia/skillz.git")
+python_packages_to_install=("yamllint" "shell-gpt" "datadog" "skillz @ git+https://github.com/3ZsForInsomnia/skillz.git")
 
 stowed_folder_locations=("$HOME/.config/bat" "$HOME/.config/ctags" "$HOME/.config/espanso" "$HOME/.config/git" "$HOME/.config/luacheck" "$HOME/.config/nvim" "$HOME/.local/bin/notes" "$HOME/.config/newsboat" "$HOME/.local/bin/8ball" "$HOME/.config/silicon" "$HOME/.config/ripgrep" "$HOME/.config/wezterm" "$HOME/.config/yazi" "$HOME/.zsh" "$HOME/.config/i3" "$HOME/.config/dunst" "$HOME/.config/rofi" "$HOME/.config/systemd" "$HOME/.icons" "$HOME/.Xmodmap" "$HOME/.XCompose")
 
@@ -445,7 +445,7 @@ show_steps() {
   echo "Step 11: Cloning dotfiles repo and unstowing dotfiles"
   echo "Step 12: Retrieving hidden gists"
   echo "Step 13: Set Arch/i3wm settings that can be handled via CLI"
-  echo "Step 14: Setup services (ollama, chromadb)"
+  echo "Step 14: Setup services (ollama)"
   echo ""
   echo "At this point, the steps become manual and are broken up into two parts:"
   echo ""
@@ -900,52 +900,9 @@ setup_services() {
     sudo systemctl enable ollama
     sudo systemctl start ollama
 
-    # Wait a moment for service to start
-    sleep 3
-
-    echo "Step 14a: Downloading nomic-embed-text model..."
-    ollama pull nomic-embed-text
-
     echo "Step 14a: Finished setting up ollama!"
   else
     echo "Step 14a: ollama is not installed. Skipping ollama setup."
-  fi
-
-  echo "Step 14b: Setting up ChromaDB service..."
-
-  if check_command_is_installed docker; then
-    # Create chroma data directory
-    mkdir -p "$HOME/.local/share/chroma-data"
-
-    # Create systemd user service directory if it doesn't exist
-    mkdir -p "$HOME/.config/systemd/user"
-
-    # Create the systemd service file
-    cat >"$HOME/.config/systemd/user/chromadb.service" <<EOF
-[Unit]
-Description=ChromaDB Container
-After=docker.service
-Requires=docker.service
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/docker run --rm -v $HOME/.local/share/chroma-data:/data -p 8000:8000 chromadb/chroma:0.6.3
-ExecStop=/usr/bin/docker stop chromadb
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=default.target
-EOF
-
-    # Reload systemd and enable the service
-    systemctl --user daemon-reload
-    systemctl --user enable chromadb.service
-    systemctl --user start chromadb.service
-
-    echo "Step 14b: Finished setting up ChromaDB service!"
-  else
-    echo "Step 14b: Docker is not installed. Skipping ChromaDB setup."
   fi
 
   echo "Step 14: Finished setting up services!"
@@ -1232,21 +1189,6 @@ healthcheck() {
     fi
   else
     echo "  Ollama is not installed!"
-    echo ""
-    ((did_anything_fail++))
-  fi
-
-  # Check ChromaDB service
-  if check_if_file_or_folder_exists "$HOME/.config/systemd/user/chromadb.service"; then
-    if systemctl --user is-active --quiet chromadb; then
-      echo_on_success "  ChromaDB service is running!"
-    else
-      echo "  ChromaDB service exists but is not running!"
-      echo ""
-      ((did_anything_fail++))
-    fi
-  else
-    echo "  ChromaDB service does not exist!"
     echo ""
     ((did_anything_fail++))
   fi

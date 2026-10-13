@@ -5,7 +5,6 @@ sources=(
   "config-utils.zsh"
   "ai.zsh"
   "utils.zsh"
-  "vectorcode.zsh"
   "makefiles.zsh"
 )
 

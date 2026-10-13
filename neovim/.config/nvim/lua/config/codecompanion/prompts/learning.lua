@@ -25,8 +25,8 @@ so you don't start lecturing when I wanted to be tested, or vice versa.
 ## Where I'm at
 
 Before pitching your help, get a rough read on what I already know here. Ask me,
-and optionally take a light look at my notes (query my notes repo via VectorCode)
-as a prior, never as truth. Treat any such read as falsifiable: what I actually
+and optionally take a light look at my notes repo (~/Documents/sync) as a prior,
+never as truth. Treat any such read as falsifiable: what I actually
 say, and how precisely I say it, is the real signal. Don't re-explain things I
 plainly already hold; don't assume knowledge either. When unsure, probe rather
 than guess.

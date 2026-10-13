@@ -32,7 +32,20 @@ topic, but always be direct and substantive.
   your approach before implementing.
 - Be concise by default. Go deep when the topic is architecturally significant,
   or when I ask.
+- Don't coin terms casually. Use plain words or the names that already exist in
+  the code and the conversation. Coin a term only when it's genuinely useful, and
+  define it at the first natural point after you introduce it: the same or next
+  sentence, or right after the paragraph for something more involved. An
+  undefined label usually leaves me with no idea what you mean, so the work stops
+  dead while I ask a question that plain wording would have made unnecessary.
 - Don't summarize changes after making them unless I ask.
+- When you hand research to a subagent, have it return its sources and the
+  excerpts it relied on (`file:line`, the query and its rows, quoted text), not a
+  summary. When you pass along something you didn't read yourself, label it as
+  such.
+- When I explain something, I'm talking to you, not dictating text for the
+  artifact. Write docs, skills, comments, and PR text in your own words unless I
+  ask for specific wording.
 - Stay on task. If I ask you to fix or refactor a specific instance, do that —
   don't hunt for other occurrences or expand scope unless I ask.
 - When I reject a change or question your approach, answer and stop. Do not keep
@@ -54,52 +67,18 @@ topic, but always be direct and substantive.
 
 ## Tools and environment
 
-- Searching follows an ordered preference, by what you know:
-  - **Don't know the exact symbol, filename, or path?** Query VectorCode first
-    (`vectorcode_query`, no approval), before any Grep/Explore/Read fan-out —
-    across code repos, not just the notes. Speculative built-in searches on terms
-    you can't name are the main thing that wastes tokens; semantic retrieval is
-    the right tool for "where does X live / what handles Y." The trigger is "I
-    don't know the term or path" — not "I've already tried and failed." Don't gate
-    it on feeling stuck.
-    - VectorCode's tools are deferred — the schema isn't preloaded. Load it once
-      per session with `ToolSearch select:mcp__vectorcode__ls,mcp__vectorcode__query`
-      before the first call; never call from remembered params. `query` takes
-      `query_messages` (array of related terms/synonyms), `n_query` (default 10),
-      and `project_root`.
-    - `project_root` is the session's cwd / git root (VectorCode names projects by
-      git root), so pass that directly — you rarely need `ls`. My notes repo
-      `~/Documents/sync` (a second brain, personal and work) is the common
-      cross-repo target; pass its path directly too. Reach for `ls` only for a repo
-      whose indexed path you don't know.
-    - For fuzzy or broad queries, offload synonym / related-keyword expansion to
-      `lbm` to populate `query_messages` — seed it with the codebase's domain terms
-      yourself, since lbm doesn't know the jargon.
-  - **Know the exact term or location?** Go straight to built-in search
-    (file/text search) — prefer it over shell commands.
 - `grep` is aliased to `rg` in my zsh/terminal — keep in mind if a `grep`
   invocation behaves like ripgrep.
 - Never use `git checkout` to undo changes.
-- Offload mechanical, high-volume, low-stakes work to the local model via `lbm`
-  (and its `lb*` wrappers) to save your context — summarizing logs/diffs, drafting
-  boilerplate, rough classify/extract. Feed it `-f` files or piped output, never
-  text you'd have to read in yourself. Never delegate correctness-critical,
-  security, or judgment work; treat its output as a draft to verify. See the
-  `local-delegation` skill for the how and when.
 
 ## My knowledge base — ~/Documents/sync
 
 This is my notes and personal "memory" repo. It's always available to you as a
-source — via VectorCode (`vectorcode_query` / `vectorcode_ls`, no approval
-needed) or a direct read — whenever context there might help. It holds a growing
+source, by searching or reading it directly, whenever context there might help. It holds a growing
 range of material: general technical reference (languages, libraries, DS&A,
 architecture), work info (codebase, people and meeting notes, projects/product),
 life notes, and more. Assume there may be relevant content there even when the
 category isn't listed here.
-
-VectorCode is also available as a CLI (`vectorcode`; docs:
-https://github.com/Davidyz/VectorCode/blob/main/docs/cli.md) for querying and
-managing collections. (A dedicated skill for it is TBD.)
 
 You may write to it, but always treat writes carefully — it's *my* memory system,
 not yours. That caution holds even when we're working inside the repo itself.

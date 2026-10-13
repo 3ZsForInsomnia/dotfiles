@@ -9,21 +9,15 @@ return {
 
   -- Software Development
   ["Debugging"] = require("config.codecompanion.prompts.debugging"),
-  ["Code Review"] = require("config.codecompanion.prompts.code-review"),
   ["Api Design"] = require("config.codecompanion.prompts.api-design"),
   ["System Architecture"] = require("config.codecompanion.prompts.sys-arch-docs"),
   ["Architecture Review"] = require("config.codecompanion.prompts.arch-review"),
   ["Technical Writing"] = require("config.codecompanion.prompts.technical-writing"),
 
   -- Project Management
-  ["Story Writing"] = require("config.codecompanion.prompts.stories"),
   ["Process Improvements"] = require("config.codecompanion.prompts.process-retros"),
   ["Meeting Prep"] = require("config.codecompanion.prompts.meetings").meeting_prep,
   ["Meeting Cleanup"] = require("config.codecompanion.prompts.meetings").meeting_cleanup,
-
-  -- Knowledge Management
-  ["Notes: File (Remote)"] = require("config.codecompanion.prompts.note-filing").note_file_remote,
-  ["Notes: File (Local)"] = require("config.codecompanion.prompts.note-filing").note_file_local,
 
   -- Hebrew Learning
   ["Hebrew: Vocab Cards"] = require("config.codecompanion.prompts.hebrew-cards").vocab,

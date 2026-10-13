@@ -1,8 +1,5 @@
 -- Shared variables and adapters for CodeCompanion prompt modules.
 -- Naming conventions (for prompt table keys):
---   VectorCode prompts: vc_<type>_<local|remote>[ _notes]
---     types: summary, raw
---     _notes = use notes_root as project_root
 --   Web fetch / buffer: web_fetch_<local|remote>, buffer_<local|remote>_<chat|new>
 --   Code examples: snippet_<local|remote>, good_bad_code_example_<local|remote>
 --
@@ -23,11 +20,11 @@ If no results: No results.
 Do not invent files.
 ]]
 
--- Sources section format for VectorCode-enhanced prompts
+-- Sources section format for prompts that pull in context from other files
 local sources_format = [[
 
 ## Sources
-Cite all VectorCode results and referenced files using footnotes:
+Cite all referenced files using footnotes:
 [^1]: path/to/file.md
   - Brief description of content
   - Why it's relevant to this context
@@ -43,21 +40,10 @@ Use Obsidian callouts sparingly (roughly 1 per 50 lines of content):
 Don't overuse - save for truly important items.
 ]]
 
--- Date-aware VectorCode querying instructions
-local date_aware_query = string.format([[
-Current date: %s
-
-When querying VectorCode, prefer recent context:
-1. After getting VectorCode results, use ${agent} to check file modification times
-2. Prioritize files modified within last 3 months unless older files are highly relevant
-3. Focus on recent context for meeting notes and project discussions
-]], os.date("%Y-%m-%d %A"))
-
 return {
   home = home,
   notes_root = notes_root,
   biblio_text = biblio_text,
   sources_format = sources_format,
   callout_usage = callout_usage,
-  date_aware_query = date_aware_query,
 }

@@ -263,7 +263,6 @@ return {
         "NeogitPopup",
         "codecompanion",
         "octo",
-        "mcphub",
         "snacks_notif_history",
         "k8s_pod_logs",
       },

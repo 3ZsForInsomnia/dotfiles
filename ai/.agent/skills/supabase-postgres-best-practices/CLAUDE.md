@@ -1,1 +1,0 @@
-/Users/zacharylevinw/.openskills-temp-1773610633130/repo/skills/supabase-postgres-best-practices/AGENTS.md

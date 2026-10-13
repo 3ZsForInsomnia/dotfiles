@@ -2,9 +2,7 @@ tags
 tags.*
 confluence/*.json
 .DS_STORE
-chroma-data
 src/apps/backend/btx/conf.base.qat.yaml
 src/apps/backend/btx/conf.local.qat.yaml
-.vectorcode
 main/brokerportal/main.go
 ui/broker-portal-fe/.space.env.local
