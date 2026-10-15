@@ -78,7 +78,7 @@ alias oreg='o https://regex101.com'
 alias http='/opt/homebrew/bin/http' # This is httpie's script
 alias http-server='$HOME/.npm/_npx/e5196fa6dc3cecbc/node_modules/.bin/http-server'
 
-alias unstow='stow --no-folding --target=$HOME'
+alias unstow='stow --no-folding --target=$HOME --ignore="\.zwc$"'
 function unstowAll() {
   cd "$HOME/src/dotfiles/"
 
