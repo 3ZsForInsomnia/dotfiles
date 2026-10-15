@@ -128,7 +128,12 @@ return {
   {
     "obsidian-nvim/obsidian.nvim",
     version = "*",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
+    event = {
+      -- Adjust path to your actual vault path
+      "BufReadPre " .. vim.fn.expand("~") .. "/Documents/sync/**/*.md",
+      "BufNewFile " .. vim.fn.expand("~") .. "/Documents/sync/**/*.md",
+    },
     lazy = true,
     dependencies = {
       "nvim-lua/plenary.nvim",
