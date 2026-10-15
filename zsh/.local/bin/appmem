@@ -1,0 +1,278 @@
+#!/usr/bin/env python3
+"""Show memory usage grouped by app instead of by process.
+
+A process starts a group when its parent is launchd or a terminal login shell;
+everything it spawns belongs to that group. Groups are named after their
+outermost .app bundle, or their executable when there is none. Memory is the
+physical footprint reported by top.
+"""
+
+import os
+import re
+import signal
+import subprocess
+from argparse import ArgumentParser
+from dataclasses import dataclass
+
+GIB = 1024**3
+DEFAULT_CUTOFF_BYTES = GIB
+LAUNCHD_PID = 1
+KERNEL_PID = 0
+UNIT_BYTES = {"B": 1, "K": 1024, "M": 1024**2, "G": 1024**3, "T": 1024**4}
+TOP_MEMORY_ROW = re.compile(r"^\s*(\d+)\s+([\d.]+)([BKMGT])[+-]?\s*$")
+APP_BUNDLE = re.compile(r"/([^/]+)\.app(/|$)")
+INTERPRETERS = {"node", "python", "python3", "Python", "ruby", "perl", "bun", "deno"}
+
+
+@dataclass(frozen=True)
+class Process:
+    pid: int
+    ppid: int
+    executable: str
+    args: str
+    memory: int
+
+
+def run(command: list[str]) -> str:
+    return subprocess.run(command, capture_output=True, text=True, check=True).stdout
+
+
+def parse_size(amount: str, unit: str) -> int:
+    return int(float(amount) * UNIT_BYTES[unit])
+
+
+def read_memory() -> dict[int, int]:
+    rows = (TOP_MEMORY_ROW.match(line) for line in run(["top", "-l", "1", "-stats", "pid,mem"]).splitlines())
+    return {int(row[1]): parse_size(row[2], row[3]) for row in rows if row}
+
+
+def read_ps_column(column: str) -> dict[int, str]:
+    lines = run(["ps", "-axo", f"pid=,{column}="]).splitlines()
+    pairs = (line.strip().split(None, 1) for line in lines)
+    return {int(pair[0]): pair[1] if len(pair) > 1 else "" for pair in pairs}
+
+
+def read_processes() -> dict[int, Process]:
+    memory = read_memory()
+    parents = read_ps_column("ppid")
+    executables = read_ps_column("comm")
+    args = read_ps_column("args")
+    return {
+        pid: Process(pid, int(ppid), executables.get(pid, ""), args.get(pid, ""), memory.get(pid, 0))
+        for pid, ppid in parents.items()
+        if pid not in (KERNEL_PID, LAUNCHD_PID)
+    }
+
+
+def is_terminal_shell(process: Process) -> bool:
+    return process.executable.startswith("-")
+
+
+def starts_group(process: Process, processes: dict[int, Process]) -> bool:
+    parent = processes.get(process.ppid)
+    parent_is_launchd_or_gone = parent is None
+    return parent_is_launchd_or_gone or is_terminal_shell(parent)
+
+
+def children_by_parent(processes: dict[int, Process]) -> dict[int, list[Process]]:
+    children: dict[int, list[Process]] = {}
+    for process in processes.values():
+        children.setdefault(process.ppid, []).append(process)
+    return children
+
+
+def member_children(process, processes, children) -> list[Process]:
+    return [child for child in children.get(process.pid, []) if not starts_group(child, processes)]
+
+
+def group_members(root: Process, processes, children) -> list[Process]:
+    members, pending = [], [root]
+    while pending:
+        current = pending.pop()
+        members.append(current)
+        pending.extend(member_children(current, processes, children))
+    return members
+
+
+def executable_name(process: Process) -> str:
+    executable = process.executable.lstrip("-")
+    is_path = executable.startswith("/")
+    return os.path.basename(executable) if is_path else executable.split(" ")[0]
+
+
+def script_name(process: Process) -> str | None:
+    arguments = process.args.split()[1:]
+    scripts = (arg for arg in arguments if not arg.startswith("-") and arg not in ("exec", "run"))
+    script = next(scripts, None)
+    return os.path.basename(script) if script else None
+
+
+def process_label(process: Process) -> str:
+    name = executable_name(process)
+    is_wrapper = name in INTERPRETERS or name in ("npm", "npx")
+    return (script_name(process) or name) if is_wrapper else name
+
+
+def app_name(process: Process) -> str:
+    bundle = APP_BUNDLE.search(process.executable)
+    return bundle[1] if bundle else process_label(process)
+
+
+def read_working_dirs(pids: list[int]) -> dict[int, str]:
+    if not pids:
+        return {}
+    command = ["lsof", "-a", "-d", "cwd", "-Fpn", "-p", ",".join(map(str, pids))]
+    output = subprocess.run(command, capture_output=True, text=True).stdout
+    directories, pid = {}, None
+    for line in output.splitlines():
+        if line.startswith("p"):
+            pid = int(line[1:])
+        elif line.startswith("n") and pid is not None:
+            directories[pid] = "~" if line[1:] == os.path.expanduser("~") else os.path.basename(line[1:])
+    return directories
+
+
+@dataclass(frozen=True)
+class Usage:
+    label: str
+    memory: int
+    process_count: int
+
+
+@dataclass(frozen=True)
+class Instance:
+    usage: Usage
+    children: list[Usage]
+
+
+@dataclass(frozen=True)
+class App:
+    usage: Usage
+    instances: list[Instance]
+
+
+def usage_of(label: str, members: list[Process]) -> Usage:
+    return Usage(label, sum(member.memory for member in members), len(members))
+
+
+def combined_usage(label: str, usages: list[Usage]) -> Usage:
+    return Usage(label, sum(u.memory for u in usages), sum(u.process_count for u in usages))
+
+
+def effective_root(root: Process, processes, children) -> Process:
+    """Skip wrapper chains like nvim's UI process launching its `nvim --embed` server."""
+    current = root
+    while True:
+        kids = member_children(current, processes, children)
+        is_same_program = len(kids) == 1 and executable_name(kids[0]) == executable_name(current)
+        if not is_same_program:
+            return current
+        current = kids[0]
+
+
+def child_usages(roots: list[Process], processes, children) -> list[Usage]:
+    by_label: dict[str, list[Usage]] = {}
+    for root in roots:
+        for child in member_children(effective_root(root, processes, children), processes, children):
+            label = process_label(child)
+            by_label.setdefault(label, []).append(usage_of(label, group_members(child, processes, children)))
+    return [
+        combined_usage(label if len(usages) == 1 else f"{label} ×{len(usages)}", usages)
+        for label, usages in by_label.items()
+    ]
+
+
+def build_instance(label: str, roots: list[Process], processes, children) -> Instance:
+    members = [member for root in roots for member in group_members(root, processes, children)]
+    return Instance(usage_of(label, members), child_usages(roots, processes, children))
+
+
+def roots_by_instance(processes: dict[int, Process]) -> dict[tuple[str, str], list[Process]]:
+    """Each terminal-launched root is its own instance; launchd-launched roots of one app merge."""
+    roots = [process for process in processes.values() if starts_group(process, processes)]
+    terminal_launched = [root.pid for root in roots if root.ppid in processes]
+    directories = read_working_dirs(terminal_launched)
+    grouped: dict[tuple[str, str], list[Process]] = {}
+    for root in roots:
+        name = app_name(root)
+        is_terminal_launched = root.pid in terminal_launched
+        label = f"{name} ({directories.get(root.pid, '?')}, {root.pid})" if is_terminal_launched else name
+        grouped.setdefault((name, label), []).append(root)
+    return grouped
+
+
+def build_apps(processes: dict[int, Process]) -> list[App]:
+    children = children_by_parent(processes)
+    instances_by_app: dict[str, list[Instance]] = {}
+    for (name, label), roots in roots_by_instance(processes).items():
+        instances_by_app.setdefault(name, []).append(build_instance(label, roots, processes, children))
+    return [
+        App(combined_usage(name, [instance.usage for instance in instances]), instances)
+        for name, instances in instances_by_app.items()
+    ]
+
+
+def by_memory(usages):
+    return sorted(usages, key=lambda item: getattr(item, "usage", item).memory, reverse=True)
+
+
+def select_apps(apps: list[App], options) -> list[App]:
+    names = [name.lower() for name in options.names]
+    matching = [app for app in apps if any(name in app.usage.label.lower() for name in names)] if names else apps
+    ranked = by_memory(matching)
+    if options.top:
+        return ranked[: options.top]
+    show_everything = options.all or bool(names)
+    return ranked if show_everything else [app for app in ranked if app.usage.memory >= DEFAULT_CUTOFF_BYTES]
+
+
+def select_children(usages: list[Usage], options) -> list[Usage]:
+    ranked = by_memory(usages)
+    if options.children:
+        return ranked[: options.children]
+    return ranked if options.all else [usage for usage in ranked if usage.memory >= DEFAULT_CUTOFF_BYTES]
+
+
+def format_size(size: int) -> str:
+    if size >= GIB:
+        return f"{size / GIB:.1f}G"
+    return f"{size // 1024**2}M" if size >= 1024**2 else f"{size // 1024}K"
+
+
+def format_row(depth: int, usage: Usage) -> str:
+    label = "  " * depth + usage.label
+    return f"{label:<48.48} {format_size(usage.memory):>7} {usage.process_count:>6}"
+
+
+def instance_rows(depth: int, instance: Instance, options) -> list[str]:
+    child_rows = [format_row(depth + 1, child) for child in select_children(instance.children, options)]
+    return [format_row(depth, instance.usage), *child_rows]
+
+
+def app_rows(app: App, options) -> list[str]:
+    if len(app.instances) == 1:
+        return instance_rows(0, app.instances[0], options)
+    nested = [row for instance in by_memory(app.instances) for row in instance_rows(1, instance, options)]
+    return [format_row(0, app.usage), *nested]
+
+
+def parse_options():
+    parser = ArgumentParser(description="Show memory usage grouped by app. Defaults to apps and children over 1GB.")
+    parser.add_argument("names", nargs="*", help="only show apps whose name contains any of these (case-insensitive)")
+    parser.add_argument("-a", "--all", action="store_true", help="show all apps and children, ignoring the 1GB cutoff")
+    parser.add_argument("-n", "--top", type=int, metavar="N", help="show the N largest apps")
+    parser.add_argument("-c", "--children", type=int, metavar="N", help="show the N largest children per app or instance")
+    return parser.parse_args()
+
+
+def main():
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # exit quietly when piped into head and similar
+    options = parse_options()
+    apps = select_apps(build_apps(read_processes()), options)
+    print(f"{'APP':<48} {'MEMORY':>7} {'PROCS':>6}")
+    for app in apps:
+        print("\n".join(app_rows(app, options)))
+
+
+if __name__ == "__main__":
+    main()
