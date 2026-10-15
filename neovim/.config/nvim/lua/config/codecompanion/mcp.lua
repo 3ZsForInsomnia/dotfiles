@@ -44,6 +44,10 @@ local servers = {
     cmd = { "npx", "@playwright/mcp@latest" },
   },
 
+  ["playwright-extension"] = {
+    cmd = { "npx", "@playwright/mcp@latest", "--extension" },
+  },
+
   ["tavily"] = {
     cmd = {
       "npx",
@@ -136,6 +140,7 @@ local work_servers = {
   "kubernetes",
   "nx",
   "playwright",
+  "playwright-extension",
 }
 
 v.list_extend(default_servers, in_any_of(work_repos) and work_servers or personal_servers)
