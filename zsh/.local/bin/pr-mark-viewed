@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+"""Mark files in a GitHub PR as viewed for the current gh user, in one request.
+
+Viewed state is private to the user and GitHub clears it on any file that
+changes in a later push. Run it from inside the PR's repository.
+"""
+
+import json
+import subprocess
+import sys
+from argparse import ArgumentParser
+
+MUTATION_FIELD = "m{index}: markFileAsViewed(input: {{pullRequestId: $pr, path: $p{index}}}) {{ clientMutationId }}"
+
+
+def pull_request_id(number: int) -> str:
+    output = subprocess.run(["gh", "pr", "view", str(number), "--json", "id"], capture_output=True, text=True, check=True).stdout
+
+    return json.loads(output)["id"]
+
+
+def build_mutation(path_count: int) -> str:
+    variables = ", ".join(["$pr: ID!", *(f"$p{index}: String!" for index in range(path_count))])
+    fields = "\n  ".join(MUTATION_FIELD.format(index=index) for index in range(path_count))
+
+    return f"mutation({variables}) {{\n  {fields}\n}}"
+
+
+def send_mutation(pr_id: str, paths: list[str]) -> dict:
+    path_args = [arg for index, path in enumerate(paths) for arg in ("-f", f"p{index}={path}")]
+    command = ["gh", "api", "graphql", "-f", f"query={build_mutation(len(paths))}", "-f", f"pr={pr_id}", *path_args]
+    # gh exits non-zero when any mutation fails but still prints the response,
+    # which says which ones succeeded.
+    result = subprocess.run(command, capture_output=True, text=True)
+    if not result.stdout:
+        sys.exit(f"gh api failed: {result.stderr.strip()}")
+
+    return json.loads(result.stdout)
+
+
+def failures_by_path(response: dict, paths: list[str]) -> dict[str, str]:
+    def path_for(error: dict) -> str:
+        alias = error.get("path", ["?"])[0]
+
+        return paths[int(alias[1:])] if alias.startswith("m") else alias
+
+    return {path_for(error): error["message"] for error in response.get("errors", [])}
+
+
+def main() -> None:
+    parser = ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("number", type=int, help="PR number")
+    parser.add_argument("paths", nargs="+", help="file paths as they appear in the PR")
+    args = parser.parse_args()
+
+    paths = list(dict.fromkeys(args.paths))
+    failures = failures_by_path(send_mutation(pull_request_id(args.number), paths), paths)
+    marked = [path for path in paths if path not in failures]
+
+    print(f"Marked viewed ({len(marked)}):", *marked, sep="\n")
+    if failures:
+        print(f"\nFailed ({len(failures)}):", *(f"{path}: {message}" for path, message in failures.items()), sep="\n")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+"""Print the files in a GitHub PR that never need human review, one per line.
+
+A file qualifies when the PR deletes it, when git sees it as binary, or when
+git attributes tag it linguist-generated or linguist-vendored. Attributes come
+from the repo's .gitattributes at the PR head plus the global attributes file
+(~/.config/git/attributes). Run it from inside the PR's repository.
+"""
+
+import json
+import subprocess
+from argparse import ArgumentParser
+
+SKIP_ATTRIBUTES = ("linguist-generated", "linguist-vendored")
+ATTRIBUTE_ENABLED = ("set", "true")
+BINARY_COUNT = "-"
+
+
+def run(command: list[str], stdin: str | None = None) -> str:
+    return subprocess.run(command, input=stdin, capture_output=True, text=True, check=True).stdout
+
+
+def fetch_pr_refs(number: int) -> tuple[str, str]:
+    pr = json.loads(run(["gh", "pr", "view", str(number), "--json", "baseRefName,headRefOid"]))
+    run(["git", "fetch", "--quiet", "origin", pr["baseRefName"], f"pull/{number}/head"])
+    fork_point = run(["git", "merge-base", f"origin/{pr['baseRefName']}", pr["headRefOid"]]).strip()
+
+    return fork_point, pr["headRefOid"]
+
+
+def split_nul(output: str) -> list[str]:
+    return output.split("\0")[:-1]
+
+
+def deleted_files(fork_point: str, head_sha: str) -> set[str]:
+    return set(split_nul(run(["git", "diff", "-z", "-M", "--diff-filter=D", "--name-only", fork_point, head_sha])))
+
+
+def present_files(fork_point: str, head_sha: str) -> list[str]:
+    return split_nul(run(["git", "diff", "-z", "-M", "--diff-filter=d", "--name-only", fork_point, head_sha]))
+
+
+def binary_files(fork_point: str, head_sha: str) -> set[str]:
+    rows = (row.split("\t") for row in split_nul(run(["git", "diff", "-z", "--no-renames", "--numstat", fork_point, head_sha])))
+
+    return {path for additions, _, path in rows if additions == BINARY_COUNT}
+
+
+def attribute_tagged_files(paths: list[str], head_sha: str) -> set[str]:
+    output = run(["git", "check-attr", "-z", "--stdin", "--source", head_sha, *SKIP_ATTRIBUTES], stdin="\0".join(paths))
+    fields = split_nul(output)
+    triples = zip(fields[0::3], fields[1::3], fields[2::3])
+
+    return {path for path, _, value in triples if value in ATTRIBUTE_ENABLED}
+
+
+def main() -> None:
+    parser = ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("number", type=int, help="PR number")
+    number = parser.parse_args().number
+
+    fork_point, head_sha = fetch_pr_refs(number)
+    present = present_files(fork_point, head_sha)
+    binary = binary_files(fork_point, head_sha) & set(present)
+    known = deleted_files(fork_point, head_sha) | binary | attribute_tagged_files(present, head_sha)
+
+    print("\n".join(sorted(known)))
+
+
+if __name__ == "__main__":
+    main()

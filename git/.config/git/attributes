@@ -1,0 +1,10 @@
+# Lockfiles and checksum files: generated, never worth reading in a PR review.
+# GitHub never sees this file; pr-known-files reads it through git check-attr.
+package-lock.json linguist-generated
+yarn.lock linguist-generated
+pnpm-lock.yaml linguist-generated
+go.sum linguist-generated
+atlas.sum linguist-generated
+poetry.lock linguist-generated
+uv.lock linguist-generated
+lazy-lock.json linguist-generated

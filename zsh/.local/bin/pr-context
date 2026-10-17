@@ -1,0 +1,296 @@
+#!/usr/bin/env python3
+"""Print a markdown bundle of everything needed to start reviewing a GitHub PR.
+
+Covers the PR's metadata and description, commits, changed files with their
+viewed state, review threads, the last few commits to each changed file before
+the PR branched off its base, and existing tests for each changed file. Run it
+from inside the PR's repository.
+
+Commits and files come from git, using the PR head GitHub publishes as
+pull/<number>/head; nothing is checked out. GitHub supplies only what git
+cannot: metadata, review threads, and each file's viewed state.
+"""
+
+import json
+import re
+import subprocess
+from argparse import ArgumentParser
+from dataclasses import dataclass
+from pathlib import PurePosixPath
+
+HISTORY_DEPTH = 3
+TICKET_KEY = re.compile(r"\b[A-Z][A-Z0-9]+-\d+\b")
+HTML_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
+BACKTICK_RUN = re.compile(r"`+")
+MIN_FENCE_LENGTH = 3
+TEST_DIRS = ("", "__tests__", "tests", "test")
+TEST_NAME = re.compile(r"^(?:test_)?(?P<stem>.+?)(?:[._](?:test|spec))?$")
+CHANGE_TYPES = {"A": "added", "M": "modified", "D": "deleted", "R": "renamed", "C": "copied", "T": "type changed"}
+BINARY_COUNT = "-"
+COMMIT_SEPARATOR = "\x1e"
+# Line counts match GitHub's PR view only with its algorithm, whatever the local
+# diff.algorithm setting is.
+GITHUB_DIFF_ALGORITHM = "myers"
+
+PR_QUERY = """
+query($owner: String!, $repo: String!, $number: Int!) {
+  repository(owner: $owner, name: $repo) {
+    pullRequest(number: $number) {
+      title url body state isDraft author { login } baseRefName headRefName headRefOid
+      closingIssuesReferences(first: 10) { nodes { number title url } }
+    }
+  }
+}
+"""
+
+CONNECTION_QUERY = """
+query($owner: String!, $repo: String!, $number: Int!, $endCursor: String) {
+  repository(owner: $owner, name: $repo) {
+    pullRequest(number: $number) {
+      %s(first: 100, after: $endCursor) {
+        pageInfo { hasNextPage endCursor }
+        nodes { %s }
+      }
+    }
+  }
+}
+"""
+
+FILE_FIELDS = "path viewerViewedState"
+THREAD_FIELDS = """
+  path line originalLine isResolved isOutdated
+  comments(first: 50) { nodes { author { login } body } }
+"""
+
+
+@dataclass(frozen=True)
+class ChangedFile:
+    path: str
+    change: str
+    old_path: str | None
+    additions: str
+    deletions: str
+
+
+def run(command: list[str]) -> str:
+    return subprocess.run(command, capture_output=True, text=True, check=True).stdout
+
+
+def current_repo() -> tuple[str, str]:
+    repo = json.loads(run(["gh", "repo", "view", "--json", "owner,name"]))
+
+    return repo["owner"]["login"], repo["name"]
+
+
+def graphql_args(query: str, owner: str, repo: str, number: int) -> list[str]:
+    return ["gh", "api", "graphql", "-f", f"query={query}", "-F", f"owner={owner}", "-F", f"repo={repo}", "-F", f"number={number}"]
+
+
+def fetch_pr(owner: str, repo: str, number: int) -> dict:
+    response = json.loads(run(graphql_args(PR_QUERY, owner, repo, number)))
+
+    return response["data"]["repository"]["pullRequest"]
+
+
+def fetch_connection(owner: str, repo: str, number: int, connection: str, fields: str) -> list[dict]:
+    query = CONNECTION_QUERY % (connection, fields)
+    pages = json.loads(run([*graphql_args(query, owner, repo, number), "--paginate", "--slurp"]))
+
+    return [node for page in pages for node in page["data"]["repository"]["pullRequest"][connection]["nodes"]]
+
+
+def fetch_viewed_states(owner: str, repo: str, number: int) -> dict[str, str]:
+    files = fetch_connection(owner, repo, number, "files", FILE_FIELDS)
+
+    return {file["path"]: file["viewerViewedState"].lower() for file in files}
+
+
+def fetch_refs(number: int, base: str) -> None:
+    run(["git", "fetch", "--quiet", "origin", base, f"pull/{number}/head"])
+
+
+def merge_base(base: str, head_sha: str) -> str:
+    return run(["git", "merge-base", f"origin/{base}", head_sha]).strip()
+
+
+def read_commits(fork_point: str, head_sha: str) -> list[str]:
+    log = run(["git", "log", "--reverse", f"--format=%h %B{COMMIT_SEPARATOR}", f"{fork_point}..{head_sha}"])
+
+    return [commit.strip() for commit in log.split(COMMIT_SEPARATOR) if commit.strip()]
+
+
+def parse_name_status(output: str) -> list[tuple[str, str | None, str]]:
+    fields = output.split("\0")[:-1]
+    entries, index = [], 0
+    while index < len(fields):
+        status = fields[index][0]
+        has_old_path = status in ("R", "C")
+        old_path = fields[index + 1] if has_old_path else None
+        path = fields[index + 2] if has_old_path else fields[index + 1]
+        entries.append((status, old_path, path))
+        index += 3 if has_old_path else 2
+
+    return entries
+
+
+def parse_numstat(output: str) -> dict[str, tuple[str, str]]:
+    fields = output.split("\0")[:-1]
+    counts, index = {}, 0
+    while index < len(fields):
+        additions, deletions, path = fields[index].split("\t")
+        is_rename = path == ""
+        counts[fields[index + 2] if is_rename else path] = (additions, deletions)
+        index += 3 if is_rename else 1
+
+    return counts
+
+
+def read_changed_files(fork_point: str, head_sha: str) -> list[ChangedFile]:
+    diff = ["git", "diff", "-z", "-M", f"--diff-algorithm={GITHUB_DIFF_ALGORITHM}", fork_point, head_sha]
+    statuses = parse_name_status(run([*diff, "--name-status"]))
+    counts = parse_numstat(run([*diff, "--numstat"]))
+
+    return [ChangedFile(path, status, old_path, *counts[path]) for status, old_path, path in statuses]
+
+
+def head_tree(head_sha: str) -> frozenset[str]:
+    return frozenset(run(["git", "ls-tree", "-r", "--name-only", head_sha]).splitlines())
+
+
+def is_test_file(path: str) -> bool:
+    name = PurePosixPath(path).name
+    stem = name.split(".")[0]
+
+    return stem.startswith("test_") or stem.endswith("_test") or ".test." in name or ".spec." in name
+
+
+def test_stem(path: str) -> str:
+    stem = PurePosixPath(path).name.split(".")[0]
+
+    return TEST_NAME.match(stem)["stem"]
+
+
+def related_tests(path: str, test_files: list[str]) -> list[str]:
+    source = PurePosixPath(path)
+    stem = source.name.split(".")[0]
+    candidate_dirs = {source.parent / test_dir for test_dir in TEST_DIRS}
+
+    return [test for test in test_files if PurePosixPath(test).parent in candidate_dirs and test_stem(test) == stem]
+
+
+def file_history(path: str, fork_point: str) -> list[str]:
+    log = run(["git", "log", f"-n{HISTORY_DEPTH}", "--format=%h %as %an: %s", fork_point, "--", path])
+
+    return log.splitlines()
+
+
+def ticket_keys(pr: dict) -> list[str]:
+    text = " ".join([pr["title"], pr["headRefName"], pr["body"]])
+
+    return sorted(set(TICKET_KEY.findall(text)))
+
+
+def clean_body(body: str) -> str:
+    return HTML_COMMENT.sub("", body).strip()
+
+
+def fence(text: str) -> list[str]:
+    longest_backtick_run = max((len(backticks) for backticks in BACKTICK_RUN.findall(text)), default=0)
+    marker = "`" * max(MIN_FENCE_LENGTH, longest_backtick_run + 1)
+
+    return [f"{marker}markdown", text, marker]
+
+
+def render_overview(pr: dict, fork_point: str) -> list[str]:
+    issues = [f"- #{issue['number']} {issue['title']} ({issue['url']})" for issue in pr["closingIssuesReferences"]["nodes"]]
+    keys = ", ".join(ticket_keys(pr)) or "none"
+    state = f"{pr['state'].lower()}{', draft' if pr['isDraft'] else ''}"
+
+    return [
+        f"# {pr['title']}",
+        f"{pr['url']}",
+        f"{state} | Author: {pr['author']['login']} | {pr['headRefName']} -> {pr['baseRefName']}",
+        f"Head: {pr['headRefOid']} | Merge base: {fork_point}",
+        f"Possible ticket keys (title, branch, description): {keys}",
+        *(["Linked issues:", *issues] if issues else []),
+        "",
+        "## Description",
+        *fence(clean_body(pr["body"]) or "(empty)"),
+    ]
+
+
+def render_commits(commits: list[str]) -> list[str]:
+    def render(commit: str) -> str:
+        return "- " + commit.replace("\n", "\n  ")
+
+    return ["", "## Commits", *(render(commit) for commit in commits)]
+
+
+def describe_counts(file: ChangedFile) -> str:
+    is_binary = file.additions == BINARY_COUNT
+
+    return "binary" if is_binary else f"+{file.additions}/-{file.deletions}"
+
+
+def render_file(file: ChangedFile, viewed: str, fork_point: str, test_files: list[str]) -> list[str]:
+    renamed_from = f" from {file.old_path}" if file.old_path else ""
+    header = f"### {file.path} ({CHANGE_TYPES[file.change]}{renamed_from}, {describe_counts(file)}, {viewed})"
+    history = [] if file.change == "A" else file_history(file.old_path or file.path, fork_point)
+    tests = [] if is_test_file(file.path) else related_tests(file.path, test_files)
+
+    return [
+        header,
+        *(["Recent commits before this PR:", *(f"- {line}" for line in history)] if history else []),
+        *(["Related tests:", *(f"- {test}" for test in tests)] if tests else []),
+    ]
+
+
+def total_lines(files: list[ChangedFile], count: str) -> int:
+    return sum(int(getattr(file, count)) for file in files if getattr(file, count) != BINARY_COUNT)
+
+
+def render_files(files: list[ChangedFile], viewed: dict[str, str], fork_point: str, tree: frozenset[str]) -> list[str]:
+    test_files = sorted(path for path in tree if is_test_file(path))
+    totals = f"+{total_lines(files, 'additions')}/-{total_lines(files, 'deletions')}"
+    sections = [line for file in files for line in render_file(file, viewed.get(file.path, "unknown"), fork_point, test_files)]
+
+    return ["", f"## Files ({len(files)} files, {totals})", *sections]
+
+
+def render_thread(thread: dict) -> list[str]:
+    line = thread["line"] or thread["originalLine"]
+    states = [state for state, flag in (("resolved", thread["isResolved"]), ("outdated", thread["isOutdated"])) if flag]
+    status = f" [{', '.join(states)}]" if states else ""
+    comments = [f"  - {comment['author']['login']}: {clean_body(comment['body'])}" for comment in thread["comments"]["nodes"]]
+
+    return [f"- {thread['path']}:{line}{status}", *comments]
+
+
+def render_threads(threads: list[dict]) -> list[str]:
+    rendered = [line for thread in threads for line in render_thread(thread)]
+
+    return ["", "## Review threads", *(rendered or ["(none)"])]
+
+
+def main() -> None:
+    parser = ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("number", type=int, help="PR number")
+    number = parser.parse_args().number
+
+    owner, repo = current_repo()
+    pr = fetch_pr(owner, repo, number)
+    viewed = fetch_viewed_states(owner, repo, number)
+    threads = fetch_connection(owner, repo, number, "reviewThreads", THREAD_FIELDS)
+
+    head_sha = pr["headRefOid"]
+    fetch_refs(number, pr["baseRefName"])
+    fork_point = merge_base(pr["baseRefName"], head_sha)
+    commits = read_commits(fork_point, head_sha)
+    files = read_changed_files(fork_point, head_sha)
+
+    lines = [*render_overview(pr, fork_point), *render_commits(commits), *render_files(files, viewed, fork_point, head_tree(head_sha)), *render_threads(threads)]
+    print("\n".join(lines))
+
+
+if __name__ == "__main__":
+    main()
