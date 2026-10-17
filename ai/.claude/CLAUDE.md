@@ -173,6 +173,9 @@ not yours. That caution holds even when we're working inside the repo itself.
 - `~/src` - my code repos: a mix of my own projects, these dotfiles
   (`~/src/dotfiles`), and third-party repos pulled down to contribute to or
   explore. Not all mine.
+- `~/src/zmk-config` - ZMK firmware config for my keyboard (Lily58, nice!nano
+  v2, nice!view ePaper displays): keymaps, layers, display settings. Firmware
+  builds via GitHub Actions.
 - `~/Documents/sync` - notes / knowledge base (detailed above).
 - `~/src/work` - all work material: multiple repos (most work is in `platform`),
   plus a `misc` folder for uncommitted odds-and-ends (scripts, auth0 exports, the
