@@ -129,7 +129,7 @@ Find the issues that are cheap to spot from the whole PR, before any deep readin
 - bugs and likely regressions, including a change in one file that breaks how another file uses it;
 - security problems;
 - performance problems;
-- violations of the coding rules with no comment or visible reason. Rules come from Zach's personal rules and the repo's own `CLAUDE.md` and rules files, which are already loaded in context. Label each violation with which set it breaks; one that breaks only Zach's personal rules is labeled `personal rule`, since he may still choose to raise it.
+- violations of the coding rules with no comment or visible reason, labeled the way `reviewing-code` describes (including `personal rule`).
 
 Keep the list to issues worth a reviewer's attention; deeper review happens in stage 3. Point at each issue with up to three line ranges (`path:12-18`); when it spans more than that, list the files involved instead.
 
@@ -157,7 +157,7 @@ Answer whatever else he asks about the file: explain a hunk using its commits, t
 
 Start when Zach says his first round is done. Do a full, independent review, then critique his comments.
 
-**Your review** covers every file not marked viewed, judged from the whole PR. It includes everything in "What to look for" below and goes beyond it: design, naming, simpler alternatives, missing cases, unclear code, anything else worth a comment.
+**Your review** covers every file not marked viewed, judged from the whole PR. It follows "What to look for" below and goes beyond it: design, naming, simpler alternatives, missing cases, unclear code, anything else worth a comment.
 
 Review tests in full. Zach often skims or skips them given how much test code PRs carry, so this round is where they get a real review: judge them against the testing rules in Zach's personal rules and the repo's rules files, and report missing coverage for changed behavior.
 
@@ -200,15 +200,10 @@ Add the summary to the notes file.
 
 ## What to look for
 
-Every stage uses these as a floor, not a ceiling:
+Follow the `reviewing-code` skill for the review process, the areas to cover, severity, and how to write up findings. On top of that, for every PR:
 
-- **Correctness:** bugs, edge cases, error handling, and regressions in code that uses what changed.
-- **Security:** input validation at boundaries, authorization, secrets or PII in logs or responses.
-- **Performance:** extra queries or requests, work in loops or render paths, unbounded data.
-- **Rules:** Zach's personal rules and the repo's rules, labeled as described in stage 1.
-- **Tests:** changed behavior has tests; `pr-context` lists each file's existing tests, changed or not. What counts as enough comes from the rules.
-- **The ticket:** the PR does what the ticket asks, without unrelated changes.
-- **The description:** it explains what changed and why.
+- `pr-context` lists each changed file's existing tests, changed or not; use them when judging coverage.
+- Compare the PR against the ticket fetched in stage 1.
 
 ## Extra context
 
