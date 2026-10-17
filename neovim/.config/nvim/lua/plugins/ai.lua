@@ -177,9 +177,11 @@ return {
       --
       -- Visual Mode
       --
-      k_cmd({
+      k({
         key = a .. "a",
-        action = "CodeCompanionChat Add",
+        action = function()
+          require("config.codecompanion.send_selection").send_selection()
+        end,
         desc = "Add visual selection to chat",
         mode = "v",
       }),
