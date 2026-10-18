@@ -19,7 +19,7 @@ Always ask Zach before changing any file, whatever its type: propose the exact c
 
 ## Where it belongs
 
-Choose the narrowest home that reliably reaches the moments the guidance is needed. Always-loaded files cost attention in every session, so every line there must be true and useful everywhere it loads.
+Choose the narrowest home that reliably reaches the moments the guidance is needed. Always-loaded files cost attention in every session, so every line there must be true and useful everywhere it loads. A general principle restated concretely in several language files is fine and often better: the concrete version is what gets followed. Don't merge such duplicates into one abstract rule.
 
 **First, check whether something already covers it.** If it does and it still didn't work, find out why before changing anything. Common causes: the wording was vague or missing its reason; it lived somewhere that doesn't load at that moment (a path-scoped rule, a memory nobody reads, the wrong config); it was crowded out by too much always-loaded text, such as dozens of skill descriptions; another instruction contradicted it (Claude Code's system prompt, a team rule, another memory); or it was too abstract to beat a strong habit from training data and needed a concrete example. Fix the actual cause - sometimes that's the text, often it isn't.
 
@@ -28,7 +28,7 @@ Otherwise, in order of preference:
 1. **Global CLAUDE.md** - `~/src/dotfiles/ai/.claude/CLAUDE.md` (stowed to `~/.claude/CLAUDE.md`). How Zach and Claude work together, in every project. Always loaded in personal and work sessions.
 2. **Work CLAUDE.md** - `~/src/work/.claude/CLAUDE.md` (not in dotfiles; backed up by `mksecret`). Work-specific workflow and tooling. Loaded only in work sessions.
 3. **A repo's CLAUDE.md, a nested CLAUDE.md, or repo docs** - knowledge specific to one repo or one part of it, including gotchas worth sharing. A nested CLAUDE.md in a subdirectory (e.g. `apps/<app>/CLAUDE.md`) loads when Claude works in that directory; `docs/` suits anything people should read too. In work repos these are committed and team-owned, so changes go through a PR.
-4. **Personal rules** - `~/src/dotfiles/ai/.claude/rules/` (`all.md`, `typescript.md`, `golang.md`). Coding preferences. Loaded in personal and work sessions; the language files load only when matching files are touched.
+4. **Personal rules** - `~/src/dotfiles/ai/.claude/rules/` (`all.md` plus path-scoped files per language, framework, and for tests). Coding preferences. Loaded in personal and work sessions; `all.md` always loads, the others only when matching files are touched.
 5. **Platform's committed rules** - `~/src/work/platform/.claude/rules/`. Team-owned; changes go through a PR.
 6. **A skill** - `~/src/dotfiles/ai/.config/skillz/` (`core/` is listed in every session, `custom/` loads on demand). Guidance needed only for a certain kind of task. Recommend edits to existing skills, or a new skill when one is warranted; Zach decides if and when it gets written.
 7. **A memory** - a fact or lesson that's personal or environment-specific and that nothing above fits, such as how Zach reaches a lower-environment database. Not for general preferences. Memories live per project under `~/.claude/projects/<project>/memory/` (personal) or `~/src/work/.claude/projects/<project>/memory/` (work); a project's first memory creates a folder that `mksecret` won't back up until it's added with `mksecret add <folder>`.

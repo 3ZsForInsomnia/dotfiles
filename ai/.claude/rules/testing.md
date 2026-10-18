@@ -9,6 +9,8 @@ paths:
 
 # Testing
 
+- Unit tests exercise one unit with no external systems. Integration tests run a slice of the system through its real code and mock only what lies outside it (other services, third-party APIs, queues), as far out as possible: at the network layer rather than by stubbing a client. A database the code owns counts as inside; use a real or in-memory one rather than mocking queries.
+- Weight toward integration tests: they give the most confidence per test because they exercise real code paths together. Use unit tests for pure logic with many cases, such as parsing, calculations, and state transitions.
 - Test from the user's perspective. Don't assert on internal state, props, or implementation details.
 - Tests may import production types, enums, and constants - reusing them keeps tests strongly typed.
 - Never skip, delete, or comment out tests to make a suite pass.
