@@ -1,6 +1,6 @@
 local g = vim.g
 local cmd = require("helpers").k_cmd
-local kcmd = require("helpers").k
+local keymap = require("helpers").k
 
 local h = "<leader>h"
 local k = function(command)
@@ -118,7 +118,7 @@ return {
         action = k("replay"),
         desc = "Replay HTTP request",
       }),
-      kcmd({
+      keymap({
         key = h .. "E",
         action = select_kulala_env,
         desc = "Select Kulala environment",
@@ -341,7 +341,7 @@ return {
       mapkey = false,
     },
     keys = {
-      kcmd({
+      keymap({
         key = "<leader>zt",
         action = ":'<,'>NvimUnstack",
         desc = "Explore stacktrace from visual selection",
