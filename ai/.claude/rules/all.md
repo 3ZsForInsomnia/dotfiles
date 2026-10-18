@@ -61,6 +61,6 @@ The no-chat-content rule applies to PR descriptions too. The "as it is now" rule
 - PR descriptions must be complete. Delete sections that don't apply rather than writing "N/A".
 - Never use `git checkout` to undo changes.
 - Default to one PR per feature or task, including any new components or helpers it needs. Split only for a real reason - a different reviewer, separate deploy risk, a size I flagged - and say what it is. An ordering between parts isn't one; nothing is used until it merges.
-- After committing on a feature branch, push in the same step. Pushing to the default branch is fine in some repos (notes, dotfiles, and others), but ask first. Never force-push without asking, and ask before pushes that trigger deploys or other workflows.
+- After committing on a feature branch, push in the same step. Pushing to the default branch is fine without asking in my personal repos (notes, dotfiles); in other repos, ask first. Never force-push without asking, and ask before pushes that trigger deploys or other workflows.
 - Batch fixes for a round of review feedback into one push; multiple commits in it are fine.
 - In PR comments and review replies, describe what changed rather than citing commit SHAs - they go stale after a rebase or squash.
