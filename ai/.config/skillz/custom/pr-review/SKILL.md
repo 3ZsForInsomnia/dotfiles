@@ -32,7 +32,7 @@ All commands run from inside the PR's repository. `gh` placeholders `{owner}` an
    ```sh
    pr-notes <number>
    ```
-   It prints the path of `~/src/work/misc/pr-reviews/<owner>-<repo>-<number>.md` and its contents, creating it with empty sections first if it doesn't exist. If it says `existing`, this is a re-review: read what it printed before anything else and treat its decisions as settled unless the code they concern has changed.
+   It prints the path of `~/.local/share/pr-reviews/<owner>-<repo>-<number>.md` and its contents, creating it with empty sections first if it doesn't exist. If it says `existing`, this is a re-review: read what it printed before anything else and treat its decisions as settled unless the code they concern has changed.
 
 The notes file is the durable record of the review: it survives chat compaction (older messages replaced by a summary) and later sessions. Fill its sections as each stage produces content:
 
@@ -194,7 +194,8 @@ Before Zach submits, give him:
 
 - issues raised in the review that have no comment, and whether that was a decision;
 - open questions still unanswered;
-- files still unviewed (rerun `pr-context` for current viewed state) that weren't deliberately skipped.
+- files still unviewed (rerun `pr-context` for current viewed state) that weren't deliberately skipped;
+- work decisions made during this review, and rule candidates (handled through `instruction-upkeep`). Zach decides what to record and where.
 
 Add the summary to the notes file.
 

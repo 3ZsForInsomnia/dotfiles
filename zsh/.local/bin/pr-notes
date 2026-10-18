@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """Print the review notes file for a GitHub PR, creating it first if needed.
 
-Notes live in ~/src/work/misc/pr-reviews/<owner>-<repo>-<number>.md and hold
-what a review produces: findings, investigations, and decisions. Prints the
-file's path, whether it was just created, and its contents. Run it from inside
-the PR's repository.
+Notes live in $XDG_DATA_HOME/pr-reviews/<owner>-<repo>-<number>.md and hold
+what a review produces: findings, investigations, and decisions. Prints the file's path, whether it was just
+created, and its contents. Run it from inside the PR's repository.
 """
 
 import json
+import os
 import subprocess
 from argparse import ArgumentParser
 from pathlib import Path
 
-NOTES_DIR = Path.home() / "src" / "work" / "misc" / "pr-reviews"
+PR_REVIEWS_DIR = Path(os.environ["XDG_DATA_HOME"]) / "pr-reviews"
 SECTIONS = ("Pre-review", "Files", "Investigations", "Second round", "Decisions", "Post-review summary")
 
 
@@ -23,7 +23,7 @@ def gh_json(command: list[str]) -> dict:
 def notes_path(number: int) -> Path:
     repo = gh_json(["repo", "view", "--json", "owner,name"])
 
-    return NOTES_DIR / f"{repo['owner']['login']}-{repo['name']}-{number}.md"
+    return PR_REVIEWS_DIR / f"{repo['owner']['login']}-{repo['name']}-{number}.md"
 
 
 def skeleton(number: int) -> str:

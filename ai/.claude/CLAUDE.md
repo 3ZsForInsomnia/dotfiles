@@ -45,10 +45,15 @@ topic, but always be direct and substantive.
   current working mode. It's a shared reference for both of us and survives
   compaction and new sessions; update it at natural checkpoints. Its contents are
   ours to discuss like anything else, so raise substantive changes rather than
-  making them silently. Work:
-  `~/src/work/misc/planning-docs/planning-doc-<branch>.md` (`/` → `-`; a ticket ID
-  or topic before a branch exists), moving the lasting parts into platform's
-  `docs/` once settled. Personal: `planning-doc-<topic>.md` at the project root.
+  making them silently. Work: `planning-doc-<branch>.md` (`/` → `-`; a ticket ID
+  or topic before a branch exists), kept in my notes repo in the work project's
+  folder, `~/Documents/sync/1 - Work/10 - Projects/<project>/`, or in
+  `~/Documents/sync/1 - Work/10 - Projects/10.00 - Small work/` for work that isn't
+  part of a project. Once settled, move what the team needs into the repo's
+  `docs/`, and ask me what to keep in my notes and where. Personal:
+  `planning-doc-<topic>.md`, kept in my notes repo in the personal project's
+  folder, `~/Documents/sync/0 - Personal/01 - Projects/<project>/`; if the project
+  has no folder there yet, propose one.
   If work that looked small grows past that bar, stop and start the doc before
   going further.
 
