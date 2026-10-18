@@ -7,7 +7,7 @@ paths:
 
 Unit tests cover pure functions, hooks in isolation, and single components without providers. Integration tests render a component tree with real providers (router, query client, theme) and exercise user flows.
 
-- Mock API calls at the network layer (MSW) in integration tests. Configure MSW with `onUnhandledRequest: "error"` and reset handlers after each test, so a request a test forgot to mock fails loudly instead of passing by accident.
+- Mock API calls at the network layer (MSW) in integration tests.
 - Drive interactions with `userEvent`, not `fireEvent`. It fires the full sequence a real user produces (focus, keydown, input, click), so tests catch bugs `fireEvent` skips.
 - Wait for async UI with `findBy*` or `waitFor` on the expected result. Never use fixed sleeps, and keep `waitFor` callbacks free of side effects.
 - Query through the component's own test helpers first, then `data-testid`, then role/label/text queries for the cases where neither fits.
