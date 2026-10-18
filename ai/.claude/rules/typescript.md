@@ -3,7 +3,7 @@ paths:
   - "**/*.{ts,tsx,js,jsx}"
 ---
 
-# TypeScript and React
+# TypeScript
 
 ## Types
 
@@ -35,12 +35,6 @@ paths:
 - Run independent async work concurrently with `Promise.all` rather than sequential `await`s. Await in sequence only when each step needs the previous result.
 - Annotate caught errors as `unknown` (`catch (error: unknown)`) and narrow them.
 
-## React
+## Modules
 
-- React is declarative UI; write it that way. Express variation through components, props, and lookups - a map from state to component, a boundary component wrapping a subtree - rather than branching and imperative steps inside render.
-- One exported component per file. Colocate hooks and helpers only if they are single-use for that component.
-- Use `useEffect` only to synchronize with something outside React (subscriptions, timers, imperative browser APIs). Don't use it for derived state - compute that during render - or to respond to events - do that in the handler - or to sync one piece of state from another. Use `useMemo` and `useCallback` for what they're for (expensive computations, referential identity something depends on), not by reflex.
-- Prefer controlled components. Do not use refs for form state.
-- Wrap component subtrees in `ErrorBoundary` anywhere a failure should be isolated - cards, panels, data-dependent sections, dialogs. Not just at the page level.
 - Avoid deep relative imports (`../../../`). If you find yourself writing them, that's a signal of missing structure.
-- Components expose their own test helpers for queries and interactions, covering what tests actually need. Treat this as a strong default; skipping helpers is a deliberate exception. Every component has a `data-testid` on its root element.
