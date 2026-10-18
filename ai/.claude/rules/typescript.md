@@ -43,14 +43,4 @@ paths:
 - Prefer controlled components. Do not use refs for form state.
 - Wrap component subtrees in `ErrorBoundary` anywhere a failure should be isolated - cards, panels, data-dependent sections, dialogs. Not just at the page level.
 - Avoid deep relative imports (`../../../`). If you find yourself writing them, that's a signal of missing structure.
-
-## Testing
-
-Unit tests cover pure functions, hooks in isolation, and single components without providers. Integration tests render a component tree with real providers (router, query client, theme) and exercise user flows.
-
-- Mock API calls at the network layer (MSW) in integration tests.
-- Components should expose their own test helpers for queries and interactions, covering what tests actually need. Treat this as a strong default; skipping helpers is a deliberate exception. Every component has a `data-testid` on its root element.
-- Query through component helpers first, then `data-testid`, then role/label/text queries for the cases where neither fits.
-- Render once per `describe` (in `beforeEach` or at describe scope) when tests differ only in mock data. Re-rendering expensive components such as data grids in every test makes suites slow.
-- Do not mock state management, user interactions, or third-party components the component under test relies on.
-- Do not add `eslint-disable` or `@ts-expect-error` suppressions in test files. If the types are wrong, fix them.
+- Components expose their own test helpers for queries and interactions, covering what tests actually need. Treat this as a strong default; skipping helpers is a deliberate exception. Every component has a `data-testid` on its root element.

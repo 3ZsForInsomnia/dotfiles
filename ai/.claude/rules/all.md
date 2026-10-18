@@ -49,7 +49,7 @@ The no-chat-content rule applies to PR descriptions too. The "as it is now" rule
 
 - Changes that add or alter behavior come with tests that would catch a real regression in that behavior. A test that exists only to satisfy this rule or a coverage number is worse than none: it adds code to maintain and proves nothing.
 - Write coverage as you write code. Don't run coverage tooling retroactively to chase a number.
-- Production code never imports from test files, test helpers, or mocks.
+- Production code doesn't import from test files, test helpers, or mocks. Test data such as mock API responses may stand in temporarily for an endpoint that isn't ready yet; remove that use once the real one exists.
 
 ## Git and PRs
 
