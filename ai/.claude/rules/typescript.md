@@ -16,6 +16,7 @@ paths:
 - Use the rest of the type toolbox where it makes types more precise: `as const` objects instead of enums, `satisfies` to check a value's shape without widening it, template literal types for structured strings.
 - Mark data you don't mutate `readonly` - `readonly` fields and `readonly T[]` make immutability checkable rather than conventional.
 - Avoid `as` type assertions - prefer type guards, `satisfies`, or narrowing. Use `as` only when you know something the compiler cannot prove; leave a comment explaining why.
+- Annotate return types wherever TypeScript can't infer them precisely: when inference would widen a literal union to `string`, include an unintended `undefined`, or fall back to `any`.
 
 ## Values and Nullability
 
