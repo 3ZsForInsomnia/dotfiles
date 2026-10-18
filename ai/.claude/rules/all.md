@@ -47,13 +47,9 @@ The no-chat-content rule applies to PR descriptions too. The "as it is now" rule
 
 ## Testing
 
-- Test from the user's perspective. Don't assert on internal state, props, or implementation details.
-- Tests may import production types, enums, and constants - reusing them keeps tests strongly typed. The dependency runs one way: production code never imports from test files, test helpers, or mocks.
-- Never skip, delete, or comment out tests to make a suite pass.
-- Never modify assertions to match wrong output.
-- Never weaken mocks or broaden test setup to fix a failing test without understanding the failure.
-- Extract reusable test helpers - setup, fixtures, mock factories, assertion helpers - as soon as a second test would benefit. Bias toward extraction, not speculation.
+- Changes that add or alter behavior come with tests that would catch a real regression in that behavior. A test that exists only to satisfy this rule or a coverage number is worse than none: it adds code to maintain and proves nothing.
 - Write coverage as you write code. Don't run coverage tooling retroactively to chase a number.
+- Production code never imports from test files, test helpers, or mocks.
 
 ## Git and PRs
 
