@@ -113,6 +113,43 @@ function grbo() {
   git rebase --onto "$1" "$2"
 }
 
+# Restacks a branch after the PR below it in a stack was squash-merged. The branch still
+# carries that PR's original commits, which conflict with their squashed copy on main. GitHub
+# keeps a merged PR's last head commit, so this rebases only the commits after it onto main.
+function grbsq() {
+  if [[ "$1" == "-h" || -z "$1" ]]; then
+    echo "Usage: grbsq <merged PR number> [branch]"
+    echo "Restack a branch after the PR below it in a stack was squash-merged."
+    echo ""
+    echo "How: looks up the merged PR's last head commit on GitHub (gh pr view --json"
+    echo "headRefOid), fetches origin, then runs:"
+    echo "  git rebase --onto origin/\$GIT_MAIN_BRANCH <that commit> [branch]"
+    echo "Only the branch's own commits are replayed; the merged PR's original commits"
+    echo "are dropped, since main already has them as the squash commit."
+    echo ""
+    echo "Branch defaults to the current branch."
+    echo ""
+    echo "Doesn't handle:"
+    echo "  - Real conflicts: main commits, or later changes to the merged PR, that edit"
+    echo "    the same lines still stop the rebase for you to resolve as usual."
+    echo "  - A branch that isn't built on the merged PR's last head (rebased since, or"
+    echo "    built on an older version of it): the wrong commits get replayed. Check"
+    echo "    with: git merge-base --is-ancestor <PR head> <branch>"
+    echo "  - A PR that merged without squashing: a plain grb is enough."
+    echo "  - Branches further up the stack: run it once per branch, each against the PR"
+    echo "    directly below it."
+    echo "  - Pushing: force-push afterwards with --force-with-lease."
+    echo ""
+    echo "Example: grbsq 13161 feat/cd-2804-user-consumers"
+    [[ "$1" == "-h" ]] && return 0 || return 1
+  fi
+
+  local old_base
+  old_base=$(GH_PAGER=cat gh pr view "$1" --json headRefOid -q .headRefOid) || return 1
+  git fetch origin || return 1
+  git rebase --onto "origin/$GIT_MAIN_BRANCH" "$old_base" ${2:+"$2"}
+}
+
 alias grbas='git rebase --interactive --autosquash "$GIT_MAIN_BRANCH"'
 
 ### Stash + Rebase Compound Operations
