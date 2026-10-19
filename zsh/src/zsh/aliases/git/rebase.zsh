@@ -114,40 +114,59 @@ function grbo() {
 }
 
 # Restacks a branch after the PR below it in a stack was squash-merged. The branch still
-# carries that PR's original commits, which conflict with their squashed copy on main. GitHub
-# keeps a merged PR's last head commit, so this rebases only the commits after it onto main.
+# carries that PR's original commits, which conflict with their squashed copy on the PR's
+# base branch. GitHub keeps a merged PR's last head commit, so this rebases only the commits
+# after it onto that base, after checking the branch is actually built on that head.
 function grbsq() {
   if [[ "$1" == "-h" || -z "$1" ]]; then
     echo "Usage: grbsq <merged PR number> [branch]"
     echo "Restack a branch after the PR below it in a stack was squash-merged."
     echo ""
-    echo "How: looks up the merged PR's last head commit on GitHub (gh pr view --json"
-    echo "headRefOid), fetches origin, then runs:"
-    echo "  git rebase --onto origin/\$GIT_MAIN_BRANCH <that commit> [branch]"
+    echo "How: looks up the merged PR's last head commit and base branch on GitHub"
+    echo "(gh pr view --json headRefOid,baseRefName), fetches origin, checks the branch"
+    echo "is built on that head, then runs:"
+    echo "  git rebase --onto origin/<PR's base> <PR's last head> <branch>"
     echo "Only the branch's own commits are replayed; the merged PR's original commits"
-    echo "are dropped, since main already has them as the squash commit."
+    echo "are dropped, since its base already has them as the squash commit."
     echo ""
     echo "Branch defaults to the current branch."
     echo ""
+    echo "Stops without rebasing when the branch isn't built on the PR's last head (the"
+    echo "PR changed after the branch was last restacked), and prints the command to"
+    echo "rebase from the branch's own first commit instead."
+    echo ""
     echo "Doesn't handle:"
-    echo "  - Real conflicts: main commits, or later changes to the merged PR, that edit"
+    echo "  - Real conflicts: base commits, or later changes to the merged PR, that edit"
     echo "    the same lines still stop the rebase for you to resolve as usual."
-    echo "  - A branch that isn't built on the merged PR's last head (rebased since, or"
-    echo "    built on an older version of it): the wrong commits get replayed. Check"
-    echo "    with: git merge-base --is-ancestor <PR head> <branch>"
     echo "  - A PR that merged without squashing: a plain grb is enough."
-    echo "  - Branches further up the stack: run it once per branch, each against the PR"
-    echo "    directly below it."
+    echo "  - Branches further up the stack: their PR below hasn't merged. Rebase each"
+    echo "    onto the branch you just restacked, from that branch's old tip:"
+    echo "    grbo <restacked branch> <its old tip>, run on the next branch up."
     echo "  - Pushing: force-push afterwards with --force-with-lease."
     echo ""
     echo "Example: grbsq 13161 feat/cd-2804-user-consumers"
     [[ "$1" == "-h" ]] && return 0 || return 1
   fi
 
-  local old_base
-  old_base=$(GH_PAGER=cat gh pr view "$1" --json headRefOid -q .headRefOid) || return 1
-  git fetch origin || return 1
-  git rebase --onto "origin/$GIT_MAIN_BRANCH" "$old_base" ${2:+"$2"}
+  local merged_head merged_base branch
+  merged_head=$(GH_PAGER=cat gh pr view "$1" --json headRefOid -q .headRefOid) || return 1
+  merged_base=$(GH_PAGER=cat gh pr view "$1" --json baseRefName -q .baseRefName) || return 1
+  branch="${2:-$(git branch --show-current)}"
+  # Without tags, so a tag CI moved on the remote can't fail the fetch. --no-prune-tags
+  # too: fetch.pruneTags otherwise syncs every tag even with --no-tags.
+  git fetch --no-tags --no-prune-tags origin || return 1
+
+  if ! git merge-base --is-ancestor "$merged_head" "$branch"; then
+    echo "Error: $branch isn't built on PR #$1's last head ($merged_head)."
+    echo "The PR changed after $branch was last restacked, so rebasing from that head"
+    echo "would replay old versions of its commits. Find $branch's first own commit in:"
+    echo "  git log --oneline origin/$merged_base..$branch"
+    echo "then run:"
+    echo "  git rebase --onto origin/$merged_base <first own commit>^ $branch"
+    return 1
+  fi
+
+  git rebase --onto "origin/$merged_base" "$merged_head" "$branch"
 }
 
 alias grbas='git rebase --interactive --autosquash "$GIT_MAIN_BRANCH"'
