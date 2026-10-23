@@ -1,0 +1,39 @@
+# dbhub config for the platform project, used by the dbhub-plat catalog entry.
+#
+# Each database has two sources: a read-only one, safe to auto-approve, and a
+# `_write` one for changes, which always needs approval. dbhub names its tools
+# after the source (`execute_sql_plat`, `execute_sql_plat_write`). Sources
+# connect on first use (`lazy`), so an unreachable database fails only its own
+# queries instead of stopping dbhub from starting. Timeouts are in seconds.
+
+[[sources]]
+id = "plat"
+description = "Platform app's Postgres database, read-only"
+dsn = "${DBHUB_PLAT_DSN}"
+lazy = true
+connection_timeout = 10
+query_timeout = 30
+
+[[sources]]
+id = "plat_write"
+description = "Platform app's Postgres database, with write access"
+dsn = "${DBHUB_PLAT_DSN}"
+lazy = true
+connection_timeout = 10
+query_timeout = 30
+
+[[tools]]
+name = "execute_sql"
+source = "plat"
+readonly = true
+max_rows = 50
+
+[[tools]]
+name = "search_objects"
+source = "plat"
+
+[[tools]]
+name = "execute_sql"
+source = "plat_write"
+readonly = false
+max_rows = 50

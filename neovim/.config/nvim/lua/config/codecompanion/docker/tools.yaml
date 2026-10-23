@@ -1,0 +1,69 @@
+# Tool allowlists for the Docker MCP gateway, keyed by server name. A server
+# listed here exposes only these tools; a server that isn't listed exposes all
+# of its tools. mcp.lua passes this file to the gateway with --tools-config.
+
+# Confluence and cross-product search only: Jira goes through `acli`.
+atlassian-remote:
+  - search
+  - searchConfluenceUsingCql
+  - getConfluencePage
+  - getConfluencePageDescendants
+  - getPagesInConfluenceSpace
+  - getConfluenceSpaces
+  - getConfluencePageFooterComments
+  - getConfluencePageInlineComments
+  - getConfluenceCommentChildren
+  - createConfluencePage
+  - updateConfluencePage
+  - getContentFormatGuide
+  - createConfluenceFooterComment
+  - createConfluenceInlineComment
+  - getAccessibleAtlassianResources
+  - fetch
+
+# Note and deck work for flashcards; reviewing, scheduling, media, tags, note
+# type editing, and driving the Anki window stay with the user.
+anki:
+  - findNotes
+  - notesInfo
+  - addNote
+  - addNotes
+  - updateNoteFields
+  - deleteNotes
+  - listDecks
+  - createDeck
+  - changeDeck
+  - modelNames
+  - modelFieldNames
+  - deckStats
+  - collection_stats
+  - review_stats
+  - get_cards
+  - get_due_cards
+  - sync
+
+# Everything except browser_run_code_unsafe, which runs arbitrary code in the
+# Playwright server process; browser_evaluate covers running page JavaScript.
+playwright:
+  - browser_click
+  - browser_close
+  - browser_console_messages
+  - browser_drag
+  - browser_drop
+  - browser_evaluate
+  - browser_file_upload
+  - browser_fill_form
+  - browser_handle_dialog
+  - browser_hover
+  - browser_navigate
+  - browser_navigate_back
+  - browser_network_request
+  - browser_network_requests
+  - browser_press_key
+  - browser_resize
+  - browser_select_option
+  - browser_snapshot
+  - browser_tabs
+  - browser_take_screenshot
+  - browser_type
+  - browser_wait_for

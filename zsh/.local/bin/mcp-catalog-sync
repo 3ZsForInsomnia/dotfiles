@@ -1,0 +1,59 @@
+#!/usr/bin/env zsh
+#
+# mcp-catalog-sync - install the dotfiles' Docker MCP catalog and build the
+#                    local images its servers use.
+#
+# The Docker MCP gateway only reads catalogs from inside
+# ~/.docker/mcp/catalogs/ and rejects symlinks that resolve anywhere else, so
+# the catalog is copied there. The dotfiles copy is the source of truth: run
+# this after editing it. Edits made to the installed copy (e.g. while
+# debugging) are overwritten on the next run, so redo them in dotfiles first.
+
+emulate -L zsh
+setopt err_exit no_unset pipe_fail
+
+CODE_HOME="${XDG_CODE_HOME:-$HOME/src}"
+DOTFILES="$CODE_HOME/dotfiles"
+SOURCE_DIR="$DOTFILES/neovim/.config/nvim/lua/config/codecompanion/docker"
+INSTALLED_CATALOG="$HOME/.docker/mcp/catalogs/dotfiles.yaml"
+
+log() { print -r -- "mcp-catalog-sync: $*"; }
+
+usage() {
+  cat <<EOF
+Usage: mcp-catalog-sync [-h]
+
+Copies $SOURCE_DIR/catalog.yaml
+to $INSTALLED_CATALOG, then builds an image
+for each <name>/Dockerfile in that directory, tagged local/<name>-mcp.
+EOF
+}
+
+install_catalog() {
+  mkdir -p "${INSTALLED_CATALOG:h}"
+  cp "$SOURCE_DIR/catalog.yaml" "$INSTALLED_CATALOG"
+  log "installed $INSTALLED_CATALOG"
+}
+
+build_images() {
+  local dockerfile image
+
+  for dockerfile in "$SOURCE_DIR"/*/Dockerfile; do
+    image="local/${dockerfile:h:t}-mcp"
+    log "building $image"
+    docker build --quiet --tag "$image" "${dockerfile:h}" >/dev/null
+  done
+}
+
+main() {
+  case "${1:-}" in
+    -h | --help) usage; return ;;
+    "") ;;
+    *) usage >&2; return 1 ;;
+  esac
+
+  install_catalog
+  build_images
+}
+
+main "$@"

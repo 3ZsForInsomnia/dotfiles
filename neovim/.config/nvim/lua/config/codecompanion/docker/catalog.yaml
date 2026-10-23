@@ -1,0 +1,67 @@
+# Docker MCP catalog for servers that aren't in Docker's own catalog. The
+# gateway only reads catalogs from ~/.docker/mcp/catalogs/, so this file is
+# installed there by `mcp-catalog-sync`, which also builds the `local/*` images
+# from the Dockerfiles next to it. Per-server tool allowlists live in
+# tools.yaml, which the gateway reads from here directly.
+version: 3
+name: dotfiles
+displayName: Dotfiles MCP servers
+registry:
+  anki:
+    title: Anki
+    description: Read and edit Anki decks and notes through the AnkiConnect add-on in the running Anki app.
+    type: server
+    image: local/anki-mcp
+    env:
+      - name: ANKI_CONNECT_URL
+        value: http://host.docker.internal:8765
+
+  # One dbhub entry per project, all on the local/dbhub-mcp image, which holds
+  # each project's config (dbhub/<project>.toml). The gateway only mounts host
+  # paths it's been told to allow; the gateway entry in mcp.lua allows the
+  # SQLite folders below.
+  dbhub-plat:
+    title: DBHub (platform)
+    description: SQL access to the platform Postgres database, with a read-only tool and a separate write tool.
+    type: server
+    image: local/dbhub-mcp
+    command:
+      - --transport
+      - stdio
+      - --config
+      - /config/plat.toml
+    secrets:
+      - name: dbhub.plat_dsn
+        env: DBHUB_PLAT_DSN
+
+  dbhub-revman:
+    title: DBHub (revman.nvim)
+    description: SQL access to revman.nvim's SQLite database, with a read-only tool and a separate write tool.
+    type: server
+    image: local/dbhub-mcp
+    command:
+      - --transport
+      - stdio
+      - --config
+      - /config/revman.toml
+    volumes:
+      - /Users/zacharylevinw/.local/state/nvim/revman:/dbs/revman
+
+  dbhub-jira-ai:
+    title: DBHub (jira-ai)
+    description: SQL access to jira-ai's SQLite database, with a read-only tool and a separate write tool.
+    type: server
+    image: local/dbhub-mcp
+    command:
+      - --transport
+      - stdio
+      - --config
+      - /config/jira-ai.toml
+    volumes:
+      - /Users/zacharylevinw/.local/share/nvim/jira-ai:/dbs/jira-ai
+
+  mui:
+    title: MUI
+    description: MUI component documentation and examples.
+    type: server
+    image: local/mui-mcp

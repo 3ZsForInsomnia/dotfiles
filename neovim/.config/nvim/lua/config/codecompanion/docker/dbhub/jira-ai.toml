@@ -1,0 +1,30 @@
+# dbhub config for jira-ai, used by the dbhub-jira-ai catalog entry. Same
+# read-only/write source pairing as plat.toml.
+
+[[sources]]
+id = "jira_ai"
+description = "jira-ai's SQLite database, read-only"
+dsn = "sqlite:///dbs/jira-ai/jira_ai.db"
+lazy = true
+
+[[sources]]
+id = "jira_ai_write"
+description = "jira-ai's SQLite database, with write access"
+dsn = "sqlite:///dbs/jira-ai/jira_ai.db"
+lazy = true
+
+[[tools]]
+name = "execute_sql"
+source = "jira_ai"
+readonly = true
+max_rows = 50
+
+[[tools]]
+name = "search_objects"
+source = "jira_ai"
+
+[[tools]]
+name = "execute_sql"
+source = "jira_ai_write"
+readonly = false
+max_rows = 50

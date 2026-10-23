@@ -21,7 +21,8 @@ export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export AZURE_CONFIG_DIR="$XDG_CONFIG_HOME/azure"
 export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"
 export KUBECACHEDIR="$XDG_CACHE_HOME/kube"
-export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+# Docker stays in ~/.docker: Docker Desktop ignores DOCKER_CONFIG and keeps
+# installing CLI plugins (e.g. docker-pass) and MCP Toolkit state there.
 
 export FZF_DEFAULT_COMMAND='fd -H --type f'
 export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border --bind "ctrl-d:preview-down" --bind "ctrl-u:preview-up"'
