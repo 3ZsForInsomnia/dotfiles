@@ -81,7 +81,7 @@ return {
           icons = {
             chat_fold = " ",
           },
-          fold_reasoning = true,
+          fold_reasoning = false,
           show_reasoning = true,
         },
       },
