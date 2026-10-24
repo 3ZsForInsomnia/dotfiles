@@ -196,6 +196,11 @@ checkpoint reports and in the living doc.
   invocation behaves like ripgrep.
 - The Bash tool runs zsh, so zsh's special parameters apply in commands too:
   never use `path` (tied to `PATH`), `status`, or `argv` as variable names.
+- My terminal doesn't apply right-to-left ordering, so Hebrew in chat displays
+  backwards: write it letter-reversed and without niqqud, for display only;
+  files and tool calls get normal Hebrew. When vowels matter (pronunciation,
+  telling words apart, conjugated forms), add a transliteration alongside it,
+  using a consistent scheme.
 - When you create or switch to a git worktree or another checkout, say so plainly
   at the time, and repeat it when it matters (e.g. which checkout a dev server must
   run from). When I don't see a change, first check whether what I'm running points

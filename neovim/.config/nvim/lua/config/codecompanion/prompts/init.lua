@@ -19,10 +19,6 @@ return {
   ["Meeting Prep"] = require("config.codecompanion.prompts.meetings").meeting_prep,
   ["Meeting Cleanup"] = require("config.codecompanion.prompts.meetings").meeting_cleanup,
 
-  -- Hebrew Learning
-  ["Hebrew: Vocab Cards"] = require("config.codecompanion.prompts.hebrew-cards").vocab,
-  ["Hebrew: Grammar Cards"] = require("config.codecompanion.prompts.hebrew-cards").grammar,
-  ["Hebrew: Function Words"] = require("config.codecompanion.prompts.hebrew-cards").function_words,
   ["AI Rabbi"] = require("config.codecompanion.prompts.ai-rabbi"),
 
   -- Code Examples
