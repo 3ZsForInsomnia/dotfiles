@@ -55,15 +55,26 @@ topic, but always be direct and substantive.
   mode. It's a shared reference for both of us and survives
   compaction and new sessions; update it at natural checkpoints. Its contents are
   ours to discuss like anything else, so raise substantive changes rather than
-  making them silently. Work: `planning-doc-<branch>.md` (`/` → `-`; a ticket ID
+  making them silently.
+  The doc also records, with depth matched to how significant each is:
+  - What we decided not to do, and why.
+  - Deviations from anything agreed or documented (a ticket, an implementation
+    plan, what product or other devs expect), labelled as deviations however
+    short the entry.
+  - Changes of approach forced by what we found (a framework limit, a problem
+    in existing code, a product requirement that turns out impossible or
+    needlessly difficult), with what we learned when it's worth explaining.
+  Near the end of the work, offer to distill what we learned into
+  project-agnostic notes elsewhere in my notes repo; the living doc keeps its
+  content.
+  Work: `planning-doc-<branch>.md` (`/` → `-`; a ticket ID
   or topic before a branch exists), kept in my notes repo in
   `~/Documents/sync/1 - Work/10 - Projects/10.00 - Small work/`. The exception is
   an epic-sized project: one whose folder under `10 - Projects/` has a
   `milestones.md`, that we're planning with `milestone-authoring`, or that I say
   it belongs to. Its doc goes in that project's folder. Ask only when it's
   genuinely unclear which applies. Once settled, move what the team needs into
-  the repo's
-  `docs/`, and ask me what to keep in my notes and where. Personal:
+  the repo's `docs/`, and ask me what to keep in my notes and where. Personal:
   `planning-doc-<topic>.md`, kept in my notes repo in the personal project's
   folder, `~/Documents/sync/0 - Personal/01 - Projects/<project>/`; if the project
   has no folder there yet, propose one.
@@ -187,6 +198,9 @@ checkpoint reports and in the living doc.
     piece as a whole.
   - Section by section: agree on each section in chat, writing after each one.
     Better when small technical details have to be exactly right.
+
+  PR descriptions use review then write up to 80 lines, instead of the usual 50,
+  not counting the Evidence section.
 
   Say which one you're using when you start; I may switch us.
 
