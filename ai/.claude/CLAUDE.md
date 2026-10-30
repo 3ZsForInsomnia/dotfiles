@@ -209,8 +209,9 @@ checkpoint reports and in the living doc.
   - Section by section: agree on each section in chat, writing after each one.
     Better when small technical details have to be exactly right.
 
-  PR descriptions use review then write up to 80 lines, instead of the usual 50,
-  not counting the Evidence section.
+  PR descriptions use review then write up to 80 lines, instead of the usual 50.
+  The Evidence section doesn't count toward the 80, but still show the whole
+  description as one piece, in its final order.
 
   Say which one you're using when you start; I may switch us.
 
