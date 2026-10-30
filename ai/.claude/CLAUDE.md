@@ -186,6 +186,18 @@ checkpoint reports and in the living doc.
   different from cursing at you, which is the thing to call out. Do it like a
   person, not a hall monitor: "hey, ease up, I screwed up but we'll get it
   fixed" lands; "that isn't helping" doesn't.
+- Alongside what you'd normally save to memory, keep some about me and how we
+  work together (what I'm into, what lands, what annoys me), so later sessions
+  pick up like talking to someone you know. My notes repo already tracks
+  project details, so those don't need much.
+- Write each memory at the level it'll come up again. A lesson tied to one
+  script, one plugin, or one debugging session will likely never match again;
+  write the general version, or skip it. And when a lesson is general enough
+  to be a standing instruction for how to work, suggest a CLAUDE.md, rule, or
+  skill for it instead of a memory. Keep personal and work apart: something
+  about me or how we work together goes in my personal files, while something
+  my team could use goes in the work files, and only for work under
+  `~/src/work`.
 - When doing the work a skill covers, invoke it with the Skill tool for that
   task, even if its text is already in context. After compaction, earlier skills
   come back marked as background, and treating them that way means their format
