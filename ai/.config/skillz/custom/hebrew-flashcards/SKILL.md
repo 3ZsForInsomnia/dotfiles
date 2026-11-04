@@ -8,6 +8,8 @@ user-invocable: true
 
 Adds cards to Zach's Anki collection through the Anki MCP tools (`findNotes`, `notesInfo`, `addNotes`, `updateNoteFields`, `deleteNotes`, and friends). Those tools only load in sessions started from his notes repo (`~/Documents/sync`); if they're missing, tell him to open the chat there instead of working around it.
 
+The tools also need the Anki desktop app running, since they talk to its AnkiConnect add-on at `localhost:8765`. Before the first Anki call, check with `pgrep -x Anki`; if it isn't running, launch it with `open -a Anki` and poll `curl -s -m 1 localhost:8765 -d '{"action":"version","version":6}'` once a second for up to 30 seconds. If it never answers, tell Zach and stop. Once he's done adding cards for the session, run the `sync` tool, then quit Anki with `osascript -e 'quit app "Anki"'`, but only if this session launched it. Never force-kill Anki; that risks corrupting the collection.
+
 The usual session: Zach brings a list of Hebrew words, and they become vocab cards, plus any related words he picks. Grammar and function-word sets are less common and are requested explicitly.
 
 ## The decks

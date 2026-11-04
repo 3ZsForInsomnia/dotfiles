@@ -196,5 +196,9 @@ create it per **Creating tasks** above, confirming first. Usually nothing.
 
 Once the plan is settled, write its **planned half** to the daily log (see **The
 daily log**). One entry, terse, matching the file's existing format; leave Actual
-empty for daily review to complete. Then you're done; the user works the plan in
-Sunsama.
+empty for daily review to complete.
+
+### 7. Daily learning
+
+Finish by running the `daily-learning` skill (invoke it with the Skill tool). The
+plan is done at this point; the user works it in Sunsama.
