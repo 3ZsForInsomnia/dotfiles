@@ -3,7 +3,7 @@ alias goToPlugins='cd "$NVIM_PLUGINS"'
 
 function openNvim() {
   if [ -z "$1" ]; then
-    nvim .
+    nvim
   else
     nvim "$1"
   fi
