@@ -3,11 +3,10 @@
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 import traceback
-from argparse import ArgumentParser
+from argparse import SUPPRESS, ArgumentParser
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,8 +25,6 @@ def get_xdg_var(var, fallback):
 STATE_DIR = get_xdg_var("XDG_STATE_HOME", "~/.local/state") / "nvim-update"
 STATE_DIR.mkdir(parents=True, exist_ok=True)
 HISTORY_FILE = STATE_DIR / "version-history.json"
-BACKUP_DIR = STATE_DIR / "nvim-backups"
-BACKUP_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = STATE_DIR / "nvim-update.log"
 MAX_LOG_SIZE = 5 * 1024 * 1024  # 5MB
 
@@ -38,6 +35,9 @@ if not XDG_CODE_HOME:
     sys.exit(1)
 NVIM_SRC = Path(XDG_CODE_HOME) / "neovim"
 NVIM_INSTALL = Path(XDG_CODE_HOME) / "neovim"
+DEPS_DIR = NVIM_SRC / ".deps"
+DEPS_MARKER = DEPS_DIR / ".nvim-update-cmake-deps-tree"
+PREVIOUS_VERSION = "previous"
 
 
 # --- Logging ---
@@ -102,28 +102,6 @@ def start_log():
 
 
 current_logfile = str(start_log())
-
-
-def backup_nvim(sha):
-    nvim_bin = NVIM_INSTALL / "bin" / "nvim"
-    backup_bin = BACKUP_DIR / f"nvim-{sha}"
-    if nvim_bin.exists():
-        shutil.copy2(nvim_bin, backup_bin)
-        logmsg(f"Backed up nvim binary to {backup_bin}")
-        return backup_bin.exists()
-    else:
-        logerr(f"nvim binary not found at {nvim_bin}")
-        return False
-
-
-def restore_nvim(sha):
-    nvim_bin = NVIM_INSTALL / "bin" / "nvim"
-    backup_bin = BACKUP_DIR / f"nvim-{sha}"
-    if backup_bin.exists():
-        shutil.copy2(backup_bin, nvim_bin)
-        logmsg(f"Restored nvim binary from {backup_bin}")
-    else:
-        logerr(f"No backup found for SHA {sha} at {backup_bin}")
 
 
 def run(cmd, check=True, capture_output=False, env=None):
@@ -196,6 +174,21 @@ def git_checkout(ref):
     run(["git", "checkout", ref], check=True)
 
 
+def is_known_commit(sha):
+    result = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"{sha}^{{commit}}"],
+        capture_output=True,
+    )
+    return result.returncode == 0
+
+
+def require_known_commit(sha):
+    """Fetch origin, then fail unless sha names a commit in the neovim repo."""
+    run(["git", "fetch", "--no-tags", "origin"], check=False)
+    if not is_known_commit(sha):
+        raise ValueError(f"{sha} is not a commit in {NVIM_SRC}")
+
+
 def remove_build():
     build = NVIM_SRC / "build"
     if build.exists():
@@ -203,7 +196,28 @@ def remove_build():
         run(["rm", "-rf", str(build)])
 
 
+def get_cmake_deps_tree():
+    """Git tree hash of cmake.deps/, which pins every bundled dependency."""
+    return run(["git", "rev-parse", "HEAD:cmake.deps"], capture_output=True)
+
+
+def deps_match_checkout(tree):
+    return DEPS_MARKER.exists() and DEPS_MARKER.read_text().strip() == tree
+
+
+def build_deps():
+    tree = get_cmake_deps_tree()
+    if not deps_match_checkout(tree):
+        logmsg(f"Bundled deps don't match cmake.deps tree {tree}, removing {DEPS_DIR}")
+        run(["rm", "-rf", str(DEPS_DIR)])
+
+    run(["cmake", "-S", "cmake.deps", "-B", str(DEPS_DIR)])
+    run(["cmake", "--build", str(DEPS_DIR)])
+    DEPS_MARKER.write_text(tree)
+
+
 def build_and_install():
+    build_deps()
     cmake_flags = [
         f"-DCMAKE_INSTALL_PREFIX={NVIM_INSTALL}",
         "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
@@ -290,12 +304,6 @@ def upgrade(channel):
             print(f"Already up to date with {channel}. No upgrade needed.")
             return
 
-        if sha_installed:
-            if not backup_nvim(sha_installed):
-                logerr("Backup failed! Aborting upgrade.")
-                print("Backup failed! Aborting upgrade.", file=sys.stderr)
-                return
-
         remove_build()
         build_and_install()
 
@@ -312,21 +320,30 @@ def upgrade(channel):
         sys.exit(1)
 
 
-def rollback():
-    try:
-        h = prev_history()
-        if not h:
-            print("No previous version in history. Can't rollback!")
-            return
-        target_sha = h["sha"]
-        logmsg(f"Rolling back to {target_sha} ({h['tag']}) ...")
-        restore_nvim(target_sha)
-        add_history_entry(h["tag"], h["sha"], "rollback")
-        print(f"Rolled back to {target_sha} ({h['tag']})")
-    except Exception as e:
-        logexc(e)
-        print("Rollback failed. See log for details.", file=sys.stderr)
-        sys.exit(1)
+def resolve_rollback_sha(target):
+    if target != PREVIOUS_VERSION:
+        return target
+    h = prev_history()
+    return h["sha"] if h else None
+
+
+def rollback(target):
+    sha = resolve_rollback_sha(target)
+    if not sha:
+        print("No previous version in history. Can't rollback!")
+        return
+
+    logmsg(f"Rolling back to {sha} ...")
+    manual_checkout(sha, action="rollback")
+
+
+def print_history_shas():
+    """Previously installed SHAs, newest first, as `sha:commit date` for zsh completion."""
+    seen = set()
+    for h in reversed(load_history()):
+        if h["sha"] not in seen:
+            seen.add(h["sha"])
+            print(f"{h['sha']}:{h['tag']}")
 
 
 def get_commit_date(sha):
@@ -382,14 +399,15 @@ def show_logfile():
     print(str(LOG_FILE))
 
 
-def manual_checkout(sha, channel=None):
+def manual_checkout(sha, channel=None, action="manual_checkout"):
     try:
+        require_known_commit(sha)
         logmsg(f"Checking out {sha} ...")
         git_checkout(sha)
         remove_build()
         build_and_install()
         sha_new, date_new = get_sha()
-        add_history_entry(date_new, sha_new, "manual_checkout", channel=channel)
+        add_history_entry(date_new, sha_new, action, channel=channel)
         print(f"Checked out {date_new} ({sha_new})")
     except Exception as e:
         logexc(e)
@@ -412,9 +430,12 @@ def main():
     )
     parser.add_argument(
         "--rollback",
-        action="store_true",
-        help="Roll back to previous version by history.",
+        nargs="?",
+        const=PREVIOUS_VERSION,
+        metavar="SHA",
+        help="Rebuild and install a previously installed version (default: the one before the current).",
     )
+    parser.add_argument("--history-shas", action="store_true", help=SUPPRESS)
     parser.add_argument(
         "--history",
         action="store_true",
@@ -440,9 +461,11 @@ def main():
     if args.upgrade:
         upgrade(args.channel)
     elif args.rollback:
-        rollback()
+        rollback(args.rollback)
     elif args.history:
         print_history()
+    elif args.history_shas:
+        print_history_shas()
     elif args.version:
         show_version(args.channel)
     elif args.logfile:
