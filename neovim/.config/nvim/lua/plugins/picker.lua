@@ -43,7 +43,10 @@ return {
             title = "{title}",
             title_pos = "center",
             { win = "input", height = 1, border = "top" },
-            { win = "list", border = "none" },
+            -- Explicit height: without one, snacks' ui_select sizes the list from
+            -- `vim.o.lines * 0.8 - 10`, which isn't an integer for most terminal
+            -- heights, so long lists crash the window and leave the picker stuck.
+            { win = "list", height = 32, border = "none" },
           },
         },
       },
