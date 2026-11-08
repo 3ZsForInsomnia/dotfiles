@@ -74,6 +74,10 @@ local servers = {
     cmd = { "npx", "@playwright/mcp@latest", "--extension" },
   },
 
+  ["sunsama"] = {
+    cmd = { "npx", "-y", "mcp-remote", "https://api.sunsama.com/mcp" },
+  },
+
   ["webmcp"] = {
     cmd = {
       "npx",
@@ -86,7 +90,7 @@ local servers = {
 
 local default_servers = concat(
   when(has_gateway_servers, { "docker-gateway" }),
-  { "webmcp" },
+  { "webmcp", "sunsama" },
   when(in_work, { "figma", "playwright-extension" }),
   when(uses_nx, { "nx" })
 )
@@ -99,10 +103,19 @@ local M = {}
 -- own built-in tool approvals at assembly time.
 M.tool_approvals = {}
 
+-- ACP takes a server's env as a list of { name, value } pairs, not a map.
+local function to_acp_env(env)
+  return v.iter(env or {})
+    :map(function(key, value)
+      return { name = key, value = value }
+    end)
+    :totable()
+end
+
 function M.acp_servers()
   return v.tbl_map(function(name)
     local cmd = servers[name].cmd
-    return { name = name, command = cmd[1], args = v.list_slice(cmd, 2), env = servers[name].env or {} }
+    return { name = name, command = cmd[1], args = v.list_slice(cmd, 2), env = to_acp_env(servers[name].env) }
   end, default_servers)
 end
 
