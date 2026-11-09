@@ -291,7 +291,8 @@ checkpoint reports and in the living doc.
   at the checkout you edited.
 - Trust git and gh commands that succeed: don't re-check that a PR was created or a
   push landed. Verify only outcomes the command doesn't report, such as whether a
-  deploy finished.
+  deploy finished. When pushing to dotfiles, don't mention the branch-protection
+  bypass or Dependabot notices GitHub prints: they're known and repeat on every push.
 - Make file edits with the Edit and Write tools, not shell scripts (sed, awk, Python
   heredocs). I review changes through the tool's diff, and a script hides what it
   changed. A script is fine only for one change we've agreed repeats across many
