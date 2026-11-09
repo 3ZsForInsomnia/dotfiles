@@ -12,20 +12,21 @@ The tools also need the Anki desktop app running, since they talk to its AnkiCon
 
 The usual session: Zach brings a list of Hebrew words, and they become vocab cards, plus any related words he picks. Grammar and function-word sets are less common and are requested explicitly.
 
-## The decks
+## Decks and note types
 
-Each deck uses exactly one note type, built around how that kind of thing gets studied. Never change the note types; fill their fields as they are.
+Each note type is built around how that kind of thing gets studied. Never change the note types; fill their fields as they are.
 
-- **Hebrew** (note type `Basic`): simple vocab, the default. Fields `Front` (the Hebrew word) and `Back` (English).
-- **Vocab** (note type `Hebrew Vocab`): rich vocab for words a one-line translation can't capture. Fields: `מילה עברית` (the word), `תרגום אנגלי` (English translation), `הגדרה עברית` (a simplified Hebrew definition), `חלק דיבור / בניין` (part of speech, plus binyan for verbs), `מגדר` (gender, nouns only), `שורש` (root, letters joined with hyphens), `משפטי דוגמה` (example sentences), `הערות` (notes).
-- **Grammar** (note type `Hebrew Grammar`): verb conjugation sets. Fields: `Hebrew Word`, `Infinitive`, `Root`, `Binyan`, `Tense`, `Person/Gender/Number`, `Target Request`, `Answer`, `Conjugation Table`.
-- **Function** (note type `Hebrew Function Grammar`): prepositions and similar words with pronoun suffixes. Fields: `צורה עברית` (the inflected form), `צורת בסיס` (the base word), `תרגום אנגלי` (English), `סוג מילה` (word type), `גוף` (the pronoun), `טבלת נטייה` (the full inflection table), `הערות` (notes, in Hebrew).
+- **Hebrew** deck: all vocab, in one of two note types.
+  - `Basic`: simple vocab, the default. Fields `Front` (the Hebrew word) and `Back` (English).
+  - `Hebrew Vocab`: rich vocab for words a one-line translation can't capture. Fields: `מילה עברית` (the word), `תרגום אנגלי` (English translation), `הגדרה עברית` (a simplified Hebrew definition), `חלק דיבור / בניין` (part of speech, plus binyan for verbs), `מגדר` (gender, nouns only), `שורש` (root, letters joined with hyphens), `משפטי דוגמה` (example sentences), `הערות` (notes).
+- **Grammar** deck (note type `Hebrew Grammar`): verb conjugation sets. Fields: `Hebrew Word`, `Infinitive`, `Root`, `Binyan`, `Tense`, `Person/Gender/Number`, `Target Request`, `Answer`, `Conjugation Table`.
+- **Function** deck (note type `Hebrew Function Grammar`): prepositions and similar words with pronoun suffixes. Fields: `צורה עברית` (the inflected form), `צורת בסיס` (the base word), `תרגום אנגלי` (English), `סוג מילה` (word type), `גוף` (the pronoun), `טבלת נטייה` (the full inflection table), `הערות` (notes, in Hebrew).
 
-Before writing to any deck, read two or three recent notes of that type (`findNotes` on the deck, then `notesInfo` on a few of the newest IDs) and copy their formatting exactly: niqqud, capitalization, separators, and the HTML used in table fields.
+Before writing a note type, read two or three recent notes of that type (`findNotes` with `note:"<type>"`, then `notesInfo` on a few of the newest IDs) and copy their formatting exactly: niqqud, capitalization, separators, and the HTML used in table and list fields.
 
-## Choosing the deck
+## Choosing the note type
 
-Default to vocab, and between the two vocab decks, default to **Hebrew** (Basic). Use **Vocab** (rich) when a one-line English gloss would mislead or lose something: several unrelated senses, a cultural or emotional load, register or slang nuance, or a common false friend. Zach finds these hard to spot, so call them out yourself: when a word on his list is a good rich candidate, say why in a few words and ask which deck he wants. Classic examples: firgun, davka, stam, chaval, tachles, dugri, freier. Expect this regularly, not rarely.
+Default to vocab, and for vocab default to `Basic`. Use `Hebrew Vocab` when a one-line English gloss would mislead or lose something: several unrelated senses, a cultural or emotional load, register or slang nuance, or a common false friend. Zach finds these hard to spot, so call them out yourself: when a word on his list is a good rich candidate, say why in a few words and ask which note type he wants. Classic examples: firgun, davka, stam, chaval, tachles, dugri, freier. Expect this regularly, not rarely.
 
 Grammar and Function sets only when he asks for them.
 
@@ -57,9 +58,9 @@ Rules:
 
 **Vocab list**
 
-1. For each word: verify it, gather meanings, and check for duplicates. Search both vocab decks with `nc:<word>` (Anki's niqqud-insensitive match), e.g. `deck:Hebrew nc:<word>`, then confirm hits with `notesInfo`.
-2. Flag rich-card candidates and ask about them; everything else goes to the Hebrew deck.
-3. Add each deck's cards with one `addNotes` call. Its approval prompt is Zach's preview of the batch, so don't ask for a separate confirmation first.
+1. For each word: verify it, gather meanings, and check for duplicates. Search the Hebrew deck with `nc:<word>` (Anki's niqqud-insensitive match), e.g. `deck:Hebrew nc:<word>`, then confirm hits with `notesInfo`.
+2. Flag rich-card candidates and ask about them; everything else is `Basic`.
+3. Add each note type's cards with one `addNotes` call. Its approval prompt is Zach's preview of the batch, so don't ask for a separate confirmation first.
 4. Summarize, then offer related words: Pealim's related words for each word, plus your own suggestions, as one numbered pick list. Add the ones he picks the same way.
 
 **Grammar set**
@@ -80,4 +81,4 @@ Zach's terminal (Ghostty and Neovim) doesn't apply right-to-left ordering, so no
 
 ## Summary
 
-After each batch: counts per deck; each added word as transliteration plus its English; skipped duplicates; words not added and why; sentences you wrote yourself; and the related-word pick list.
+After each batch: counts per note type; each added word as transliteration plus its English; skipped duplicates; words not added and why; sentences you wrote yourself; and the related-word pick list.
