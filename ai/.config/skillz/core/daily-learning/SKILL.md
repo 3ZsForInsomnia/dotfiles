@@ -14,9 +14,11 @@ In this order:
 
 1. **Parsha and haftarah**: the weekly Torah portion and the reading from the Prophets that goes with it. Included automatically on Saturdays (by local date), and on any other day when Zach asks for them.
 2. **Daf yomi**: the day's page of Talmud in the daf yomi cycle, which the whole world learns in step, one page a day. Sefaria's calendar knows today's page, so nothing needs tracking.
-3. **Hebrew word**
-4. **English word**
+3. **Hebrew word**: card days only.
+4. **English word**: card days only.
 5. **Fun items**: Jewish, Hebrew, or Israeli.
+
+**Card days.** Anki cards are added only on Monday, Wednesday, Friday, and Sunday, by local date. On Tuesday, Thursday, and Saturday, skip the Hebrew and English words entirely: no word and no card. Zach also adds cards from his Hebrew lessons, so daily learning keeps its share small: a card day adds at most three cards, namely the Hebrew word, at most one related word, and the English word.
 
 Length follows the material. Short days are fine and preferable; never pad an item to fill space.
 
@@ -86,9 +88,11 @@ Skip anything dull. Material is dull when it has no link to modern Jewish life, 
 
 Zach's Hebrew is conversational but slow, with limited vocabulary. Pick a word from everyday adult Hebrew (news, conversation, Israeli TV and media), past textbook basics and short of literary or archaic.
 
-The `hebrew-flashcards` skill owns how Hebrew cards are verified and written. Read it at `~/src/dotfiles/ai/.config/skillz/custom/hebrew-flashcards/SKILL.md` before this step and follow its rules for verifying the word, checking for duplicates, choosing between decks, filling fields, and showing Hebrew in chat. Check for duplicates in the `Hebrew` and `Vocab` decks only; `Function` and `Grammar` hold grammar drills, not vocabulary. When the candidate is a duplicate or fails verification, pick another.
+The `hebrew-flashcards` skill owns how Hebrew cards are verified and written. Read it at `~/src/dotfiles/ai/.config/skillz/custom/hebrew-flashcards/SKILL.md` before this step and follow its rules for verifying the word, checking for duplicates, choosing between note types, filling fields, and showing Hebrew in chat. Check for duplicates in the `Hebrew` deck only; `Function` and `Grammar` hold grammar drills, not vocabulary. When the candidate is a duplicate or fails verification, pick another.
 
-Present the word with its transliteration, the Hebrew shown as that skill describes, its English meaning, a short example, and a deck recommendation: `Hebrew` for a clean one-line translation, `Vocab` for a word a one-line gloss would mislead on, with a few words on why. Add the card only after Zach agrees or picks the other deck, then add it as `hebrew-flashcards` describes.
+Present the word with its transliteration, the Hebrew shown as that skill describes, its English meaning, a short example, and a note type recommendation: `Basic` for a clean one-line translation, `Hebrew Vocab` for a word a one-line gloss would mislead on, with a few words on why. Both go in the `Hebrew` deck. Add the card only after Zach agrees or picks the other note type, then add it as `hebrew-flashcards` describes.
+
+**Related word.** After the Hebrew word, offer at most one related word from the same root: the most common one in everyday adult Hebrew that isn't already in the `Hebrew` deck, held to the same bar as the daily word. Skip it only when no candidate clears that bar, such as when the root's other words are rare or literary. Offer one only when the Hebrew deck has fewer than 20 cards due or already reviewed today (`findNotes` with `deck:Hebrew (is:due OR rated:1)`); counting cards already reviewed keeps the number honest when Zach has done his reviews before planning. Verify it and check for duplicates the same way as the main word. This replaces the related-word pick list in the `hebrew-flashcards` vocab flow.
 
 ## English word
 
@@ -100,7 +104,7 @@ Before presenting it, search the `English` deck for it (`findNotes` with `deck:E
 - One example sentence.
 - One to three near-synonyms it beats in some situations, with how and why it's the better choice there.
 
-Add it to the `English` deck with the `English Vocab` note type, filling `Word`, `Definition`, `Example`, and `Compared with` (the near-synonym comparison). Create the deck with `createDeck` if it doesn't exist. Add it after presenting; the `addNotes` approval prompt is Zach's preview, so don't ask separately.
+Add it to the `English` deck with the `English Vocab` note type, filling `Word`, `Definition`, `Example`, and `Compared with` (the near-synonym comparison). Create the deck with `createDeck` if it doesn't exist. Add it only after Zach OKs it in chat. The message presenting the word is his preview of the card, so show every field's value there. Never treat the `addNotes` permission prompt as the preview: Claude often runs with tools auto-approved, and the prompt doesn't show the arguments anyway.
 
 ## Fun items
 
@@ -125,8 +129,8 @@ After the last card is added, run the `sync` tool. Then, only if this session la
 
 ## The flow
 
-1. Fetch the calendar, then the daf, its Rashi and Tosafot, and its related texts (plus the parsha's related texts when it's included). Start Anki if it isn't running.
-2. Read `hebrew-flashcards`, then pick and check the Hebrew and English words.
-3. Present everything in one message, in the order under **The items**, with a heading per item. End by asking about the Hebrew word's deck and inviting questions about anything.
-4. Add the English card, and the Hebrew card once Zach decides. Then sync and close Anki as described above.
+1. Fetch the calendar, then the daf, its Rashi and Tosafot, and its related texts (plus the parsha's related texts when it's included). On a card day, start Anki if it isn't running.
+2. On a card day, read `hebrew-flashcards`, then pick and check the Hebrew and English words, and the related word if the threshold allows one.
+3. Present everything in one message, in the order under **The items**, with a heading per item. On a card day, end by asking Zach to OK the cards (and the Hebrew word's note type). Always invite questions about anything.
+4. Add each card once Zach OKs it in chat. Then sync and close Anki as described above.
 5. Answer questions about any item, fetching texts as described under **Fetching texts** when a question needs them.
